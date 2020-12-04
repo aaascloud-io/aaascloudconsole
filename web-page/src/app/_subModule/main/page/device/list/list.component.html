@@ -1,0 +1,165 @@
+<!--BEGIN CONTENT-->
+<div class="page-content" style="height: -webkit-fill-available;" @bottom_flyIn>
+  <div id="tab-general">
+
+    <div id="query-area">
+      <p>
+        <a class="btn btn-default" data-toggle="collapse" href="#query-collapse">
+          条件検索▼
+        </a>
+      </p>
+      <div id="query-collapse" class="collapse">
+        <div class="well">
+          <form>
+            <div class="form-group">
+              <label>IMEI</label>
+              <input type="text" name="imei" class="form-control" 
+                [(ngModel)]="pageModel.query.imei" (ngModelChange)="onQueryChange()">
+            </div>
+            <div class="form-group">
+              <label>ICCID</label>
+              <input type="text" name="iccid" class="form-control" 
+                [(ngModel)]="pageModel.query.iccid" (ngModelChange)="onQueryChange()">
+            </div>
+            <div class="form-group">
+              <label>所有者</label>
+              <select name="uid" class="form-control" 
+                [(ngModel)]="pageModel.query.uid" (ngModelChange)="onQueryChange()">
+                <option *ngFor="let item of pageModel.users" [value]="item.id">
+                  {{item.username}}
+                </option>
+              </select>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="list-area" class="panel panel-grey">
+      <div class="panel-heading">デバイス一覧</div>
+      <div class="panel-body">
+        <div>
+          <a class="btn btn-blue navbar-btn" style="margin-right: 5px;" [routerLink]="[ '../create' ]">
+            新　規
+          </a>
+          <a class="btn btn-blue navbar-btn"  style="margin-right: 5px;" 
+            data-target="#myModalByChckebox" data-toggle="modal">
+            削　除
+          </a>
+          <a class="btn btn-blue navbar-btn" style="margin-right: 5px;" (click)="getDeviceList()">
+            リロード
+          </a>
+          <img *ngIf="loading" class="loading" src="../../../../../../assets/images/loading.gif">
+        </div>
+        <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">No.</th>
+              <th scope="col">IMEI</th>
+              <th scope="col">ICCID</th>
+              <th scope="col">状態</th>
+              <th scope="col">所有者</th>
+              <th scope="col">操作
+                <!-- 何これ -->
+                <!--
+                <select class="selectpicker" *ngIf="pageModel.products.length>0 && pageModel.deviceList.length>0"
+                  [(ngModel)]="pageModel.productId" (change)="productsChange($event)">
+                  <option *ngFor="let i of pageModel.products" [ngValue]="i.productid">{{i.productname}}</option>
+                </select>
+                <select class="selectpicker" *ngIf="pageModel.groups.length>0" [(ngModel)]="pageModel.groupId"
+                  (change)="groupsChange($event)">
+                  <option *ngFor="let i of pageModel.groups" [ngValue]="i.groupid">{{i.groupidname}}</option>
+                </select>
+                -->
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of pageModel.shows; let i = index;">
+              <td>
+                <input type="checkbox" style="width: 1.8rem; height: 1.8rem;" [(ngModel)]="item.removing">
+              </td>
+              <td data-label="No.">{{item.no}}</td>
+              <td data-label="IMEI">{{item.imei}}</td>
+              <td data-label="ICCID">{{item.iccid}}</td>
+              <td data-label="状態" *ngIf="item.isBind == 0">登録済</td>
+              <td data-label="状態" *ngIf="item.isBind == 1">バインド済
+                <span *ngIf="item.deviceStatus == undefined || item.deviceStatus.status == 0"
+                  style="color:#ccc;font-family: auto;">[オフライン]</span>
+                <span *ngIf="item.deviceStatus != undefined && item.deviceStatus.status == 2"
+                  style="color:#ccc;font-family: auto;">[電源オフ]</span>
+                <i class="fa fa-battery-half" *ngIf="item.deviceStatus != undefined && item.deviceStatus.status == 1
+                          && item.deviceStatus.batteryInfo != undefined
+                          && item.deviceStatus.batteryInfo.batteryPercentage > 20 
+                          && item.deviceStatus.batteryInfo.batteryPercentage < 60" style="color:deeppink;">
+                  {{item.deviceStatus.batteryInfo.batteryPercentage}}%
+                </i>
+                <i class="fa fa-battery-quarter" *ngIf="item.deviceStatus != undefined 
+                          && item.deviceStatus.status == 1
+                          && item.deviceStatus.batteryInfo != undefined  
+                          && item.deviceStatus.batteryInfo.batteryPercentage <= 20" style="color:firebrick;">
+                  {{item.deviceStatus.batteryInfo.batteryPercentage}}%
+                </i>
+                <i class="fa fa-battery-full" *ngIf="item.deviceStatus != undefined 
+                          && item.deviceStatus.status == 1
+                          && item.deviceStatus.batteryInfo != undefined
+                          && item.deviceStatus.batteryInfo.batteryPercentage >= 60" style="color:lawngreen;">
+                  {{item.deviceStatus.batteryInfo.batteryPercentage}}%
+                </i>
+              </td>
+              <td data-label="所有者">{{item.username}}</td>
+              <td data-label="操作">
+                <a [routerLink]="[ '../modify' ]" [queryParams]="{imei:item.imei,uid:item.uid}">詳細</a>
+                <!--
+                <a [routerLink]="[ '../modify' ]" [queryParams]="{imei:item.imei,uid:item.uid,iccid:item.iccid}">修正</a>
+                <a data-target="#myModal" data-toggle="modal" (click)="deleteParam(item)">削除</a>
+                -->
+                <!-- <a style="margin: 0 10px;" [routerLink]="[ '../command' ]" [queryParams] = "{imei:item.imei,deviceName:item.devicename}">命令</a> -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <page [(pagination)]="pagination" *ngIf="pageModel.matches.length > 0"></page>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">ご注意ください.</h4>
+      </div>
+      <div class="modal-body">
+        <p>このデバイスを削除してもよろしいですか？</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="delete()">削除</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModalByChckebox" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">ご注意ください.</h4>
+      </div>
+      <div class="modal-body">
+        <p>選択されたデバイスを削除してもよろしいですか？</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="delete()">削除</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--END CONTENT-->

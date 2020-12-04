@@ -1,0 +1,25 @@
+/* Naviの見た目の調整　*/
+#myTab li {
+  margin: 0;
+}
+#myTab a {
+  margin-top: 1rem;
+}
+
+.input-group {
+  width: 100%;
+}
+
+/* desktop */
+@media screen and (min-width: 768px) {
+  
+  #list-table th:nth-child(1),
+  #list-table td:nth-child(1) {
+    text-align: center;
+  }
+}
+
+/* mobile and tablet */
+@media screen and (max-width: 767px) {
+
+}

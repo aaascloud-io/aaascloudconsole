@@ -1,0 +1,11 @@
+/* Naviの見た目の調整　*/
+#myTab li {
+  margin: 0;
+}
+#myTab a {
+  margin-top: 1rem;
+}
+
+.input-group {
+  width: 100%;
+}

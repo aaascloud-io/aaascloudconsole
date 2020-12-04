@@ -1,0 +1,150 @@
+<div class="page-content">
+  <div id="tab-general">
+    <div id="sum_box" class="row mbl titleInfo">
+      <div class="col-md-12 col-xs-12">
+        <div class="panel panel-grey">
+          <div class="panel-heading">バージョン一覧</div>
+          <div class="panel-body">
+            <!-- <div class="col-md-12 col-xs-12" style="text-align: center;">
+              <a class="btn btn-green navbar-btn" data-toggle="modal" data-target="#addVer">新規</a>
+            </div> -->
+            <table class="table table-hover table-bordered" cellspacing="0">
+              <thead>
+                <tr>
+                  <th class="col-md-3" scope="col">バージョン名</th>
+                  <th class="col-md-3" scope="col">説明</th>
+                  <th class="col-md-1" scope="col">状態</th>
+                  <th class="col-md-3" scope="col">リリース時間</th>
+                  <th class="col-md-2" scope="col">ロードデバイス数</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="cursor: pointer" *ngFor="let item of pageModel.vers;let i = index;">
+                  <td data-label="バージョン名" class="active">{{item.versionName}}</td>
+                  <td data-label="説明" class="active">{{item.remarks}}</td>
+                  <td data-label="状態" class="active">
+                    <span *ngIf="item.testWaitting > 0">テスト待ち</span>
+                    <span *ngIf="item.testWaitting == 0">リリース済み</span>
+                  </td>
+                  <td data-label="リリース時間" class="active">
+                    <span *ngIf="item.testWaitting > 0">-</span>
+                    <span *ngIf="item.testWaitting == 0">{{item.versionTime}}</span>
+                  </td>
+                  <td data-label="ロードデバイス数" class="active">{{item.created}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <page [(pagination)]="pagination" *ngIf="pageModel.vers.length>0"> </page>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- addModal -->
+  <div id="addVer" class="modal fade" style="top: 33%;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" data-dismiss="modal" aria-hidden="true" class="close">
+            &times;</button>
+          <h4 class="modal-title">新バージョン</h4>
+        </div>
+        <div class="modal-body">
+          <div class="panel-info modalPanel">
+            <div class="panel-body" style="text-align:left;">
+              <div class="input-group col-md-9 col-xs-12 inputDiv">
+                <div class="input-group col-md-12 col-xs-12">
+                  <label for="inputMessage" class="control-label">
+                    バージョン番号：
+                  </label>
+                  <input type="text" class="form-control" placeholder="例えば　V1.0.0"
+                    [(ngModel)]="pageModel.addVerInfo.ver_num">
+                </div>
+                <br>
+                <div class="input-group col-md-12 col-xs-12">
+                  <label for="inputMessage" class="control-label">
+                    バージョンの説明：
+                  </label>
+                  <textarea rows="4" cols="45" [(ngModel)]="pageModel.addVerInfo.ver_des"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default">
+              取　消</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="registry()">
+              確　定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- addModal end-->
+
+
+
+  <!-- editModal -->
+  <div id="editVer" class="modal fade" style="top: 33%;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" data-dismiss="modal" aria-hidden="true" class="close">
+            &times;</button>
+          <h4 class="modal-title">新バージョン</h4>
+        </div>
+        <div class="modal-body">
+          <div class="panel-info modalPanel">
+            <div class="panel-body" style="text-align:left;">
+              <div class="input-group col-md-9 col-xs-12 inputDiv">
+                <div class="input-group col-md-12 col-xs-12">
+                  <label for="inputMessage" class="control-label">
+                    バージョン番号：
+                  </label>
+                  <input type="text" class="form-control" placeholder="例えば　V1.0.0"
+                    [(ngModel)]="pageModel.editVerInfo.ver_num">
+                </div>
+                <br>
+                <div class="input-group col-md-12 col-xs-12">
+                  <label for="inputMessage" class="control-label">
+                    バージョンの説明：
+                  </label>
+                  <textarea rows="4" cols="45" [(ngModel)]="pageModel.editVerInfo.ver_des"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default">
+              取　消</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="update()">
+              確　定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- editModal end-->
+
+<!-- delModal -->
+<div class="modal fade" id="delModal" style="top: 33%;">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">ご注意ください.</h4>
+      </div>
+      <div class="modal-body">
+        <p>{{pageModel.verNum}}を削除してもよろしいですか？</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="delVersion()">確　定</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- delModal end-->

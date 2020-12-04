@@ -1,0 +1,14 @@
+.downloadTag{
+  font-size: 14px;
+  position: absolute;
+  top: 4px;
+  background-color: unset !important;
+  color: red;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.modifyBtn a{
+  margin-right: 10px;
+}
+

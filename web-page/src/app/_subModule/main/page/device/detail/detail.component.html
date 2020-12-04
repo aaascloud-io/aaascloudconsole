@@ -1,0 +1,99 @@
+<!--BEGIN CONTENT-->
+<ul id="myTab" class="nav nav-tabs">
+  <li class="active">
+    <a href="#home" data-toggle="tab">デバイス詳細</a>
+  </li>
+  <!-- <li>
+      <a href="#commands" data-toggle="tab">歴史命令</a>
+    </li> -->
+</ul>
+
+<div id="myTabContent" class="tab-content" *ngIf="pageModel.device">
+  <div class="tab-pane fade in active" id="home">
+    <div class="page-content" @bottom_flyIn>
+
+      <div id="tab-general">
+        <div id="sum_box" class="row mbl titleInfo">
+
+          <div class="col-md-12 col-xs-12">
+            <div class="panel panel-blue">
+              <div class="panel-body pan">
+
+                <div class="form-body pal">
+                  <div class="input-group col-md-12 col-xs-12">
+                    <label for="inputMessage" class="control-label">
+                      デバイスID
+                    </label>
+                    <input type="text" class="form-control" [(ngModel)]="pageModel.device.imei" placeholder="" readonly>
+                  </div>
+                  <br>
+                  <div class="input-group col-md-12 col-xs-12">
+                    <label for="inputMessage" class="control-label">
+                      iccid
+                    </label>
+                    <input type="text" class="form-control" [(ngModel)]="pageModel.device.iccid" placeholder=""
+                      readonly>
+                  </div>
+                  <br>
+                  <div class="input-group col-md-12 col-xs-12">
+                    <label for="inputMessage" class="control-label">
+                      所有者
+                    </label>
+                    <input type="text" class="form-control" [(ngModel)]="pageModel.nameValue" placeholder="" readonly>
+                  </div>
+                  <br>
+                  <div class="input-group col-md-12 col-xs-12">
+                    <label for="inputMessage" class="control-label">
+                      devicename
+                    </label>
+                    <input type="text" class="form-control" [(ngModel)]="pageModel.device.devicename" placeholder=""
+                      readonly>
+                  </div>
+                  <br>
+                  <div class="input-group col-md-12 col-xs-12">
+                    <label for="inputMessage" class="control-label">
+                      firmwareVersion
+                    </label>
+                    <input type="text" class="form-control" [(ngModel)]="pageModel.device.firmwareVersion"
+                      placeholder="" readonly>
+                  </div>
+                  <br>
+                  <div class="input-group col-md-12 col-xs-12">
+                    <label for="inputMessage" class="control-label">
+                      newestVersionConfirmTime
+                    </label>
+                    <input type="text" class="form-control" [(ngModel)]="pageModel.device.newestVersionConfirmTime"
+                      placeholder="" readonly>
+                  </div>
+                  <br>
+                </div>
+              </div>
+              <div class="form-body pal">
+                <div class="form-actions text-center pal modifyBtn">
+                  <a class="btn btn-blue" [routerLink]="[ '../list' ]">戻る</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="tab-pane fade" id="commands">
+      <table class="table table-hover table-bordered" cellspacing="0">
+        <thead>
+          <tr>
+            <th class="col-md-1" scope="col">状態</th>
+            <th class="col-md-1" scope="col">命令ID</th>
+            <th class="col-md-2" scope="col">命令作成時間</th>
+            <th class="col-md-1" scope="col">命令内容</th>
+          </tr>
+        </thead>
+        <tbody>
+           <tr *ngFor="let deviceCommand of deviceCommands" style="cursor: pointer" >
+            <td data-label="状態" class="active">{{deviceCommand.status}}</td>
+            <td data-label="命令ID" class="active">{{deviceCommand.commandid}}</td>
+            <td data-label="命令作成時間" class="active" >{{deviceCommand.creationtime}}</td>
+            <td data-label="命令内容" class="active">{{deviceCommand.commandcontent}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div> -->
+        </div>
+        <!--END CONTENT-->

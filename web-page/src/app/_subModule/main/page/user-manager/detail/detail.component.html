@@ -1,0 +1,63 @@
+<!--BEGIN CONTENT-->
+<div class="page-content" @bottom_flyIn>
+  <div id="tab-general">
+    <div id="sum_box" class="row mbl titleInfo">
+
+      <div class="col-md-12 col-xs-12">
+        <div class="panel panel-blue">
+          <div class="panel-heading">
+            ユーザー詳細</div>
+          <div class="panel-body pan">
+
+            <div class="form-body pal">
+              <div class="form-group" style="color: darkred;">基本情報</div>
+              <br>
+              <div class="input-group">
+                <label for="inputMessage" class="control-label">
+                  ログインID
+                </label>
+                <span class="badge badge-primary">{{pageModel.loginid}}</span>
+              </div>
+              <br>
+              <div class="input-group">
+                <label for="inputMessage" class="control-label">
+                  会社
+                </label>
+                <span class="badge badge-primary">{{pageModel.company}}</span>
+              </div>
+              <br>
+              <div class="input-group">
+                <label for="inputMessage" class="control-label">
+                  アドレス
+                </label>
+                <span class="badge badge-primary">{{pageModel.address}}</span>
+              </div>
+              <br>
+              <div class="input-group">
+                <label for="inputMessage" class="control-label">
+                  メール
+                </label>
+                <span class="badge badge-primary">{{pageModel.mail}}</span>
+              </div>
+              <br>
+              <div class="input-group">
+                <label for="inputMessage" class="control-label">
+                  電話
+                </label>
+                <span class="badge badge-primary">{{pageModel.tel}}</span>
+              </div>
+              <br>
+            </div>
+            <div class="form-body pal">
+              <div class="form-actions text-center pal">
+                <button type="button" class="btn btn-success" [routerLink]="[ '../list' ]">戻る</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--END CONTENT-->

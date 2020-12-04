@@ -1,0 +1,95 @@
+<!--BEGIN CONTENT-->
+<div class="page-content">
+  <ul id="myTab" class="nav nav-tabs">
+    <li class="active">
+      <!-- <a href="#home" data-toggle="tab">デバイス修正</a> -->
+      <a href="#home" data-toggle="tab">デバイス詳細</a>
+    </li>
+  </ul>
+
+  <div id="myTabContent" class="tab-content">
+    <div class="tab-pane fade in active" id="home">
+      <div @bottom_flyIn>
+        <div id="tab-general">
+          <div id="sum_box" class="row mbl titleInfo">
+
+            <div class="col-md-12 col-xs-12">
+              <div class="panel panel-blue">
+                <div class="panel-body pan">
+                  <div class="form-body pal">
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        IMEI
+                      </label>
+                      <input type="text" class="form-control" [(ngModel)]="pageModel.device.imei" readonly>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        ICCID
+                      </label>
+                      <input type="text" class="form-control" [(ngModel)]="pageModel.device.iccid" readonly>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        IMSI
+                      </label>
+                      <input type="text" class="form-control" [(ngModel)]="pageModel.device.imsi">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        所有者
+                      </label>
+                      <select class="form-control" [(ngModel)]="pageModel.device.uid" [disabled]="true">
+                        <option *ngFor="let item of pageModel.users" [value]="item.id">
+                          {{item.username}} 
+                        </option>
+                      </select>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        デバイス名
+                      </label>
+                      <input type="text" class="form-control" [(ngModel)]="pageModel.device.devicename">
+                    </div>
+                    <br>
+                    <div id="showWhenExistsBlock" *ngIf="pageModel.device.exists">
+                      <div class="input-group">
+                        <label for="inputMessage" class="control-label">
+                          ファームウェア・バージョン
+                        </label>
+                        <input type="text" class="form-control" 
+                          [(ngModel)]="pageModel.device.firmwareVersion" readonly>
+                      </div>
+                      <br>
+                      <div class="input-group">
+                        <label for="inputMessage" class="control-label">
+                          ファームウェア・バージョンの最新の確認時刻
+                        </label>
+                        <input type="text" class="form-control" 
+                          [(ngModel)]="pageModel.device.v_newestVersionConfirmTime" readonly>
+                      </div>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-body pal">
+                  <div class="form-actions text-center pal modifyBtn">
+                    <button class="btn btn-pink" (click)="createOrUpdate()">保存</button>
+                    <a class="btn btn-blue" [routerLink]="[ '../list' ]">戻る</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        <!-- ここから追加 -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--END CONTENT-->

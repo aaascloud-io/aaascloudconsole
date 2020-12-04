@@ -1,0 +1,5 @@
+  <h2>Response Data</h2>
+  <br>
+  <span>操作時間</span>
+  <div *ngFor='let message of showcommandService.bodys'> {{message}} </div>
+  <button class="clear" (click)="showcommandService.clear()">clear</button>

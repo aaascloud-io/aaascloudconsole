@@ -1,0 +1,32 @@
+#captcha-input {
+  margin-right: 2rem;
+}
+
+.verifyDiv {
+  height: 40px !important;
+  width: 100px !important;
+  background-color: grey;
+  vertical-align: middle;
+}
+.verifyCanvas {
+  width: 100px !important;
+  height: 40px !important;
+  cursor: pointer; 
+}
+
+.float-left {
+  float: left;
+}
+
+.float-left.fa-lock {
+  position: absoute;
+  left: 5px;
+}
+
+.input-icon.right input[type="text"] {
+  border: none;
+}
+
+#login-button {
+  padding: 1rem 1.5rem;
+}

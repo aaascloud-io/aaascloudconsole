@@ -1,0 +1,16 @@
+import { Component, OnInit } from '@angular/core';
+import { ShowcommandService } from 'src/app/_shareModule/service/showcommand.service';
+
+@Component({
+  selector: 'app-showcommand',
+  templateUrl: './showcommand.component.html',
+  styleUrls: ['./showcommand.component.css']
+})
+export class ShowcommandComponent implements OnInit {
+
+  constructor(public showcommandService: ShowcommandService) { }
+
+  ngOnInit() {
+  }
+
+}

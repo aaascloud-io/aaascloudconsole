@@ -1,0 +1,162 @@
+<div class="page-content">
+  <ul id="myTab" class="nav nav-tabs">
+    <li class="active">
+      <a href="#individual" data-toggle="tab">登　録</a>
+    </li>
+    <li>
+      <a href="#multiple" data-toggle="tab">一括登録</a>
+    </li>
+  </ul>
+  <div id="myTabContent" class="tab-content">
+
+    <!--BEGIN デバイス個別新規-->
+    <div class="tab-pane fade in active" id="individual">
+      <div @bottom_flyIn>
+        <div id="tab-general">
+          <div id="sum_box" class="row mbl titleInfo">
+
+            <div class="col-md-12 col-xs-12">
+              <div class="panel panel-orange">
+                <div class="panel-body pan">
+                  <div class="form-body pal">
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        IMEI
+                      </label>
+                      <input type="text" class="form-control" [(ngModel)]="pageModel.device.imei">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        ICCID
+                      </label>
+                      <input type="text" class="form-control" [(ngModel)]="pageModel.device.iccid">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        IMSI
+                      </label>
+                      <input type="text" class="form-control" [(ngModel)]="pageModel.device.imsi">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        所有者
+                      </label>
+                      <select class="form-control" [(ngModel)]="pageModel.device.uid">
+                        <option *ngFor="let item of pageModel.users" [value]="item.id">
+                          {{item.username}}
+                        </option>
+                      </select>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        暗号化通信
+                      </label>
+                      <select class="form-control" [(ngModel)]="pageModel.device.securityMode">
+                        <option value=0 selected>OFF</option>
+                        <option value=1>ON</option>
+                      </select>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        暗号化キー
+                      </label>
+                      <input type="text" class="form-control" [(ngModel)]="pageModel.device.psk"
+                        placeholder="空白の場合、サーバで自動生成します" value="">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        接続サーバアドレス
+                      </label>
+                      <input type="text" class="form-control" [(ngModel)]="pageModel.device.serverHost"
+                        placeholder="空白の場合、サーバで自動生成します" value="">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        接続サーバポート番号
+                      </label>
+                      <input type="text" class="form-control" [(ngModel)]="pageModel.device.serverPort"
+                        placeholder="空白の場合、サーバで自動生成します" value="">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                      <label for="inputMessage" class="control-label">
+                        バンディング済みフラグ
+                      </label>
+                      <select class="col-md-3 form-control" [(ngModel)]="pageModel.device.isBind">
+                        <option value="0">バンディングなし</option>
+                        <option value="1">バンディング済み</option>
+                      </select>
+                    </div>
+                    <br>
+                  </div>
+                </div>
+                <div class="form-body pal">
+                  <div class="form-actions text-center pal modifyBtn">
+                    <button class="btn btn-pink" (click)="registry()">登録</button>
+                    <a class="btn btn-orange" [routerLink]="[ '../list' ]">キャンセル</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--END デバイス個別新規-->
+
+    <!--BEGIN デバイス一括新規-->
+    <div class="tab-pane fade" id="multiple">
+      <i class="fa fa-arrow-circle-down" aria-hidden="true" (click)="downloadSampleFiles()"
+        style="cursor: pointer;">
+        サンプルファイルをダウンロード
+      </i>
+      <br><br>
+      <input class="" type="file" (click)="clearTarget($event)" (change)="changeTarget($event)">
+      <br>
+      <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
+        <thead>
+          <tr>
+            <th scope="col">no.</th>
+            <th scope="col">imei</th>
+            <th scope="col">iccid</th>
+            <th scope="col">imsi</th>
+            <th scope="col">uid</th>
+            <th scope="col">secMode</th>
+            <th scope="col">psk</th>
+            <th scope="col">host</th>
+            <th scope="col">port</th>
+            <th scope="col">bind</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pageModel.dataAll; let i = index;">
+            <td data-label="no.">{{i + 1}}</td>
+            <td data-label="imei">{{item.imei}}</td>
+            <td data-label="iccid">{{item.iccid}}</td>
+            <td data-label="imsi">{{item.imsi}}</td>
+            <td data-label="uid">{{item.uid}}</td>
+            <td data-label="secMode">{{item.securityMode}}</td>
+            <td data-label="psk">{{item.psk}}</td>
+            <td data-label="host">{{item.serverHost}}</td>
+            <td data-label="port">{{item.serverPort}}</td>
+            <td data-label="bind">{{item.isBind}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="form-body pal">
+        <div class="form-actions text-center pal modifyBtn">
+          <button class="btn btn-pink" (click)="registryAll()">一括登録</button>
+          <a class="btn btn-orange" [routerLink]="[ '../list' ]">キャンセル</a>
+        </div>
+      </div>
+    </div>
+    <!--END デバイス一括新規-->
+  </div>
+</div>

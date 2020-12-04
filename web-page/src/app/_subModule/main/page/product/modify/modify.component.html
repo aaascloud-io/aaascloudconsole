@@ -1,0 +1,194 @@
+<!--BEGIN CONTENT-->
+<div class="page-content" @bottom_flyIn>
+  <div id="tab-general">
+    <div id="sum_box" class="row mbl titleInfo">
+
+      <div class="col-md-12 col-xs-12">
+        <div class="panel panel-pink">
+          <div class="panel-heading">
+            プロダクト修正</div>
+          <div class="panel-body pan">
+
+            <div class="form-body pal">
+              <div class="form-group" style="color: darkred;">基本情報</div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <label for="inputMessage" class="control-label">
+                    プロダクト名
+                  </label>
+                  <input id="inputName" type="text" placeholder="プロダクト名" class="form-control"
+                    [(ngModel)]="pageModel.product.productname"></div>
+              </div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <label for="inputMessage" class="control-label">
+                    産業種類
+                  </label>
+                  <input id="inputName" type="text" name="inputName" placeholder=""
+                    [(ngModel)]="pageModel.product.industrytype" class="form-control" /></div>
+              </div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <label for="inputMessage" class="control-label">
+                    用途
+                  </label>
+                  <input id="inputName" type="text" name="inputName" placeholder=""
+                    [(ngModel)]="pageModel.product.application" class="form-control" /></div>
+              </div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <label for="inputMessage" class="control-label">
+                    所在地
+                  </label>
+                  <input id="inputEmail" type="text" placeholder="所在地" class="form-control"
+                    [(ngModel)]="pageModel.product.location"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputMessage" class="control-label">
+                  概要
+                </label>
+                <textarea rows="5" class="form-control" style="max-width: 100%;"
+                  [(ngModel)]="pageModel.product.summary"></textarea>
+              </div>
+
+              <div class="form-body pal">
+                <div class="form-group" style="color: darkred;">所属プロダクトのグループ</div>
+
+                <div class="panel panel-org" style="background:#FFF;">
+                  <div class="panel-heading nodeTable">グループリスト<span
+                      class="badge badge-yellow pull-right">{{pageModel.groups.length}}</span>
+
+                  </div>
+                  <div class="panel-body">
+
+                    <table class="table table-hover table-bordered" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th scope="col">NO</th>
+                          <th scope="col">グループID</th>
+                          <th scope="col">グループ名</th>
+                          <th scope="col">管理者</th>
+                          <th class="col-md-2" scope="col">操作</th>
+                        </tr>
+                      </thead>
+                      <tbody class="scrollBody">
+                        <tr style="cursor: pointer" *ngFor="let item of pageModel.groups;let i = index;">
+                          <td data-label="NO" class="active">{{i+1}}</td>
+                          <td data-label="グループID" class="active">{{item.groupid}}</td>
+                          <td data-label="グループ名" class="active">{{item.groupidname}}</td>
+                          <td data-label="管理者" class="active">{{item.makeruid}}</td>
+                          <td data-label="操作" class="active">
+                            <a style="margin: 0 10px;" data-toggle="modal" data-target="#updateGroupModal"
+                              (click)="selectGroupByGroupId(item.groupid)">修正</a>
+                            <a style="margin: 0 10px;" data-toggle="modal" data-target="#deleteGroupModal"
+                              (click)="deleteGroupSetId(item.groupid)">削除</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <page [(pagination)]="pagination" *ngIf="pageModel.groups.length>0"> </page>
+                    <div class="form-actions text-center pal modifyBtn">
+                      <a class="btn btn-pink" data-toggle="modal" data-target="#addGroupModal">グループ追加</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="alert alert-success" [hidden]="!pageModel.update_success">
+              <strong>成功!</strong> プロダクト更新成功.
+            </div>
+            <div class="form-body pal">
+              <div class="form-actions text-center pal modifyBtn">
+                <a class="btn btn-pink" (click)="updateProduct()">プロジェクト更新</a>
+                <a class="btn btn-blue" [routerLink]="[ '../list' ]">戻る</a>
+              </div>
+            </div>
+            <flash-messages></flash-messages>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- グループ追加Modal -->
+    <div class="modal fade" id="addGroupModal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <!--group STSRT-->
+            <div class="form-body pal">
+              <div class="form-group" style="color: darkred;">グループ基本情報</div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <i class="fa fa-paper-plane"></i>
+                  <input id="inputName" type="text" name="inputName" placeholder="グループ名"
+                    [(ngModel)]="pageModel.group.groupname" class="form-control" /></div>
+              </div>
+            </div>
+            <!--group END-->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="addGroup()">グループ追加</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- グループ追加Modal end-->
+    <!-- グループ更新Modal -->
+    <div class="modal fade" id="updateGroupModal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <!--group STSRT-->
+            <div class="form-body pal">
+              <div class="form-group" style="color: darkred;">グループ基本情報</div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <i class="fa fa-paper-plane"></i>
+                  <input id="inputName" type="text" name="inputName" placeholder="グループ名"
+                    [(ngModel)]="pageModel.group.groupname" class="form-control" /></div>
+              </div>
+            </div>
+            <!--group END-->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="updateGroup()">グループ更新</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- グループ更新Modal end-->
+    <!-- グループ削除Modal -->
+    <div class="modal fade" id="deleteGroupModal" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">ご注意ください.</h4>
+          </div>
+          <div class="modal-body">
+            <p>このグループを削除してもよろしいですか？</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="deleteGroup()">削除</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- グループ削除Modal end-->
+  </div>
+  <!--END CONTENT-->

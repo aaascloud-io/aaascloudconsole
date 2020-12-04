@@ -1,0 +1,56 @@
+<div class="page-form" [@left_flyIn] (keypress)="keyPress($event)">
+  <div class="panel panel-blue">
+    <div class="panel-body pan">
+      <form action="#" class="form-horizontal">
+        <div class="form-body pal">
+          <div class="form-group">
+            <div class="col-sm-12 text-center">
+              <h4>i-focus</h4>
+              <h4>NB-IoT プラットフォーム</h4>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputName" class="col-sm-3 control-label">ログインID:</label>
+            <div class="col-sm-9">
+              <div class="input-icon right">
+                <i class="fa fa-user"></i>
+                <input id="inputName" type="text" name="inputName" class="form-control" placeholder="" 
+                  [(ngModel)]="pageModel.user.username">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputPassword" class="col-sm-3 control-label">パスワード:</label>
+            <div class="col-sm-9">
+              <div class="input-icon right">
+                <i class="fa fa-lock"></i>
+                <input id="inputPassword" type="password" name="inputPassword" class="form-control" placeholder=""
+                  [(ngModel)]="pageModel.user.password">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">チェックコード:</label>
+            <div class="col-sm-9">
+              <div id="captcha-input" class="input-icon right float-left">
+                <i class="fa fa-lock"></i>
+                <input type="text" id="checkcode" name="checkcode" class="form-text" autocomplete="off" required 
+                  [(ngModel)]="pageModel.user.checkcode">
+              </div>
+              <div class="verifyDiv float-left" (click)="resetCheckCode()">
+                <canvas #myCanvas class="verifyCanvas"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="form-group mbn">
+            <div class="col-sm-12">
+              <div class="form-group mbn" style="text-align: right;">
+                <button id="login-button" type="button" class="btn btn-default" (click)="login()">ログイン</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

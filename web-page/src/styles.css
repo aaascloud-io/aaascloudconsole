@@ -1,0 +1,140 @@
+/* main.css の位置付けが不明だが、全体的なレイアウト関連はここで上書く */
+
+/* desktop */
+@media screen and (min-width: 768px) {
+
+  /* 全体的なサイズ系(ここはもう弄りたくない！) */
+  body {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    overflow-y: hidden !important;
+  }
+  #mainDiv {
+    width: 100% !important;
+    min-width: 1200px !important;
+    height: 100% !important;
+  }
+  #wrapper {
+    width: 100% !important;
+    height: calc(100% - 50px) !important;
+    min-height: unset !important;
+  }
+  #page-wrapper {
+    width: calc(100% - 250px) !important;
+    height: 100% !important;
+    min-height: unset !important;
+  }
+  .page-title-breadcrumb {
+    width: 100% !important;
+    height: 60px !important;
+    min-height: unset !important;
+  }
+  .page-content {
+    width: 100% !important;
+    height: calc(100% - 60px) !important;
+    min-height: unset !important;
+    overflow-y: scroll !important;
+  }
+
+  /* ここから個別のコンポーネント */
+  #list-table th {
+    background-color: #f8f8f8;
+  }
+}
+
+/* mobile and tablet */
+@media screen and (max-width: 767px) {
+
+  /* main.css 上書き */
+  .page-content {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  /* ここから個別のコンポーネント */
+
+  #list-table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  #list-table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+  }
+  #list-table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    text-align: right;
+  }
+  #list-table td::before {
+    content: attr(data-label);
+    float: left;
+  }
+  #list-table tr td:first-child {
+    position: unset;
+    background-color: #919191;
+    color: white;
+  }
+  /* Bootstrap 上書き */
+  #list-table tr td:first-child input {
+    margin: .6rem 0;
+  }
+}
+
+/* 全体的な設定 */
+
+/* main.css 上書き */
+.page-content {
+  padding: 1rem !important;
+}
+.page-form {
+  width: auto !important;
+  max-width: 650px !important;
+}
+.panel {
+  margin-bottom: 0 !important;
+}
+td a {
+  color: blue !important;
+  text-decoration: underline;
+}
+
+/* Bootstrap 上書き */
+.form-horizontal .form-group {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+th, td {
+  vertical-align: middle !important;
+}
+
+/* ここから個別のコンポーネント */
+
+/* Bootstrap上書き */
+#query-area .well {
+  padding: 1rem;
+}
+#query-area .form-group {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+#query-area label {
+  width: 10rem;
+}
+#query-area .form-control {
+  display: inline;
+  max-width: 40rem;
+}
+
+#list-area .loading {
+  width: 30px;
+  height: 30px;
+  margin: 10px 0;
+}

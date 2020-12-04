@@ -1,0 +1,6 @@
+.active{
+  background: #3e77ab;
+  transition: 0.2s all ease-in-out;
+  outline: none;
+  color: #FFF;
+}

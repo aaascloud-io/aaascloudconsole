@@ -1,0 +1,83 @@
+<!--BEGIN CONTENT-->
+<div class="page-content" @bottom_flyIn>
+  <div id="tab-general">
+    <div id="sum_box" class="row mbl titleInfo">
+
+      <div class="col-md-12 col-xs-12">
+        <div class="panel panel-orange">
+          <div class="panel-heading">
+            プロダクト新規</div>
+          <div class="panel-body pan">
+
+            <div class="form-body pal">
+              <div class="form-group" style="color: darkred;">基本情報</div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <i class="fa fa-paper-plane"></i>
+                  <input id="inputName" type="text" name="inputName" placeholder="プロダクト名"
+                    [(ngModel)]="pageModel.product.productname" class="form-control" /></div>
+              </div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <i class="fa fa-paper-plane"></i>
+                  <input id="inputName" type="text" name="inputName" placeholder="産業種類"
+                    [(ngModel)]="pageModel.product.industrytype" class="form-control" /></div>
+              </div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <i class="fa fa-paper-plane"></i>
+                  <input id="inputName" type="text" name="inputName" placeholder="用途"
+                    [(ngModel)]="pageModel.product.application" class="form-control" /></div>
+              </div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <i class="fa fa-map-marker"></i>
+                  <input id="inputEmail" type="text" placeholder="所在地" class="form-control"
+                    [(ngModel)]="pageModel.product.location"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputMessage" class="control-label">
+                  概要
+                </label>
+                <textarea rows="5" class="form-control" style="max-width: 100%;"
+                  [(ngModel)]="pageModel.product.summary"></textarea>
+              </div>
+
+            </div>
+            <div class="alert alert-success" [hidden]="!pageModel.insert_success">
+              <strong>成功!</strong> プロダクト登録成功.
+            </div>
+            <div class="form-body pal">
+              <div class="form-actions text-center pal">
+                <a class="btn btn-orange" (click)="insert()">プロダクト作成</a>
+                <a class="btn btn-blue" [routerLink]="[ '../list' ]">戻る</a>
+              </div>
+            </div>
+            <!--group STSRT-->
+            <div class="form-body pal" [hidden]="!pageModel.insert_success">
+              <div class="form-group" style="color: darkred;">グループ基本情報</div>
+              <div class="form-group">
+                <div class="input-icon right">
+                  <i class="fa fa-paper-plane"></i>
+                  <input id="inputName" type="text" name="inputName" placeholder="グループ名"
+                    [(ngModel)]="pageModel.group.groupname" class="form-control" /></div>
+              </div>
+              <div class="alert alert-success" [hidden]="!pageModel.group_insert_success">
+                <strong>成功!</strong> グループ登録成功.
+              </div>
+              <div class="form-body pal">
+                <div class="form-actions text-center pal">
+                  <a class="btn btn-orange" (click)="insertGroup()">グループ作成</a>
+                </div>
+              </div>
+            </div>
+            <flash-messages></flash-messages>
+          </div>
+          <!--group END-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--END CONTENT-->

@@ -1,0 +1,194 @@
+<!--BEGIN CONTENT-->
+<div class="page-content" @bottom_flyIn>
+  <div id="tab-general">
+    <div id="sum_box" class="row mbl titleInfo">
+
+      <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="panel task db mbm">
+          <div class="panel-body">
+            <p class="icon">
+              <i class="icon fa fa-user" style="color: #9351ad;"></i>
+            </p>
+            <h4 class="value" style="text-align: center;">
+              <span class="value-span">{{pageModel.userLength}}</span></h4>
+            <p class="description">ユーザー数</p>
+            <div class="progress progress-sm mbn">
+              <div role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"
+                class="progress-bar progress-bar-violet">
+                <span class="sr-only">100% Complete (success)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="panel task db mbm">
+          <div class="panel-body">
+            <p class="icon">
+              <i class="icon fa fa-user" style="color: #5bc0de;"></i>
+            </p>
+            <h4 class="value" style="text-align: center;">
+              <span class="value-span">{{pageModel.projectLength}}</span></h4>
+            <p class="description">プロジェクト</p>
+            <div class="progress progress-sm mbn">
+              <div role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"
+                class="progress-bar progress-bar-violet">
+                <span class="sr-only">100% Complete (success)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="panel profit db mbm">
+          <div class="panel-body">
+            <p class="icon">
+              <i class="icon fa fa-paper-plane" style="color: #d9534f;"></i>
+            </p>
+            <h4 class="value">
+              <span data-counter="" data-start="10" data-end="50" data-step="1" data-duration="0">
+              </span><span class="value-span">{{pageModel.productLength}}</span></h4>
+            <p class="description">プロダクト</p>
+            <div class="progress progress-sm mbn">
+              <div role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"
+                class="progress-bar progress-bar-pink">
+                <span class="sr-only">100% Complete (success)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="panel income db mbm">
+          <div class="panel-body">
+            <p class="icon">
+              <i class="icon fa fa-hdd-o" style="color: #0a819c;"></i>
+            </p>
+            <h4 class="value">
+              <code style="font-size: 5px;float: left;color: #5bc0de;">オンライン</code>
+              <code style="font-size: 5px;float: right;color: #5bc0de;">事前定義総数</code>
+              <span class="value-span">{{pageModel.deviceOnlLen}}/{{pageModel.deviceLen}}</span><span></span>
+            </h4>
+            <p class="description"> IoT デバイス数</p>
+            <div class="progress progress-sm mbn">
+              <div role="progressbar" aria-valuenow=pageModel.deviceOnlLenPer aria-valuemin="0" aria-valuemax="100"
+                [ngStyle]="{'width': pageModel.deviceOnlLenPer}" class="progress-bar progress-bar-info">
+                <span class="sr-only">{{pageModel.deviceOnlLenPer}} online</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="panel visit db mbm">
+          <div class="panel-body">
+            <p class="icon">
+              <i class="icon fa fa-bug" style="color: #f2994b;"></i>
+            </p>
+            <h4 class="value">
+              <span class="value-span">{{pageModel.deviceOutlLen}}</span></h4>
+            <p class="description">
+              エラー</p>
+            <div class="progress progress-sm mbn">
+              <div role="progressbar" aria-valuenow=pageModel.deviceOutlLenPer aria-valuemin="0" aria-valuemax="100"
+                [ngStyle]="{'width': pageModel.deviceOutlLenPer}" class="progress-bar progress-bar-warning">
+                <span class="sr-only">{{pageModel.deviceOutlLenPer}} Complete (success)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mbl">
+      <div class="col-lg-4 userList">
+        <div class="panel">
+          <div class="panel-body">
+            <div class="profile">
+              <div class="row">
+                <div class="col-xs-12 col-sm-12">
+
+                  <div class="list-group">
+                    <a class="list-group-item active">
+                      　ユーザー一覧
+                      <span class="badge badge-info pull-right">{{pageModel.superUserList.length}}</span>
+                    </a>
+                    <a class="list-group-item" *ngFor="let item of pageModel.superUserList;let i = index;">
+                      {{item.loginId}}          {{item.companyName}}<span class="badge badge-warning pull-right">{{item.companyName}}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8 grapList">
+        <div class="panel">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-4">
+                <h4 class="mbm"> プロダクト一覧</h4>
+                <div class="project-list">
+                  <a class="list-group-item" *ngFor="let item of pageModel.products;let i = index;">
+                    {{item.productId}}   {{item.productName}}<span class="badge badge-success pull-right">{{item.type}}</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mbl">
+
+      <div class="col-lg-4 projectInfo">
+      </div>
+
+      <div class="col-lg-8 alertList">
+        <div class="portlet box">
+          <div class="portlet-header" style="padding: 15px;">
+            <span class="badge badge-info pull-right">5</span>
+            <div class="caption">
+              エラーリスト
+
+            </div>
+          </div>
+          <div class="portlet-body">
+            <ul class="alertList-ul">
+              <li class="">
+                <div class="note note-danger li-div">
+                  <p><strong>プロダクト： </strong>トラッカー重機</p>
+                  <p>ssid : acd-00203011 のセンサーノートがタイムアウトしました</p>
+                </div>
+              </li>
+              <li class="">
+                <div class="note note-warning">
+                  <p><strong>プロダクト： </strong>トラッカー重機</p>
+                  <p>ssid : acd-00203012 のセンサーノートが端末バージョンアップデート失敗しました</p>
+                </div>
+              </li>
+              <li class="">
+                <div class="note note-warning">
+                  <p><strong>プロダクト： </strong>トラッカー重機</p>
+                  <p>ssid : acd-00203012 のセンサーノートが端末バージョンアップデート失敗しました</p>
+                </div>
+              </li>
+              <li class="">
+                <div class="note note-danger">
+                  <p><strong>プロダクト： </strong>トラッカー重機</p>
+                  <p>ssid : acd-00203013 のセンサーノートが省電力モートに戻れなくなりました</p>
+                </div>
+              </li>
+              <li class="">
+                <div class="note note-danger">
+                  <p><strong>プロダクト： </strong>トラッカー重機</p>
+                  <p>ssid : acd-00203014 のセンサーノートが電力不足のエラー出てきました</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--END CONTENT-->

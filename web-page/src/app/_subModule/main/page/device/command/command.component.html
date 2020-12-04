@@ -1,0 +1,58 @@
+<!--BEGIN CONTENT-->
+<div class="page-content">
+  <div id="tab-general">
+    <div id="sum_box" class="row mbl titleInfo">
+
+      <div class="col-md-12 col-xs-12">
+        <div class="panel panel-pink">
+          <div class="panel-heading">
+            命令放送</div>
+          <div class="panel-body pan">
+
+            <div class="form-body pal">
+              <span style="color: rgb(168, 164, 164);">デバイス名</span>
+              <br>
+              <span>{{deviceName}}</span>
+              <br>
+              <br>
+              <span style="color: rgb(168, 164, 164);">サーバー名</span>
+              <div class="input-group col-md-12 col-xs-12">
+                <select class="form-control" #subname>
+                  <option *ngFor="let subname of subnames" [id]="subname.id" [value]="subname.value">{{subname.value}}
+                </select>
+              </div>
+              <br>
+              <br>
+              <span style="color: rgb(168, 164, 164);">命令名</span><span style="color: rgb(250, 10, 10);">*</span>
+              <div class="input-group col-md-12 col-xs-12">
+                <select class="form-control" #commandname>
+                  <option *ngFor="let commandname of commandnames" [id]="commandname.id" [value]="commandname.value">
+                    {{commandname.value}}
+                </select>
+              </div>
+              <br>
+              <br>
+              <span style="color: rgb(168, 164, 164);">on_off</span><span
+                style="color: rgb(250, 10, 10);">*</span><span>整数の入力範囲「0,1」</span>
+              <br>
+              <input type="text" class="form-control" placeholder="" #command>
+              <br>
+
+            </div>
+
+          </div>
+
+          <div class="form-body pal">
+            <div class="form-actions text-left pal modifyBtn">
+              <a class="btn btn-pink" (click)="send(command.value,subname.value,commandname.value);">発送</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  <app-showcommand #showcommand></app-showcommand>
+</div>
+<!--END CONTENT-->

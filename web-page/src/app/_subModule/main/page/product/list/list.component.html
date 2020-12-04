@@ -1,0 +1,78 @@
+<!--BEGIN CONTENT-->
+<block-ui>
+  <div class="page-content" style="height: -webkit-fill-available;" @bottom_flyIn>
+    <div id="tab-general">
+      <div id="sum_box" class="row mbl titleInfo">
+
+        <div class="col-md-12 col-xs-12">
+          <div class="panel panel-grey">
+            <div class="panel-heading">プロダクト一覧</div>
+            <div class="panel-body">
+              <div class="col-md-12 col-xs-12" style="text-align: center;">
+                <a class="btn btn-green navbar-btn" [routerLink]="[ '../create' ]">新　規</a>
+              </div>
+              <table class="table table-hover table-bordered" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th class="col-md-1" scope="col">NO</th>
+                    <th class="col-md-2" scope="col">プロダクトID</th>
+                    <th class="col-md-2" scope="col">プロダクト名</th>
+                    <th class="col-md-1" scope="col">所在地</th>
+                    <th class="col-md-2" scope="col">概要</th>
+                    <th class="col-md-2" scope="col">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="cursor: pointer" *ngFor="let item of pageModel.productList;let i = index;">
+                    <td data-label="NO" class="active">{{i+1}}</td>
+                    <td data-label="プロダクトID" class="active">{{item.productid}}</td>
+                    <td data-label="プロダクト名" class="active">{{item.productname}}</td>
+                    <td data-label="所在地" class="active">{{item.location}}</td>
+                    <td data-label="概要" class="active"
+                      style="overflow: hidden; white-space: nowrap; text-overflow:ellipsis;">{{item.summary}}</td>
+                    <td data-label="操作" class="active">
+                      <a style="margin: 0 10px;" [routerLink]="[ '../detail' ]"
+                        [queryParams]="{productid:item.productid}">詳細</a>
+                      <a style="margin: 0 10px;" [routerLink]="[ '../modify' ]"
+                        [queryParams]="{productid:item.productid}">修正</a>
+                      <a style="margin: 0 10px;" data-toggle="modal" data-target="#deleteProductModal"
+                        (click)="deleteProductSetId(item.productid)">削除</a>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+              <page [(pagination)]="pagination" *ngIf="pageModel.productList.length>0"> </page>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    <!-- グループ削除Modal -->
+    <div class="modal fade" id="deleteProductModal" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">ご注意ください.</h4>
+          </div>
+          <div class="modal-body">
+            <p>このプロダクトを削除してもよろしいですか？</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="deleteProduct()">削除</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- グループ削除Modal end-->
+  </div>
+</block-ui>
+<!--END CONTENT-->

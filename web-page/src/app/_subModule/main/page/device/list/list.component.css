@@ -1,0 +1,72 @@
+/*
+@import '../../product/create/create.component.css';
+
+.panel-blue > .panel-body , .modalPanel > .panel-body{
+  max-height: 500px;
+  overflow-y: auto;
+}
+*/
+
+/*
+#detailNode .modal-dialog {
+  width: 60%;
+  margin-top: 5%;
+}
+*/
+
+/*
+.deviceInfoDiv{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+*/
+
+/*
+@media screen and (max-width: 991px) {
+  #detailNode .modal-dialog {
+    width: 90%;
+  }
+}
+*/
+
+
+/* desktop */
+@media screen and (min-width: 768px) {
+
+  #list-table td:nth-child(1),
+  #list-table th:nth-child(2),
+  #list-table td:nth-child(2) {
+    text-align: center;
+  }
+
+  #list-table th:nth-child(1) {
+    width: 4%;
+  }
+  #list-table th:nth-child(2) {
+    width: 6%;
+  }
+  #list-table th:nth-child(3) {
+    width: 18%;
+  }
+  #list-table th:nth-child(4) {
+    width: 22%;
+  }
+  #list-table th:nth-child(5) {
+    width: 23%;
+  }
+  #list-table th:nth-child(6) {
+    width: 15%;
+  }
+  #list-table th:nth-child(7) {
+    width: 12%;
+  }
+}
+
+/* mobile and tablet */
+@media screen and (max-width: 767px) {
+
+  /* style.css 上書き */
+  #list-table tr td:first-child {
+    text-align: left;
+  }
+}

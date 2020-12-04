@@ -1,0 +1,72 @@
+.alertList .portlet-body{
+  overflow: hidden;
+  height: 295px;
+}
+
+.alertList .alertList-ul{
+  overflow: auto;
+  list-style:none;
+  padding-left: 0px;
+  height: 270px;
+}
+
+.alertList .li-div{
+  margin: 0 0 10px 0;
+  padding: 8px 30px;
+}
+
+.userList .panel-body{
+  height: 345px;
+}
+
+.userList .profile{
+  display: inline;
+}
+
+.userList .row{
+  margin-bottom: 15px;
+}
+
+.userList .list-group{
+  height: 300px;
+  overflow-y:auto;
+}
+
+.grapList .panel-body{
+  height: 425px;
+}
+
+.grapList .project-list{
+  margin-top: 30px;
+  height: 330px;
+  overflow-y: auto;
+}
+
+.projectInfo .panel-body{
+  height: 425px;
+}
+
+.projectInfo .profile{
+  display: inline;
+}
+
+.projectInfo .row{
+  margin-bottom: 15px;
+}
+
+.titleInfo i{
+  font-size: 40px;
+}
+
+.titleInfo .value{
+  text-align: center;
+}
+
+.titleInfo .value-span{
+  font-size: 40px !important;
+  padding-left:40px;
+}
+
+.titleInfo .description{
+  text-align: left;
+}

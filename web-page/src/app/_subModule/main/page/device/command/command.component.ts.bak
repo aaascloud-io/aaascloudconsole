@@ -1,0 +1,59 @@
+import { Component, OnInit } from '@angular/core';
+
+import { ShowcommandService } from 'src/app/_shareModule/service/showcommand.service';
+import { HttpService } from 'src/app/_shareModule/service/HttpService';
+import { Select } from 'src/app/_common/_interface/select';
+
+export const SUBNAMES: Select[] = [
+  { id: '0', value: 'StreetLightBasic' },
+  { id: '1', value: 'ifocus' }
+];
+
+export const COMMANDNAMES: Select[] = [
+  { id: '0', value: 'SWITCH' },
+  { id: '1', value: 'UDP' }
+];
+
+@Component({
+  selector: 'app-command',
+  templateUrl: './command.component.html',
+  styleUrls: ['./command.component.css']
+})
+export class CommandComponent implements OnInit {
+  subnames = SUBNAMES;
+  commandnames = COMMANDNAMES;
+  constructor(private httpService:HttpService,private showcommandService: ShowcommandService) { }
+
+  ngOnInit() {
+  } 
+  /**
+   *  命令放送
+   * @param paras 
+   */
+  send(command: string,subname:string,commandName:string): void {
+    let commandForm = {
+      // 操作時間
+      command:command,
+      // requestHead
+      subname:subname,
+      // requestBody
+      commandName:commandName
+    };
+    this.httpService.usePost('pfApi/send',commandForm).then(data =>{
+      try{
+        try{
+          if(data.result){
+            // this.showcommandService.add(commandForm);
+            console.log('httpService ok');
+          }
+        }catch(e){
+          console.log(e);
+        }
+        
+      }catch(e){
+        console.log('httpService エラー　発生しました。');
+      }
+      
+    })
+  }
+}

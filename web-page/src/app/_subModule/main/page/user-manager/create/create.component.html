@@ -1,0 +1,110 @@
+<!--BEGIN CONTENT-->
+<div class="page-content" @bottom_flyIn>
+  <div id="tab-general">
+    <div id="sum_box" class="row mbl titleInfo">
+
+      <div class="col-md-12 col-xs-12">
+        <div class="panel panel-blue">
+          <div class="panel-heading">
+            ユーザー登録</div>
+          <div class="panel-body pan">
+
+            <div class="form-body pal">
+              <div class="form-group" style="color: darkred;">基本情報</div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  ログインID
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.loginid"
+                  (blur)="blurLonginid()">
+              </div>
+              <div class="alert alert-success" [hidden]="!pageModel.loginid_alert_success">
+                <strong>いいね!</strong> ログインIDは登録できます.
+              </div>
+              <div class="alert alert-warning" [hidden]="!pageModel.loginid_alert_warning">
+                <strong>警告!</strong> ログインIDを入力してください.
+              </div>
+              <div class="alert alert-danger" [hidden]="!pageModel.loginid_alert_danger">
+                <strong>危険!</strong> ログインIDは存在する、再入力してください.
+              </div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  パスワード
+                </label>
+                <input type="password" class="form-control" placeholder="" [(ngModel)]="pageModel.password"
+                  (blur)="blurPassword()">
+              </div>
+              <div class="alert alert-danger" [hidden]="!pageModel.password_alert_danger">
+                <strong>危険!</strong> パスワードを入力してください.
+              </div>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  パスワード確認
+                </label>
+                <input type="password" class="form-control" placeholder="" [(ngModel)]="pageModel.passwordConfirm"
+                  (blur)="blurPasswordConfirm()">
+              </div>
+              <div class="alert alert-success" [hidden]="!pageModel.passwordConfirm_alert_success">
+                <strong>いいね!</strong> パスワード確認同じ.
+              </div>
+              <div class="alert alert-warning" [hidden]="!pageModel.passwordConfirm_alert_warning">
+                <strong>警告!</strong> パスワード確認矛盾.
+              </div>
+              <div class="alert alert-danger" [hidden]="!pageModel.passwordConfirm_alert_danger">
+                <strong>危険!</strong> パスワード確認を入力してください..
+              </div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  会社
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.company">
+              </div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  アドレス
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.address">
+              </div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  メール
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.mail">
+              </div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  電話
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.tel">
+              </div>
+              <br>
+            </div>
+
+            <div class="form-body pal">
+              <div class="form-actions text-center pal">
+                <!-- <a class="btn btn-blue">戻る</a> -->
+                <button type="button" class="btn btn-success" (click)="registered()">登録</button>
+                <button type="button" class="btn btn-secondary" [routerLink]="[ '../list' ]">戻る</button>
+              </div>
+              <div class="alert alert-success" [hidden]="!pageModel.registered_success">
+                <strong>成功!</strong> 登録成功.
+              </div>
+              <div class="alert alert-danger" [hidden]="!pageModel.registered_danger">
+                <strong>失敗!</strong> 登録失敗.
+              </div>
+              <flash-messages></flash-messages>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--END CONTENT-->

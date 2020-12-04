@@ -1,0 +1,71 @@
+<!--BEGIN CONTENT-->
+<div class="page-content" @bottom_flyIn>
+  <div id="tab-general">
+    <div id="sum_box" class="row mbl titleInfo">
+
+      <div class="col-md-12 col-xs-12">
+        <div class="panel panel-blue">
+          <div class="panel-heading">
+            ユーザー更新</div>
+          <div class="panel-body pan">
+
+            <div class="form-body pal">
+              <div class="form-group" style="color: darkred;">基本情報</div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  パスワード
+                </label>
+                <input type="password" class="form-control" placeholder="" [(ngModel)]="pageModel.password">
+              </div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  会社
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.company">
+              </div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  アドレス
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.address">
+              </div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  メール
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.mail">
+              </div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  電話
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.tel">
+              </div>
+              <br>
+            </div>
+
+            <div class="form-body pal">
+              <div class="form-actions text-center pal">
+                <button type="button" class="btn btn-success" (click)="update()">更新</button>
+                <button type="button" class="btn btn-secondary" [routerLink]="[ '../list' ]">戻る</button>
+              </div>
+              <div class="alert alert-success" [hidden]="!pageModel.update_success">
+                <strong>成功!</strong> 更新成功.
+              </div>
+              <div class="alert alert-danger" [hidden]="!pageModel.update_danger">
+                <strong>失敗!</strong> 更新失敗.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--END CONTENT-->

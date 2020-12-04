@@ -1,0 +1,10 @@
+<div style="background:#000; color:#FFF" *ngIf="senddate != ''">
+  <span>Response Data</span>
+  <br>
+  <br>
+  <br>
+  <p style="color: rgb(114, 111, 111);">操作時間:{{senddate}} </p>
+  <p style="color: rgb(49, 151, 8);">メッセージヘッダ情報:{{header}} </p>
+  <p style="color: rgb(236, 142, 118);">メッセージボディ情報:{{body}}</p>
+  <button style="color:rgb(241, 11, 11)" (click)="clearcommand()">clear</button>
+</div>
