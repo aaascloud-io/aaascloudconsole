@@ -1,5 +1,6 @@
 package com.ifocus.aaascloud.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,9 @@ import net.sf.json.JSONObject;
 @Controller
 public class LoginController {
 
+	@Autowired
 	private Cloud_userService cloud_userService;
+	@Autowired
 	private Cloud_companyService cloud_companyService;
 
 	/**
