@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
@@ -32,18 +30,22 @@ public class LoginController {
 	@RequestMapping(value = "/getuser", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getLoginUser(@RequestBody String json) throws Exception {
+	///public BaseHttpResponse<String> getLoginUser(@RequestBody String json) throws Exception {
+	public BaseHttpResponse<String> getLoginUser(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
-
+//
 		JSONObject resJasonObj = new JSONObject();
+//
+//		ObjectMapper objectMapper = new ObjectMapper();
+//
+//		JsonNode rootNode = objectMapper.readValue(URLDecoder.decode(json, "UTF-8"), JsonNode.class);
 
-		ObjectMapper objectMapper = new ObjectMapper();
+//		String loginId = rootNode.get("loginid").asText();
+//		String password = rootNode.get("password").asText();
 
-		JsonNode rootNode = objectMapper.readValue(json, JsonNode.class);
-
-		String loginId = rootNode.get("loginId").asText();
-		String password = rootNode.get("password").asText();
+		String loginId = cloud_userModel.getLoginid();
+		String password = cloud_userModel.getPassword();
 
 		if (null != loginId && null != password) {
 
@@ -82,7 +84,7 @@ public class LoginController {
 
 		response.setStatus(200);
 		response.setData(resJasonObj.toString());
-	//	response.setHeader("Access-Control-Allow-Origin", "*");
+		//	response.setHeader("Access-Control-Allow-Origin", "*");
 		return response;
 	}
 }
