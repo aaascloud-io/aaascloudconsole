@@ -1,5 +1,6 @@
 package com.ifocus.aaascloud;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,11 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.ifocus.aaascloud.entity.Cloud_productEntity;
+import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.service.Cloud_companyService;
+import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_userService;
 
 import junit.framework.TestCase;
@@ -29,6 +33,11 @@ class AaascloudApplicationTests extends TestCase{
 
 	@Autowired
 	private Cloud_companyService cloud_companyService;
+	@Autowired
+	private Cloud_productService cloud_productService;
+
+	@Autowired
+	private Cloud_productRepository cloud_productRepository;
 
 
 	/*
@@ -111,4 +120,108 @@ class AaascloudApplicationTests extends TestCase{
 		assertEquals( model.getCompanyname(), "アイフォーカス");
 	}
 
+	/*
+	 * Cloud_productService
+	 * プロダクト一覧取得
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testgetProductAll() throws Exception {
+
+		List<Cloud_productEntity> list = cloud_productService.getProductAll();
+		assertEquals( list.size(), 3);
+	}
+
+	/*
+	 * Cloud_productService
+	 * プロダクト登録
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testregisterProduct() throws Exception {
+
+		Cloud_productEntity entity = new Cloud_productEntity();
+		entity.setProductcode("code004");
+		entity.setProductname("テスト用プロダクト");
+		entity.setModel("モデム");
+		entity.setVersion("Ver0001");
+		entity.setSimflag(1);
+		entity.setSummary("テスト");
+		entity.setAlive(0);
+		entity.setI_uid(111);
+		entity.setI_time(new Timestamp(System.currentTimeMillis()));
+		entity.setU_uid(111);
+		entity.setU_time(new Timestamp(System.currentTimeMillis()));
+
+
+		Cloud_productEntity inserted = cloud_productService.registerProduct(entity);
+		assertEquals( inserted.getProductcode(), entity.getProductcode());
+		assertEquals( inserted.getProductname(), entity.getProductname());
+		assertEquals( inserted.getModel(), entity.getModel());
+		assertEquals( inserted.getVersion(), entity.getVersion());
+	}
+
+	/*
+	 * Cloud_productService
+	 * プロダクト更新
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testregisterProductForUpdate() throws Exception {
+
+		Cloud_productEntity entity = new Cloud_productEntity();
+		entity.setProductid(4);
+		entity.setProductcode("code006");
+		entity.setProductname("テスト用プロダクト");
+		entity.setModel("モデム");
+		entity.setVersion("Ver0001");
+		entity.setSimflag(1);
+		entity.setSummary("テスト");
+		entity.setAlive(0);
+		entity.setI_uid(222);
+		entity.setI_time(new Timestamp(System.currentTimeMillis()));
+		entity.setU_uid(333);
+		entity.setU_time(new Timestamp(System.currentTimeMillis()));
+
+		/* 更新前のレコード */
+		Optional<Cloud_productEntity> before = cloud_productRepository.findById(4);
+
+
+		Cloud_productEntity updated = cloud_productService.registerProduct(entity);
+
+		/* 更新後のレコード */
+		Optional<Cloud_productEntity> after = cloud_productRepository.findById(4);
+
+		assertEquals( after.get().getProductcode(), entity.getProductcode());
+		assertEquals( after.get().getProductname(), entity.getProductname());
+		assertEquals( after.get().getModel(), entity.getModel());
+		assertEquals( after.get().getVersion(), entity.getVersion());
+		assertEquals( after.get().getSimflag(), entity.getSimflag());
+		assertEquals( after.get().getSummary(), entity.getSummary());
+		assertEquals( after.get().getU_uid(), entity.getU_uid());
+//		assertEquals( after.get().getU_time(), entity.getU_time());
+
+		/* 更新前のレコードの登録者と登録日時が変わっていないこと */
+		assertEquals( after.get().getI_uid(), before.get().getI_uid());
+		assertEquals( after.get().getI_time(), before.get().getI_time());
+	}
+
+	/*
+	 * Cloud_productService
+	 * プロダクト削除
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testdeleteProduct() throws Exception {
+
+		cloud_productService.deleteProduct(4);
+
+		Optional<Cloud_productEntity> entity = cloud_productRepository.findById(4);
+
+		assertEquals( entity.isEmpty(), true);
+	}
 }

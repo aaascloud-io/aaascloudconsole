@@ -57,32 +57,32 @@ public class LoginController {
 			if (model.getUserid() >= 0) {
 
 				// 管理者情報設定
-				resJasonObj.put("Userid", model.getUserid());
-				resJasonObj.put("Username", model.getUsername());
-				resJasonObj.put("Companyid", model.getCompanyid());
-				resJasonObj.put("Loginid", model.getLoginid());
-				resJasonObj.put("Role", model.getRole());
-				resJasonObj.put("Upperuserid", model.getUpperuserid());
+				resJasonObj.put("userid", model.getUserid());
+				resJasonObj.put("username", model.getUsername());
+				resJasonObj.put("companyid", model.getCompanyid());
+				resJasonObj.put("loginid", model.getLoginid());
+				resJasonObj.put("role", model.getRole());
+				resJasonObj.put("upperuserid", model.getUpperuserid());
 				// 会社情報取得
 				Cloud_companyModel cloud_companyModel = cloud_companyService.getCompanyInfo(model.getCompanyid());
 
 				// 会社情報設定
-				resJasonObj.put("Companyname", cloud_companyModel.getCompanyname());
-				resJasonObj.put("Address", cloud_companyModel.getAddress());
-				resJasonObj.put("Industry", cloud_companyModel.getIndustry());
-				resJasonObj.put("Mail", cloud_companyModel.getMail());
-				resJasonObj.put("Tel", cloud_companyModel.getTel());
-				resJasonObj.put("Fax", cloud_companyModel.getFax());
-				resJasonObj.put("Level", cloud_companyModel.getLevel());
+				resJasonObj.put("companyname", cloud_companyModel.getCompanyname());
+				resJasonObj.put("address", cloud_companyModel.getAddress());
+				resJasonObj.put("industry", cloud_companyModel.getIndustry());
+				resJasonObj.put("mail", cloud_companyModel.getMail());
+				resJasonObj.put("tel", cloud_companyModel.getTel());
+				resJasonObj.put("fax", cloud_companyModel.getFax());
+				resJasonObj.put("level", cloud_companyModel.getLevel());
 
-				resJasonObj.put("Result", true);
+				resJasonObj.put("result", true);
 
 			} else {
 
-				resJasonObj.put("Result", false);
+				resJasonObj.put("result", false);
 			}
 		} else {
-			resJasonObj.put("Result", false);
+			resJasonObj.put("result", false);
 		}
 
 		response.setStatus(200);
