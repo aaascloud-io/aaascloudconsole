@@ -72,7 +72,8 @@ public class Cloud_productController {
 
 	/**
 	 * プロダクトを登録する
-	 * @return
+	 * @param model Cloud_productModel
+	 * @return BaseHttpResponse<String>
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/registerProduct", method = RequestMethod.POST)
@@ -89,7 +90,7 @@ public class Cloud_productController {
 		if (insertedEntity == null) {
 			/* 異常系 */
 			response.setStatus(200);
-			response.setResultCode("0001");
+			response.setResultCode("0100");
 			response.setResultMsg("登録失敗。");
 		} else {
 
@@ -129,9 +130,139 @@ public class Cloud_productController {
 	}
 
 	/**
-	 * プロダクトを登録するためのEntity作成
-	 * @return Cloud_productEntity
+	 * プロダクトを更新する
+	 * @param model Cloud_productModel
+	 * @return BaseHttpResponse<String>
 	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> updateProduct(@RequestBody Cloud_productModel model) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		Cloud_productEntity updateEntity = getCloud_productEntity(model);
+
+		/* 更新するため、productidを設定する */
+		if (model.getProductid() == null) {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode("0001");
+			response.setResultMsg("パラメータ設定エラー：productid必須");
+			return response;
+		} else {
+			/* 更新するため、productidを設定する */
+			updateEntity.setProductid(model.getProductid());
+		}
+
+		Cloud_productEntity updatedEntity =  cloud_productService.registerProduct(updateEntity);
+
+		if (updatedEntity == null) {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode("0101");
+			response.setResultMsg("更新失敗。");
+		} else {
+
+			/* 正常系：正常時、一覧を取得して返す */
+			List<Cloud_productEntity> list = cloud_productService.getProductAll();
+
+			String responseData = new String();
+			List<JSONObject> returnList = new ArrayList();
+			for (Cloud_productEntity entity:list) {
+				if (returnList.isEmpty()) {
+					responseData = responseData + "[";
+				} else {
+					responseData = responseData + ",";
+				}
+				JSONObject resJasonObj = new JSONObject();
+				// 情報設定
+				resJasonObj.put("productid", entity.getProductid());
+				resJasonObj.put("productcode", entity.getProductcode());
+				resJasonObj.put("productname", entity.getProductname());
+				resJasonObj.put("model", entity.getModel());
+				resJasonObj.put("version", entity.getVersion());
+				resJasonObj.put("simflag", entity.getSimflag());
+				resJasonObj.put("summary", entity.getSummary());
+
+				returnList.add(resJasonObj);
+				responseData = responseData + resJasonObj.toString();
+
+			}
+			responseData = responseData + "]";
+
+			response.setStatus(200);
+			response.setResultCode("0000");
+			response.setCount(list.size());
+			response.setData(responseData);
+		}
+		return response;
+	}
+
+	/**
+	 * プロダクトを削除する
+	 * @param model Cloud_productModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/deleteProduct", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> deleteProduct(@RequestBody Cloud_productModel model) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		/* 削除するため、productidを設定する */
+		if (model.getProductid() == null) {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode("0001");
+			response.setResultMsg("パラメータ設定エラー：productid必須");
+			return response;
+		}
+		/* 削除する */
+		cloud_productService.deleteProduct(model.getProductid());
+
+
+		/* 正常系：正常時、一覧を取得して返す */
+		List<Cloud_productEntity> list = cloud_productService.getProductAll();
+
+		String responseData = new String();
+		List<JSONObject> returnList = new ArrayList();
+		for (Cloud_productEntity entity:list) {
+			if (returnList.isEmpty()) {
+				responseData = responseData + "[";
+			} else {
+				responseData = responseData + ",";
+			}
+			JSONObject resJasonObj = new JSONObject();
+			// 情報設定
+			resJasonObj.put("productid", entity.getProductid());
+			resJasonObj.put("productcode", entity.getProductcode());
+			resJasonObj.put("productname", entity.getProductname());
+			resJasonObj.put("model", entity.getModel());
+			resJasonObj.put("version", entity.getVersion());
+			resJasonObj.put("simflag", entity.getSimflag());
+			resJasonObj.put("summary", entity.getSummary());
+
+			returnList.add(resJasonObj);
+			responseData = responseData + resJasonObj.toString();
+
+		}
+		responseData = responseData + "]";
+
+		response.setStatus(200);
+		response.setResultCode("0000");
+		response.setCount(list.size());
+		response.setData(responseData);
+		return response;
+	}
+
+	/**
+	 * プロダクトを登録するためのEntity作成
+	 * @param model Cloud_productModel
+	 * @return Cloud_productEntity
 	 */
 	public Cloud_productEntity getCloud_productEntity(Cloud_productModel model) {
 		Cloud_productEntity entity = new Cloud_productEntity();
