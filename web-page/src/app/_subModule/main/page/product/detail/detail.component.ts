@@ -2,7 +2,7 @@ import { Component, OnInit, Output } from '@angular/core';
 import { bottom_flyIn } from 'src/app/_common/_animations/bottom_flyIn';
 import { ActivatedRoute } from '@angular/router';
 import { HttpService } from 'src/app/_shareModule/service/HttpService';
-import { loginUser } from 'src/app/_common/_interface/userInfo';
+import { UserInfo } from 'src/app/_common/_interface/userInfo';
 import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { Pagination } from '../../pagination/pagination';
@@ -28,7 +28,7 @@ export class DetailComponent implements OnInit {
     },
     groups: [],//groups
   }
-  loginuser: loginUser;
+  userInfo: UserInfo;
 
   constructor(private routerinfo: ActivatedRoute, private httpService: HttpService, private cookieService: CookieService) { }
 
@@ -36,9 +36,9 @@ export class DetailComponent implements OnInit {
   public pagination: Pagination = Pagination.defaultPagination;
   ngOnInit() {
     this.pagination.currentPage = 1;
-    this.loginuser = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
+    this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
     // プロダクトIDをリスト画面から取得された
-    this.getProductInfoApi(this.routerinfo.snapshot.queryParams["productid"])
+    this.getProductInfoApi(this.routerinfo.snapshot.queryParams)
   }
 
 

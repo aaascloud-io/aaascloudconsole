@@ -25,7 +25,7 @@ export class HttpService {
         return this._http.post(this.baseService.getPath(path),JSON.stringify(data),this.baseService.getHeader())
         .toPromise()
         .then((result : any) =>{
-            return JSON.parse(result.data);
+            return result;
         })
         .catch((err) => {
             if(err.status === 401 && err.error.result === false){
@@ -268,15 +268,16 @@ export class HttpService {
         return this.fetchFromKeycloak(formData);
     }
 
-    accessToken(username:string, password:string): Promise<any>{
-        var formData = "grant_type=password&client_id=" + ConstantsHandler.keycloak_client_id + "&username=" + username + "&password=" + password + "&client_secret=385935b8-85e3-41df-94b9-6365c5a39056";
+    accessToken(loginid:string, password:string): Promise<any>{
+        ///var formData = "grant_type=password&client_id=" + ConstantsHandler.keycloak_client_id + "&username=" + username + "&password=" + password + "&client_secret=385935b8-85e3-41df-94b9-6365c5a39056";
         // var formData = "grant_type=password&client_id=" + ConstantsHandler.keycloak_client_id + "&username=" + username + "&password=" + password + "&client_secret=385935b8-85e3-41df-94b9-6365c5a39056";
+        // var formData = "&loginid=" + username  + "&password=" + password ;
 
-        // var formData = {
-        //     loginId: 'admin',
-        //     password: 'zaq12wsx'
-        // };
-        return this.fetchFromKeycloak(formData);
+        var formData = {
+            loginid: loginid,
+            password: password
+            };
+        return this.fetchFromKeycloak(JSON.stringify(formData));
     }
     
     logout(): void{
@@ -289,11 +290,18 @@ export class HttpService {
 
     private fetchFromKeycloak(formData: string) {
         var obj = this;
-        var url = ConstantsHandler.keycloakServer + "v1.0/user/login";
-        // var url = ConstantsHandler.keycloakServer + "getuser";
-        return this._http.post(url, formData, {
-            headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8')
-        }).toPromise()
+        // var url = ConstantsHandler.keycloakServer + "v1.0/user/login";
+        var url = ConstantsHandler.keycloakServer +"getuser";
+        var options = {
+            headers: new HttpHeaders({
+            //TODO クライアント側が値をx-www-form-urlencodedで送信するときに使用します。(＠ModelAttribute)
+            //'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+            //TODO クライアント側が値をJSONで送信するときに使用します。(@RequestBody)
+            'Content-Type': 'application/json'
+            }),
+          };
+        return this._http.post(url, formData, options)
+            .toPromise()
             .then(function (res) {
                 // save token
                 ConstantsHandler.TOKEN.access_token = res["access_token"];
@@ -327,22 +335,16 @@ export class HttpService {
     processUserInfo(res: any): void{
         if(res){
             // save user info
-            var userInfo = res["userInfo"];
-            let temp = {
-                uid: userInfo.id,
-                login_id: userInfo.username,
-                uname: this.getString(userInfo.firstName) + " " +  this.getString(userInfo.lastName),
-                block: false,
-                permissions: res["permissions"],
-            }
-            if(userInfo["attributes"]){
-                if(userInfo["attributes"].block){
-                    temp.block = true;
-                }
-                if(userInfo["attributes"].uid instanceof Array){
-                    temp.uid = userInfo["attributes"].uid[0];
-                }
-            }
+            var userInfo = res["data"];
+            let temp = userInfo;
+            // if(userInfo["attributes"]){
+            //     if(userInfo["attributes"].block){
+            //         temp.block = true;
+            //     }
+            //     if(userInfo["attributes"].uid instanceof Array){
+            //         temp.userid = userInfo["attributes"].uid[0];
+            //     }
+            // }
             this.dataFatoryService.setLoginUser(temp);
 
             var timeout = new Date(new Date().getTime() + ConstantsHandler.GLOBAL_TOKEN.interval);

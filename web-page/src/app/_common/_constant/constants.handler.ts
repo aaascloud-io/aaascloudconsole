@@ -7,9 +7,9 @@ export class ConstantsHandler {
     // static bsServer = "http://localhost:8081";
     // static keycloakServer = "https://auth.trackun.jp/auth/realms/trackun/"
     // static keycloakServer = "https://auth.trackun.jp/"
-    static keycloakServer = "https://auth.aaascloud.io/"
+    // static keycloakServer = "https://auth.aaascloud.io/"
     // static keycloakServer = "http://192.168.0.195:8080/"
-    // static keycloakServer = "http://localhost:8080/auth/realms/trackun/"
+    static keycloakServer = "http://localhost:8080/"
     static keycloak_client_id = "trackun";
 
     static TOKEN = {
@@ -41,7 +41,7 @@ export class ConstantsHandler {
     static USER_TOKEN_INVALID = 'ユーザー安全認証トークンが無効になりました';
 
     // static environment = 'development179'; // products
-    static environment = 'development33'; //
+    static environment = 'products'; //
     static environmentCfg = {
         development: {
             protocal: 'http',
@@ -72,6 +72,12 @@ export class ConstantsHandler {
             host: 'localhost',
             port: '8080',
             root: 'pfweb.api',
+        },
+        products: {
+            protocal: 'http',
+            host: 'localhost',
+            port: '8080',
+            root: 'root',
         }
     };
 

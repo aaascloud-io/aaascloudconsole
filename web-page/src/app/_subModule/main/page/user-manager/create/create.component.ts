@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { bottom_flyIn } from "src/app/_common/_animations/bottom_flyIn";
 import { HttpService } from 'src/app/_shareModule/service/HttpService';
-import { loginUser } from 'src/app/_common/_interface/userInfo';
+import { UserInfo } from 'src/app/_common/_interface/userInfo';
 import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { FlashMessagesService } from 'angular2-flash-messages';
@@ -14,7 +14,7 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 })
 export class CreateComponent implements OnInit {
 
-  loginuser: loginUser
+  userInfo: UserInfo
   private pageModel = {
     loginid: '',
     loginid_alert_success: false,
@@ -47,9 +47,9 @@ export class CreateComponent implements OnInit {
 
   ngOnInit() {
     // ユーザー情報を取得する
-    // this.loginuser = this.dataFatoryService.getLoginUser();
-    this.loginuser = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
-    this.httpService.usePost('login/getProductsByUid', { "uid": this.loginuser.uid }).then(item => {
+    // this.userInfo = this.dataFatoryService.getuserInfo();
+    this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
+    this.httpService.usePost('login/getProductsByUid', { "userid": this.userInfo.userid }).then(item => {
       try {
         let jsonItem = typeof item == 'string' ? JSON.parse(item) : item;
         this.pageModel.prodects = jsonItem.products;
@@ -73,7 +73,7 @@ export class CreateComponent implements OnInit {
         this.pageModel.prodectIds.splice(index, 1);
       }
     }
-    this.httpService.usePost('login/getGroupsByUidAndPid', { "uid": this.loginuser.uid, "productid": productid }).then(item => {
+    this.httpService.usePost('login/getGroupsByUidAndPid', { "uid": this.userInfo.userid, "productid": productid }).then(item => {
       try {
         let jsonItem = typeof item == 'string' ? JSON.parse(item) : item;
         this.pageModel.groups = jsonItem.groups;
@@ -115,7 +115,7 @@ export class CreateComponent implements OnInit {
       this.pageModel.loginid_alert_warning = true;
       this.pageModel.loginid_alert_danger = false;
     } else {
-      // this.httpService.usePost('login/checkUserByLoginid', { "role": this.loginuser.role, "uid": this.loginuser.uid, "loginid": this.pageModel.loginid }).then(item => {
+      // this.httpService.usePost('login/checkUserByLoginid', { "role": this.userInfo.role, "uid": this.userInfo.uid, "loginid": this.pageModel.loginid }).then(item => {
       //   try {
       //     let jsonItem = typeof item == 'string' ? JSON.parse(item) : item;
       //     let count: Number = jsonItem.count;
@@ -158,9 +158,9 @@ export class CreateComponent implements OnInit {
 
       tel: this.pageModel.tel,
 
-      // role: this.loginuser.role.toString(),
+      // role: this.userInfo.role.toString(),
 
-      createdid: this.loginuser.uid,  // 作成者⇒登録ユーザー
+      createdid: this.userInfo.userid,  // 作成者⇒登録ユーザー
 
       productid: this.pageModel.prodectIds,
 
@@ -232,7 +232,7 @@ export class CreateComponent implements OnInit {
 
     } else {
       var obj = this;
-      // this.httpService.usePost('login/checkUserByLoginid', { "role": this.loginuser.role, "uid": this.loginuser.uid, "loginid": this.pageModel.loginid }).then(item => {
+      // this.httpService.usePost('login/checkUserByLoginid', { "role": this.userInfo.role, "uid": this.userInfo.uid, "loginid": this.pageModel.loginid }).then(item => {
       //   try {
       //     let jsonItem = typeof item == 'string' ? JSON.parse(item) : item;
       //     let count: Number = jsonItem.count;

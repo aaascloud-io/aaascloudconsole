@@ -1,7 +1,8 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { bottom_flyIn } from 'src/app/_common/_animations/bottom_flyIn';
 import { HttpService } from 'src/app/_shareModule/service/HttpService';
-import { loginUser } from 'src/app/_common/_interface/userInfo';
+import { DataFatoryService } from 'src/app/_shareModule/service/DataFatoryService';
+import { UserInfo } from 'src/app/_common/_interface/UserInfo';
 import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { Pagination } from '../../pagination/pagination';
@@ -15,19 +16,17 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 })
 export class ListComponent implements OnInit {
 
-  constructor(private httpService: HttpService, private cookieService: CookieService) { }
+  constructor(
+    private httpService: HttpService,
+    private cookieService: CookieService,
+    private　dataFatoryService: DataFatoryService
+  ) { }
 
   pageModel = {
     productid: '',
-    productList: [
-      {productid: '0000001', 
-      productname: 'faceII',
-      location: '東京',
-      summary: '顔識別、温度検査',
-    },
-    ]
+    productList: []
   }
-  loginuser: loginUser
+  userInfo: UserInfo
 
   @Output()
   public pagination: Pagination = Pagination.defaultPagination;
@@ -37,11 +36,13 @@ export class ListComponent implements OnInit {
     // this.blockUI.start('プロダクト検索中です。少々お待ちください。');
     this.pagination.currentPage = 1;
     // ユーザー情報を取得する
-    // this.loginuser = this.dataFatoryService.getLoginUser();
-    // this.loginuser = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
+    // this.userInfo = this.dataFatoryService.getLoginUser();
+
+
+    // this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
 
     // プロダクトリストを取得する
-    // this.getProjectListApi(this.loginuser.role);
+    this.getProjectList();
 
   }
 
@@ -74,27 +75,28 @@ export class ListComponent implements OnInit {
   }
 
   /**
-  * プロダクトリストを検索API
+  * プロダクトリストを検索
   */
-  private getProjectListApi(role: any): void {
-    this.httpService.usePost('product/getProductList', { "makeruid": this.loginuser.uid, "role": role }).then(item => {
+  private getProjectList(): void {
+    var res = this.httpService.usePost('getProductAll', {});
+    this.httpService.usePost('getProductAll', {}).then(item => {
       try {
-        if (item.result) {
-          this.blockUI.stop();
-          let jsonItem = typeof item == 'string' ? JSON.parse(item) : item;
-          // this.pageModel.productList = jsonItem.productList;
-          this.initList(jsonItem.productList);
+        if (item.resultCode === "0000") {
+          // this.blockUI.stop();
+          let jsonItemData = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
+          this.pageModel.productList = jsonItemData;
+          this.initList(jsonItemData);
 
           this.pagination.changePage = (() => {
-            this.initList(jsonItem.productList);
+            this.initList(jsonItemData);
           });
         } else {
           this.blockUI.stop();
-          console.log('ユーザーリストを検索API エラー　発生しました。');
+          console.log('プロダクトを検索 エラー　発生しました。');
         }
       } catch (e) {
         this.blockUI.stop();
-        console.log('ユーザーリストを検索API エラー　発生しました。', e);
+        console.log('プロダクトを検索 エラー　発生しました。', e);
       }
     })
   }

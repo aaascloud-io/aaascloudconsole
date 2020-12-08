@@ -51,14 +51,14 @@ export class LoginComponent extends AbstractComponent implements OnInit {
     if (flg) {
       try {
         ///認証
-        await this.httpService.accessToken(
+        var res = await this.httpService.accessToken(
           this.pageModel.user.username, 
           this.pageModel.user.password
         );
         ///権限チェック
-        await this.userService.authorized().toPromise();
+        // var res = await this.userService.authorized().toPromise();
         ///自身の情報取得
-        var res = await this.userService.getMyInfo().toPromise();
+        // var res = await this.userService.getMyInfo().toPromise();
         ///保存
         this.httpService.processUserInfo(res);
         ///画面遷移
