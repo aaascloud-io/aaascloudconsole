@@ -104,37 +104,10 @@ public class Cloud_productController {
 			response.setResultMsg("登録失敗:cloud_product");
 		} else {
 
-			/* 正常系：正常時、一覧を取得して返す */
-			List<Cloud_productEntity> list = cloud_productService.getProductAll();
-
-			String responseData = new String();
-			List<JSONObject> returnList = new ArrayList();
-			for (Cloud_productEntity entity:list) {
-				if (returnList.isEmpty()) {
-					responseData = responseData + "[";
-				} else {
-					responseData = responseData + ",";
-				}
-				JSONObject resJasonObj = new JSONObject();
-				// 情報設定
-				resJasonObj.put("productid", entity.getProductid());
-				resJasonObj.put("productcode", entity.getProductcode());
-				resJasonObj.put("productname", entity.getProductname());
-				resJasonObj.put("model", entity.getModel());
-				resJasonObj.put("version", entity.getVersion());
-				resJasonObj.put("simflag", entity.getSimflag());
-				resJasonObj.put("summary", entity.getSummary());
-
-				returnList.add(resJasonObj);
-				responseData = responseData + resJasonObj.toString();
-
-			}
-			responseData = responseData + "]";
-
+			/* 正常系 */
 			response.setStatus(200);
 			response.setResultCode("0000");
-			response.setCount(list.size());
-			response.setData(responseData);
+			response.setResultMsg("登録成功。");
 		}
 		return response;
 	}
@@ -172,40 +145,12 @@ public class Cloud_productController {
 			/* 異常系 */
 			response.setStatus(200);
 			response.setResultCode("0101");
-			response.setResultMsg("更新失敗。");
+			response.setResultMsg("更新失敗：cloud_product");
 		} else {
-
-			/* 正常系：正常時、一覧を取得して返す */
-			List<Cloud_productEntity> list = cloud_productService.getProductAll();
-
-			String responseData = new String();
-			List<JSONObject> returnList = new ArrayList();
-			for (Cloud_productEntity entity:list) {
-				if (returnList.isEmpty()) {
-					responseData = responseData + "[";
-				} else {
-					responseData = responseData + ",";
-				}
-				JSONObject resJasonObj = new JSONObject();
-				// 情報設定
-				resJasonObj.put("productid", entity.getProductid());
-				resJasonObj.put("productcode", entity.getProductcode());
-				resJasonObj.put("productname", entity.getProductname());
-				resJasonObj.put("model", entity.getModel());
-				resJasonObj.put("version", entity.getVersion());
-				resJasonObj.put("simflag", entity.getSimflag());
-				resJasonObj.put("summary", entity.getSummary());
-
-				returnList.add(resJasonObj);
-				responseData = responseData + resJasonObj.toString();
-
-			}
-			responseData = responseData + "]";
-
+			/* 正常系 */
 			response.setStatus(200);
 			response.setResultCode("0000");
-			response.setCount(list.size());
-			response.setData(responseData);
+			response.setResultMsg("更新成功。");
 		}
 		return response;
 	}
@@ -235,37 +180,10 @@ public class Cloud_productController {
 		cloud_productService.deleteProduct(model.getProductid());
 
 
-		/* 正常系：正常時、一覧を取得して返す */
-		List<Cloud_productEntity> list = cloud_productService.getProductAll();
-
-		String responseData = new String();
-		List<JSONObject> returnList = new ArrayList();
-		for (Cloud_productEntity entity:list) {
-			if (returnList.isEmpty()) {
-				responseData = responseData + "[";
-			} else {
-				responseData = responseData + ",";
-			}
-			JSONObject resJasonObj = new JSONObject();
-			// 情報設定
-			resJasonObj.put("productid", entity.getProductid());
-			resJasonObj.put("productcode", entity.getProductcode());
-			resJasonObj.put("productname", entity.getProductname());
-			resJasonObj.put("model", entity.getModel());
-			resJasonObj.put("version", entity.getVersion());
-			resJasonObj.put("simflag", entity.getSimflag());
-			resJasonObj.put("summary", entity.getSummary());
-
-			returnList.add(resJasonObj);
-			responseData = responseData + resJasonObj.toString();
-
-		}
-		responseData = responseData + "]";
-
+		/* 正常系 */
 		response.setStatus(200);
 		response.setResultCode("0000");
-		response.setCount(list.size());
-		response.setData(responseData);
+		response.setResultMsg("削除成功。");
 		return response;
 	}
 
