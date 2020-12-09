@@ -26,7 +26,7 @@ public class Cloud_productService {
 	 *
 	 *
 	 */
-	public List<Cloud_productEntity> getProductAll() {
+	public List<Cloud_productEntity> getProductAll() throws Exception {
 		List<Cloud_productEntity> returnList = new ArrayList();
 		Iterable<Cloud_productEntity> list = cloud_productRepository.findAll();
 		list.forEach(s -> returnList.add(s));
@@ -39,7 +39,7 @@ public class Cloud_productService {
 	 *
 	 *
 	 */
-	public Cloud_productEntity registerProduct(Cloud_productEntity entity) {
+	public Cloud_productEntity registerProduct(Cloud_productEntity entity) throws Exception {
 		Cloud_productEntity insertedEntity = cloud_productRepository.save(entity);
 		return insertedEntity;
 
@@ -50,7 +50,7 @@ public class Cloud_productService {
 	 *
 	 *
 	 */
-	public void deleteProduct(Integer productid) {
+	public void deleteProduct(Integer productid) throws Exception {
 		if (cloud_productRepository.existsById(productid)) {
 			cloud_productRepository.deleteById(productid);
 		}

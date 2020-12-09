@@ -37,7 +37,7 @@ public class Cloud_userService {
 	 *
 	 *
 	 */
-	public Cloud_userModel login(String loginid, String pswd) {
+	public Cloud_userModel login(String loginid, String pswd) throws Exception {
 		Cloud_userModel model = new Cloud_userModel();
 		model.setUserid(-1);
 		List<Cloud_userEntity> list = cloud_userRepository.searchByLoginidAndPassword(loginid, pswd);
@@ -60,7 +60,7 @@ public class Cloud_userService {
 	 *
 	 *
 	 */
-	public boolean isAncestor(Integer userid, Integer targetUserId) {
+	public boolean isAncestor(Integer userid, Integer targetUserId) throws Exception {
 		Optional<Cloud_userEntity> myEntity = cloud_userRepository.findById(targetUserId);
 		if (userid.equals(myEntity.get().getUpperuserid())) {
 			return true;
@@ -78,7 +78,7 @@ public class Cloud_userService {
 	 *
 	 *
 	 */
-	public List<Cloud_userModel> getSonUsers(Integer loginid) {
+	public List<Cloud_userModel> getSonUsers(Integer loginid) throws Exception {
 		List<Cloud_userModel> returnList = new ArrayList();
 		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(loginid);
 		if (list != null && list.size() == 1) {
@@ -110,7 +110,7 @@ public class Cloud_userService {
 	 *
 	 *
 	 */
-	public List<Cloud_userEntity> getCompanyUsers(Integer companyid) {
+	public List<Cloud_userEntity> getCompanyUsers(Integer companyid) throws Exception {
 		List<Cloud_userEntity> returnList = cloud_userRepository.getUsersByCompanyid(companyid);
 		return returnList;
 
@@ -122,7 +122,7 @@ public class Cloud_userService {
 	 * @param cloud_userModel Cloud_userModel
 	 * @return userid Integer
 	 */
-	public Integer registerSonUser(LoginInfo loginInfo, Cloud_userModel model) {
+	public Integer registerSonUser(LoginInfo loginInfo, Cloud_userModel model) throws Exception {
 
 		// 会社IDが設定していない場合、
 		if (model.getCompanyid() == null) {
@@ -185,7 +185,7 @@ public class Cloud_userService {
 	 * @param cloud_userModel Cloud_userModel
 	 * @return userid Integer
 	 */
-	public Integer updateSonUser(LoginInfo loginInfo, Cloud_userModel model) {
+	public Integer updateSonUser(LoginInfo loginInfo, Cloud_userModel model) throws Exception {
 
 
 		// 会社情報取得
@@ -270,7 +270,7 @@ public class Cloud_userService {
 	 * @param loginInfo LoginInfo
 	 * @param cloud_userModel Cloud_userModel
 	 */
-	public void deleteSonUser(LoginInfo loginInfo, Cloud_userModel model) {
+	public void deleteSonUser(LoginInfo loginInfo, Cloud_userModel model) throws Exception {
 
 		if (cloud_userRepository.existsById(model.getUserid())) {
 			cloud_userRepository.deleteById(model.getUserid());
