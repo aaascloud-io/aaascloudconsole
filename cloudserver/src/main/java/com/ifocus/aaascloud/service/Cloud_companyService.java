@@ -63,4 +63,34 @@ public class Cloud_companyService {
 		return model;
 
 	}
+
+	/*
+	 * 会社更新
+	 *
+	 */
+	public Cloud_companyModel updateCompany(Cloud_companyEntity entity) {
+		Cloud_companyModel model = new Cloud_companyModel();
+		Cloud_companyEntity updatedEntity = cloud_companyRepository.save(entity);
+		if (updatedEntity != null ) {
+			model.setCompanyid(updatedEntity.getCompanyid());
+			model.setCorporatenumber(updatedEntity.getCorporatenumber());
+			model.setCompanyname(updatedEntity.getCompanyname());
+			model.setAddress(updatedEntity.getAddress());
+			model.setIndustry(updatedEntity.getIndustry());
+			model.setMail(updatedEntity.getMail());
+			model.setTel(updatedEntity.getTel());
+			model.setFax(updatedEntity.getFax());
+			model.setLevel(updatedEntity.getLevel());
+		}
+		return model;
+
+	}
+
+	/*
+	 * 会社削除
+	 *
+	 */
+	public void deleteCompany(Cloud_companyEntity entity) {
+		cloud_companyRepository.deleteById(entity.getCompanyid());
+	}
 }
