@@ -30,7 +30,7 @@ public class LoginController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getuser", method = RequestMethod.POST)
+	@RequestMapping(value = "/getuser", method = RequestMethod.GET)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
 	///public BaseHttpResponse<String> getLoginUser(@RequestBody String json) throws Exception {
