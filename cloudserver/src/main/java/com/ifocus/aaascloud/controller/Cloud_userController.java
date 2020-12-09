@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
+import com.ifocus.aaascloud.entity.Cloud_companyEntity;
+import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.service.Cloud_companyService;
@@ -114,6 +116,15 @@ public class Cloud_userController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		// admin権限以外の場合、
+		if (1 != loginInfo.getLoginrole() ) {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode("0002");
+			response.setResultMsg("登録権限なし:admin権限が必要。");
+			return response;
+		}
+
 		Integer registeredUserid = cloud_userService.registerSonUser(loginInfo,cloud_userModel);
 
 		if (null != registeredUserid ) {
@@ -127,6 +138,79 @@ public class Cloud_userController {
 			response.setResultCode("0100");
 			response.setResultMsg("登録失敗:cloud_user");
 		}
+
+		return response;
+	}
+
+	/**
+	 * ユーザを更新する
+	 * @param loginInfo LoginInfo
+	 * @param cloud_userModel Cloud_userModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> updateUser(@RequestBody LoginInfo loginInfo,Cloud_userModel cloud_userModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		Integer registeredUserid = cloud_userService.updateSonUser(loginInfo,cloud_userModel);
+
+		if (null != registeredUserid ) {
+			/* 正常系 */
+			response.setStatus(200);
+			response.setResultCode("0000");
+			response.setResultMsg("更新成功。");
+		} else {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode("0100");
+			response.setResultMsg("更新失敗:cloud_user");
+		}
+		return response;
+	}
+
+	/**
+	 * ユーザを削除する
+	 * @param loginInfo LoginInfo
+	 * @param cloud_userModel Cloud_userModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> deleteUser(@RequestBody LoginInfo loginInfo,Cloud_userModel cloud_userModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		// プロジェクトがある場合、削除しないこと。ToDo
+//		if () {
+//			response.setStatus(200);
+//			response.setResultCode("0003");
+//			response.setResultMsg("プロジェクトがある。プロジェクトを削除してから再実施してください。");
+//			return response;
+//		}
+
+		// 会社ユーザ一覧取得
+		List<Cloud_userEntity> entiyList = cloud_userService.getCompanyUsers(cloud_userModel.getCompanyid());
+
+		// 会社の最後のユーザになった場合、会社も削除する。
+		if (entiyList.size() == 1) {
+			Cloud_companyEntity cloud_companyEntity = new Cloud_companyEntity();
+			cloud_companyEntity.setCompanyid(cloud_userModel.getCompanyid());
+			// 会社を削除する
+			cloud_companyService.deleteCompany(cloud_companyEntity);
+		}
+
+		// ユーザを削除する
+		cloud_userService.deleteSonUser(loginInfo,cloud_userModel);
+
+		response.setStatus(200);
+		response.setResultCode("0000");
+		response.setResultMsg("削除成功。");
 
 		return response;
 	}
