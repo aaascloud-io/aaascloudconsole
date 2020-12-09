@@ -2,154 +2,82 @@ package com.ifocus.aaascloud.model;
 
 import java.sql.Timestamp;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class Cloud_userModel {
+
+	// 検索対象
+	@Getter
+	@Setter
+	private Integer targetuserid;
+
 	// 管理者情報
+	@Getter
+	@Setter
 	private Integer userid;
+	@Getter
+	@Setter
 	private Integer companyid;
+	@Getter
+	@Setter
 	private String username;
+	@Getter
+	@Setter
 	private String loginid;
+	@Getter
+	@Setter
 	private String password;
+	@Getter
+	@Setter
 	private Integer role;
+	@Getter
+	@Setter
 	private Integer upperuserid;
+	@Getter
+	@Setter
 	private Integer alive;
+	@Getter
+	@Setter
 	private Integer i_uid;
+	@Getter
+	@Setter
 	private Timestamp i_time;
+	@Getter
+	@Setter
 	private Integer u_uid;
+	@Getter
+	@Setter
 	private Timestamp u_time;
+
 	// 会社情報
+	@Getter
+	@Setter
+	private String corporatenumber;
+	@Getter
+	@Setter
 	private String companyName;
+	@Getter
+	@Setter
 	private String address;
+	@Getter
+	@Setter
 	private String industry;
+	@Getter
+	@Setter
 	private String mail;
+	@Getter
+	@Setter
 	private String tel;
+	@Getter
+	@Setter
 	private String fax;
+	@Getter
+	@Setter
 	private Integer level;
+	// デバイス数
+	@Getter
+	@Setter
+	private Integer devicecount;
 
-
-
-	public Integer getUserid() {
-		return userid;
-	}
-	public void setUserid(Integer userid) {
-		this.userid = userid;
-	}
-
-	public Integer getCompanyid() {
-		return companyid;
-	}
-	public void setCompanyid(Integer companyid) {
-		this.companyid = companyid;
-	}
-
-	public String getLoginid() {
-		return loginid;
-	}
-	public void setLoginid(String loginid) {
-		this.loginid = loginid;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Integer getRole() {
-		return role;
-	}
-	public void setRole(Integer role) {
-		this.role = role;
-	}
-
-	public Integer getUpperuserid() {
-		return upperuserid;
-	}
-	public void setUpperuserid(Integer upperuserid) {
-		this.upperuserid = upperuserid;
-	}
-
-	public Integer getAlive() {
-		return alive;
-	}
-	public void setAlive(Integer alive) {
-		this.alive = alive;
-	}
-
-	public Integer getI_uid() {
-		return i_uid;
-	}
-	public void setI_uid(Integer i_uid) {
-		this.i_uid = i_uid;
-	}
-
-	public Timestamp getI_time() {
-		return i_time;
-	}
-	public void setI_time(Timestamp i_time) {
-		this.i_time = i_time;
-	}
-
-	public Integer getU_uid() {
-		return u_uid;
-	}
-	public void setU_uid(Integer u_uid) {
-		this.u_uid = u_uid;
-	}
-
-	public Timestamp getU_time() {
-		return u_time;
-	}
-	public void setU_time(Timestamp u_time) {
-		this.u_time = u_time;
-	}
-	public String getCompanyName() {
-		return companyName;
-	}
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public String getIndustry() {
-		return industry;
-	}
-	public void setIndustry(String industry) {
-		this.industry = industry;
-	}
-	public String getMail() {
-		return mail;
-	}
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-	public String getTel() {
-		return tel;
-	}
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
-	public String getFax() {
-		return fax;
-	}
-	public void setFax(String fax) {
-		this.fax = fax;
-	}
-	public Integer getLevel() {
-		return level;
-	}
-	public void setLevel(Integer level) {
-		this.level = level;
-	}
 }
