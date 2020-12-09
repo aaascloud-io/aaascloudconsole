@@ -21,6 +21,10 @@ public class Cloud_companyService {
 	@Autowired
 	private Cloud_companyRepository cloud_companyRepository ;
 
+	/*
+	 * 会社情報取得
+	 *
+	 */
 	public Cloud_companyModel getCompanyInfo(Integer companyid) {
 		Cloud_companyModel model = new Cloud_companyModel();
 		Optional<Cloud_companyEntity> entity = cloud_companyRepository.findById(companyid);
@@ -38,4 +42,25 @@ public class Cloud_companyService {
 
 	}
 
+	/*
+	 * 会社登録
+	 *
+	 */
+	public Cloud_companyModel registerCompany(Cloud_companyEntity entity) {
+		Cloud_companyModel model = new Cloud_companyModel();
+		Cloud_companyEntity insertedEntity = cloud_companyRepository.save(entity);
+		if (insertedEntity != null ) {
+			model.setCompanyid(insertedEntity.getCompanyid());
+			model.setCorporatenumber(insertedEntity.getCorporatenumber());
+			model.setCompanyname(insertedEntity.getCompanyname());
+			model.setAddress(insertedEntity.getAddress());
+			model.setIndustry(insertedEntity.getIndustry());
+			model.setMail(insertedEntity.getMail());
+			model.setTel(insertedEntity.getTel());
+			model.setFax(insertedEntity.getFax());
+			model.setLevel(insertedEntity.getLevel());
+		}
+		return model;
+
+	}
 }
