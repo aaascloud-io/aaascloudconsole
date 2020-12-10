@@ -37,4 +37,12 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	@Autowired
 	public List<Cloud_userEntity> getParentUserByUpperuserid(@Param("upperuserid") Integer upperuserid);
 
+	/*
+	 * 会社ユーザ一覧
+	 *
+	 *
+	 */
+	@Query("SELECT c FROM cloud_user c WHERE c.companyid = :companyid")
+	@Autowired
+	public List<Cloud_userEntity> getUsersByCompanyid(@Param("companyid") Integer companyid);
 }

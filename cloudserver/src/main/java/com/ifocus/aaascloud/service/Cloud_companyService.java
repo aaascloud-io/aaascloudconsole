@@ -25,7 +25,7 @@ public class Cloud_companyService {
 	 * 会社情報取得
 	 *
 	 */
-	public Cloud_companyModel getCompanyInfo(Integer companyid) {
+	public Cloud_companyModel getCompanyInfo(Integer companyid) throws Exception {
 		Cloud_companyModel model = new Cloud_companyModel();
 		Optional<Cloud_companyEntity> entity = cloud_companyRepository.findById(companyid);
 		if (entity != null ) {
@@ -46,7 +46,7 @@ public class Cloud_companyService {
 	 * 会社登録
 	 *
 	 */
-	public Cloud_companyModel registerCompany(Cloud_companyEntity entity) {
+	public Cloud_companyModel registerCompany(Cloud_companyEntity entity) throws Exception {
 		Cloud_companyModel model = new Cloud_companyModel();
 		Cloud_companyEntity insertedEntity = cloud_companyRepository.save(entity);
 		if (insertedEntity != null ) {
@@ -62,5 +62,35 @@ public class Cloud_companyService {
 		}
 		return model;
 
+	}
+
+	/*
+	 * 会社更新
+	 *
+	 */
+	public Cloud_companyModel updateCompany(Cloud_companyEntity entity) throws Exception {
+		Cloud_companyModel model = new Cloud_companyModel();
+		Cloud_companyEntity updatedEntity = cloud_companyRepository.save(entity);
+		if (updatedEntity != null ) {
+			model.setCompanyid(updatedEntity.getCompanyid());
+			model.setCorporatenumber(updatedEntity.getCorporatenumber());
+			model.setCompanyname(updatedEntity.getCompanyname());
+			model.setAddress(updatedEntity.getAddress());
+			model.setIndustry(updatedEntity.getIndustry());
+			model.setMail(updatedEntity.getMail());
+			model.setTel(updatedEntity.getTel());
+			model.setFax(updatedEntity.getFax());
+			model.setLevel(updatedEntity.getLevel());
+		}
+		return model;
+
+	}
+
+	/*
+	 * 会社削除
+	 *
+	 */
+	public void deleteCompany(Cloud_companyEntity entity) throws Exception {
+		cloud_companyRepository.deleteById(entity.getCompanyid());
 	}
 }
