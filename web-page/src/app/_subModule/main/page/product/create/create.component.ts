@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { bottom_flyIn } from "../../../../../_common/_animations/bottom_flyIn";
 import { HttpService } from 'src/app/_shareModule/service/HttpService';
-import { loginUser } from 'src/app/_common/_interface/userInfo';
+import { UserInfo } from 'src/app/_common/_interface/userInfo';
 import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { FlashMessagesService } from 'angular2-flash-messages';
@@ -20,7 +20,7 @@ export class CreateComponent implements OnInit {
       application: '',
       location: '',
       summary: '',
-      makeruid: ''
+      makeruid: 0
     },
     insert_success: false,
     group: {
@@ -29,15 +29,15 @@ export class CreateComponent implements OnInit {
     },
     group_insert_success: false,
   }
-  loginuser: loginUser;
+  userInfo: UserInfo;
   constructor(private httpService: HttpService, private cookieService: CookieService, private _flashMessagesService: FlashMessagesService) { }
 
   ngOnInit() {
     // ユーザー情報を取得する
-    this.loginuser = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
+    this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
 
     // 作成者取得
-    this.pageModel.product.makeruid = this.loginuser.uid
+    this.pageModel.product.makeruid = this.userInfo.userid
   }
 
 
@@ -61,7 +61,7 @@ export class CreateComponent implements OnInit {
       application: product.application,// 用途
       location: product.location,//所在地
       summary: product.summary,//概要
-      makeruid: this.loginuser.uid//作成者
+      makeruid: this.userInfo.userid//作成者
     }
     this.httpService.usePost('product/insertProduct', paramReq).then(item => {
       try {
@@ -86,7 +86,7 @@ export class CreateComponent implements OnInit {
     }
     let paramReq = {
       productid: this.pageModel.group.productid,//プロダクトid
-      makeruid: this.loginuser.uid,//作成者
+      makeruid: this.userInfo.userid,//作成者
       groupidname: this.pageModel.group.groupname,// グループ名
     }
     this.httpService.usePost('product/insertGroup', paramReq).then(item => {

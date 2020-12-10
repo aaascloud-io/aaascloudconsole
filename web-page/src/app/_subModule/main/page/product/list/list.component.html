@@ -42,9 +42,9 @@
                       style="overflow: hidden; white-space: nowrap; text-overflow:ellipsis;">{{item.summary}}</td> -->
                     <td data-label="操作" class="active">
                       <a style="margin: 0 10px;" [routerLink]="[ '../detail' ]"
-                        [queryParams]="{item}">詳細</a>
+                        [queryParams]="{productid:item.productid}">詳細</a>
                       <a style="margin: 0 10px;" [routerLink]="[ '../modify' ]"
-                        [queryParams]="{item}">修正</a>
+                        [queryParams]="{productid:item.productid}">修正</a>
                       <a style="margin: 0 10px;" data-toggle="modal" data-target="#deleteProductModal"
                         (click)="deleteProductSetId(item.productid)">削除</a>
                     </td>

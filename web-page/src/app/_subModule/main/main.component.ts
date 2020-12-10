@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { SubjectService } from '../../_shareModule/service/SubjectService';
 import { DataFatoryService } from 'src/app/_shareModule/service/DataFatoryService';
-import { UserInfo, loginUser } from 'src/app/_common/_interface/userInfo';
+import { UserInfo } from 'src/app/_common/_interface/userInfo';
 import { Subscription } from 'rxjs';
 import { MenuHandler } from '../../_common/_constant/menu.handler';
 import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
@@ -29,7 +29,7 @@ export class MainComponent implements OnInit {
     company: '',
     uname: ""
   }
-  loginuser: loginUser;
+  userInfo: UserInfo;
 
   constructor(private dataFatoryService: DataFatoryService,
     private router: Router,
@@ -39,7 +39,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     //userInfoを取得する
-    this.loginuser = this.dataFatoryService.getLoginUser();
+    this.userInfo = this.dataFatoryService.getLoginUser();
 
     ///cookieが利用できない時の対応追加
     ///let userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));

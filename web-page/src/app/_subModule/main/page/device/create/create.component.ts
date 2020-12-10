@@ -2,7 +2,7 @@ import { Component, OnInit, Injector } from '@angular/core';
 import * as XLSX from 'xlsx';
 
 import { bottom_flyIn } from '@common/_animations/bottom_flyIn';
-import { loginUser } from '@common/_interface/userInfo';
+import { UserInfo } from '@common/_interface/userInfo';
 import { Logger } from '@utils/logger';
 import { DataFatoryService } from '@service/DataFatoryService';
 import { UserService } from '@service/UserService';
