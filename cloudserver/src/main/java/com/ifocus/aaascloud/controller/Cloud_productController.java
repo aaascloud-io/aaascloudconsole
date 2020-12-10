@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
-import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.model.LoginInfo;
@@ -32,7 +31,7 @@ public class Cloud_productController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getProductAll", method = RequestMethod.GET)
+	@RequestMapping(value = "/getProductAll", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
 	public BaseHttpResponse<String> getProductAll(LoginInfo loginInfo) throws Exception {
@@ -42,49 +41,42 @@ public class Cloud_productController {
 		// 権限チェック
 		if (!loginInfo.getLogincompanyid().equals(1)) {
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			response.setResultCode("0002");
+			response.setResultMsg("権限なし：i-focusのadmin権限が必須です。");
 			return response;
 
 		}
-		try {
-			List<Cloud_productEntity> list = cloud_productService.getProductAll();
 
-			String responseData = new String();
-			List<JSONObject> returnList = new ArrayList();
-			for (Cloud_productEntity entity:list) {
-				if (returnList.isEmpty()) {
-					responseData = responseData + "[";
-				} else {
-					responseData = responseData + ",";
-				}
-				JSONObject resJasonObj = new JSONObject();
-				// 情報設定
-				resJasonObj.put("productid", entity.getProductid());
-				resJasonObj.put("productcode", entity.getProductcode());
-				resJasonObj.put("productname", entity.getProductname());
-				resJasonObj.put("model", entity.getModel());
-				resJasonObj.put("version", entity.getVersion());
-				resJasonObj.put("simflag", entity.getSimflag());
-				resJasonObj.put("summary", entity.getSummary());
+		List<Cloud_productEntity> list = cloud_productService.getProductAll();
 
-				returnList.add(resJasonObj);
-				responseData = responseData + resJasonObj.toString();
-
+		String responseData = new String();
+		List<JSONObject> returnList = new ArrayList();
+		for (Cloud_productEntity entity:list) {
+			if (returnList.isEmpty()) {
+				responseData = responseData + "[";
+			} else {
+				responseData = responseData + ",";
 			}
-			responseData = responseData + "]";
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-			response.setCount(list.size());
-			response.setData(responseData);
+			JSONObject resJasonObj = new JSONObject();
+			// 情報設定
+			resJasonObj.put("productid", entity.getProductid());
+			resJasonObj.put("productcode", entity.getProductcode());
+			resJasonObj.put("productname", entity.getProductname());
+			resJasonObj.put("model", entity.getModel());
+			resJasonObj.put("version", entity.getVersion());
+			resJasonObj.put("simflag", entity.getSimflag());
+			resJasonObj.put("summary", entity.getSummary());
 
-		} catch( Exception e) {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0004);
+			returnList.add(resJasonObj);
+			responseData = responseData + resJasonObj.toString();
+
 		}
+		responseData = responseData + "]";
 
+		response.setStatus(200);
+		response.setResultCode("0000");
+		response.setCount(list.size());
+		response.setData(responseData);
 		return response;
 	}
 
@@ -108,14 +100,14 @@ public class Cloud_productController {
 		if (insertedEntity == null) {
 			/* 異常系 */
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0100);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_product");
+			response.setResultCode("0100");
+			response.setResultMsg("登録失敗:cloud_product");
 		} else {
 
 			/* 正常系 */
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			response.setResultCode("0000");
+			response.setResultMsg("登録成功。");
 		}
 		return response;
 	}
@@ -139,8 +131,8 @@ public class Cloud_productController {
 		if (model.getProductid() == null) {
 			/* 異常系 */
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "productid必須");
+			response.setResultCode("0001");
+			response.setResultMsg("パラメータ設定エラー：productid必須");
 			return response;
 		} else {
 			/* 更新するため、productidを設定する */
@@ -152,13 +144,13 @@ public class Cloud_productController {
 		if (updatedEntity == null) {
 			/* 異常系 */
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0101);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0101 + "cloud_product");
+			response.setResultCode("0101");
+			response.setResultMsg("更新失敗：cloud_product");
 		} else {
 			/* 正常系 */
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			response.setResultCode("0000");
+			response.setResultMsg("更新成功。");
 		}
 		return response;
 	}
@@ -180,8 +172,8 @@ public class Cloud_productController {
 		if (model.getProductid() == null) {
 			/* 異常系 */
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "productid必須");
+			response.setResultCode("0001");
+			response.setResultMsg("パラメータ設定エラー：productid必須");
 			return response;
 		}
 		/* 削除する */
@@ -190,8 +182,8 @@ public class Cloud_productController {
 
 		/* 正常系 */
 		response.setStatus(200);
-		response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-		response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+		response.setResultCode("0000");
+		response.setResultMsg("削除成功。");
 		return response;
 	}
 
