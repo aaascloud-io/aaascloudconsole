@@ -3,7 +3,8 @@ package com.ifocus.aaascloud.model;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Cloud_productModel {
+public class Cloud_productModel extends TargetUserInfo {
+
 	@Getter
 	@Setter
 	private Integer productid;
