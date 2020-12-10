@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
-import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_userService;
@@ -52,23 +51,23 @@ public class LoginController {
 				if (model.getUserid() >= 0) {
 
 					// 管理者情報設定
-					resJasonObj.put("userid", model.getUserid());
-					resJasonObj.put("username", model.getUsername());
-					resJasonObj.put("companyid", model.getCompanyid());
+					resJasonObj.put("loginuserid", model.getUserid());
+					resJasonObj.put("loginusername", model.getUsername());
+					resJasonObj.put("logincompanyid", model.getCompanyid());
 					resJasonObj.put("loginid", model.getLoginid());
-					resJasonObj.put("role", model.getRole());
-					resJasonObj.put("upperuserid", model.getUpperuserid());
-					// 会社情報取得
-					Cloud_companyModel cloud_companyModel = cloud_companyService.getCompanyInfo(model.getCompanyid());
-
-					// 会社情報設定
-					resJasonObj.put("companyname", cloud_companyModel.getCompanyname());
-					resJasonObj.put("address", cloud_companyModel.getAddress());
-					resJasonObj.put("industry", cloud_companyModel.getIndustry());
-					resJasonObj.put("mail", cloud_companyModel.getMail());
-					resJasonObj.put("tel", cloud_companyModel.getTel());
-					resJasonObj.put("fax", cloud_companyModel.getFax());
-					resJasonObj.put("level", cloud_companyModel.getLevel());
+					resJasonObj.put("loginrole", model.getRole());
+					resJasonObj.put("loginupperuserid", model.getUpperuserid());
+//					// 会社情報取得
+//					Cloud_companyModel cloud_companyModel = cloud_companyService.getCompanyInfo(model.getCompanyid());
+//
+//					// 会社情報設定
+//					resJasonObj.put("companyname", cloud_companyModel.getCompanyname());
+//					resJasonObj.put("address", cloud_companyModel.getAddress());
+//					resJasonObj.put("industry", cloud_companyModel.getIndustry());
+//					resJasonObj.put("mail", cloud_companyModel.getMail());
+//					resJasonObj.put("tel", cloud_companyModel.getTel());
+//					resJasonObj.put("fax", cloud_companyModel.getFax());
+//					resJasonObj.put("level", cloud_companyModel.getLevel());
 
 					resJasonObj.put("result", true);
 
