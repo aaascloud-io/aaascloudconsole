@@ -32,10 +32,10 @@ public class Cloud_productController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getProductAll", method = RequestMethod.GET)
+	@RequestMapping(value = "/getProductAll", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getProductAll(LoginInfo loginInfo) throws Exception {
+	public BaseHttpResponse<String> getProductAll(@RequestBody LoginInfo loginInfo) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
