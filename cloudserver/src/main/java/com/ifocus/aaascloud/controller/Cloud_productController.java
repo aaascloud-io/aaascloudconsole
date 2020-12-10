@@ -39,7 +39,7 @@ public class Cloud_productController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		// 権限チェック
-		if (!model.getLogincompanyid().equals(1)) {
+		if (!model.getLoginInfo().getLogincompanyid().equals(1)) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
@@ -210,9 +210,9 @@ public class Cloud_productController {
 		entity.setVersion(model.getVersion());
 		entity.setSimflag(model.getSimflag());
 		entity.setSummary(model.getSummary());
-		entity.setI_uid(model.getLoginuserid());
+		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
-		entity.setU_uid(model.getLoginuserid());
+		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
 
 		return entity;
