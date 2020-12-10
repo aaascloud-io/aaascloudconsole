@@ -3,7 +3,7 @@ import { bottom_flyIn } from 'src/app/_common/_animations/bottom_flyIn';
 import { HttpService } from 'src/app/_shareModule/service/HttpService';
 import { DataFatoryService } from 'src/app/_shareModule/service/DataFatoryService';
 import { ActivatedRoute } from "@angular/router";
-import { loginUser } from 'src/app/_common/_interface/userInfo';
+import { UserInfo } from 'src/app/_common/_interface/userInfo';
 
 @Component({
   selector: 'app-modify',
@@ -13,7 +13,7 @@ import { loginUser } from 'src/app/_common/_interface/userInfo';
 })
 export class ModifyComponent implements OnInit {
 
-  loginuser: loginUser
+  UserInfo: UserInfo
   private pageModel = {
     password: '',
     company: '',
@@ -33,7 +33,7 @@ export class ModifyComponent implements OnInit {
 
   ngOnInit() {
     // ユーザー情報を取得する
-    this.loginuser = this.dataFatoryService.getLoginUser();
+    this.UserInfo = this.dataFatoryService.getLoginUser();
     // uid⇒リスト中に選択されたのユーザー(ユーザー詳細検索)
     this.httpService.usePost('login/getUserInfo', { "uid": this.routeInfo.snapshot.queryParams["uid"] }).then(item => {
       try {
@@ -44,7 +44,7 @@ export class ModifyComponent implements OnInit {
         this.pageModel.tel = jsonItem.userInfo.tel;
 
         // プロダクト検索
-        this.httpService.usePost('login/getProductsByUid', { "uid": this.loginuser.uid }).then(itemP => {
+        this.httpService.usePost('login/getProductsByUid', { "uid": this.UserInfo.userid }).then(itemP => {
           try {
             let jsonItemP = typeof itemP == 'string' ? JSON.parse(itemP) : itemP;
 
@@ -67,7 +67,7 @@ export class ModifyComponent implements OnInit {
               this.pageModel.prodects.push(elementAll)
             });
             // グループ検索
-            this.httpService.usePost('login/getGroupsByUidAndPid', { "uid": this.loginuser.uid, "productid": productid[0] }).then(itemG => {
+            this.httpService.usePost('login/getGroupsByUidAndPid', { "uid": this.UserInfo.userid, "productid": productid[0] }).then(itemG => {
               try {
                 let jsonItemG = typeof itemG == 'string' ? JSON.parse(itemG) : itemG;
 
@@ -150,7 +150,7 @@ export class ModifyComponent implements OnInit {
         this.pageModel.prodectIds.splice(index, 1);
       }
     }
-    this.httpService.usePost('login/getGroupsByUidAndPid', { "uid": this.loginuser.uid, "productid": productid }).then(item => {
+    this.httpService.usePost('login/getGroupsByUidAndPid', { "uid": this.UserInfo.userid, "productid": productid }).then(item => {
       try {
         let jsonItem = typeof item == 'string' ? JSON.parse(item) : item;
         this.pageModel.groups = jsonItem.groups;

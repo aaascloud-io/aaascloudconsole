@@ -78,7 +78,6 @@ export class ListComponent implements OnInit {
   * プロダクトリストを検索
   */
   private getProjectList(): void {
-    var res = this.httpService.usePost('getProductAll', {});
     this.httpService.usePost('getProductAll', {}).then(item => {
       try {
         if (item.resultCode === "0000") {

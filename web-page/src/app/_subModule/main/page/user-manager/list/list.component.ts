@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, Injector } from '@angular/core';
 import { HttpService } from 'src/app/_shareModule/service/HttpService';
-import { loginUser } from 'src/app/_common/_interface/userInfo';
+import { UserInfo } from 'src/app/_common/_interface/userInfo';
 import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';

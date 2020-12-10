@@ -2,7 +2,7 @@ import { Component, OnInit, Output } from '@angular/core';
 import { bottom_flyIn } from 'src/app/_common/_animations/bottom_flyIn';
 import { ActivatedRoute } from '@angular/router';
 import { HttpService } from 'src/app/_shareModule/service/HttpService';
-import { loginUser } from 'src/app/_common/_interface/userInfo';
+import { UserInfo } from 'src/app/_common/_interface/userInfo';
 import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { FlashMessagesService } from 'angular2-flash-messages';
@@ -34,7 +34,7 @@ export class ModifyComponent implements OnInit {
       groupname: ''
     },
   }
-  loginuser: loginUser;
+  userInfo: UserInfo;
 
 
   constructor(private routerinfo: ActivatedRoute, private httpService: HttpService, private cookieService: CookieService, private _flashMessagesService: FlashMessagesService) { }
@@ -46,7 +46,7 @@ export class ModifyComponent implements OnInit {
     this.pagination.currentPage = 1;
     // ユーザー情報を取得する
     // this.loginuser = this.dataFatoryService.getLoginUser();
-    this.loginuser = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
+    this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
 
     // グループ追加用
     this.pageModel.group.productid = this.routerinfo.snapshot.queryParams["productid"];
@@ -57,9 +57,6 @@ export class ModifyComponent implements OnInit {
     // プロダクトIDをリスト画面から取得された
     this.getProductInfoApi(this.routerinfo.snapshot.queryParams["productid"])
   }
-
-
-
 
   /**
   * プロダクト更新
@@ -121,7 +118,7 @@ export class ModifyComponent implements OnInit {
     }
     let paramReq = {
       productid: this.pageModel.group.productid,//プロダクトid
-      makeruid: this.loginuser.uid,//作成者
+      makeruid: this.userInfo.userid,//作成者
       groupidname: this.pageModel.group.groupname,// グループ名
     }
     this.httpService.usePost('product/insertGroup', paramReq).then(item => {
