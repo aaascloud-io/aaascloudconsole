@@ -16,7 +16,6 @@ import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.model.Cloud_productModel;
-import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.service.Cloud_productService;
 
 import net.sf.json.JSONObject;
@@ -35,12 +34,12 @@ public class Cloud_productController {
 	@RequestMapping(value = "/getProductAll", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getProductAll(@RequestBody LoginInfo loginInfo) throws Exception {
+	public BaseHttpResponse<String> getProductAll(@RequestBody Cloud_productModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		// 権限チェック
-		if (!loginInfo.getLogincompanyid().equals(1)) {
+		if (!model.getLogincompanyid().equals(1)) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
@@ -97,11 +96,11 @@ public class Cloud_productController {
 	@RequestMapping(value = "/registerProduct", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> registerProduct(@RequestBody LoginInfo loginInfo,Cloud_productModel model) throws Exception {
+	public BaseHttpResponse<String> registerProduct(@RequestBody Cloud_productModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		Cloud_productEntity inserEntity = getCloud_productEntity(loginInfo, model);
+		Cloud_productEntity inserEntity = getCloud_productEntity(model);
 
 		Cloud_productEntity insertedEntity =  cloud_productService.registerProduct(inserEntity);
 
@@ -129,11 +128,11 @@ public class Cloud_productController {
 	@RequestMapping(value = "/updateProduct", method = RequestMethod.PUT)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> updateProduct(@RequestBody LoginInfo loginInfo,Cloud_productModel model) throws Exception {
+	public BaseHttpResponse<String> updateProduct(@RequestBody Cloud_productModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		Cloud_productEntity updateEntity = getCloud_productEntity(loginInfo, model);
+		Cloud_productEntity updateEntity = getCloud_productEntity(model);
 
 		/* 更新するため、productidを設定する */
 		if (model.getProductid() == null) {
@@ -172,7 +171,7 @@ public class Cloud_productController {
 	@RequestMapping(value = "/deleteProduct", method = RequestMethod.DELETE)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> deleteProduct(@RequestBody LoginInfo loginInfo,Cloud_productModel model) throws Exception {
+	public BaseHttpResponse<String> deleteProduct(@RequestBody Cloud_productModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
@@ -197,11 +196,10 @@ public class Cloud_productController {
 
 	/**
 	 * プロダクトを登録するためのEntity作成
-	 * @param loginInfo LoginInfo
 	 * @param model Cloud_productModel
 	 * @return Cloud_productEntity
 	 */
-	public Cloud_productEntity getCloud_productEntity(LoginInfo loginInfo,Cloud_productModel model) {
+	private Cloud_productEntity getCloud_productEntity(Cloud_productModel model) {
 		Cloud_productEntity entity = new Cloud_productEntity();
 
 		/* システム日時 */
@@ -212,9 +210,9 @@ public class Cloud_productController {
 		entity.setVersion(model.getVersion());
 		entity.setSimflag(model.getSimflag());
 		entity.setSummary(model.getSummary());
-		entity.setI_uid(loginInfo.getLoginuserid());
+		entity.setI_uid(model.getLoginuserid());
 		entity.setI_time(systemTime);
-		entity.setU_uid(loginInfo.getLoginuserid());
+		entity.setU_uid(model.getLoginuserid());
 		entity.setU_time(systemTime);
 
 		return entity;
