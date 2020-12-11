@@ -29,8 +29,8 @@ public class Cloud_deviceService {
 	 */
 	public List<Cloud_deviceEntity> getAllDevices(Integer userid) throws Exception {
 		List<Cloud_deviceEntity> returnList = new ArrayList();
-		Iterable<Cloud_deviceEntity> list = cloud_deviceRepository.(userid);
-		list.forEach(s -> returnList.add(s));
+//		Iterable<Cloud_deviceEntity> list = cloud_deviceRepository.(userid);
+//		list.forEach(s -> returnList.add(s));
 		return returnList;
 
 	}
@@ -42,8 +42,8 @@ public class Cloud_deviceService {
 	 */
 	public List<Cloud_deviceEntity> getMyDevices(Integer userid) throws Exception {
 		List<Cloud_deviceEntity> returnList = new ArrayList();
-		Iterable<Cloud_deviceEntity> list = cloud_deviceRepository.searchByUserid(userid);
-		list.forEach(s -> returnList.add(s));
+//		Iterable<Cloud_deviceEntity> list = cloud_deviceRepository.searchByUserid(userid);
+//		list.forEach(s -> returnList.add(s));
 		return returnList;
 
 	}
