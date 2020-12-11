@@ -12,25 +12,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@javax.persistence.Table(name="cloud_project")
-public class Cloud_projectEntity {
+@javax.persistence.Table(name="cloud_group")
+public class Cloud_groupEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Getter
 	@Setter
-	private Integer projectid;
+	private Integer groupid;
 	@Getter
 	@Setter
-	private Integer userid;
+	private String projectid;
 	@Getter
 	@Setter
-	private String projectname;
+	private String groupname;
 	@Getter
 	@Setter
-	private Integer productid;
-	@Getter
-	@Setter
-	private String projectsummary;
+	private String summary;
 	@Getter
 	@Setter
 	private Integer alive;
