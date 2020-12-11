@@ -56,6 +56,32 @@ public class Cloud_userService {
 	}
 
 	/*
+	 * アクセス権限チェック
+	 *
+	 *
+	 */
+	public boolean checkAccessOK(Integer loginuserid, Integer targetuserid) throws Exception {
+
+//		if (null != loginuserid && null != targetuserid) {
+//
+//			if (loginuserid.equals(targetuserid)) {
+//				return true;
+//			} else {
+//				try {
+//					// 権限判断
+//					return isAncestor(Integer.valueOf(loginuserid), Integer.valueOf(targetuserid));
+//				} catch (Exception e) {
+//					return false;
+//				}
+//			}
+//		} else {
+//			return false;
+//		}
+		return true;
+	}
+
+
+	/*
 	 * 先祖であるかどうかを判断する
 	 *
 	 *
@@ -144,7 +170,8 @@ public class Cloud_userService {
 			entity.setMail(model.getMail());
 			entity.setTel(model.getTel());
 			entity.setFax(model.getFax());
-			entity.setLevel(myEntity.get().getLevel() + 1);   // レベルアップ
+			entity.setLevel(myEntity.get().getLevel() + 1);   	// レベルアップ
+			entity.setAlive(0);									// セロ固定
 			entity.setI_uid(loginInfo.getLoginuserid());
 			entity.setI_time(systemTime);
 			entity.setU_uid(loginInfo.getLoginuserid());
