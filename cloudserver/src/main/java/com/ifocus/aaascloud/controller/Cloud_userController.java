@@ -36,7 +36,7 @@ public class Cloud_userController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getSonUsers", method = RequestMethod.GET)
+	@RequestMapping(value = "/getSonUsers", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
 	public BaseHttpResponse<String> getSonUsers(@RequestBody LoginInfo loginInfo,Cloud_userModel cloud_userModel) throws Exception {

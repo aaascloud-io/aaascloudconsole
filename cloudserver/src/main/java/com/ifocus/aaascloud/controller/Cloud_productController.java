@@ -210,6 +210,7 @@ public class Cloud_productController {
 		entity.setVersion(model.getVersion());
 		entity.setSimflag(model.getSimflag());
 		entity.setSummary(model.getSummary());
+		entity.setAlive(0);						// セロ固定
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
