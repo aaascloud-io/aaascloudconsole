@@ -55,7 +55,7 @@ public class Cloud_productController {
 				if (responseData.length() > 1) {
 					responseData = responseData + ",";
 				}
-				responseData = responseData + cloud_productService.getProductDetail(entity.getProductid());
+				responseData = responseData + this.getJsonFromCloud_productEntity(entity);
 			}
 			responseData = responseData + "]";
 
