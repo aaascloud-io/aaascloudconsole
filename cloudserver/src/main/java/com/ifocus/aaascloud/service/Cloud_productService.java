@@ -2,6 +2,7 @@ package com.ifocus.aaascloud.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,6 +32,17 @@ public class Cloud_productService {
 		Iterable<Cloud_productEntity> list = cloud_productRepository.findAll();
 		list.forEach(s -> returnList.add(s));
 		return returnList;
+
+	}
+
+	/*
+	 * プロダクト詳細取得
+	 *
+	 *
+	 */
+	public Cloud_productEntity getProductDetail(Integer productid) throws Exception {
+		Optional<Cloud_productEntity> entity = cloud_productRepository.findById(productid);
+		return entity.get();
 
 	}
 
