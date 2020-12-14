@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 @NgModule({
   imports: [
     LoginRoutingModule,
-    ShareModule.forRoot(),
+    // ShareModule.forRoot(),
     FormsModule,
     // i18n国際化
     // TranslateModule.forRoot({

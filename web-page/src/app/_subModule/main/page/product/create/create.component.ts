@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { bottom_flyIn } from "../../../../../_common/_animations/bottom_flyIn";
 import { HttpService } from 'src/app/_shareModule/service/HttpService';
-import { UserInfo } from 'src/app/_common/_interface/userInfo';
+import { UserInfo, LoginInfo } from 'src/app/_common/_interface/userInfo';
 import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { FlashMessagesService } from 'angular2-flash-messages';
+import { codes } from '@common/_utils/codes';
+import { DataFatoryService } from 'src/app/_shareModule/service/DataFatoryService';
+
 
 @Component({
   selector: 'app-create',
@@ -16,9 +19,9 @@ export class CreateComponent implements OnInit {
   pageModel = {
     product: {
       productname: '',
-      industrytype: '',
-      application: '',
-      location: '',
+      model: '',
+      version: '',
+      simflag: 0,
       summary: '',
       makeruid: 0
     },
@@ -27,17 +30,22 @@ export class CreateComponent implements OnInit {
       productid: '',
       groupname: ''
     },
-    group_insert_success: false,
   }
   userInfo: UserInfo;
-  constructor(private httpService: HttpService, private cookieService: CookieService, private _flashMessagesService: FlashMessagesService) { }
+  loginInfo: LoginInfo;
+  constructor(private httpService: HttpService,
+    private cookieService: CookieService,
+    private _flashMessagesService: FlashMessagesService,
+    private dataFatoryService: DataFatoryService,
+  ) { }
 
   ngOnInit() {
     // ユーザー情報を取得する
-    this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
+    // this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
+    this.loginInfo = this.dataFatoryService.getLoginUser();
 
     // 作成者取得
-    this.pageModel.product.makeruid = this.userInfo.userid
+    // this.pageModel.product.makeruid = this.loginInfo.loginuserid;
   }
 
 
@@ -56,48 +64,23 @@ export class CreateComponent implements OnInit {
   */
   private getInsertProductApi(product: any): void {
     let paramReq = {
-      productname: product.productname,//プロダクト名
-      industrytype: product.industrytype,//産業種類
-      application: product.application,// 用途
-      location: product.location,//所在地
-      summary: product.summary,//概要
-      makeruid: this.userInfo.userid//作成者
+      productname: product.productname,
+      model: product.model,
+      version: product.version,
+      simflag: product.simflag,
+      summary: product.summary,
+      makeruid: 1,
+      loginInfo: this.loginInfo
     }
-    this.httpService.usePost('product/insertProduct', paramReq).then(item => {
+    this.httpService.usePost('registerProduct', paramReq).then(item => {
       try {
-        if (item.result) {
+        if (item.resultCode === codes.RETCODE.NORMAL) {
           this.pageModel.insert_success = true;
-          this.pageModel.group.productid = item.insertProductid// グループ登録用プロダクトid
         } else {
           this.pageModel.insert_success = false;
         }
       } catch (e) {
         console.log('プロダクトを登録するAPI エラー　発生しました。');
-      }
-    })
-  }
-  /**
-  * グループを登録するAPI
-  */
-  insertGroup(): void {
-    // parameter check
-    if (!this.checkGroupParameters()) {
-      return;
-    }
-    let paramReq = {
-      productid: this.pageModel.group.productid,//プロダクトid
-      makeruid: this.userInfo.userid,//作成者
-      groupidname: this.pageModel.group.groupname,// グループ名
-    }
-    this.httpService.usePost('product/insertGroup', paramReq).then(item => {
-      try {
-        if (item.result) {
-          this.pageModel.group_insert_success = true;
-        } else {
-          this.pageModel.group_insert_success = false;
-        }
-      } catch (e) {
-        console.log('グループを登録するAPI エラー　発生しました。');
       }
     })
   }

@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { UserInfo } from 'src/app/_common/_interface/userInfo';
+import { LoginInfo } from 'src/app/_common/_interface/userInfo';
 
 @Injectable()
 export class DataFatoryService {
 
-  private user: UserInfo;
+  private loginInfo: LoginInfo;
 
   private routleSel: any;
 
@@ -14,23 +14,23 @@ export class DataFatoryService {
   constructor() {
   }
 
-  public setLoginUser(info: UserInfo): void {
-    this.user = JSON.parse(JSON.stringify(info));
+  public setLoginUser(info: any): void {
+    this.loginInfo = info
   }
 
-  public getLoginUser(): UserInfo {
+  public getLoginUser(): any {
     let temp = null;
-    if (this.user) {
-      temp = JSON.parse(JSON.stringify(this.user));
+    if (this.loginInfo) {
+      temp = this.loginInfo;
     }
 
     return temp;
   }
 
   public clearLoginUser(): void {
-    if (this.user) {
-      this.user.loginid = null;
-      this.user.userid = null;
+    if (this.loginInfo) {
+      this.loginInfo.loginid = null;
+      this.loginInfo.loginuserid = null;
     }
 
   }

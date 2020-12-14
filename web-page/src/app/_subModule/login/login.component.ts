@@ -4,6 +4,10 @@ import { left_flyIn } from "@common/_animations/left_flyIn";
 import { HttpService } from '@service/HttpService';
 import { UserService } from '@service/UserService';
 import { AbstractComponent } from '@sub/abstract/abstract.component';
+import { codes } from "@common/_utils/codes";
+import { UserInfo, LoginInfo } from 'src/app/_common/_interface/userInfo';
+import { DataFatoryService } from '@service/DataFatoryService';
+
 
 
 @Component({
@@ -16,6 +20,8 @@ export class LoginComponent extends AbstractComponent implements OnInit {
   /** 描画用キャンバス */
   @ViewChild('myCanvas') protected canvas: ElementRef;
 
+  private loginInfo: LoginInfo;
+
   /** 画面モデル */
   protected pageModel = {
     user: {
@@ -23,13 +29,17 @@ export class LoginComponent extends AbstractComponent implements OnInit {
       password: '',
       checkcode: ''
     },
-    checkcodeList: ''
+    checkcodeList: '',
+    result: {
+      retcode: '',
+      message: ''
+    }
   }
 
   constructor(
     protected injector: Injector,
     private httpService: HttpService,
-    private userService: UserService
+    private dataFatoryService: DataFatoryService
   ) {
     super(injector);
   }
@@ -52,17 +62,24 @@ export class LoginComponent extends AbstractComponent implements OnInit {
       try {
         ///認証
         var res = await this.httpService.accessToken(
-          this.pageModel.user.username, 
+          this.pageModel.user.username,
           this.pageModel.user.password
         );
+        if (res.resultCode === codes.RETCODE.NORMAL) {
+          this.pageModel.result.retcode = res.resultCode;
+          this.pageModel.result.message = res.resultMsg;
+          ///保存
+          this.httpService.processUserInfo(res);
+          ///画面遷移
+          this.router.navigate(["/main/page/dashboard"]);
+        } else {
+          this.alert.warning('ユーザー名またはパスワードは間違った。');
+          flg = false;
+        }
         ///権限チェック
         // var res = await this.userService.authorized().toPromise();
         ///自身の情報取得
         // var res = await this.userService.getMyInfo().toPromise();
-        ///保存
-        this.httpService.processUserInfo(res);
-        ///画面遷移
-        this.router.navigate(["/main/page/dashboard"]);
       } catch (err) {
         this.handleError('操作失敗', err);
       }

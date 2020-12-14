@@ -17,10 +17,11 @@ export interface UserInfo {
 }
 
 //ログインしたユーザーの情報（cookieに格納）
-// export interface loginUser {
-// 	Userid: string;
-// 	username: string;
-// 	login_id: string;
-// 	block: boolean;
-// 	permissions: Array<String>;
-// }
+export interface LoginInfo {
+	loginuserid: number;
+	logincompanyid: number;
+	loginusername: string;
+	loginid: string;
+	loginrole: number;
+	loginupperuserid: number;
+}

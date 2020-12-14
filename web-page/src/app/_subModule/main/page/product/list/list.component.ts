@@ -7,6 +7,8 @@ import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { Pagination } from '../../pagination/pagination';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { LoginInfo } from 'src/app/_common/_interface/userInfo';
+import { codes } from '@common/_utils/codes';
 
 @Component({
   selector: 'app-list',
@@ -16,17 +18,18 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 })
 export class ListComponent implements OnInit {
 
+  loginInfo: LoginInfo;
+
   constructor(
     private httpService: HttpService,
     private cookieService: CookieService,
-    private　dataFatoryService: DataFatoryService
+    private dataFatoryService: DataFatoryService,
   ) { }
 
   pageModel = {
     productid: '',
     productList: []
   }
-  userInfo: UserInfo
 
   @Output()
   public pagination: Pagination = Pagination.defaultPagination;
@@ -36,14 +39,10 @@ export class ListComponent implements OnInit {
     // this.blockUI.start('プロダクト検索中です。少々お待ちください。');
     this.pagination.currentPage = 1;
     // ユーザー情報を取得する
-    // this.userInfo = this.dataFatoryService.getLoginUser();
-
-
+    this.loginInfo = this.dataFatoryService.getLoginUser();
     // this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
-
     // プロダクトリストを取得する
     this.getProjectList();
-
   }
 
   /**
@@ -57,30 +56,36 @@ export class ListComponent implements OnInit {
   /**
   * プロダクト削除
   */
-  deleteProduct() {
+  deleteProduct(productid: any) {
     let paramReq = {
-      productid: this.pageModel.productid//プロダクトid
+      productid: productid,　//プロダクトid
+      loginInfo: this.loginInfo
     }
-    this.httpService.usePost('product/deleteProduct', paramReq).then(item => {
+    this.httpService.usePost('deleteProduct', paramReq).then(item => {
       try {
         if (item.result) {
           //更新後再検索
-          // this.getProjectListApi(this.loginuser.role);
+          this.getProjectList();
         }
       } catch (e) {
         console.log('グループを登録するAPI エラー　発生しました。');
       }
     })
-
   }
 
   /**
   * プロダクトリストを検索
   */
   private getProjectList(): void {
-    this.httpService.usePost('getProductAll', {}).then(item => {
+    // console.log(JSON.stringify( this.loginInfo.loginid));
+    // サーバーのstyleのため、jsonのjsonを作る
+    var loginInfo = {
+      loginInfo: this.loginInfo
+    }
+    
+    this.httpService.usePost('getProductAll', loginInfo).then(item => {
       try {
-        if (item.resultCode === "0000") {
+        if (item.resultCode === codes.RETCODE.NORMAL) {
           // this.blockUI.stop();
           let jsonItemData = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
           this.pageModel.productList = jsonItemData;

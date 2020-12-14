@@ -7,18 +7,25 @@ import { Router } from '@angular/router';
 import { ConstantsHandler, ServerType } from '../../_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { UrlHandler } from 'src/app/_common/_constant/url.handler';
+import { LoginInfo } from 'src/app/_common/_interface/userInfo';
 
 @Injectable()
 export class HttpService {
+
+    public loginInfo: LoginInfo;
+
     static times = 0;
+
     validTimePaddingInMs: number;
+
     constructor(
         private dataFatoryService: DataFatoryService,
         private _http: HttpClient,
         private _authSignService: AuthSignService,
         private _router: Router,
         private baseService: BaseService,
-        private cookieService: CookieService) {
+        private cookieService: CookieService,
+    ) {
     }
 
     post(fullUrl: string, data: any, header: any): Promise<any> {
@@ -26,8 +33,8 @@ export class HttpService {
             .toPromise();
     }
 
-    usePost(path: string, data: any): Promise<any> {
-        return this._http.get(this.baseService.getPath(path), this.baseService.getHeader())
+    usePost(path: string, datas: any): Promise<any> {
+        return this._http.post(this.baseService.getPath(path), datas, this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
                 return result;
@@ -129,8 +136,6 @@ export class HttpService {
             });
     }
 
-
-
     verify(): boolean {
         // verify befroe page route
         // check token
@@ -157,7 +162,7 @@ export class HttpService {
         }
         if (tokenStatus == ConstantsHandler.tokenStatus.refresh_token_valid) {
             // use refresh token to fetch token
-            this.refreshToken();
+            // this.refreshToken();
         }
         return true;
     }
@@ -341,7 +346,7 @@ export class HttpService {
         if (res) {
             // save user info
             var userInfo = res["data"];
-            let temp = userInfo;
+            // let temp = userInfo;
             // if(userInfo["attributes"]){
             //     if(userInfo["attributes"].block){
             //         temp.block = true;
@@ -350,11 +355,13 @@ export class HttpService {
             //         temp.userid = userInfo["attributes"].uid[0];
             //     }
             // }
-            this.dataFatoryService.setLoginUser(temp);
+            userInfo = JSON.parse(userInfo);
+            this.loginInfo = userInfo;
+            this.dataFatoryService.setLoginUser(userInfo);
 
             var timeout = new Date(new Date().getTime() + ConstantsHandler.GLOBAL_TOKEN.interval);
             //save in cookie
-            this.cookieService.set(ConstantsHandler.GLOBAL_TOKEN.id, JSON.stringify(temp), timeout);
+            this.cookieService.set(ConstantsHandler.GLOBAL_TOKEN.id, JSON.stringify(userInfo), timeout);
             // save valid period in cookie
             this.cookieService.set(ConstantsHandler.TOKEN.cookieName, JSON.stringify(ConstantsHandler.TOKEN), timeout);
             return res;

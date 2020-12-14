@@ -36,9 +36,9 @@ export class DetailComponent implements OnInit {
   public pagination: Pagination = Pagination.defaultPagination;
   ngOnInit() {
     this.pagination.currentPage = 1;
-    this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
+    // this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
     // プロダクトIDをリスト画面から取得された
-    this.getProductInfoApi(this.routerinfo.snapshot.queryParams)
+    this.getProductInfoApi(this.routerinfo.snapshot.queryParams);
   }
 
 
