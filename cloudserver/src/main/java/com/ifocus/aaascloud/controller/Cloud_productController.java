@@ -131,21 +131,28 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		Cloud_productEntity inserEntity = getCloud_productEntity(model);
+		try {
+			Cloud_productEntity inserEntity = getCloud_productEntity(model);
 
-		Cloud_productEntity insertedEntity =  cloud_productService.registerProduct(inserEntity);
+			Cloud_productEntity insertedEntity =  cloud_productService.registerProduct(inserEntity);
 
-		if (insertedEntity == null) {
-			/* 異常系 */
+			if (insertedEntity == null) {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0100);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_product");
+			} else {
+
+				/* 正常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			}
+
+		} catch( Exception e) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0100);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_product");
-		} else {
-
-			/* 正常系 */
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + e.getMessage());
 		}
 		return response;
 	}
@@ -163,33 +170,42 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		Cloud_productEntity updateEntity = getCloud_productEntity(model);
+		try {
 
-		/* 更新するため、productidを設定する */
-		if (model.getProductid() == null) {
-			/* 異常系 */
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "productid必須");
-			return response;
-		} else {
+			Cloud_productEntity updateEntity = getCloud_productEntity(model);
+
 			/* 更新するため、productidを設定する */
-			updateEntity.setProductid(model.getProductid());
-		}
+			if (model.getProductid() == null) {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0001);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "productid必須");
+				return response;
+			} else {
+				/* 更新するため、productidを設定する */
+				updateEntity.setProductid(model.getProductid());
+			}
 
-		Cloud_productEntity updatedEntity =  cloud_productService.registerProduct(updateEntity);
+			Cloud_productEntity updatedEntity =  cloud_productService.registerProduct(updateEntity);
 
-		if (updatedEntity == null) {
-			/* 異常系 */
+			if (updatedEntity == null) {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0101);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0101 + "cloud_product");
+			} else {
+				/* 正常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			}
+
+		} catch( Exception e) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0101);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0101 + "cloud_product");
-		} else {
-			/* 正常系 */
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0101 + e.getMessage());
 		}
+
 		return response;
 	}
 
@@ -199,29 +215,36 @@ public class Cloud_productController {
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/deleteProduct", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/deleteProduct", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
 	public BaseHttpResponse<String> deleteProduct(@RequestBody Cloud_productModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		/* 削除するため、productidを設定する */
-		if (model.getProductid() == null) {
-			/* 異常系 */
+		try {
+			/* 削除するため、productidを設定する */
+			if (model.getProductid() == null) {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0001);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "productid必須");
+				return response;
+			}
+			/* 削除する */
+			cloud_productService.deleteProduct(model.getProductid());
+
+
+			/* 正常系 */
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "productid必須");
-			return response;
+			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0102);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0102 + e.getMessage());
 		}
-		/* 削除する */
-		cloud_productService.deleteProduct(model.getProductid());
-
-
-		/* 正常系 */
-		response.setStatus(200);
-		response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-		response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 		return response;
 	}
 
