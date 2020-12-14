@@ -106,7 +106,7 @@ export class HttpService {
 
     //put? data type
     UsePutForRealPath(path: string, data: any): Promise<any> {
-        return this._http.put(path, JSON.stringify(data), this.baseService.getHeader())
+        return this._http.put(this.baseService.getPath(path), data, this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
                 return result;

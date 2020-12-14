@@ -9,47 +9,50 @@
           <div class="panel-body pan">
             <div class="form-body pal">
               <div class="form-group" style="color: darkred;">基本情報</div>
-              <div class="form-group">
-                <div class="input-icon right">
-                  <i class="fa fa-paper-plane"></i>
-                  <input id="inputName" type="text" name="inputName" placeholder="プロダクト名"
-                    [(ngModel)]="pageModel.product.productname" class="form-control" /></div>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  プロダクト名
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.product.productname">
               </div>
-              <div class="form-group">
-                <div class="input-icon right">
-                  <i class="fa fa-paper-plane"></i>
-                  <input id="inputName" type="text" name="inputName" placeholder="型番"
-                    [(ngModel)]="pageModel.product.model" class="form-control" /></div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  型番
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.product.model">
               </div>
-              <div class="form-group">
-                <div class="input-icon right">
-                  <i class="fa fa-paper-plane"></i>
-                  <input id="inputName" type="text" name="inputName" placeholder="バージョン"
-                    [(ngModel)]="pageModel.product.version" class="form-control" /></div>
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
+                <label for="inputMessage" class="control-label">
+                  バージョン
+                </label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.product.version">
               </div>
+              <br>
               <div class="form-group">SIMカード：
                 <select [(ngModel)]="pageModel.product.simflag">
-                  <!-- <option disabled="disabled" selected>選択してください</option> -->
                   <option [value]=0>不要</option>
                   <option [value]=1>必須</option>
                   <option [value]=2>オプション</option>
                 </select>
               </div>
-              <div class="form-group">
+              <br>
+              <div class="input-group col-md-12 col-xs-12">
                 <label for="inputMessage" class="control-label">
                   概要
                 </label>
-                <textarea rows="5" class="form-control" style="max-width: 100%;"
-                  [(ngModel)]="pageModel.product.summary"></textarea>
+                <textarea rows="5" class="form-control" style="max-width: 100%;" [(ngModel)]="pageModel.product.summary"></textarea>
               </div>
+              <br>
             </div>
-            <a *ngIf="pageModel.insert_success">
+            <a *ngIf="pageModel.update_success">
               <div class="alert alert-success">
                 <strong>成功!</strong> プロダクト更新成功.
               </div>
             </a>
-            <a *ngIf="pageModel.insert_success">
-              <div class="alert alert-success" *ngIf="!pageModel.insert_success">
+            <a *ngIf="pageModel.update_success === false">
+              <div class="alert alert-failure">
                 <strong>失敗!</strong> プロダクト更新失敗.
               </div>
             </a>

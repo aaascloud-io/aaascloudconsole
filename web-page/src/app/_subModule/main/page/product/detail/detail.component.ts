@@ -2,10 +2,12 @@ import { Component, OnInit, Output } from '@angular/core';
 import { bottom_flyIn } from 'src/app/_common/_animations/bottom_flyIn';
 import { ActivatedRoute } from '@angular/router';
 import { HttpService } from 'src/app/_shareModule/service/HttpService';
-import { UserInfo } from 'src/app/_common/_interface/userInfo';
+import { LoginInfo } from 'src/app/_common/_interface/userInfo';
 import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { Pagination } from '../../pagination/pagination';
+import { DataFatoryService } from 'src/app/_shareModule/service/DataFatoryService';
+import { codes } from '@common/_utils/codes';
 
 @Component({
   selector: 'app-detail',
@@ -16,27 +18,28 @@ import { Pagination } from '../../pagination/pagination';
 export class DetailComponent implements OnInit {
   pageModel = {
     product: {
-      productid: '',
-      affiliationuid: '',
-      groupid: '',
       productname: '',
-      industrytype: '',
-      application: '',
-      location: '',
+      model: '',
+      version: '',
+      simflag: 0,
       summary: '',
-      makeruid: ''
+      makeruid: 0
     },
     groups: [],//groups
   }
-  userInfo: UserInfo;
+  loginInfo: LoginInfo;
 
-  constructor(private routerinfo: ActivatedRoute, private httpService: HttpService, private cookieService: CookieService) { }
+  constructor(private routerinfo: ActivatedRoute,
+    private httpService: HttpService,
+    private cookieService: CookieService,
+    private dataFatoryService: DataFatoryService) { }
 
   @Output()
   public pagination: Pagination = Pagination.defaultPagination;
   ngOnInit() {
     this.pagination.currentPage = 1;
     // this.userInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
+    this.loginInfo = this.dataFatoryService.getLoginUser();
     // プロダクトIDをリスト画面から取得された
     this.getProductInfoApi(this.routerinfo.snapshot.queryParams);
   }
@@ -45,31 +48,18 @@ export class DetailComponent implements OnInit {
   /**
   * プロダクト詳細を検索API
   */
-  private getProductInfoApi(productid: any): void {
-    this.httpService.usePost('product/getProductInfo', { "productid": productid }).then(item => {
+  private getProductInfoApi(queryParams: any): void {
+    let paramReq = {
+      productid: queryParams.productid,　//プロダクトid
+      loginInfo: this.loginInfo
+    }
+    this.httpService.usePost('getProductDetail', paramReq).then(item => {
       try {
-        if (item.result) {
-          let jsonItem = typeof item == 'string' ? JSON.parse(item) : item;
-          this.pageModel.product = jsonItem.productInfo;
-          // グループリストを検索API
-          // this.httpService.usePost('product/getGroupList',{ "role":this.loginuser.role,"productid":productid}).then(itemG =>{
-          //   try{
-          //     if(itemG.result){
-          //       let jsonItemG = typeof itemG=='string'?JSON.parse(itemG):itemG;
-          //       // this.pageModel.groups = jsonItemG.groupList;
-          //       this.initList(jsonItemG.groupList)
-
-          //       this.pagination.changePage = (() => {
-          //         this.initList(jsonItemG.groupList);
-          //       });
-          //     }else{
-          //       console.log('グループリストを検索API エラー　発生しました。');
-          //     }
-          //   }catch(e){
-          //     console.log('グループリストを検索API エラー　発生しました。');
-          //   }
-          // })
+        if (item.resultCode === codes.RETCODE.NORMAL) {
+          // let jsonItem = typeof item.data == 'string' ? JSON.parse(item) : item;
+          this.pageModel.product = JSON.parse(item.data);
         } else {
+
           console.log('プロダクト詳細を検索API エラー　発生しました。');
         }
       } catch (e) {

@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { Pagination } from '../../pagination/pagination';
 import { DataFatoryService } from 'src/app/_shareModule/service/DataFatoryService';
+import { codes } from '@common/_utils/codes';
 
 @Component({
   selector: 'app-modify',
@@ -17,8 +18,9 @@ import { DataFatoryService } from 'src/app/_shareModule/service/DataFatoryServic
 })
 export class ModifyComponent implements OnInit {
   pageModel = {
-    update_success: false,
+    update_success: null,
     product: {
+      productid: '',
       productname: '',
       model: '',
       version: '',
@@ -42,15 +44,13 @@ export class ModifyComponent implements OnInit {
   ngOnInit() {
     this.pagination.currentPage = 1;
     // ユーザー情報を取得する
-    // this.loginuser = this.dataFatoryService.getLoginUser();
-    // this.loginInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
     this.loginInfo = this.dataFatoryService.getLoginUser();
 
     // プロダクト更新用
     // this.pageModel.product.productid = this.routerinfo.snapshot.queryParams["productid"];
 
     // プロダクトIDをリスト画面から取得された
-    this.getProductInfoApi(this.routerinfo.snapshot.queryParams["productid"])
+    this.getProductInfoApi(this.routerinfo.snapshot.queryParams);
   }
 
   /**
@@ -61,7 +61,8 @@ export class ModifyComponent implements OnInit {
     if (!this.checkParameters()) {
       return;
     }
-    let paramReq = {
+    var paramReq = {
+      productid: this.pageModel.product.productid,
       productname: this.pageModel.product.productname,
       model: this.pageModel.product.model,
       version: this.pageModel.product.version,
@@ -70,10 +71,12 @@ export class ModifyComponent implements OnInit {
       makeruid: 1,
       loginInfo: this.loginInfo
     }
-    this.httpService.usePost('updateProduct', paramReq).then(item => {
+    this.httpService.UsePutForRealPath('updateProduct', paramReq).then(item => {
       try {
-        if (item.result) {
+        if (item.resultCode === codes.RETCODE.NORMAL) {
           this.pageModel.update_success = true;
+        } else {
+          this.pageModel.update_success = false;
         }
       } catch (e) {
         console.log('グループ更新APIエラー　発生しました。');
@@ -84,17 +87,16 @@ export class ModifyComponent implements OnInit {
   /**
   * プロダクト詳細を検索API
   */
-  private getProductInfoApi(productid: any): void {
+  private getProductInfoApi(queryParams: any): void {
     let paramReq = {
-      productname: productid,
+      productid: queryParams.productid,　//プロダクトid
       loginInfo: this.loginInfo
     }
-    this.httpService.usePost('getProductInfo', paramReq).then(item => {
+    this.httpService.usePost('getProductDetail', paramReq).then(item => {
       try {
-        if (item.result) {
-          let jsonItem = typeof item == 'string' ? JSON.parse(item) : item;
-          this.pageModel.product = jsonItem.productInfo;
-
+        if (item.resultCode === codes.RETCODE.NORMAL) {
+          // let jsonItem = typeof item.data == 'string' ? JSON.parse(item) : item;
+          this.pageModel.product = JSON.parse(item.data);
         } else {
           console.log('プロダクト詳細を検索API エラー　発生しました。');
         }
@@ -111,13 +113,4 @@ export class ModifyComponent implements OnInit {
     }
     return true;
   }
-
-
-  private initList(res: any): void {
-    let page = this.pagination.currentPage - 1;
-    this.pagination.totalItems = res.length;
-    let head = page * this.pagination.pageItems;
-    let end = head + this.pagination.pageItems - 1;
-  }
-
 }

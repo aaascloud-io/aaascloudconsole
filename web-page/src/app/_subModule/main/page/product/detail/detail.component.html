@@ -19,26 +19,24 @@
               <br>
               <div class="input-group col-md-12 col-xs-12">
                 <label for="inputMessage" class="control-label">
-                  産業種類
+                  型番
                 </label>
-                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.product.industrytype"
-                  readonly>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.product.model" readonly>
               </div>
               <br>
               <div class="input-group col-md-12 col-xs-12">
                 <label for="inputMessage" class="control-label">
-                  用途
+                  バージョン
                 </label>
-                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.product.application"
-                  readonly>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.product.version" readonly>
               </div>
               <br>
-              <div class="input-group col-md-12 col-xs-12">
-                <label for="inputMessage" class="control-label">
-                  所在地
-                </label>
-                <input type="text" class="form-control" placeholder="" [(ngModel)]="pageModel.product.location"
-                  readonly>
+              <div class="form-group">SIMカード：
+                <select [(ngModel)]="pageModel.product.simflag" disabled="disabled">
+                  <option *ngIf="pageModel.product.simflag == 0" [value]=0>不要</option>
+                  <option *ngIf="pageModel.product.simflag == 1" [value]=1>必須</option>
+                  <option *ngIf="pageModel.product.simflag == 2" [value]=2>オプション</option>
+                </select>
               </div>
               <br>
               <div class="input-group col-md-12 col-xs-12">
@@ -61,118 +59,3 @@
     </div>
   </div>
   <!--END CONTENT-->
-
-  <!--BEGIN MODAL CONFIG PORTLET-->
-  <div id="addNode" class="modal fade">
-    <div class="modal-dialog" style="width: 90%;margin-top: 15%;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" data-dismiss="modal" aria-hidden="true" class="close">
-            &times;</button>
-          <h4 class="modal-title">
-            センサーノート追加</h4>
-        </div>
-        <div class="modal-body">
-          <div class="panel panel-blue modalPanel" style="background:#FFF;">
-            <div class="panel-heading">センサーノートリスト<span class="badge badge-info pull-right">5</span></div>
-            <div class="panel-body">
-              <table class="table table-hover table-bordered ">
-                <thead>
-                  <tr>
-                    <th class="col-md-1" scope="col">選択</th>
-                    <th class="col-md-1" scope="col">NO</th>
-                    <th class="col-md-1" scope="col">登録者</th>
-                    <th class="col-md-2" scope="col">自番号</th>
-                    <th class="col-md-1" scope="col">表示名</th>
-                    <th class="col-md-1" scope="col">用途</th>
-                    <th class="col-md-1" scope="col">入れモジュール</th>
-                    <th class="col-md-2" scope="col">ssid</th>
-                    <th class="col-md-1" scope="col">通信間隔</th>
-                    <th class="col-md-1" scope="col">登録先</th>
-                    <th class="col-md-1" scope="col">登録時間</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style="cursor: pointer">
-                    <td data-label="選択" class="active">
-                      <input type="checkbox" name="checkbox" style="cursor: pointer;" />
-                    </td>
-                    <td data-label="NO" class="active">1</td>
-                    <td data-label="登録者" class="active">agri</td>
-                    <td data-label="自番号" class="active">traker-ty-0001</td>
-                    <td data-label="表示名" class="active">トラッカー　-1</td>
-                    <td data-label="用途" class="active">追跡</td>
-                    <td data-label="入れモジュール" class="active">GPS</td>
-                    <td data-label="ssid" class="active">a349fjbot0e11d0fid-01020304043</td>
-                    <td data-label="通信間隔" class="active">一日二回</td>
-                    <td data-label="追加先" class="active">QRCode</td>
-                    <td data-label="追加時間" class="active">2019/01/02</td>
-                  </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" data-dismiss="modal" class="btn btn-default">
-            取 消</button>
-          <button type="button" class="btn btn-primary">
-            選 択</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--END MODAL CONFIG PORTLET-->
-
-
-  <!--BEGIN MODAL CONFIG PORTLET-->
-  <div id="addUser" class="modal fade">
-    <div class="modal-dialog" style="width: 90%;margin-top: 15%;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" data-dismiss="modal" aria-hidden="true" class="close">
-            &times;</button>
-          <h4 class="modal-title">
-            ユーザー追加</h4>
-        </div>
-        <div class="modal-body">
-          <div class="panel panel-blue modalPanel" style="background:#FFF;">
-            <div class="panel-heading">ユーザーリスト<span class="badge badge-info pull-right">5</span></div>
-            <div class="panel-body">
-              <table class="table table-hover table-bordered ">
-                <thead>
-                  <tr>
-                    <th class="col-md-1" scope="col">選択</th>
-                    <th class="col-md-1" scope="col">NO</th>
-                    <th class="col-md-1" scope="col">ユーザー名</th>
-                    <th class="col-md-1" scope="col">ユーザーID</th>
-                    <th class="col-md-8" scope="col">プロダクト</th>
-
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style="cursor: pointer">
-                    <td data-label="選択" class="active">
-                      <input type="checkbox" name="checkbox" style="cursor: pointer;" />
-                    </td>
-                    <td data-label="NO" class="active">1</td>
-                    <td data-label="ユーザー名" class="active">agri</td>
-                    <td data-label="ユーザーID" class="active">traker-ty-0001</td>
-                    <td data-label="プロダクト" class="active ">
-                      <span class="badge badge-danger">トラッカー重機</span>
-                      <span class="badge badge-danger">千葉農園</span>
-                    </td>
-                  </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" data-dismiss="modal" class="btn btn-default">
-            取 消</button>
-          <button type="button" class="btn btn-primary">
-            選 択</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--END MODAL CONFIG PORTLET-->

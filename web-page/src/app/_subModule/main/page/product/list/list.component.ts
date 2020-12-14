@@ -56,19 +56,21 @@ export class ListComponent implements OnInit {
   /**
   * プロダクト削除
   */
-  deleteProduct(productid: any) {
+  deleteProduct() {
     let paramReq = {
-      productid: productid,　//プロダクトid
+      productid: this.pageModel.productid,　//プロダクトid
       loginInfo: this.loginInfo
     }
     this.httpService.usePost('deleteProduct', paramReq).then(item => {
       try {
-        if (item.result) {
-          //更新後再検索
+        if (item.resultCode === codes.RETCODE.NORMAL) {
+          //削除後再検索
           this.getProjectList();
+        } else {
+          console.log('プロダクトの削除は エラー 発生しました。');
         }
       } catch (e) {
-        console.log('グループを登録するAPI エラー　発生しました。');
+        console.log('プロダクトの削除は エラー　発生しました。');
       }
     })
   }
