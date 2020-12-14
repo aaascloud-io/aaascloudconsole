@@ -1,7 +1,6 @@
 package com.ifocus.aaascloud.controller;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,31 +46,19 @@ public class Cloud_productController {
 
 		}
 		try {
+			// プロダクト一覧を取得する
 			List<Cloud_productEntity> list = cloud_productService.getProductAll();
 
 			String responseData = new String();
-			List<JSONObject> returnList = new ArrayList();
+			responseData = responseData + "[";
 			for (Cloud_productEntity entity:list) {
-				if (returnList.isEmpty()) {
-					responseData = responseData + "[";
-				} else {
+				if (responseData.length() > 1) {
 					responseData = responseData + ",";
 				}
-				JSONObject resJasonObj = new JSONObject();
-				// 情報設定
-				resJasonObj.put("productid", entity.getProductid());
-				resJasonObj.put("productcode", entity.getProductcode());
-				resJasonObj.put("productname", entity.getProductname());
-				resJasonObj.put("model", entity.getModel());
-				resJasonObj.put("version", entity.getVersion());
-				resJasonObj.put("simflag", entity.getSimflag());
-				resJasonObj.put("summary", entity.getSummary());
-
-				returnList.add(resJasonObj);
-				responseData = responseData + resJasonObj.toString();
-
+				responseData = responseData + cloud_productService.getProductDetail(entity.getProductid());
 			}
 			responseData = responseData + "]";
+
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
@@ -81,7 +68,51 @@ public class Cloud_productController {
 		} catch( Exception e) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
+	 * プロダクト詳細を取得する
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getProductDetail", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> getProductDetail(@RequestBody Cloud_productModel model) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		// 権限チェック
+		if (!model.getLoginInfo().getLogincompanyid().equals(1)) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			return response;
+
+		}
+		try {
+			// プロダクト詳細を取得する
+			Cloud_productEntity entity = cloud_productService.getProductDetail(model.getProductid());
+
+			if (entity != null) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+				response.setData(this.getJsonFromCloud_productEntity(entity));
+			} else {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0004);
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
 		}
 
 		return response;
@@ -218,4 +249,28 @@ public class Cloud_productController {
 
 		return entity;
 	}
+
+	/**
+	 * プロダクトのEntityからJson作成
+	 * @param entity Cloud_productEntity
+	 * @return String Json形式
+	 */
+	private String getJsonFromCloud_productEntity(Cloud_productEntity entity) {
+
+		if (entity == null ) {
+			return "";
+		}
+		JSONObject resJasonObj = new JSONObject();
+		// 情報設定
+		resJasonObj.put("productid", entity.getProductid());
+		resJasonObj.put("productcode", entity.getProductcode());
+		resJasonObj.put("productname", entity.getProductname());
+		resJasonObj.put("model", entity.getModel());
+		resJasonObj.put("version", entity.getVersion());
+		resJasonObj.put("simflag", entity.getSimflag());
+		resJasonObj.put("summary", entity.getSummary());
+
+		return resJasonObj.toString();
+	}
+
 }

@@ -1,6 +1,5 @@
 package com.ifocus.aaascloud.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,49 +46,30 @@ public class Cloud_projectController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 権限チェック
-		if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
+		try {
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
 
-			// プロジェクト一覧を取得する
-			List<Cloud_projectModel> list = cloud_projectService.getMyProjects(cloud_projectModel.getTargetUserInfo().getTargetuserid());
+					// プロジェクト一覧を取得する
+					List<Cloud_projectModel> list = cloud_projectService.getMyProjects(cloud_projectModel.getTargetUserInfo().getTargetuserid());
 
-			String responseData = new String();
-			List<JSONObject> returnList = new ArrayList();
-			for (Cloud_projectModel model:list) {
-				if (returnList.isEmpty()) {
-					responseData = responseData + "[";
-				} else {
-					responseData = responseData + ",";
-				}
-				JSONObject resJasonObj = new JSONObject();
-				// 情報設定
-				resJasonObj.put("projectid", model.getProjectid());
-				resJasonObj.put("userid", model.getUserid());
-				resJasonObj.put("projectname", model.getProjectname());
-				resJasonObj.put("productid", model.getProductid());
-				resJasonObj.put("projectsummary", model.getProjectsummary());
-				resJasonObj.put("productname", model.getProductname());
-				resJasonObj.put("groupCounts", model.getGroupCounts());
-				resJasonObj.put("deviceCounts", model.getDeviceCounts());
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+					response.setCount(list.size());
+					response.setData(this.getProjectJsonString(list));
 
-				returnList.add(resJasonObj);
-				responseData = responseData + resJasonObj.toString();
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "loginuserid&targetuseridが必須です。");
+
 			}
-			responseData = responseData + "]";
-
+		} catch( Exception e) {
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-			response.setCount(list.size());
-			response.setData(responseData);
-
-		} else {
-			/* 異常系 */
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "loginuserid&targetuseridが必須です。");
-			return response;
-
+			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
 		}
 
 		return response;
@@ -108,45 +88,52 @@ public class Cloud_projectController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 権限チェック
-		if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
+		try {
 
-			// プロジェクト詳細を取得する
-			Cloud_projectDetailModel model = cloud_projectService.getMyProject(cloud_projectModel.getProductid());
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
 
-			String responseData = new String();
-			responseData = responseData + "{";
+				// プロジェクト詳細を取得する
+				Cloud_projectDetailModel model = cloud_projectService.getMyProject(cloud_projectModel.getProductid());
 
-			JSONObject resJasonObj = new JSONObject();
-			// 情報設定
-			resJasonObj.put("projectid", model.getProjectid());
-			resJasonObj.put("userid", model.getUserid());
-			resJasonObj.put("projectname", model.getProjectname());
-			resJasonObj.put("productid", model.getProductid());
-			resJasonObj.put("projectsummary", model.getProjectsummary());
-			resJasonObj.put("productname", model.getProductname());
-			resJasonObj.put("groupCounts", model.getGroupCounts());
-			resJasonObj.put("deviceCounts", model.getDeviceCounts());
+				String responseData = new String();
+				responseData = responseData + "{";
 
-			// グループ一覧情報設定
-			resJasonObj.put("groupList", getGroupJsonString(model.getGroupList()));
-			// デバイス一覧情報設定
-			resJasonObj.put("deviceList", getDeviceJsonString(model.getDeviceList()));
+				JSONObject resJasonObj = new JSONObject();
+				// 情報設定
+				resJasonObj.put("projectid", model.getProjectid());
+				resJasonObj.put("userid", model.getUserid());
+				resJasonObj.put("projectname", model.getProjectname());
+				resJasonObj.put("productid", model.getProductid());
+				resJasonObj.put("projectsummary", model.getProjectsummary());
+				resJasonObj.put("productname", model.getProductname());
+				resJasonObj.put("groupCounts", model.getGroupCounts());
+				resJasonObj.put("deviceCounts", model.getDeviceCounts());
 
-			responseData = responseData + "}";
+				// グループ一覧情報設定
+				resJasonObj.put("groupList", getGroupJsonString(model.getGroupList()));
+				// デバイス一覧情報設定
+				resJasonObj.put("deviceList", getDeviceJsonString(model.getDeviceList()));
 
+				responseData = responseData + "}";
+
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+				response.setData(responseData);
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "loginuserid&targetuseridが必須です。");
+
+			}
+
+		} catch( Exception e) {
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-			response.setData(responseData);
-
-		} else {
-			/* 異常系 */
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "loginuserid&targetuseridが必須です。");
-			return response;
-
+			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
 		}
 
 		return response;
@@ -159,10 +146,10 @@ public class Cloud_projectController {
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
+	@RequestMapping(value = "/registerProject", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> registerUser(@RequestBody LoginInfo loginInfo,Cloud_projectModel cloud_projectModel) throws Exception {
+	public BaseHttpResponse<String> registerProject(@RequestBody LoginInfo loginInfo,Cloud_projectModel cloud_projectModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
@@ -176,10 +163,10 @@ public class Cloud_projectController {
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+	@RequestMapping(value = "/updateProject", method = RequestMethod.PUT)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> updateUser(@RequestBody LoginInfo loginInfo,Cloud_projectModel cloud_projectModel) throws Exception {
+	public BaseHttpResponse<String> updateProject(@RequestBody LoginInfo loginInfo,Cloud_projectModel cloud_projectModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
@@ -214,10 +201,10 @@ public class Cloud_projectController {
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/deleteProject", method = RequestMethod.DELETE)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> deleteUser(@RequestBody LoginInfo loginInfo,Cloud_projectModel cloud_projectModel) throws Exception {
+	public BaseHttpResponse<String> deleteProject(@RequestBody LoginInfo loginInfo,Cloud_projectModel cloud_projectModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
@@ -228,14 +215,49 @@ public class Cloud_projectController {
 		return response;
 	}
 
+	/**
+	 * プロジェクトリストのJsonを取得する
+	 * @param list List<Cloud_projectModel>
+	 * @return String Json形式
+	 */
+	private String getProjectJsonString(List<Cloud_projectModel> list) {
+
+		String responseData = new String();
+		responseData = responseData + "[";
+		for (Cloud_projectModel model:list) {
+			if (responseData.length() > 1) {
+				responseData = responseData + ",";
+			}
+			JSONObject resJasonObj = new JSONObject();
+			// 情報設定
+			resJasonObj.put("projectid", model.getProjectid());
+			resJasonObj.put("userid", model.getUserid());
+			resJasonObj.put("projectname", model.getProjectname());
+			resJasonObj.put("productid", model.getProductid());
+			resJasonObj.put("projectsummary", model.getProjectsummary());
+			resJasonObj.put("productname", model.getProductname());
+			resJasonObj.put("groupCounts", model.getGroupCounts());
+			resJasonObj.put("deviceCounts", model.getDeviceCounts());
+
+			responseData = responseData + resJasonObj.toString();
+		}
+		responseData = responseData + "]";
+
+		return responseData;
+
+	}
+
+	/**
+	 * グループリストのJsonを取得する
+	 * @param list List<Cloud_groupModel>
+	 * @return String Json形式
+	 */
 	private String getGroupJsonString(List<Cloud_groupModel> list) {
 
 		String responseData = new String();
-		List<JSONObject> returnList = new ArrayList();
+		responseData = responseData + "[";
 		for (Cloud_groupModel model:list) {
-			if (returnList.isEmpty()) {
-				responseData = responseData + "[";
-			} else {
+			if (responseData.length() > 1) {
 				responseData = responseData + ",";
 			}
 			JSONObject resJasonObj = new JSONObject();
@@ -245,7 +267,6 @@ public class Cloud_projectController {
 			resJasonObj.put("groupname",model.getGroupname());
 			resJasonObj.put("alive",model.getAlive());
 
-			returnList.add(resJasonObj);
 			responseData = responseData + resJasonObj.toString();
 		}
 		responseData = responseData + "]";
@@ -254,14 +275,17 @@ public class Cloud_projectController {
 
 	}
 
+	/**
+	 * デバイスリストのJsonを取得する
+	 * @param list List<Cloud_deviceModel>
+	 * @return String Json形式
+	 */
 	private String getDeviceJsonString(List<Cloud_deviceModel> list) {
 
 		String responseData = new String();
-		List<JSONObject> returnList = new ArrayList();
+		responseData = responseData + "[";
 		for (Cloud_deviceModel model:list) {
-			if (returnList.isEmpty()) {
-				responseData = responseData + "[";
-			} else {
+			if (responseData.length() > 1) {
 				responseData = responseData + ",";
 			}
 			JSONObject resJasonObj = new JSONObject();
@@ -280,7 +304,6 @@ public class Cloud_projectController {
 			resJasonObj.put("userid",model.getUserid());
 			resJasonObj.put("alive",model.getAlive());
 
-			returnList.add(resJasonObj);
 			responseData = responseData + resJasonObj.toString();
 		}
 		responseData = responseData + "]";
