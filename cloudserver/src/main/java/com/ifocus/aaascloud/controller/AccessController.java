@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.model.Cloud_userModel;
-import com.ifocus.aaascloud.service.Cloud_userService;
+import com.ifocus.aaascloud.service.AccessService;
 
 import net.sf.json.JSONObject;
 
@@ -21,7 +21,7 @@ import net.sf.json.JSONObject;
 public class AccessController {
 
 	@Autowired
-	private Cloud_userService cloud_userService;
+	private AccessService accessService;
 
 	/**
 	 * アクセス権限ユーザ一覧を取得する
@@ -44,7 +44,7 @@ public class AccessController {
 
 			try {
 				// アクセス権限ユーザ一覧を取得する
-				List<Integer> list = cloud_userService.getAccessUsers(cloud_userModel.getUserid());
+				List<Integer> list = accessService.getAccessUsers(cloud_userModel.getUserid());
 
 				// ユーザID情報設定
 				resJasonObj.put("accessableUserIdList", this.getJsonListFromUseridList(list));

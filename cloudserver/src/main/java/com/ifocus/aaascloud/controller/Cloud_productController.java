@@ -15,6 +15,7 @@ import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.model.Cloud_productModel;
+import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_productService;
 
 import net.sf.json.JSONObject;
@@ -22,6 +23,8 @@ import net.sf.json.JSONObject;
 @Controller
 public class Cloud_productController {
 
+	@Autowired
+	private AccessService accessService;
 	@Autowired
 	private Cloud_productService cloud_productService;
 
@@ -37,14 +40,6 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 権限チェック
-		if (!model.getLoginInfo().getLogincompanyid().equals(1)) {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
-			return response;
-
-		}
 		try {
 			// プロダクト一覧を取得する
 			List<Cloud_productEntity> list = cloud_productService.getProductAll();
@@ -86,14 +81,6 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 権限チェック
-		if (!model.getLoginInfo().getLogincompanyid().equals(1)) {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
-			return response;
-
-		}
 		try {
 			// プロダクト詳細を取得する
 			Cloud_productEntity entity = cloud_productService.getProductDetail(model.getProductid());
@@ -131,6 +118,14 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		// 権限チェック
+		if (!accessService.checkProductAccess(model.getLoginInfo())) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			return response;
+
+		}
 		try {
 			Cloud_productEntity inserEntity = getCloud_productEntity(model);
 
@@ -170,6 +165,14 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		// 権限チェック
+		if (!accessService.checkProductAccess(model.getLoginInfo())) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			return response;
+
+		}
 		try {
 
 			Cloud_productEntity updateEntity = getCloud_productEntity(model);
@@ -222,6 +225,14 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		// 権限チェック
+		if (!accessService.checkProductAccess(model.getLoginInfo())) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			return response;
+
+		}
 		try {
 			/* 削除するため、productidを設定する */
 			if (model.getProductid() == null) {
