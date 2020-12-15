@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.ifocus.aaascloud.api.common.BaseHttpResponse;
+import com.ifocus.aaascloud.constant.ErrorConstant;
+import com.ifocus.aaascloud.controller.AccessController;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
@@ -23,10 +26,7 @@ import junit.framework.TestCase;
 @SpringBootTest
 class AaascloudApplicationTests extends TestCase{
 
-	//public AaascloudApplicationTests(String arg0) {
-	//	super(arg0);
-	//}
-	//@Autowired
+	@Autowired
 	private Cloud_userService cloud_userService;
 	@Autowired
 	private Cloud_userRepository cloud_userRepository;
@@ -38,6 +38,9 @@ class AaascloudApplicationTests extends TestCase{
 
 	@Autowired
 	private Cloud_productRepository cloud_productRepository;
+
+	@Autowired
+	private AccessController accessController;
 
 
 	/*
@@ -224,4 +227,76 @@ class AaascloudApplicationTests extends TestCase{
 
 		assertEquals( entity.isEmpty(), true);
 	}
+
+	/*
+	 * Cloud_userService
+	 * アクセス権限ユーザ一覧を取得する
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testgetAccessUsers() throws Exception {
+
+		List<Integer> list = cloud_userService.getAccessUsers(1);
+		assertEquals( list.size(), 7);
+	}
+
+	/*
+	 * Cloud_userService
+	 * アクセス権限ユーザ一覧を取得する
+	 * 正常系2
+	 *
+	 */
+	@Test
+	public void testgetAccessUsers2() throws Exception {
+
+		List<Integer> list = cloud_userService.getAccessUsers(5);
+		assertEquals( list.size(), 1);
+		for (Integer userid:list) {
+			assertEquals( userid, Integer.valueOf(5));
+		}
+	}
+
+	/*
+	 * Cloud_userService
+	 * アクセス権限ユーザ一覧を取得する
+	 * 正常系3
+	 *
+	 */
+	@Test
+	public void testgetAccessUsers3() throws Exception {
+
+		List<Integer> list = cloud_userService.getAccessUsers(2);
+		assertEquals( list.size(), 3);
+	}
+
+	/*
+	 * AccessController
+	 * アクセス権限ユーザ一覧を取得する
+	 * 異常系
+	 *
+	 */
+	@Test
+	public void testControllergetAccessUsers() throws Exception {
+
+		Cloud_userModel cloud_userModel = new Cloud_userModel();
+		BaseHttpResponse<String> list = accessController.getAccessUsers(cloud_userModel);
+		assertEquals( list.getResultCode(), ErrorConstant.ERROR_CODE_0001);
+	}
+
+	/*
+	 * AccessController
+	 * アクセス権限ユーザ一覧を取得する
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testControllergetAccessUsersOK() throws Exception {
+
+		Cloud_userModel cloud_userModel = new Cloud_userModel();
+		cloud_userModel.setUserid(1);
+		BaseHttpResponse<String> list = accessController.getAccessUsers(cloud_userModel);
+		assertEquals( list.getResultCode(), ErrorConstant.ERROR_CODE_0000);
+	}
+
 }
