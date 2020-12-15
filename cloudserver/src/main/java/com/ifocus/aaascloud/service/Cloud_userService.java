@@ -305,24 +305,4 @@ public class Cloud_userService {
 
 	}
 
-	/*
-	 * アクセス権限ユーザ一覧を取得する
-	 * @param userid Integer ログインユーザID
-	 * @return List<Integer> アクセス権限を持つユーザ一覧
-	 *
-	 */
-	public List<Integer> getAccessUsers(Integer userid) throws Exception {
-		List<Integer> returnList = new ArrayList();
-		returnList.add(userid);
-		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
-		if (list.isEmpty()) {
-			return returnList;
-		} else {
-			for (Cloud_userEntity entity:list) {
-				returnList.addAll(getAccessUsers(entity.getUserid()));
-			}
-			return returnList;
-		}
-	}
-
 }
