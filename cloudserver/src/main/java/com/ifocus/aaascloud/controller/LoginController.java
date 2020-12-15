@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.model.Cloud_userModel;
-import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_userService;
 
 import net.sf.json.JSONObject;
@@ -21,19 +20,20 @@ public class LoginController {
 
 	@Autowired
 	private Cloud_userService cloud_userService;
-	@Autowired
-	private Cloud_companyService cloud_companyService;
+//	@Autowired
+//	private Cloud_companyService cloud_companyService;
 
 	/**
-	 * loginユーザーを取得する
-	 * @param json
-	 * @return
+	 * ログイン認証
+	 * @param cloud_userModel Cloud_userModel
+	 *         loginId
+	 *         password
+	 * @return BaseHttpResponse<String> JSON形式
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getuser", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	///public BaseHttpResponse<String> getLoginUser(@RequestBody String json) throws Exception {
 	public BaseHttpResponse<String> getLoginUser(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
@@ -46,6 +46,7 @@ public class LoginController {
 		if (null != loginId && null != password) {
 
 			try {
+				// ログイン認証
 				Cloud_userModel model = cloud_userService.login(loginId, password);
 
 				if (model.getUserid() >= 0) {
