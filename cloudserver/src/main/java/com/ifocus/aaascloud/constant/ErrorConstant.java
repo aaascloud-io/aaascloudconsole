@@ -10,6 +10,7 @@ public class ErrorConstant {
 	public static final String ERROR_CODE_0003 = "0003";
 	public static final String ERROR_CODE_0004 = "0004";
 	public static final String ERROR_CODE_0005 = "0005";
+	public static final String ERROR_CODE_0006 = "0006";
 
 	public static final String ERROR_CODE_0100 = "0100";
 	public static final String ERROR_CODE_0101 = "0101";
@@ -27,6 +28,7 @@ public class ErrorConstant {
 	public static final String ERROR_MSG_0003 = "重複チェックエラー:";
 	public static final String ERROR_MSG_0004 = "取得エラー:";
 	public static final String ERROR_MSG_0005 = "認証エラー:";
+	public static final String ERROR_MSG_0006 = "アクセス権限取得エラー:";
 
 	public static final String ERROR_MSG_0100 = "登録失敗：";
 	public static final String ERROR_MSG_0101 = "更新失敗：";
