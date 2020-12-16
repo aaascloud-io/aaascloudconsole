@@ -21,7 +21,7 @@ public class Cloud_groupEntity {
 	private Integer groupid;
 	@Getter
 	@Setter
-	private String projectid;
+	private Integer projectid;
 	@Getter
 	@Setter
 	private String groupname;

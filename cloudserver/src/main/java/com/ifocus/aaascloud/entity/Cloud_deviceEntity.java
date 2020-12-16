@@ -54,6 +54,12 @@ public class Cloud_deviceEntity {
 	private Integer userid;
 	@Getter
 	@Setter
+	private Integer lastprojectId;
+	@Getter
+	@Setter
+	private Integer lastgroupid;
+	@Getter
+	@Setter
 	private Integer alive;
 	@Getter
 	@Setter
