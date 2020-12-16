@@ -1,5 +1,7 @@
 package com.ifocus.aaascloud.model;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,10 +9,16 @@ public class Cloud_groupModel {
 
 	@Getter
 	@Setter
+	private LoginInfo loginInfo;
+	@Getter
+	@Setter
+	private TargetUserInfo targetUserInfo;
+	@Getter
+	@Setter
 	private Integer groupid;
 	@Getter
 	@Setter
-	private String projectid;
+	private Integer projectid;
 	@Getter
 	@Setter
 	private String groupname;
@@ -23,4 +31,7 @@ public class Cloud_groupModel {
 	@Getter
 	@Setter
 	private Integer groupDeviceCounts;
+	@Getter
+	@Setter
+	private List<Integer> deviceidList;	// deviceidリスト
 }
