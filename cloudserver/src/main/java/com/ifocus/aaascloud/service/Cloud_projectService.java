@@ -1,5 +1,6 @@
 package com.ifocus.aaascloud.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
 import com.ifocus.aaascloud.entity.Cloud_groupEntity;
@@ -18,6 +20,7 @@ import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_projectEntity;
 import com.ifocus.aaascloud.entity.Cloud_projectRepository;
+import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 
@@ -43,8 +46,8 @@ public class Cloud_projectService {
 
 	/*
 	 * プロジェクト一覧取得
-	 *
-	 *
+	 * @param userid Integer ターゲットユーザーID
+	 * @List<Cloud_projectModel> プロジェクト一覧
 	 */
 	public List<Cloud_projectModel> getMyProjects(Integer userid) throws Exception {
 		List<Cloud_projectModel> returnList = new ArrayList();
@@ -74,8 +77,8 @@ public class Cloud_projectService {
 
 	/*
 	 * プロジェクト詳細取得
-	 *
-	 *
+	 * @param projectid Integer プロジェクトID
+	 * @return Cloud_projectDetailModel プロジェクト詳細
 	 */
 	public Cloud_projectDetailModel getMyProject(Integer projectid) throws Exception {
 		Cloud_projectDetailModel model = new Cloud_projectDetailModel();
@@ -112,12 +115,40 @@ public class Cloud_projectService {
 
 	/*
 	 * プロジェクト登録
-	 *
-	 *
+	 * @param Cloud_projectDetailModel プロジェクト詳細
+	 * @return projectid Integer プロジェクトID
 	 */
-	public Cloud_projectEntity registerProject(Cloud_projectEntity entity) throws Exception {
-		Cloud_projectEntity insertedEntity = cloud_projectRepository.save(entity);
-		return insertedEntity;
+	public Integer registerProject(Cloud_projectDetailModel model) throws Exception {
+
+
+		////////////////////////////////////////////////////////
+		// プロジェクト登録
+		////////////////////////////////////////////////////////
+		Cloud_projectEntity insertEntity = this.getCloud_projectEntityFromModel(model);
+		Cloud_projectEntity insertedEntity = cloud_projectRepository.save(insertEntity);
+
+		// プロジェクトIDをモデルに設定する
+		model.setProductid(insertedEntity.getProductid());
+
+		// プロジェクトIDを各グループに設定する
+		this.setTakeoverInfoToGroups(model);
+
+		////////////////////////////////////////////////////////
+		// グループ登録(グループデバイス登録を含む)
+		////////////////////////////////////////////////////////
+		cloud_groupService.registerGroups(model.getGroupList());
+
+		////////////////////////////////////////////////////////
+		// プロジェクトデバイス更新
+		////////////////////////////////////////////////////////
+		// 更新対象デバイス取得
+		Iterable<Cloud_deviceEntity> entityList = cloud_deviceRepository.findAllById(this.getDeviceidList(model.getDeviceList()));
+		// 更新情報設定
+		cloud_groupService.setUpdateInfoToEntity(model, entityList);
+		// グループデバイス一括更新
+		cloud_deviceRepository.saveAll(entityList);
+
+		return insertedEntity.getProjectid();
 
 	}
 
@@ -142,6 +173,70 @@ public class Cloud_projectService {
 			cloud_projectRepository.deleteById(productid);
 		}
 		return ;
+
+	}
+
+	/*
+	 * プロジェクトEntityを取得する
+	 *
+	 * @param Cloud_projectDetailModel プロジェクト詳細
+	 * @return Cloud_projectEntity 登録用プロジェクトEntity
+	 *
+	 */
+	private Cloud_projectEntity getCloud_projectEntityFromModel(Cloud_projectDetailModel model) throws Exception {
+		Cloud_projectEntity entity = new Cloud_projectEntity();
+
+		/* システム日時 */
+		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
+		entity.setProjectname(model.getProjectname());
+		entity.setProductid(model.getProductid());
+		entity.setProjectsummary(model.getProjectsummary());
+		entity.setAlive(AliveConstant.ALIVE);
+		entity.setI_uid(model.getLoginInfo().getLoginuserid());
+		entity.setI_time(systemTime);
+		entity.setU_uid(model.getLoginInfo().getLoginuserid());
+		entity.setU_time(systemTime);
+
+		return entity;
+
+	}
+
+	/*
+	 * プロジェクトIDを各グループに設定する
+	 *
+	 * @param Cloud_projectDetailModel プロジェクト詳細
+	 *
+	 */
+	private void setTakeoverInfoToGroups(Cloud_projectDetailModel model) throws Exception {
+
+		// 引継ぎ情報設定
+		model.getGroupList().forEach(
+				s ->{
+					s.setLoginInfo(model.getLoginInfo()); 				// LoginInfo引継ぎ
+					s.setTargetUserInfo(model.getTargetUserInfo()); 	// TargetUserInfo引継ぎ
+					s.setProjectid(model.getProjectid()); 				// プロジェクトID引継ぎ
+				}
+		);
+
+	}
+
+	/*
+	 * デバイスIDリスト取得
+	 *
+	 * @param deviceList List<Cloud_deviceModel>
+	 * @return List<Integer>
+	 *
+	 */
+	private List<Integer> getDeviceidList(List<Cloud_deviceModel> deviceList) throws Exception {
+
+		List<Integer> deviceidList = new ArrayList();
+		deviceList.forEach(
+				s ->{
+					deviceidList.add(s.getDeviceid());
+				}
+		);
+		return deviceidList;
 
 	}
 }
