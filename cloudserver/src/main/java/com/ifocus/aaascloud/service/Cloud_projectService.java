@@ -98,16 +98,12 @@ public class Cloud_projectService {
 		}
 		/* グループ数取得 */
 		model.setGroupCounts(cloud_groupRepository.getProjectGroupCountsByProjectid(model.getProjectid()));
-		/* グループ一覧取得 */
-		List<Cloud_groupEntity> groupList = cloud_groupRepository.searchGroupsByProjectid(model.getProjectid());
 		/* グループ一覧を設定 */
-		model.setGroupList(cloud_groupService.getModelsByEntitys(groupList));
+		model.setGroupList(cloud_groupService.getGroups(model.getProjectid()));
 		/* デバイス数取得 */
 		model.setDeviceCounts(cloud_deviceRepository.getProjectDeviceCountsByProjectid(model.getProjectid()));
-		/* デバイス一覧取得 */
-		List<Cloud_deviceEntity> deviceList = cloud_deviceRepository.searchDevicesByProjectid(model.getProjectid());
 		/* デバイス一覧を設定 */
-		model.setDeviceList(cloud_deviceService.getModelsByEntitys(deviceList));
+		model.setDeviceList(cloud_deviceService.getProjectDevices(model.getProjectid()));
 
 		return model;
 
@@ -144,7 +140,7 @@ public class Cloud_projectService {
 		// 更新対象デバイス取得
 		Iterable<Cloud_deviceEntity> entityList = cloud_deviceRepository.findAllById(this.getDeviceidList(model.getDeviceList()));
 		// 更新情報設定
-		cloud_groupService.setUpdateInfoToEntity(model, entityList);
+		cloud_groupService.setUpdateInfoToEntityForProjectDevice(model, entityList);
 		// グループデバイス一括更新
 		cloud_deviceRepository.saveAll(entityList);
 
@@ -154,23 +150,79 @@ public class Cloud_projectService {
 
 	/*
 	 * プロジェクト更新
-	 *
+	 * @param Cloud_projectDetailModel プロジェクト詳細
+	 * @return projectid Integer プロジェクトID
 	 *
 	 */
-	public Cloud_projectEntity updateProject(Cloud_projectEntity entity) throws Exception {
-		Cloud_projectEntity insertedEntity = cloud_projectRepository.save(entity);
-		return insertedEntity;
+	public Integer updateProject(Cloud_projectDetailModel model) throws Exception {
+
+		////////////////////////////////////////////////////////
+		// プロジェクト更新
+		////////////////////////////////////////////////////////
+		/* 既存プロジェクト取得 */
+		Optional<Cloud_projectEntity> toBeUpdate = cloud_projectRepository.findById(model.getProductid());
+		Cloud_projectEntity updateEntity = toBeUpdate.get();
+		/* 更新情報設定 */
+		this.setCloud_projectEntityFromModel(model, updateEntity);
+		Cloud_projectEntity updatedEntity = cloud_projectRepository.save(updateEntity);
+
+		////////////////////////////////////////////////////////
+		// プロジェクトデバイス更新
+		////////////////////////////////////////////////////////
+		// 更新対象デバイス取得
+		List<Cloud_deviceEntity> entityList = (List<Cloud_deviceEntity>) cloud_deviceRepository.findAllById(this.getDeviceidList(model.getDeviceList()));
+		// プロジェクト＆グループ情報クリア
+		cloud_groupService.clearProjectAndGroupInfoToEntity(model.getLoginInfo(), entityList);
+		// デバイス一括更新
+		cloud_deviceRepository.saveAll(entityList);
+
+		////////////////////////////////////////////////////////
+		// グループ更新(Idあり & Alive = 1)
+		////////////////////////////////////////////////////////
+		cloud_groupService.updateGroups(model.getUpdateGroupList());
+
+		////////////////////////////////////////////////////////
+		// グループ登録(Idなし)
+		////////////////////////////////////////////////////////
+		cloud_groupService.registerGroups(model.getRegisterGroupList());
+
+		////////////////////////////////////////////////////////
+		// グループ削除(Idあり & Alive = 0)
+		////////////////////////////////////////////////////////
+		cloud_groupService.updateGroups(model.getDeleteGroupList());
+
+		return updatedEntity.getProjectid();
 
 	}
 
 	/*
 	 * プロジェクト削除
-	 *
+	 * @param model Cloud_projectModel プロジェクト詳細
 	 *
 	 */
-	public void deleteProject(Integer productid) throws Exception {
-		if (cloud_projectRepository.existsById(productid)) {
-			cloud_projectRepository.deleteById(productid);
+	public void deleteProject(Cloud_projectModel model) throws Exception {
+
+		////////////////////////////////////////////////////////
+		// プロジェクトデバイス更新
+		////////////////////////////////////////////////////////
+		// 更新対象デバイス取得
+		List<Cloud_deviceEntity> deviceEntityList = cloud_deviceRepository.searchDevicesByProjectid(model.getProjectid());
+		// プロジェクト＆グループ情報クリア
+		cloud_groupService.clearProjectAndGroupInfoToEntity(model.getLoginInfo(), deviceEntityList);
+		// デバイス一括更新
+		cloud_deviceRepository.saveAll(deviceEntityList);
+
+		////////////////////////////////////////////////////////
+		// グループ削除
+		////////////////////////////////////////////////////////
+		List<Cloud_groupEntity> groupEntityList = cloud_groupRepository.searchGroupsByProjectid(model.getProjectid());
+		cloud_groupRepository.deleteAll(groupEntityList);
+
+		////////////////////////////////////////////////////////
+		// プロジェクト削除
+		////////////////////////////////////////////////////////
+		if (cloud_projectRepository.existsById(model.getProjectid())) {
+			cloud_projectRepository.deleteById(model.getProjectid());
 		}
 		return ;
 
@@ -239,4 +291,28 @@ public class Cloud_projectService {
 		return deviceidList;
 
 	}
+
+	/*
+	 * プロジェクトEntityに更新情報を設定する
+	 *
+	 * @param model Cloud_projectDetailModel プロジェクト詳細
+	 * @param updateEntity Cloud_projectEntity 更新プロジェクトEntity
+	 *
+	 */
+	private void setCloud_projectEntityFromModel(
+			Cloud_projectDetailModel model,
+			Cloud_projectEntity updateEntity) throws Exception {
+
+		/* システム日時 */
+		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+		updateEntity.setUserid(model.getTargetUserInfo().getTargetuserid());
+		updateEntity.setProjectname(model.getProjectname());
+		updateEntity.setProductid(model.getProductid());
+		updateEntity.setProjectsummary(model.getProjectsummary());
+		updateEntity.setAlive(AliveConstant.ALIVE);
+		updateEntity.setU_uid(model.getLoginInfo().getLoginuserid());
+		updateEntity.setU_time(systemTime);
+
+	}
+
 }

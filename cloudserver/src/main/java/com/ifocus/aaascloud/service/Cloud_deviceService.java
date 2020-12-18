@@ -36,15 +36,29 @@ public class Cloud_deviceService {
 	}
 
 	/*
-	 * グループ別デバイス一覧取得
-	 *
+	 * プロジェクトデバイス一覧取得(グループに所属なし)
+	 * @param projectid Integer プロジェクトID
+	 * @return List<Cloud_deviceModel> プロジェクトデバイス一覧
 	 *
 	 */
-	public List<Cloud_deviceEntity> getMyDevices(Integer userid) throws Exception {
-		List<Cloud_deviceEntity> returnList = new ArrayList();
-//		Iterable<Cloud_deviceEntity> list = cloud_deviceRepository.searchByUserid(userid);
-//		list.forEach(s -> returnList.add(s));
-		return returnList;
+	public List<Cloud_deviceModel> getProjectDevices(Integer projectid) throws Exception {
+
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchDevicesByProjectidAndGroupid(projectid,0);
+		return this.getModelsByEntitys(list);
+
+	}
+
+	/*
+	 * グループ別デバイス一覧取得
+	 * @param projectid Integer プロジェクトID
+	 * @param groupid Integer グループID
+	 * @return List<Cloud_deviceModel> グループ別デバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getGroupDevices(Integer projectid, Integer groupid) throws Exception {
+
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchDevicesByProjectidAndGroupid(projectid, groupid);
+		return this.getModelsByEntitys(list);
 
 	}
 
@@ -102,6 +116,8 @@ public class Cloud_deviceService {
 		model.setSim_tel(entity.getSim_tel());
 		model.setCompanyid(entity.getCompanyid());
 		model.setUserid(entity.getUserid());
+		model.setLastprojectId(entity.getLastprojectId());
+		model.setLastgroupid(entity.getLastgroupid());
 		model.setAlive(entity.getAlive());
 
 		return model;
