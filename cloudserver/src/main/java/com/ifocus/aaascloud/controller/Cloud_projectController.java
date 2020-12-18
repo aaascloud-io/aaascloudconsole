@@ -16,7 +16,6 @@ import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_groupModel;
 import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
-import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
@@ -149,7 +148,7 @@ public class Cloud_projectController {
 	@RequestMapping(value = "/registerProject", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> registerProject(@RequestBody LoginInfo loginInfo,Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
+	public BaseHttpResponse<String> registerProject(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
@@ -200,7 +199,6 @@ public class Cloud_projectController {
 
 	/**
 	 * プロジェクトを更新する
-	 * @param loginInfo LoginInfo
 	 * @param cloud_projectModel Cloud_projectModel
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
@@ -208,31 +206,52 @@ public class Cloud_projectController {
 	@RequestMapping(value = "/updateProject", method = RequestMethod.PUT)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> updateProject(@RequestBody LoginInfo loginInfo,Cloud_projectModel cloud_projectModel) throws Exception {
+	public BaseHttpResponse<String> updateProject(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-//		try {
-//			Integer registeredUserid = cloud_projectService.updateSonUser(loginInfo,cloud_projectModel);
-//
-//			if (null != registeredUserid ) {
-//				/* 正常系 */
-//				response.setStatus(200);
-//				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-//				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-//			} else {
-//				/* 異常系 */
-//				response.setStatus(200);
-//				response.setResultCode(ErrorConstant.ERROR_CODE_0100);
-//				response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_projectService.updateSonUser");
-//			}
-//		} catch (Exception e) {
-//			/* 異常系 */
-//			response.setStatus(200);
-//			response.setResultCode(ErrorConstant.ERROR_CODE_0100);
-//			response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_projectService.updateSonUser:" + e.getMessage());
-//			return response;
-//		}
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_projectDetailModel.getLoginInfo().getLoginuserid(), cloud_projectDetailModel.getTargetUserInfo().getTargetuserid())) {
+
+				// プロジェクトを更新する
+				Integer projectid = cloud_projectService.updateProject(cloud_projectDetailModel);
+
+				if (projectid != null) {
+
+					String responseData = new String();
+					responseData = responseData + "{";
+
+					JSONObject resJasonObj = new JSONObject();
+					// 情報設定
+					resJasonObj.put("updateCount", 1);
+
+					responseData = responseData + "}";
+
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+					response.setData(responseData);
+				} else {
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0101);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0101);
+				}
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessOK");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0101);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0101 + e.getMessage());
+		}
+
 		return response;
 	}
 
@@ -246,7 +265,7 @@ public class Cloud_projectController {
 	@RequestMapping(value = "/deleteProject", method = RequestMethod.DELETE)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> deleteProject(@RequestBody LoginInfo loginInfo,Cloud_projectModel cloud_projectModel) throws Exception {
+	public BaseHttpResponse<String> deleteProject(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
