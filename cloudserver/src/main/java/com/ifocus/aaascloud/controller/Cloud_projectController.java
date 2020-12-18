@@ -149,9 +149,51 @@ public class Cloud_projectController {
 	@RequestMapping(value = "/registerProject", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> registerProject(@RequestBody LoginInfo loginInfo,Cloud_projectModel cloud_projectModel) throws Exception {
+	public BaseHttpResponse<String> registerProject(@RequestBody LoginInfo loginInfo,Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_projectDetailModel.getLoginInfo().getLoginuserid(), cloud_projectDetailModel.getTargetUserInfo().getTargetuserid())) {
+
+				// プロジェクトを登録する
+				Integer projectid = cloud_projectService.registerProject(cloud_projectDetailModel);
+
+				if (projectid != null) {
+					String responseData = new String();
+					responseData = responseData + "{";
+
+					JSONObject resJasonObj = new JSONObject();
+					// 情報設定
+					resJasonObj.put("projectid", projectid);
+
+					responseData = responseData + "}";
+
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+					response.setData(responseData);
+				} else {
+					/* 異常系 */
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0100);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_project");
+				}
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessOK");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0100);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + e.getMessage());
+		}
 
 		return response;
 	}
@@ -208,9 +250,40 @@ public class Cloud_projectController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		response.setStatus(200);
-		response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-		response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
+
+				// プロジェクトを削除する
+				cloud_projectService.deleteProject(cloud_projectModel);
+
+				String responseData = new String();
+				responseData = responseData + "{";
+
+				JSONObject resJasonObj = new JSONObject();
+				// 情報設定
+				resJasonObj.put("deleteCount", 1);
+
+				responseData = responseData + "}";
+
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+				response.setData(responseData);
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessOK");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0102);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0102 + e.getMessage());
+		}
 
 		return response;
 	}
