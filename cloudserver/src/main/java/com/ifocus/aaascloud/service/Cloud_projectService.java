@@ -189,7 +189,7 @@ public class Cloud_projectService {
 		////////////////////////////////////////////////////////
 		// グループ削除(Idあり & Alive = 0)
 		////////////////////////////////////////////////////////
-		cloud_groupService.updateGroups(model.getDeleteGroupList());
+		cloud_groupService.deleteGroups(model.getDeleteGroupList());
 
 		return updatedEntity.getProjectid();
 
