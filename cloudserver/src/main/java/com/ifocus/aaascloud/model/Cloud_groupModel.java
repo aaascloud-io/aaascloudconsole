@@ -1,5 +1,6 @@
 package com.ifocus.aaascloud.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
@@ -33,5 +34,15 @@ public class Cloud_groupModel {
 	private Integer groupDeviceCounts;
 	@Getter
 	@Setter
-	private List<Integer> deviceidList;	// deviceidリスト
+	private List<Cloud_deviceModel> deviceList;
+	/**
+	 *  deviceidリスト
+	 */
+	public List<Integer> getDeviceIdList() {
+		List<Integer> returnDeviceIdList = new ArrayList();
+		this.getDeviceList().forEach(model->{
+			returnDeviceIdList.add(model.getDeviceid());
+		});
+		return returnDeviceIdList;
+	}
 }

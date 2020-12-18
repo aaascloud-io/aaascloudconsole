@@ -1,6 +1,9 @@
 package com.ifocus.aaascloud.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.ifocus.aaascloud.constant.AliveConstant;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,5 +49,44 @@ public class Cloud_projectDetailModel {
 	@Getter
 	@Setter
 	private List<Cloud_deviceModel> deviceList;
+
+	/**
+	 *  新規グループリスト
+	 */
+	public List<Cloud_groupModel> getRegisterGroupList() {
+		List<Cloud_groupModel> returnList = new ArrayList();
+		this.getGroupList().forEach(model->{
+			if (model.getGroupid() == null) {
+				returnList.add(model);
+			}
+		});
+		return returnList;
+	}
+
+	/**
+	 *  更新グループリスト
+	 */
+	public List<Cloud_groupModel> getUpdateGroupList() {
+		List<Cloud_groupModel> returnList = new ArrayList();
+		this.getGroupList().forEach(model->{
+			if (model.getGroupid() != null && model.getAlive() == AliveConstant.ALIVE) {
+				returnList.add(model);
+			}
+		});
+		return returnList;
+	}
+
+	/**
+	 *  削除グループリスト
+	 */
+	public List<Cloud_groupModel> getDeleteGroupList() {
+		List<Cloud_groupModel> returnList = new ArrayList();
+		this.getGroupList().forEach(model->{
+			if (model.getGroupid() != null && model.getAlive() == AliveConstant.NOT_ALIVE) {
+				returnList.add(model);
+			}
+		});
+		return returnList;
+	}
 
 }

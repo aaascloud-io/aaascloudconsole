@@ -49,5 +49,11 @@ public class Cloud_deviceModel {
 	private Integer userid;
 	@Getter
 	@Setter
+	private Integer lastprojectId;
+	@Getter
+	@Setter
+	private Integer lastgroupid;
+	@Getter
+	@Setter
 	private Integer alive;
 }
