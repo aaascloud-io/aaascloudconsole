@@ -1,10 +1,18 @@
 package com.ifocus.aaascloud.model;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
 public class Cloud_deviceModel {
 
+	@Getter
+	@Setter
+	private LoginInfo loginInfo;
+	@Getter
+	@Setter
+	private TargetUserInfo targetUserInfo;
 	@Getter
 	@Setter
 	private Integer deviceid;
@@ -56,4 +64,7 @@ public class Cloud_deviceModel {
 	@Getter
 	@Setter
 	private Integer alive;
+	@Getter
+	@Setter
+	private List<Integer> deviceidlist;	// デバイスIDのリスト
 }
