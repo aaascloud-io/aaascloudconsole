@@ -17,7 +17,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 */
 	@Query("SELECT c FROM cloud_device c WHERE c.projectid = 0 AND c.companyid = :companyid")
 	@Autowired
-	public List<Cloud_deviceEntity> searchMyDevicesByCompanyid(@Param("companyid") Integer companyid);
+	public List<Cloud_deviceEntity> searchSelectableDevicesByCompanyid(@Param("companyid") Integer companyid);
 
 	/*
 	 * 自社全デバイス一覧(デバイス管理画面用)
@@ -26,7 +26,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 */
 	@Query("SELECT c FROM cloud_device c WHERE c.companyid = :companyid")
 	@Autowired
-	public List<Cloud_deviceEntity> searchMyDevicesAllByCompanyid(@Param("companyid") Integer companyid);
+	public List<Cloud_deviceEntity> searchAllDevicesByCompanyid(@Param("companyid") Integer companyid);
 
 	/*
 	 * プロジェクトの全デバイス一覧(デバイス管理画面用)
