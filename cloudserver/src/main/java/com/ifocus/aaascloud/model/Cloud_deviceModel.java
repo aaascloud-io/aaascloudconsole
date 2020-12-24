@@ -2,6 +2,8 @@ package com.ifocus.aaascloud.model;
 
 import java.util.List;
 
+import com.ifocus.aaascloud.constant.CommonConstant;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -89,9 +91,9 @@ public class Cloud_deviceModel {
 	public String getImeiForSearch() {
 
 		if (this.imei == null) {
-			return "'%%'";
+			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
-			return "'%" + this.imei.trim() + "%'";
+			return "%" + this.imei.trim() + "%";
 		}
 	}
 
@@ -102,9 +104,9 @@ public class Cloud_deviceModel {
 	public String getProductnameForSearch() {
 
 		if (this.productname == null) {
-			return "'%%'";
+			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
-			return "'%" + this.productname.trim() + "%'";
+			return "%" + this.productname.trim() + "%";
 		}
 	}
 
@@ -115,9 +117,9 @@ public class Cloud_deviceModel {
 	public String getProjectnameForSearch() {
 
 		if (this.projectname == null) {
-			return "'%%'";
+			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
-			return "'%" + this.projectname.trim() + "%'";
+			return "%" + this.projectname.trim() + "%";
 		}
 	}
 
@@ -128,9 +130,22 @@ public class Cloud_deviceModel {
 	public String getIndustryForSearch() {
 
 		if (this.industry == null) {
-			return "'%%'";
+			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
-			return "'%" + this.industry.trim() + "%'";
+			return "%" + this.industry.trim() + "%";
+		}
+	}
+
+	/*
+	 * group情報検索条件取得
+	 *
+	 */
+	public String getGroupForSearch() {
+
+		if (this.groupname == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.groupname.trim() + "%";
 		}
 	}
 
