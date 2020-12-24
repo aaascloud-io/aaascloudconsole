@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
+import com.ifocus.aaascloud.model.Cloud_deviceDetailModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
-import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_userService;
 
@@ -27,13 +27,11 @@ public class Cloud_deviceController {
 	private Cloud_userService cloud_userService;
 	@Autowired
 	private Cloud_deviceService cloud_deviceService;
-	@Autowired
-	private Cloud_companyService cloud_companyService;
 
 	/**
-	 * デバイス一覧を取得する
-	 * @param json
-	 * @return
+	 * デバイス一覧を取得する(デバイス管理初期表示用)
+	 * @param cloud_deviceModel Cloud_deviceModel デバイス情報
+	 * @return BaseHttpResponse<String>
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getCompanyDevices", method = RequestMethod.POST)
@@ -95,9 +93,57 @@ public class Cloud_deviceController {
 	}
 
 	/**
+	 * デバイス詳細を取得する
+	 * @param cloud_deviceModel Cloud_deviceModel デバイス情報
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getDeviceDetail", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> getDeviceDetail(@RequestBody Cloud_deviceModel cloud_deviceModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
+
+				// デバイス詳細を取得する
+				Cloud_deviceDetailModel detailModel = cloud_deviceService.getDeviceDetail(cloud_deviceModel.getDeviceid());
+
+				if (detailModel != null) {
+
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+					response.setData(getDeviceDetailJsonString(detailModel));
+				} else {
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0004);
+				}
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessOK");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "getDeviceDetail " + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
 	 * デバイスを登録する
-	 * @param loginInfo LoginInfo
-	 * @param cloud_deviceModel Cloud_deviceModel
+	 * @param cloud_deviceModel Cloud_deviceModel デバイス情報
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
 	 */
@@ -154,8 +200,104 @@ public class Cloud_deviceController {
 	}
 
 	/**
+	 * デバイスを一括登録する
+	 * @param cloud_deviceModel Cloud_deviceModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/registerDevices", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> registerDevices(@RequestBody Cloud_deviceModel cloud_deviceModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
+
+				// プロダクト存在チェックを行う
+				List<Cloud_deviceDetailModel> productErrorList = cloud_deviceService.checkProductExistedInDB(cloud_deviceModel);
+
+				// DB存在しないプロダクトがあれば、
+				if (!productErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(productErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkProductExistedInDB");
+					response.setData(getDeviceDetailsJsonString(productErrorList));
+				}
+
+				// プロジェクト存在チェックを行う
+				List<Cloud_deviceDetailModel> projectErrorList = cloud_deviceService.checkProjectExistedInDB(cloud_deviceModel);
+
+				// DB存在しないプロジェクトがあれば、
+				if (!projectErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(projectErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkProjectExistedInDB");
+					response.setData(getDeviceDetailsJsonString(projectErrorList));
+				}
+
+				// グループ存在チェックを行う
+				List<Cloud_deviceDetailModel> groupErrorList = cloud_deviceService.checkGroupExistedInDB(cloud_deviceModel);
+
+				// DB存在しないグループがあれば、
+				if (!groupErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(groupErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkGroupExistedInDB");
+					response.setData(getDeviceDetailsJsonString(groupErrorList));
+				}
+
+				// デバイスを一括登録する
+				Integer registerCount = cloud_deviceService.registerDevices(cloud_deviceModel);
+
+				if (registerCount != null) {
+
+					String responseData = new String();
+					responseData = responseData + "{";
+
+					JSONObject resJasonObj = new JSONObject();
+					// 情報設定
+					resJasonObj.put("registerCount", registerCount);
+
+					responseData = responseData + "}";
+
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+					response.setData(responseData);
+				} else {
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0100);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "registerDevices");
+				}
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessOK");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0100);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
 	 * デバイスを更新する
-	 * @param loginInfo LoginInfo
 	 * @param cloud_deviceModel Cloud_deviceModel
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
@@ -172,7 +314,7 @@ public class Cloud_deviceController {
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
 
-				// プロジェクトを更新する
+				// デバイスを更新する
 				Integer deviceid = cloud_deviceService.updateDevice(cloud_deviceModel);
 
 				if (deviceid != null) {
@@ -214,7 +356,6 @@ public class Cloud_deviceController {
 
 	/**
 	 * デバイスを削除する
-	 * @param loginInfo LoginInfo
 	 * @param cloud_deviceModel Cloud_deviceModel
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
@@ -231,7 +372,7 @@ public class Cloud_deviceController {
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
 
-				// プロジェクトを削除する
+				// デバイスを削除する
 				cloud_deviceService.deleteDevice(cloud_deviceModel);
 
 				String responseData = new String();
@@ -266,7 +407,6 @@ public class Cloud_deviceController {
 
 	/**
 	 * 選択デバイスを削除する
-	 * @param loginInfo LoginInfo
 	 * @param cloud_deviceModel Cloud_deviceModel
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
@@ -399,6 +539,61 @@ public class Cloud_deviceController {
 			resJasonObj.put("alive", model.getAlive());
 
 			responseData = responseData + resJasonObj.toString();
+		}
+		responseData = responseData + "]";
+
+		return responseData;
+
+	}
+
+	/**
+	 * デバイス詳細のJsonを取得する
+	 * @param model Cloud_deviceDetailModel デバイス詳細モデル
+	 * @return String Json形式
+	 */
+	private String getDeviceDetailJsonString(Cloud_deviceDetailModel model) {
+
+		JSONObject resJasonObj = new JSONObject();
+		// 情報設定
+		resJasonObj.put("deviceid", model.getDeviceid());
+		resJasonObj.put("projectid", model.getProjectid());
+		resJasonObj.put("groupid", model.getGroupid());
+		resJasonObj.put("devicename", model.getDevicename());
+		resJasonObj.put("imei", model.getImei());
+		resJasonObj.put("iccid", model.getIccid());
+		resJasonObj.put("sn", model.getSn());
+		resJasonObj.put("sim_iccid", model.getSim_iccid());
+		resJasonObj.put("sim_imei", model.getSim_imei());
+		resJasonObj.put("sim_tel", model.getSim_tel());
+		resJasonObj.put("companyid", model.getCompanyid());
+		resJasonObj.put("userid", model.getUserid());
+		resJasonObj.put("lastprojectId", model.getLastprojectId());
+		resJasonObj.put("lastgroupid", model.getLastgroupid());
+		resJasonObj.put("alive", model.getAlive());
+
+		resJasonObj.put("productid", model.getProductid());
+		resJasonObj.put("productcode", model.getProductcode());
+		resJasonObj.put("productname", model.getProductname());
+		resJasonObj.put("industry", model.getIndustry());
+
+		return resJasonObj.toString();
+
+	}
+
+	/**
+	 * デバイスリストのJsonを取得する
+	 * @param list List<Cloud_deviceDetailModel>
+	 * @return String Json形式
+	 */
+	private String getDeviceDetailsJsonString(List<Cloud_deviceDetailModel> list) {
+
+		String responseData = new String();
+		responseData = responseData + "[";
+		for (Cloud_deviceDetailModel model:list) {
+			if (responseData.length() > 1) {
+				responseData = responseData + ",";
+			}
+			responseData = responseData + getDeviceDetailJsonString(model);
 		}
 		responseData = responseData + "]";
 

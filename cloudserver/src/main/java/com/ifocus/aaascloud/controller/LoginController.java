@@ -31,10 +31,10 @@ public class LoginController {
 	 * @return BaseHttpResponse<String> JSON形式
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getuser", method = RequestMethod.POST)
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getLoginUser(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
+	public BaseHttpResponse<String> login(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
