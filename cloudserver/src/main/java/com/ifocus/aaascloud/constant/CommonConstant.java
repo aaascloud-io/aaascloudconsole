@@ -7,4 +7,6 @@ public class CommonConstant {
 	// プロジェクト未設定
 	public static final Integer PROJECT_NOT_SET = 0;
 
+	// 検索用デフォルト文字列
+	public static final String DEFAULT_MATCH_ALL = "%%";
 }
