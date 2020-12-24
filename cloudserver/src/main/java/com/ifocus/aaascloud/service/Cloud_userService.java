@@ -16,6 +16,7 @@ import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
+import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 
@@ -302,6 +303,31 @@ public class Cloud_userService {
 		if (cloud_userRepository.existsById(model.getUserid())) {
 			cloud_userRepository.deleteById(model.getUserid());
 		}
+
+	}
+
+	/*
+	 * 配下ユーザの会社ID一覧取得
+	 * @param model Cloud_deviceModel ユーザ情報
+	 * @return List<Integer> 配下ユーザの会社ID一覧
+	 *
+	 */
+	public List<Integer> getUnderCompanyIds(Cloud_deviceModel model) throws Exception {
+		List<Cloud_userEntity> returnList = cloud_userRepository.getUnderUserCompanyIdsByUpperuserid(model.getTargetUserInfo().getTargetuserid());
+		// 配下各社ID一覧を取得する
+		boolean isMyCompanyExist = false;
+		List<Integer> underUserCompanyIdList = new ArrayList();
+		for (Cloud_userEntity cloud_userEntity:returnList) {
+			underUserCompanyIdList.add(cloud_userEntity.getCompanyid());
+			if (cloud_userEntity.getCompanyid().equals(model.getTargetUserInfo().getTargetuserCompanyid())) {
+				isMyCompanyExist = true;
+			}
+		}
+		// 自社を追加する
+		if (!isMyCompanyExist) {
+			underUserCompanyIdList.add(model.getTargetUserInfo().getTargetuserCompanyid());
+		}
+		return underUserCompanyIdList;
 
 	}
 

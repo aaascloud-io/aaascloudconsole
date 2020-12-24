@@ -13,10 +13,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.constant.CommonConstant;
+import com.ifocus.aaascloud.entity.Cloud_companyEntity;
+import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
+import com.ifocus.aaascloud.entity.Cloud_groupEntity;
+import com.ifocus.aaascloud.entity.Cloud_groupRepository;
+import com.ifocus.aaascloud.entity.Cloud_productEntity;
+import com.ifocus.aaascloud.entity.Cloud_productRepository;
+import com.ifocus.aaascloud.entity.Cloud_projectEntity;
+import com.ifocus.aaascloud.entity.Cloud_projectRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
+import com.ifocus.aaascloud.model.Cloud_deviceDetailModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.util.Util;
 
@@ -30,6 +39,62 @@ public class Cloud_deviceService {
 	private Cloud_deviceRepository cloud_deviceRepository ;
 	@Autowired
 	private Cloud_userRepository cloud_userRepository ;
+	@Autowired
+	private Cloud_companyRepository cloud_companyRepository ;
+	@Autowired
+	private Cloud_productRepository cloud_productRepository ;
+	@Autowired
+	private Cloud_projectRepository cloud_projectRepository ;
+	@Autowired
+	private Cloud_groupRepository cloud_groupRepository ;
+
+	@Autowired
+	private Cloud_userService cloud_userService;
+
+	/*
+	 * 配下各社のデバイス一覧取得
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceModel> デバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getUnderCompanyDevices(Cloud_deviceModel model) throws Exception {
+
+		// 会社IDを設定する
+		this.setCompanyIDToModel(model);
+
+		// 配下各社ID一覧を取得する
+		List<Integer> underUserCompanyIdList = cloud_userService.getUnderCompanyIds(model);
+
+		// 全社のデバイス一覧取得
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchUnderCompanyDevicesByCompanyidIn(underUserCompanyIdList);
+		return this.getModelsByEntitys(list);
+
+	}
+
+	/*
+	 * 配下各社のデバイス検索
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceModel> デバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getUnderCompanyDevicesByConditions(Cloud_deviceModel model) throws Exception {
+
+		// 会社IDを設定する
+		this.setCompanyIDToModel(model);
+
+		// 配下各社ID一覧を取得する
+		List<Integer> underUserCompanyIdList = cloud_userService.getUnderCompanyIds(model);
+
+		// 全社のデバイス一覧取得
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchDevicesByCompanyidInAndImeiLikeOrIccidLikeOrSnLike(
+				underUserCompanyIdList,
+				model.getImeiForSearch(),
+				model.getImeiForSearch(),
+				model.getImeiForSearch()
+				);
+		return this.getModelsByEntitys(list);
+
+	}
 
 	/*
 	 * 全社のデバイス一覧取得
@@ -76,6 +141,20 @@ public class Cloud_deviceService {
 	}
 
 	/*
+	 * デバイス詳細取得
+	 * @param deviceid Integer デバイスID
+	 * @return Cloud_deviceDetailModel デバイス詳細情報
+	 *
+	 */
+	public Cloud_deviceDetailModel getDeviceDetail(Integer deviceid) throws Exception {
+
+		Optional<Cloud_deviceEntity> entity = cloud_deviceRepository.findById(deviceid);
+
+		return getDetailModelByEntity(entity.get());
+
+	}
+
+	/*
 	 * デバイス登録
 	 * @param model Cloud_deviceModel デバイス情報
 	 * @return Integer デバイスID
@@ -88,6 +167,28 @@ public class Cloud_deviceService {
 		// デバイス登録
 		Cloud_deviceEntity insertedEntity = cloud_deviceRepository.save(this.getEntitByModel(model));
 		return insertedEntity.getDeviceid();
+
+	}
+
+	/*
+	 * デバイス一括登録
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return Integer デバイスID
+	 *
+	 */
+	public Integer registerDevices(Cloud_deviceModel model) throws Exception {
+
+		// DB存在チェック実施
+
+		// 会社IDを設定する
+		this.setCompanyIDToModel(model);
+		// デバイス登録
+		Integer count = 0;
+		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+			Cloud_deviceEntity insertedEntity = cloud_deviceRepository.save(getEntitByDetailModel(deviceDetailModel));
+			count++;
+		}
+		return count;
 
 	}
 
@@ -159,6 +260,111 @@ public class Cloud_deviceService {
 	}
 
 	/*
+	 * デバイス一括登録時プロジェクト存在チェック
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceDetailModel> デバイス情報リスト
+	 *
+	 */
+	public List<Cloud_deviceDetailModel> checkProjectExistedInDB(Cloud_deviceModel model) throws Exception {
+
+		List<Cloud_deviceDetailModel> returnList = new ArrayList();
+		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+			if (deviceDetailModel.getProjectid() != null) {
+				Optional<Cloud_projectEntity> entity = cloud_projectRepository.findById(deviceDetailModel.getProjectid());
+				// 存在しない場合、
+				if (!entity.isPresent()) {
+					// 戻るリストに追加
+					returnList.add(deviceDetailModel);
+				}
+			}
+		}
+		return returnList;
+
+	}
+
+	/*
+	 * デバイス一括登録時プロダクト存在チェック
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceDetailModel> デバイス情報リスト
+	 *
+	 */
+	public List<Cloud_deviceDetailModel> checkProductExistedInDB(Cloud_deviceModel model) throws Exception {
+
+		List<Cloud_deviceDetailModel> returnList = new ArrayList();
+		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+			Optional<Cloud_productEntity> entity = cloud_productRepository.findById(deviceDetailModel.getProductid());
+			// 存在しない場合、
+			if (!entity.isPresent()) {
+				// 戻るリストに追加
+				returnList.add(deviceDetailModel);
+			}
+		}
+		return returnList;
+
+	}
+
+	/*
+	 * デバイス一括登録時グループ存在チェック
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceDetailModel> デバイス情報リスト
+	 *
+	 */
+	public List<Cloud_deviceDetailModel> checkGroupExistedInDB(Cloud_deviceModel model) throws Exception {
+
+		List<Cloud_deviceDetailModel> returnList = new ArrayList();
+		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+			if (deviceDetailModel.getGroupid() != null) {
+				Optional<Cloud_groupEntity> entity = cloud_groupRepository.findById(deviceDetailModel.getGroupid());
+				// 存在しない場合、
+				if (!entity.isPresent()) {
+					// 戻るリストに追加
+					returnList.add(deviceDetailModel);
+				}
+			}
+		}
+		return returnList;
+
+	}
+
+	/*
+	 * EntityからDetailModel取得
+	 * @param entity Cloud_deviceEntity
+	 * @return Cloud_deviceDetailModel
+	 *
+	 */
+	public Cloud_deviceDetailModel getDetailModelByEntity(Cloud_deviceEntity entity) throws Exception {
+		Cloud_deviceDetailModel model = new Cloud_deviceDetailModel();
+		model.setDeviceid(entity.getDeviceid());
+		model.setProjectid(entity.getProjectid());
+		model.setGroupid(entity.getGroupid());
+		model.setDevicename(entity.getDevicename());
+		model.setImei(entity.getImei());
+		model.setIccid(entity.getIccid());
+		model.setSn(entity.getSn());
+		model.setSim_iccid(entity.getSim_iccid());
+		model.setSim_imei(entity.getSim_imei());
+		model.setSim_tel(entity.getSim_tel());
+		model.setCompanyid(entity.getCompanyid());
+		model.setUserid(entity.getUserid());
+		model.setLastprojectId(entity.getLastprojectId());
+		model.setLastgroupid(entity.getLastgroupid());
+		model.setAlive(entity.getAlive());
+
+		// プロダクト情報取得
+		Optional<Cloud_productEntity> productEntity  = cloud_productRepository.findById(entity.getProductid());
+		model.setProductid(entity.getProductid());
+		model.setProductcode(productEntity.get().getProductcode());
+		model.setProductname(productEntity.get().getProductname());
+
+		// 会社情報取得
+		Optional<Cloud_companyEntity> companyEntity  = cloud_companyRepository.findById(entity.getCompanyid());
+		model.setIndustry(companyEntity.get().getIndustry());
+
+		return model;
+
+	}
+
+	/*
 	 * EntityからModel取得
 	 * @param entity Cloud_deviceEntity
 	 * @return Cloud_deviceModel
@@ -170,7 +376,7 @@ public class Cloud_deviceService {
 		model.setProjectid(entity.getProjectid());
 		model.setGroupid(entity.getGroupid());
 		model.setDevicename(entity.getDevicename());
-		model.setImei(entity.getImei());
+//		model.setImei(entity.getImei());
 		model.setIccid(entity.getIccid());
 		model.setSn(entity.getSn());
 		model.setSim_iccid(entity.getSim_iccid());
@@ -245,6 +451,54 @@ public class Cloud_deviceService {
 		entity.setSim_iccid(model.getSim_iccid());
 		entity.setSim_imei(model.getSim_imei());
 		entity.setSim_tel(model.getSim_tel());
+		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
+		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
+		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
+		entity.setLastgroupid(CommonConstant.GROUP_NOT_SET);
+		entity.setAlive(AliveConstant.ALIVE);
+		entity.setI_uid(model.getLoginInfo().getLoginuserid());
+		entity.setI_time(systemTime);
+		entity.setU_uid(model.getLoginInfo().getLoginuserid());
+		entity.setU_time(systemTime);
+
+		return entity;
+
+	}
+
+	/*
+	 * DetailModelからEntity取得(登録用)
+	 * @param entity Cloud_deviceEntity
+	 * @return Cloud_deviceDetailModel
+	 *
+	 */
+	private Cloud_deviceEntity getEntitByDetailModel(Cloud_deviceDetailModel model) throws Exception {
+
+		Cloud_deviceEntity entity = new Cloud_deviceEntity();
+
+		/* システム日時 */
+		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+
+		// 情報設定
+		if (model.getProjectid() == null) {
+			entity.setProjectid(CommonConstant.PROJECT_NOT_SET);
+		} else {
+			entity.setProjectid(model.getProjectid());
+		}
+
+		if (model.getProjectid() == null) {
+			entity.setGroupid(CommonConstant.GROUP_NOT_SET);
+		} else {
+			entity.setGroupid(model.getGroupid());
+		}
+
+		entity.setDevicename(model.getDevicename());
+		entity.setImei(model.getImei());
+		entity.setIccid(model.getIccid());
+		entity.setSn(model.getSn());
+		entity.setSim_iccid(model.getSim_iccid());
+		entity.setSim_imei(model.getSim_imei());
+		entity.setSim_tel(model.getSim_tel());
+		entity.setProductid(model.getProductid());
 		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
 		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
 		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
