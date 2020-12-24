@@ -16,8 +16,13 @@ import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
+import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
+import com.ifocus.aaascloud.model.LoginInfo;
+import com.ifocus.aaascloud.model.TargetUserInfo;
+import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_companyService;
+import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_userService;
 
@@ -27,14 +32,18 @@ import junit.framework.TestCase;
 class AaascloudApplicationTests extends TestCase{
 
 	@Autowired
-	private Cloud_userService cloud_userService;
-	@Autowired
 	private Cloud_userRepository cloud_userRepository;
 
+	@Autowired
+	private Cloud_userService cloud_userService;
+	@Autowired
+	private AccessService accessService;
 	@Autowired
 	private Cloud_companyService cloud_companyService;
 	@Autowired
 	private Cloud_productService cloud_productService;
+	@Autowired
+	private Cloud_deviceService cloud_deviceService;
 
 	@Autowired
 	private Cloud_productRepository cloud_productRepository;
@@ -237,7 +246,7 @@ class AaascloudApplicationTests extends TestCase{
 	@Test
 	public void testgetAccessUsers() throws Exception {
 
-		List<Integer> list = cloud_userService.getAccessUsers(1);
+		List<Integer> list = accessService.getAccessUsers(1);
 		assertEquals( list.size(), 7);
 	}
 
@@ -250,7 +259,7 @@ class AaascloudApplicationTests extends TestCase{
 	@Test
 	public void testgetAccessUsers2() throws Exception {
 
-		List<Integer> list = cloud_userService.getAccessUsers(5);
+		List<Integer> list = accessService.getAccessUsers(5);
 		assertEquals( list.size(), 1);
 		for (Integer userid:list) {
 			assertEquals( userid, Integer.valueOf(5));
@@ -266,7 +275,7 @@ class AaascloudApplicationTests extends TestCase{
 	@Test
 	public void testgetAccessUsers3() throws Exception {
 
-		List<Integer> list = cloud_userService.getAccessUsers(2);
+		List<Integer> list = accessService.getAccessUsers(2);
 		assertEquals( list.size(), 3);
 	}
 
@@ -299,4 +308,100 @@ class AaascloudApplicationTests extends TestCase{
 		assertEquals( list.getResultCode(), ErrorConstant.ERROR_CODE_0000);
 	}
 
+	/*
+	 * Cloud_deviceService
+	 * 配下各社のデバイス一覧取得
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testgetUnderCompanyDevices() throws Exception {
+
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginuserid(1);
+		loginInfo.setLogincompanyid(1);
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserid(1);
+		targetUserInfo.setTargetuserCompanyid(1);
+
+		Cloud_deviceModel model = new Cloud_deviceModel();
+
+		model.setUserid(1);
+		model.setCompanyid(1);
+		model.setLoginInfo(loginInfo);
+		model.setTargetUserInfo(targetUserInfo);
+
+		List<Cloud_deviceModel> list = cloud_deviceService.getUnderCompanyDevices(model);
+		assertEquals( list.isEmpty(), false);
+		assertEquals( list.size(), 6);
+	}
+
+	/*
+	 * Cloud_deviceService
+	 * 配下各社のデバイス検索(グループ指定なし)
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testgetUnderCompanyDevicesByConditions() throws Exception {
+
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginuserid(1);
+		loginInfo.setLogincompanyid(1);
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserid(1);
+		targetUserInfo.setTargetuserCompanyid(1);
+
+		Cloud_deviceModel model = new Cloud_deviceModel();
+
+		model.setUserid(1);
+		model.setCompanyid(1);
+		model.setLoginInfo(loginInfo);
+		model.setTargetUserInfo(targetUserInfo);
+
+		// 検索条件設定
+		model.setImei("");
+		model.setProductname("");
+		model.setProjectname("");
+		model.setIndustry("");
+
+		List<Cloud_deviceModel> list = cloud_deviceService.getUnderCompanyDevicesByConditions(model);
+		assertEquals( list.isEmpty(), false);
+		assertEquals( list.size(), 6);
+	}
+
+	/*
+	 * Cloud_deviceService
+	 * 配下各社のデバイス検索(グループ指定あり)
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testgetUnderCompanyDevicesByConditionsWithGroup() throws Exception {
+
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginuserid(1);
+		loginInfo.setLogincompanyid(1);
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserid(1);
+		targetUserInfo.setTargetuserCompanyid(1);
+
+		Cloud_deviceModel model = new Cloud_deviceModel();
+
+		model.setUserid(1);
+		model.setCompanyid(1);
+		model.setLoginInfo(loginInfo);
+		model.setTargetUserInfo(targetUserInfo);
+
+		// 検索条件設定
+		model.setImei("");
+		model.setProductname("");
+		model.setProjectname("");
+		model.setIndustry("");
+		model.setGroupname("現場");
+
+		List<Cloud_deviceModel> list = cloud_deviceService.getUnderCompanyDevicesByConditions(model);
+		assertEquals( list.isEmpty(), false);
+		assertEquals( list.size(), 3);
+	}
 }
