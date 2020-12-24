@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -78,5 +80,25 @@ public class Cloud_deviceEntity {
 	@Getter
 	@Setter
 	private Timestamp u_time;
+	@Getter
+	@Setter
+	@ManyToOne
+	@JoinColumn(name = "product")
+	private Cloud_productEntity product;
+	@Getter
+	@Setter
+	@ManyToOne
+	@JoinColumn(name = "project")
+	private Cloud_projectEntity project;
+	@Getter
+	@Setter
+	@ManyToOne
+	@JoinColumn(name = "company")
+	private Cloud_companyEntity company;
+	@Getter
+	@Setter
+	@ManyToOne
+	@JoinColumn(name = "groupentity")
+	private Cloud_groupEntity groupentity;
 
 }
