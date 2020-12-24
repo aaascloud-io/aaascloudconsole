@@ -66,5 +66,72 @@ public class Cloud_deviceModel {
 	private Integer alive;
 	@Getter
 	@Setter
+	private String productid;
+	@Getter
+	@Setter
+	private String productname;
+	@Getter
+	@Setter
+	private String industry;
+	@Getter
+	@Setter
 	private List<Integer> deviceidlist;	// デバイスIDのリスト
+	@Getter
+	@Setter
+	private List<Cloud_deviceDetailModel> deviceDetailList;	// デバイス詳細のリスト
+
+	// 検索条件
+
+	/*
+	 * imei情報検索条件取得
+	 *
+	 */
+	public String getImeiForSearch() {
+
+		if (this.imei == null) {
+			return "'%%'";
+		} else {
+			return "'%" + this.imei.trim() + "%'";
+		}
+	}
+
+	/*
+	 * productname情報検索条件取得
+	 *
+	 */
+	public String getProductnameForSearch() {
+
+		if (this.productname == null) {
+			return "'%%'";
+		} else {
+			return "'%" + this.productname.trim() + "%'";
+		}
+	}
+
+	/*
+	 * projectname情報検索条件取得
+	 *
+	 */
+	public String getProjectnameForSearch() {
+
+		if (this.projectname == null) {
+			return "'%%'";
+		} else {
+			return "'%" + this.projectname.trim() + "%'";
+		}
+	}
+
+	/*
+	 * industry情報検索条件取得
+	 *
+	 */
+	public String getIndustryForSearch() {
+
+		if (this.industry == null) {
+			return "'%%'";
+		} else {
+			return "'%" + this.industry.trim() + "%'";
+		}
+	}
+
 }

@@ -10,4 +10,9 @@ public class TargetUserInfo {
 	@Setter
 	private Integer targetuserid;
 
+	// ターゲットユーザー会社情報
+	@Getter
+	@Setter
+	private Integer targetuserCompanyid;
+
 }
