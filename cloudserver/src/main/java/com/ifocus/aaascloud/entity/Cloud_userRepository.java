@@ -29,13 +29,13 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	public List<Cloud_userEntity> getUsersByUpperuserid(@Param("upperuserid") Integer upperuserid);
 
 	/*
-	 * 親ユーザ取得
+	 * 配下ユーザの会社ID一覧取得
 	 *
 	 *
 	 */
-	@Query("SELECT c FROM cloud_user c WHERE c.upperuserid = :upperuserid")
+	@Query("SELECT DISTINCT c FROM cloud_user c WHERE c.upperuserid = :upperuserid")
 	@Autowired
-	public List<Cloud_userEntity> getParentUserByUpperuserid(@Param("upperuserid") Integer upperuserid);
+	public List<Cloud_userEntity> getUnderUserCompanyIdsByUpperuserid(@Param("upperuserid") Integer upperuserid);
 
 	/*
 	 * 会社ユーザ一覧

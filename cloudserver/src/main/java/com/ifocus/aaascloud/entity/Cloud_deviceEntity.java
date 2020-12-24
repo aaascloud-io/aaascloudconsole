@@ -48,6 +48,9 @@ public class Cloud_deviceEntity {
 	private String sim_tel;
 	@Getter
 	@Setter
+	private Integer productid;
+	@Getter
+	@Setter
 	private Integer companyid;
 	@Getter
 	@Setter

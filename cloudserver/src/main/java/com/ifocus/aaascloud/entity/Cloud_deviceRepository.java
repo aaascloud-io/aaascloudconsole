@@ -20,11 +20,40 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	public List<Cloud_deviceEntity> searchSelectableDevicesByCompanyid(@Param("companyid") Integer companyid);
 
 	/*
+	 * 配下各社デバイス一覧取得(デバイス管理画面用)
+	 *
+	 *
+	 */
+	@Query("SELECT c FROM cloud_device c WHERE c.companyid IN :companyids ORDER BY c.imei")
+	@Autowired
+	public List<Cloud_deviceEntity> searchUnderCompanyDevicesByCompanyidIn(@Param("companyids") List<Integer> companyids);
+
+	/*
+	 * 配下各社デバイス検索(デバイス管理画面用)
+	 *
+	 *
+	 */
+	@Query(   "SELECT d "
+			+ "FROM cloud_device d "
+			+ "INNER JOIN cloud_product pd ON d.productId = pd.productId "
+			+ "INNER JOIN cloud_project pj ON d.projectId = pj.projectId "
+			+ "LEFT JOIN cloud_group g ON d.groupId = g.groupId "
+			+ "INNER JOIN cloud_company com ON d.companyId = com.companyId "
+			+ "WHERE d.companyId IN :companyids "
+			+ "AND (d.IMEI LIKE :imei "
+			+ "    OR d.ICCID LIKE :iccid "
+			+ "    OR d.SN LIKE :sn) "
+			+ "ORDER BY d.companyId,d.imei")
+	@Autowired
+	public List<Cloud_deviceEntity> searchDevicesByCompanyidInAndImeiLikeOrIccidLikeOrSnLike(@Param("companyids") List<Integer> companyids,
+				@Param("imei") String imei, @Param("iccid") String iccid,@Param("sn") String sn);
+
+	/*
 	 * 自社全デバイス一覧(デバイス管理画面用)
 	 *
 	 *
 	 */
-	@Query("SELECT c FROM cloud_device c WHERE c.companyid = :companyid")
+	@Query("SELECT c FROM cloud_device c WHERE c.companyid = :companyid ORDER BY c.imei")
 	@Autowired
 	public List<Cloud_deviceEntity> searchAllDevicesByCompanyid(@Param("companyid") Integer companyid);
 
