@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: com.xiaour.spring.boot
+Implementation-Version: 1.0-SNAPSHOT
+Built-By: root
+Implementation-Vendor-Id: com.tony
+Build-Jdk: 1.8.0_192
+Implementation-URL: http://projects.spring.io/spring-boot/com.xiaour.s
+ pring.boot/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+

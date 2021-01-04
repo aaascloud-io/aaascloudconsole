@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiaour.spring.boot.mapper.UserInfoMapper" >
+	<select id="selectByPassWord" resultType="com.xiaour.spring.boot.entity.UserInfo" parameterType="Map">
+		select
+		 	UID,LOGINID,COMPANY,ADDRESS,INDUSTRY,MAIL,TEL
+		from
+			sc_user
+		where
+			LOGINID = #{loginid}
+		and
+			PASSWORD = #{password}
+	</select>
+</mapper>

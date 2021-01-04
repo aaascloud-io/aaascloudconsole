@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xiaour.spring.boot.mapper.CardMapper" >
+	<select id="getCardInfo" resultType="com.xiaour.spring.boot.entity.CardInfo">
+		select
+		 	*
+		from
+			card_information
+		where deleteflg = 1
+	</select>
+
+	<insert  id="addCardInfo" parameterType="com.xiaour.spring.boot.entity.CardInfo">
+		 INSERT INTO card_information (UKEIREBI,
+		 								KUBUN,
+                                          IMEI,
+                                          KANRIBANGO,
+                                          TENWABANGO,
+                                          HAKKOTANTO,
+                                          HAKKOBI,
+                                          HAKKOSAKI,
+                                          HAKKOSAKITANTOSHA,
+                                          RENRAKUSEN,
+                                          RIYOKAISHIBI,
+                                          RIYOMOKUTEKI,
+                                          GAIYO,
+                                          BIKO)
+              VALUES   (#{ukeirebi},
+              			#{kubun},
+                          #{imei},
+                          #{kanribango},
+                          #{tenwabango},
+                          #{hakkotanto},
+                          #{hakkobi},
+                          #{hakkosaki},
+                          #{hakkosakitantosha},
+                          #{renrakusen},
+                          #{riyokaishibi},
+                          #{riyomokuteki},
+                          #{gaiyo},
+                          #{biko})
+	</insert>
+
+	<update id="updateCardInfo" parameterType="com.xiaour.spring.boot.entity.CardInfo">
+        update card_information
+        <set>
+            UKEIREBI=#{ukeirebi},
+            KUBUN=#{kubun},
+            IMEI=#{imei},
+            KANRIBANGO=#{kanribango},
+            TENWABANGO=#{tenwabango},
+            HAKKOTANTO=#{hakkotanto},
+            HAKKOBI=#{hakkobi},
+            HAKKOSAKI=#{hakkosaki},
+            HAKKOSAKITANTOSHA=#{hakkosakitantosha},
+            RENRAKUSEN=#{renrakusen},
+            RIYOKAISHIBI=#{riyokaishibi},
+            RIYOMOKUTEKI=#{riyomokuteki},
+            GAIYO=#{gaiyo},
+            BIKO=#{biko}
+        </set>
+        where NO=#{no}
+	</update>
+
+	<update id="deleteCardInfo" parameterType="com.xiaour.spring.boot.entity.CardInfo">
+        update card_information
+        <set>
+            DELETEFLG=0
+        </set>
+        where NO=#{no}
+	</update>
+
+</mapper>

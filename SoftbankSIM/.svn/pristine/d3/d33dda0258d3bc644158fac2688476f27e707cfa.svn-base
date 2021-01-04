@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>ユーザ一覧</title>
+<meta name="description" content="ユーザ一覧">
+<link th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}" rel="stylesheet" />
+<script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
+<link rel="stylesheet" th:href="@{/DataTables-1.10.16/css/jquery.dataTables.min.css}"/>
+<link rel="stylesheet" th:href="@{/DataTables-1.10.16/css/dataTables.bootstrap4.min.css}"/>
+<script type="text/javascript" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+<script type="text/javascript" th:src="@{/DataTables-1.10.16/js/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/DataTables-1.10.16/js/dataTables.bootstrap4.min.js}"></script>
+<style>
+</style>
+</head>
+<body>
+    <table id="table1" class="table table-bordered table-hover table-lg">
+        <thead class="thead-light">
+            <tr>
+                <th>ユーザ名</th>
+                <th>メールアドレス</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+        var modalesectiondata = null;
+        $(function(){
+            // datatableの設定を変更
+            var modalesectiontable = $("#table1").DataTable({
+                "bPaginate": true,
+                "bLengthChange": false,
+                "bFilter": true,
+                "bSort": false,
+                "bInfo": false,
+                "bAutoWidth": false,
+                "language": {
+                    "url": /*[[@{/DataTables-1.10.16/Japanese.json}]]*/ 'Japanese.json'
+                },
+                "ajax": { url: /*[[@{/getuserlist}]]*/ 'getuserlist', dataSrc: '' },
+                "columns": [
+                    { data: "username" },
+                    { data: "mailaddress" },
+                ],
+                "columnDefs": [
+                    { targets: 0, width: 60 },
+                    { targets: 1, width: 180 },
+                    {targets:'_all',className : 'dt-head-center'},
+                ]
+            });
+        })
+    /*]]>*/
+    </script>
+</body>
+</html>

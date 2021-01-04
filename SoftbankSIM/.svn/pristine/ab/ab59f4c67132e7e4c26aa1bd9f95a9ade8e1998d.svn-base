@@ -1,0 +1,44 @@
+$(function() {
+        $("#btnIdents").click(function() {
+        alert("dddd");
+        var input = document.querySelector(".controls input[type=file]");
+        if (input.files) {
+            decode(URL.createObjectURL(input.files[0]));
+        }
+        });
+	});
+
+function decode(src){
+  var config = {
+        inputStream: {
+        size: 800,
+        singleChannel: false
+        },
+        locator: {
+            patchSize: "medium",
+            halfSample: true
+           },
+         decoder: {
+            readers: [{
+                 format: "code_128_reader",
+                 config: {}
+                }]
+            },
+         locate: true,
+          src: src
+   }
+
+   Quagga.decodeSingle(config, function(result) {
+            if(!result){
+               alert("图片中没有条形码！");
+               return false;
+            }
+            //识别结果
+            if(result.codeResult){
+                console.log("图片中的条形码为："+result.codeResult.code);
+                alert("图片中的条形码为：" + result.codeResult.code);
+            }else{
+                alert("未识别到图片中的条形码！");
+            }
+   });
+}

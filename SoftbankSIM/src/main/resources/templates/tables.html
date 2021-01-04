@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+
+<title>ディバイス管理</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<!-- MetisMenu CSS -->
+<link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet" />
+<!-- Custom Fonts -->
+<link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/css/bootstrap-select.min.css" />
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+</head>
+
+<body class="editor wide hero index">
+	<div class="grid">
+	<div class="unit w-2-3">
+		<div class="panel-heading">
+			<button type="button"
+				class="btn btn-info nav-external animated hiding" id="btnSubmit"
+				hidden="true" data-toggle="modal" data-whatever="add"
+				data-target="#addedit">ディバイス登録</button>
+			<button type="button" class="btn btn-success" data-whatever="edit"
+				data-toggle="modal" data-target="#addedit" id="deviceUpdbtn">ディバイス編集</button>
+			<button type="button" class="btn btn-warning" data-toggle="modal"
+				data-whatever="del" data-target="#delete" id="deviceDelbtn">ディバイス削除</button>
+		</div>
+		<div class="hero-callout">
+			<div id= "example_wrapper" class="dataTables_wrapper" role="grid">
+				<table id="example" class="display nowrap dataTable dtr-inline collapsed" style="width: 100%;" role="grid" aria-describedby="example_info">
+					<thead>
+						<tr>
+							<th class="text-center">番号</th>
+							<th class="text-center">受入日</th>
+							<th class="text-center">区分</th>
+							<th class="text-center">IMEI</th>
+							<th class="text-center">管理番号</th>
+							<th class="text-center">電話番号</th>
+							<th class="text-center">発行担当</th>
+							<th class="text-center">発行日</th>
+							<th class="text-center">発行先</th>
+							<th class="text-center">発行先担当者</th>
+							<th class="text-center">連絡先</th>
+							<th class="text-center">利用開始日</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- /#page-wrapper -->
+	<div class="modal fade" id="addedit" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog" id="myModal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true" id="closeId">×</button>
+					<h4 class="modal-title" id="myModalLabel">登録提示：</h4>
+				</div>
+				<div class="modal-body">
+					<div class="input-group">
+						<section id="container" class="container">
+							<div class="controls">
+								<fieldset class="form-group">
+									<input type="file" accept="image/*;capture=camera" />
+									<button id="btnIdents">識別</button>
+								</fieldset>
+							</div>
+						</section>
+					</div>
+					<input type='hidden' class="form-control" id="no" />
+					<div class="input-group">
+						<span id="basic-addon3">受入日：</span>
+						<div class='input-group date' id='datetimepicker3'>
+							<input type='text' class="form-control" id="ukeirebi" /> <span
+								class="input-group-addon"> <span
+								class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+						<span id="basic-addon3">発行日：</span>
+						<div class='input-group date' id='datetimepicker1'>
+							<input type='text' class="form-control" id="hakkobi" /> <span
+								class="input-group-addon"> <span
+								class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+						<span id="basic-addon3">利用開始日：</span>
+						<div class='input-group date' id='datetimepicker2'>
+							<input type='text' class="form-control" id="riyokaishibi" /> <span
+								class="input-group-addon"> <span
+								class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+					</div>
+					<div class="form-group" align="left">
+						<span id="basic-addon3">区分：</span>
+						<select class="selectpicker" id="kubun">
+							<option value="Tracker">Tracker</option>
+							<option value="SimCard">SimCard</option>
+						</select>
+						<span>IMEI：</span> <input type="text" id="imei" maxlength="20"></input>
+					</div>
+					<div class="form-group" align="left">
+						<span id="basic-addon3">管理番号：</span> <input type="text" id="kanribango" maxlength="20"></input>
+						<span id="basic-addon3">電話番号：</span> <input type="text" id="tenwabango" maxlength="20"></input>
+					</div>
+					<div class="form-group" align="left">
+						<span id="basic-addon3">発行担当：</span> <input type="text" id="hakkotanto" maxlength="20"></input>
+						<span id="basic-addon3">発行先：</span> <input type="text" id="hakkosaki" maxlength="20"></input>
+					</div>
+					<div class="form-group" align="left">
+						<span id="basic-addon3">発行先担当者：</span> <input type="text" id="hakkosakitantosha" maxlength="20"></input>
+						<span id="basic-addon3">連絡先：</span> <input type="text" id="renrakusen" maxlength="20"></input>
+					</div>
+					<div class="form-group" align="left">
+						<span id="basic-addon3">利用目的：</span> <textarea rows="3" id="riyomokuteki" style="margin: 0px; width: 553px; height: 76px;" maxlength="500"></textarea>
+						<span id="basic-addon3">案件概要：</span> <textarea rows="3" id="gaiyo" style="margin: 0px; width: 553px; height: 76px;" maxlength="500"></textarea>
+						<span id="basic-addon3">備考：</span> <textarea rows="3" id="biko" style="margin: 0px; width: 553px; height: 76px;" maxlength="500"></textarea>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="kakuninn()">確認</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="delete" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog" id="myModalDelete">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true" id="closeId">×</button>
+					<h4 class="modal-title" id="myModalLabel">削除提示：</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group" align="center">
+						<span id="basic-addon3">ディバイス削除してよろしいですか？</span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="kakuninn()">確認</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	</div>
+	<!-- jQuery Version 1.11.0 -->
+	<script src="js/jquery-1.11.0.js"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="js/bootstrap.min.js"></script>
+
+	<!-- Metis Menu Plugin JavaScript -->
+	<script src="js/plugins/metisMenu/metisMenu.min.js"></script>
+
+	<!-- DataTables JavaScript -->
+	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+	<!-- Custom Theme JavaScript -->
+	<script src="../static/js/local.js" th:src="@{/js/local.js}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="../static/js/quagga.js" th:src="@{/js/quagga.js}"></script>
+	<script src="../static/js/bootstrap-select.js" th:src="@{/js/bootstrap-select.js}"></script>
+</body>
+
+</html>
