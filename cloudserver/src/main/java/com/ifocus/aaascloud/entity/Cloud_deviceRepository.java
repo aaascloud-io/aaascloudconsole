@@ -33,30 +33,17 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(   "SELECT d "
-			+ "FROM cloud_device d "
-			+ "INNER JOIN cloud_product pd ON d.productId = pd.productId "
-			+ "INNER JOIN cloud_project pj ON d.projectId = pj.projectId "
-			+ "LEFT JOIN cloud_group g ON d.groupId = g.groupId "
-			+ "INNER JOIN cloud_company com ON d.companyId = com.companyId "
-			+ "WHERE d.companyId IN :companyids "
-			+ "AND (d.IMEI LIKE :imei "
-			+ "    OR d.ICCID LIKE :iccid "
-			+ "    OR d.SN LIKE :sn) "
-			+ "AND pd.productName LIKE :productname "
-			+ "AND pj.projectName LIKE :projectname "
-			+ "AND com.industry LIKE :industry "
-			+ "ORDER BY d.companyId,d.imei")
-	@Autowired
-	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
-			@Param("companyids") List<Integer> companyids,
-			@Param("imei") String imei,
-			@Param("iccid") String iccid,
-			@Param("sn") String sn,
-			@Param("productname") String productName,
-			@Param("projectname") String projectName,
-			@Param("industry") String industry
-		);
+//	@Query(value = "SELECT d FROM cloud_device d INNER JOIN cloud_product pd ON d.productId = pd.productId INNER JOIN cloud_project pj ON d.projectId = pj.projectId LEFT JOIN cloud_group g ON d.groupId = g.groupId INNER JOIN cloud_company com ON d.companyId = com.companyId WHERE d.companyId IN :companyids AND (d.IMEI LIKE :imei OR d.ICCID LIKE :iccid OR d.SN LIKE :sn) AND pd.productName LIKE :productname AND pj.projectName LIKE :projectname AND com.industry LIKE :industry ORDER BY d.companyId,d.imei,nativeQuery=true)"
+//			)
+//	public List<Cloud_deviceEntity> abcd(
+//			@Param("companyids") List<Integer> companyids,
+//			@Param("imei") String imei,
+//			@Param("iccid") String iccid,
+//			@Param("sn") String sn,
+//			@Param("productname") String productName,
+//			@Param("projectname") String projectName,
+//			@Param("industry") String industry
+//		);
 
 	/*
 	 * 配下各社デバイス検索(デバイス管理画面用:グループ検索あり)

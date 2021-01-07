@@ -15,8 +15,18 @@ public interface  Cloud_projectRepository extends CrudRepository<Cloud_projectEn
 	 *
 	 *
 	 */
-	@Query("SELECT c FROM cloud_project c WHERE c.userid = :userid AND c.password = :password ORDER BY c.projectname")
+	@Query("SELECT c FROM cloud_project c WHERE c.userid = :userid ORDER BY c.projectname")
 	@Autowired
 	public List<Cloud_projectEntity> searchByUserid(@Param("userid") Integer userid);
+
+
+	/*
+	 * プロジェクト一覧（プロジェクト数取得用）
+	 *
+	 *
+	 */
+	@Query("SELECT c FROM cloud_project c WHERE c.userid IN :userids")
+	@Autowired
+	public List<Cloud_projectEntity> searchByUseridIn(@Param("userid") List<Integer> userids);
 
 }

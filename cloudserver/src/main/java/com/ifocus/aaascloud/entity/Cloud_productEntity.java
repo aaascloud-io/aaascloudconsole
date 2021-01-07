@@ -60,5 +60,9 @@ public class Cloud_productEntity {
 	@Setter
 	@OneToMany(mappedBy = "product")
 	private List<Cloud_deviceEntity> devicedetailList;
+	@Getter
+	@Setter
+	@OneToMany(mappedBy = "projects")
+	private List<Cloud_projectEntity> projects;
 
 }
