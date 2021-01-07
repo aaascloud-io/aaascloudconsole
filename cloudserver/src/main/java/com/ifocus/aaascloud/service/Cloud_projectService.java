@@ -76,6 +76,39 @@ public class Cloud_projectService {
 	}
 
 	/*
+	 * プロジェクト一覧取得（プロジェクト数取得用）
+	 * @param userids List<Integer> ターゲットユーザーIDリスト
+	 * @List<Cloud_projectModel> プロジェクト一覧
+	 */
+	public List<Cloud_projectModel> getMyUnderProjects(List<Integer> userids) throws Exception {
+		List<Cloud_projectModel> returnList = new ArrayList();
+		Iterable<Cloud_projectEntity> list = cloud_projectRepository.searchByUseridIn(userids);
+		list.forEach(s -> {
+			Cloud_projectModel model = new Cloud_projectModel();
+			model.setProjectid(s.getProjectid());
+			model.setProjectname(s.getProjectname());
+			model.setUserid(s.getUserid());
+			model.setProductid(s.getProductid());
+			model.setProjectsummary(s.getProjectsummary());
+
+			returnList.add(model);
+		});
+		return returnList;
+
+	}
+
+	/*
+	 * プロダクトID一覧（プロダクト数取得用）
+	 * @param userids List<Integer> ターゲットユーザーIDリスト
+	 * @List<Integer> プロジェクト一覧
+	 */
+//	public List<Cloud_productEntity> getMyUnderProducts(List<Integer> userids) throws Exception {
+//		List<Cloud_productEntity> list = cloud_projectRepository.searchProductIdsByUseridIn(userids);
+//		return list;
+//
+//	}
+
+	/*
 	 * プロジェクト詳細取得
 	 * @param projectid Integer プロジェクトID
 	 * @return Cloud_projectDetailModel プロジェクト詳細

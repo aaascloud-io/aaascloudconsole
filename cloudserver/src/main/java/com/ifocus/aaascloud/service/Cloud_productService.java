@@ -36,6 +36,17 @@ public class Cloud_productService {
 	}
 
 	/*
+	 * プロダクトID一覧（プロダクト数取得用）
+	 * @param userids List<Integer> ターゲットユーザーIDリスト
+	 * @List<Integer> プロジェクト一覧
+	 */
+	public List<Cloud_productEntity> getMyUnderProducts(List<Integer> userids) throws Exception {
+		List<Cloud_productEntity> list = cloud_productRepository.searchProductIdsByProjects_UseridIn(userids);
+		return list;
+
+	}
+
+	/*
 	 * プロダクト詳細取得
 	 *
 	 *
