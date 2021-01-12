@@ -20,6 +20,14 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	public List<Cloud_userEntity> searchByLoginidAndPassword(@Param("loginid") String loginid, @Param("password") String password);
 
 	/*
+	 * ユーザ取得
+	 *
+	 *
+	 */
+	@Query("SELECT c FROM cloud_user c WHERE c.username = :username ")
+	@Autowired
+	public List<Cloud_userEntity> findByUsername(@Param("username") String username);
+	/*
 	 * ユーザ一覧
 	 *
 	 *

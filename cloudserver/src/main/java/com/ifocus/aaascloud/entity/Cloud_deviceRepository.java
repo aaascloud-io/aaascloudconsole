@@ -130,4 +130,14 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	@Query("SELECT COUNT(c) FROM cloud_device c WHERE c.projectid = :projectid AND c.groupid = :groupid")
 	@Autowired
 	public Integer getGroupDeviceCountsByProjectidAndGroupid(@Param("projectid") Integer projectid, @Param("groupid") Integer groupid);
+
+	/*
+	 * 配下各社デバイス一覧取得(ダッシュボード画面用)
+	 *
+	 *
+	 */
+	@Query("SELECT c FROM cloud_device c WHERE c.userid IN :userids ORDER BY c.productid,c.imei")
+	@Autowired
+	public List<Cloud_deviceEntity> searchUnderCompanyDevicesByUseridIn(@Param("userids") List<Integer> userids);
+
 }

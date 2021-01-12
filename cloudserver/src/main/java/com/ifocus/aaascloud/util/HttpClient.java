@@ -30,32 +30,36 @@ public class HttpClient {
 	   public String getUserInfo(String username, String password){
 		      String userInfo = "";
 		      String content="<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		                    +""; // 仮のPOST-body(XML)
+		                    +"<a></a>"; // 仮のPOST-body(XML)
 		      try{
 		    	 // Token取得
 				JSONObject json = (JSONObject) JSONSerializer.toJSON(getToken(username,password));
 				String accessToken = json.getString(CommonConstant.JSON_KEY_ACCESS_TOKEN);
 
-		         // アドレス設定、ヘッダー情報設定
+				// SSL証明書の検証を無視する
+				disableSSLCertificateChecking();
+
+				// アドレス設定、ヘッダー情報設定
 		         URL url = new URL(CommonConstant.AUTH_SERVER_PREFIX + CommonConstant.COMMAND_GET_UID);
-		         HttpURLConnection con = (HttpURLConnection)url.openConnection();
-		         con.setRequestMethod("GET");         // GET
-				 con.setDoOutput(true);               // データを後ろに付ける
-		         con.setInstanceFollowRedirects(false);// 勝手にリダイレクトさせない
-		         con.setRequestProperty("Authorization", "Bearer " + accessToken);
-		         con.setRequestProperty("cache-control", "no-cache");
-				 con.setRequestProperty("Accept", "application/json");
-				 con.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
-		         con.connect();
+		         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+		         conn.setRequestMethod("GET");         // GET
+				 conn.setDoOutput(true);               // データを後ろに付ける
+		         conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+		         conn.setRequestProperty("cache-control", "no-cache");
+//				 conn.setRequestProperty("Accept", "application/x-www-form-urlencoded");   // 取得できない
+//				 conn.setRequestProperty("Accept", "application/x-www-form-urlencoded;charset=utf-8");   // 取得できない
+//				 conn.setRequestProperty("Accept", "application/Auto");  // 取得できない
+				 conn.setRequestProperty("Accept", "application/json");  // 415 エラー
+		         conn.connect();
 		         // 送信
 		         PrintWriter pw = new PrintWriter(new BufferedWriter(
 		                                    new OutputStreamWriter(
-		                                       con.getOutputStream()
+		                                       conn.getOutputStream()
 		                                       ,"utf-8")));
 		         pw.print(content);// content
 		         pw.close();       // closeで送信完了
 		         // body部の文字コード取得
-		         String contentType = con.getHeaderField("Content-Type");
+		         String contentType = conn.getHeaderField("Content-Type");
 		         String charSet     = "Shift-JIS";//"ISO-8859-1";
 		         if (contentType != null) {
 			         for(String elm : contentType.replace(" ", "").split(";")) {
@@ -69,13 +73,13 @@ public class HttpClient {
 		         BufferedReader br;
 		         try{
 		            br = new BufferedReader(new InputStreamReader(
-		                                con.getInputStream(),charSet));
+		                                conn.getInputStream(),charSet));
 		            }
 		         catch(Exception e_){
-		            System.out.println( con.getResponseCode()
-		                               +" "+ con.getResponseMessage() );
+		            System.out.println( conn.getResponseCode()
+		                               +" "+ conn.getResponseMessage() );
 			        br = new BufferedReader(new InputStreamReader(
-		                                  con.getErrorStream(),charSet));
+		                                  conn.getErrorStream(),charSet));
 		            }
 		         String line;
 		         while ((line = br.readLine()) != null) {
@@ -83,7 +87,7 @@ public class HttpClient {
 		            userInfo = userInfo + line;
 		            }
 		         br.close();
-		         con.disconnect();
+		         conn.disconnect();
 		         }
 		      catch(Exception e){
 		         e.printStackTrace(System.err);

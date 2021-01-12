@@ -15,6 +15,7 @@ import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
+import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 
 @SpringBootApplication
@@ -66,4 +67,37 @@ public class AccessService {
 		}
 	}
 
+	/*
+	 * アクセス権限ユーザ一覧を取得する
+	 * @param userid Integer ログインユーザID
+	 * @return List<Cloud_userModel> アクセス権限を持つユーザ一覧
+	 *
+	 */
+	public List<Cloud_userModel> getAccessModelUsers(Integer userid) throws Exception {
+		List<Cloud_userModel> returnList = new ArrayList();
+		returnList.add(getModel(cloud_userRepository.findById(userid).get()));
+		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
+		if (list.isEmpty()) {
+			return returnList;
+		} else {
+			for (Cloud_userEntity entity:list) {
+				returnList.addAll(getAccessModelUsers(entity.getUserid()));
+			}
+			return returnList;
+		}
+	}
+
+	/*
+	 * ユーザーモデル取得
+	 * @param entity Cloud_userEntity ユーザエンティティ
+	 * @return Cloud_userModel ユーザモデル
+	 *
+	 */
+	public Cloud_userModel getModel(Cloud_userEntity entity) throws Exception {
+		Cloud_userModel model = new Cloud_userModel();
+		model.setUserid(entity.getUserid());
+		model.setUsername(entity.getUsername());
+		return model;
+
+	}
 }

@@ -1,6 +1,5 @@
 package com.ifocus.aaascloud.controller;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
+import com.ifocus.aaascloud.entity.Cloud_userEntity;
+import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.service.AccessService;
+import com.ifocus.aaascloud.util.Util;
 
 import net.sf.json.JSONObject;
 
@@ -23,6 +25,8 @@ public class AccessController {
 
 	@Autowired
 	private AccessService accessService;
+	@Autowired
+	private Cloud_userRepository cloud_userRepository;
 
 	/**
 	 * アクセス権限ユーザ一覧を取得する
@@ -86,17 +90,22 @@ public class AccessController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		Util util = new Util();
 		JSONObject resJasonObj = new JSONObject();
 
 		// ユーザID必須判定
 		if (null != cloud_userModel.getUsername()) {
 
 			try {
-				// アクセス権限ユーザ一覧を取得する Todo
-				List<String> list = Arrays.asList("1256d6c5-542b-48da-8f84-31ee621f4a33", "40bb0466-cc74-4d32-be7a-b00aececbdb9");
+				// ログインユーザ取得
+				List<Cloud_userEntity> loginUserlist = cloud_userRepository.findByUsername(cloud_userModel.getUsername());
+
+				// アクセス権限ユーザ一覧を取得する
+//				List<String> list = Arrays.asList("1256d6c5-542b-48da-8f84-31ee621f4a33", "40bb0466-cc74-4d32-be7a-b00aececbdb9");
+				List<Cloud_userModel> list = accessService.getAccessModelUsers(loginUserlist.get(0).getUserid());
 
 				// ユーザID情報設定
-				resJasonObj.put("UIDList", getUIDJsonListFromUseridList(list));
+				resJasonObj.put("UIDList", util.getUIDJsonList(list));
 
 			} catch (Exception e) {
 				/* 異常系 */
@@ -144,20 +153,20 @@ public class AccessController {
 	}
 	/**
 	 * リストから配列作成
-	 * @param useridList List<Integer> ユーザIDのリスト
+	 * @param useridList List<Cloud_userModel> ユーザのリスト
 	 * @return String ユーザIDの配列
 	 */
-	private String getUIDJsonListFromUseridList(List<String> useridList) {
+	private String getUIDJsonListFromUseridList(List<Cloud_userModel> userList) {
 
 		String returnStr = new String();
 		returnStr = returnStr + "[";
 
-		for (String userid:useridList) {
+		for (Cloud_userModel model:userList) {
 			if (returnStr.length() > 1) {
 				returnStr = returnStr + ",";
 			}
 			// ユーザID設定
-			returnStr = returnStr + userid;
+			returnStr = returnStr + model.getLoginid();
 		}
 
 		returnStr = returnStr + "]";
