@@ -2,8 +2,7 @@ package com.ifocus.aaascloud.entity;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -15,9 +14,7 @@ public interface  Cloud_productRepository extends CrudRepository<Cloud_productEn
 	 *
 	 *
 	 */
-//	@Query("SELECT DISTINCT pd FROM cloud_product pd INNER JOIN cloud_project pj ON pj.productId = pd.productId WHERE pj.userid IN :userids")
-	@Query("SELECT pd FROM cloud_product pd INNER JOIN cloud_project pj ON pj.productId = pd.productId WHERE pj.userid IN :userids")
-	@Autowired
-	public List<Cloud_productEntity> searchProductIdsByProjects_UseridIn(@Param("userid") List<Integer> userids);
+	@Query(value = "SELECT DISTINCTROW c.* FROM cloud_product c INNER JOIN cloud_project d ON d.productId = c.productId WHERE d.userid IN :userids",nativeQuery = true)
+	public List<Cloud_productEntity> searchProductIdsByProjectsUseridIn(@Param("userids") List<Integer> userids);
 
 }
