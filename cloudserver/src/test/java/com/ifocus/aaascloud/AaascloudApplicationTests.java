@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
-import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.controller.AccessController;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
@@ -19,6 +18,7 @@ import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
+import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
@@ -29,11 +29,9 @@ import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
-import com.ifocus.aaascloud.util.HttpClient;
+import com.ifocus.aaascloud.util.Util;
 
 import junit.framework.TestCase;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 
 @SpringBootTest
 class AaascloudApplicationTests extends TestCase{
@@ -61,43 +59,43 @@ class AaascloudApplicationTests extends TestCase{
 	private AccessController accessController;
 
 
-	/*
-	 * Cloud_userService:login
-	 * 正常系
-	 *
-	 */
-	@Test
-	public void testLogin() throws Exception {
-
-		Cloud_userModel model = cloud_userService.login("admin", "zaq12wsx");
-		assertEquals( model.getUserid() >=0, true);
-	}
-
-
-	/*
-	 * searchByLoginIdAndPassword
-	 * 正常系
-	 *
-	 */
-	@Test
-	public void testsearchByLoginIdAndPasswordOK() throws Exception {
-
-		List<Cloud_userEntity> list = (List<Cloud_userEntity>) cloud_userRepository.searchByLoginidAndPassword("admin", "zaq12wsx");
-		assertEquals( list.size(), 1);
-	}
+//	/*
+//	 * Cloud_userService:login
+//	 * 正常系
+//	 *
+//	 */
+//	@Test
+//	public void testLogin() throws Exception {
+//
+//		Cloud_userModel model = cloud_userService.login("admin", "zaq12wsx");
+//		assertEquals( model.getUserid() >=0, true);
+//	}
 
 
-	/*
-	 * searchByLoginIdAndPassword
-	 * 異常系
-	 *
-	 */
-	@Test
-	public void testsearchByLoginIdAndPassword() throws Exception {
+//	/*
+//	 * searchByLoginIdAndPassword
+//	 * 正常系
+//	 *
+//	 */
+//	@Test
+//	public void testsearchByLoginIdAndPasswordOK() throws Exception {
+//
+//		List<Cloud_userEntity> list = (List<Cloud_userEntity>) cloud_userRepository.searchByLoginidAndPassword("admin", "zaq12wsx");
+//		assertEquals( list.size(), 1);
+//	}
 
-		List<Cloud_userEntity> list = (List<Cloud_userEntity>) cloud_userRepository.searchByLoginidAndPassword("admin", "123456");
-		assertEquals( list.size(), 0);
-	}
+
+//	/*
+//	 * searchByLoginIdAndPassword
+//	 * 異常系
+//	 *
+//	 */
+//	@Test
+//	public void testsearchByLoginIdAndPassword() throws Exception {
+//
+//		List<Cloud_userEntity> list = (List<Cloud_userEntity>) cloud_userRepository.searchByLoginidAndPassword("admin", "123456");
+//		assertEquals( list.size(), 0);
+//	}
 
 	/*
 	 * findAll
@@ -524,51 +522,93 @@ class AaascloudApplicationTests extends TestCase{
 
 		List<Integer> userList = Arrays.asList(1,2,3);
 
-		List<Cloud_productEntity> list = cloud_productService.getMyUnderProducts(userList);
+		List<Cloud_productModel> list = cloud_productService.getMyUnderProducts(userList);
 
 		assertEquals( list.size(), 3);
 	}
 
+//	/*
+//	 * HttpClient
+//	 * 認証サーバ接続テスト
+//	 * 正常系
+//	 *
+//	 */
+//	@Test
+//	public void testgetToken() throws Exception {
+//
+//
+//		HttpClient httpClient = new HttpClient();
+//		String token = httpClient.getToken("ifocus","123456");
+//
+//		JSONObject json = (JSONObject) JSONSerializer.toJSON(token);
+//		String accessToken = json.getString("access_token");
+//
+//		assertEquals( token.isEmpty(), false);
+//		assertEquals( accessToken.isEmpty(), false);
+//	}
+
+//	/*
+//	 * HttpClient
+//	 * ユーザ情報取得テスト
+//	 * 正常系
+//	 *
+//	 */
+//	@Test
+//	public void testgetUserInfo() throws Exception {
+//
+//
+//		HttpClient httpClient = new HttpClient();
+//		String userInfo = httpClient.getUserInfo("ifocus","123456");
+//
+//		JSONObject json = (JSONObject) JSONSerializer.toJSON(userInfo);
+//		String attributes = json.getString(CommonConstant.JSON_KEY_ATTRIBUTES);
+//		JSONObject attributesInfo = (JSONObject) JSONSerializer.toJSON(attributes);
+//		String uid = attributesInfo.getString(CommonConstant.JSON_KEY_ACCESS_UID);
+//
+//		assertEquals( userInfo.isEmpty(), false);
+//		assertEquals( attributes.isEmpty(), false);
+//		assertEquals( uid.isEmpty(), false);
+//	}
+
 	/*
-	 * HttpClient
-	 * 認証サーバ接続テスト
-	 * 正常系
-	 *
-	 */
-	@Test
-	public void testgetToken() throws Exception {
-
-
-		HttpClient httpClient = new HttpClient();
-		String token = httpClient.getToken("ifocus","123456");
-
-		JSONObject json = (JSONObject) JSONSerializer.toJSON(token);
-		String accessToken = json.getString("access_token");
-
-		assertEquals( token.isEmpty(), false);
-		assertEquals( accessToken.isEmpty(), false);
-	}
-
-	/*
-	 * HttpClient
+	 * AccessController
 	 * ユーザ情報取得テスト
 	 * 正常系
 	 *
 	 */
 	@Test
-	public void testgetUserInfo() throws Exception {
+	public void testgetAccessUsersForTrackun() throws Exception {
 
 
-		HttpClient httpClient = new HttpClient();
-		String userInfo = httpClient.getUserInfo("ifocus","123456");
+		Util util = new Util();
 
-		JSONObject json = (JSONObject) JSONSerializer.toJSON(userInfo);
-		String attributes = json.getString(CommonConstant.JSON_KEY_ATTRIBUTES);
-		JSONObject attributesInfo = (JSONObject) JSONSerializer.toJSON(attributes);
-		String uid = attributesInfo.getString(CommonConstant.JSON_KEY_ACCESS_UID);
+		List<Cloud_userEntity> loginUserlist = cloud_userRepository.findByUsername("ifocus");
 
-		assertEquals( userInfo.isEmpty(), false);
-		assertEquals( attributes.isEmpty(), false);
-		assertEquals( uid.isEmpty(), false);
+		Cloud_userModel model = new Cloud_userModel();
+		model.setUsername(loginUserlist.get(0).getUsername());
+		model.setUserid(loginUserlist.get(0).getUserid());
+
+		BaseHttpResponse<String> response = accessController.getAccessUsersForTrackun(model);
+
+//		JSONObject json = (JSONObject) JSONSerializer.toJSON(uIDJsonList);
+
+		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0000);
 	}
+
+	/*
+	 * Cloud_productRepository
+	 * プロダクトID一覧（プロダクト数取得用）searchProductIdsByProjects_UseridIn
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testsearchProductIdsByProjects_UseridIn() throws Exception {
+
+		List<Integer> userList = Arrays.asList(1,2,3);
+
+		List<Cloud_productEntity> list = cloud_productRepository.searchProductIdsByProjectsUseridIn(userList);
+
+		assertEquals( list.size(), 1);
+	}
+
 }
