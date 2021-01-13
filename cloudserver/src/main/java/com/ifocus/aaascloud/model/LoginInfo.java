@@ -15,9 +15,9 @@ public class LoginInfo {
 	@Getter
 	@Setter
 	private String loginusername;
-	@Getter
-	@Setter
-	private String loginid;
+//	@Getter
+//	@Setter
+//	private String loginid;
 	@Getter
 	@Setter
 	private Integer loginrole;
