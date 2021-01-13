@@ -2,6 +2,7 @@ package com.ifocus.aaascloud.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,12 @@ import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
+import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_userService;
+import com.ifocus.aaascloud.util.KeyCloakUserService;
 
 import net.sf.json.JSONObject;
 
@@ -29,6 +32,10 @@ public class Cloud_userController {
 	private Cloud_userService cloud_userService;
 	@Autowired
 	private Cloud_companyService cloud_companyService;
+	@Autowired
+	private Cloud_userRepository cloud_userRepository;
+
+	private KeyCloakUserService keyCloakUserService;
 
 	/**
 	 * ユーザ一覧を取得する
@@ -143,6 +150,15 @@ public class Cloud_userController {
 			return response;
 		}
 
+		// KeyCloakに存在しない場合、
+		if (!keyCloakUserService.isValidUsername(loginInfo.getLoginusername())) {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0008);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録ユーザ名です。");
+			return response;
+		}
+
 		try {
 			Integer registeredUserid = cloud_userService.registerSonUser(loginInfo,cloud_userModel);
 
@@ -181,6 +197,28 @@ public class Cloud_userController {
 	public BaseHttpResponse<String> updateUser(@RequestBody LoginInfo loginInfo,Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			Optional<Cloud_userEntity> tempEntity = cloud_userRepository.findById(cloud_userModel.getUserid());
+			Cloud_userEntity entity = tempEntity.get();
+			// ユーザ名が更新されるなら、
+			if (entity.getUsername() != cloud_userModel.getUsername()) {
+				// KeyCloakに存在しない場合、
+				if (!keyCloakUserService.isValidUsername(cloud_userModel.getUsername())) {
+					/* 異常系 */
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0008);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録ユーザ名です。");
+					return response;
+				}
+			}
+		} catch (Exception e) {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0100);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_userService.updateSonUser:" + e.getMessage());
+			return response;
+		}
 
 		try {
 			Integer registeredUserid = cloud_userService.updateSonUser(loginInfo,cloud_userModel);
