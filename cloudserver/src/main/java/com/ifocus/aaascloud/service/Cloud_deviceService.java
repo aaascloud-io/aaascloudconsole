@@ -446,6 +446,20 @@ public class Cloud_deviceService {
 	}
 
 	/*
+	 * 全社のデバイス一覧取得(ダッシュボード用)
+	 * @param useridList List<Integer> ユーザーIDリスト
+	 * @return List<Cloud_deviceModel> デバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getUnderCompanyDevicesByUserids(List<Integer> useridList) throws Exception {
+
+		// 全社のデバイス一覧取得
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchUnderCompanyDevicesByUseridIn(useridList);
+		return this.getModelsByEntitys(list);
+
+	}
+
+	/*
 	 * ModelからEntity取得
 	 * @param entity Cloud_deviceEntity
 	 * @return Cloud_deviceModel

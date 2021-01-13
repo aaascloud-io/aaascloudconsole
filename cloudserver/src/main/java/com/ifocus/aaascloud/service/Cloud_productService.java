@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
+import com.ifocus.aaascloud.model.Cloud_productModel;
 
 @SpringBootApplication
 @RestController
@@ -40,9 +41,9 @@ public class Cloud_productService {
 	 * @param userids List<Integer> ターゲットユーザーIDリスト
 	 * @List<Integer> プロジェクト一覧
 	 */
-	public List<Cloud_productEntity> getMyUnderProducts(List<Integer> userids) throws Exception {
-		List<Cloud_productEntity> list = cloud_productRepository.searchProductIdsByProjects_UseridIn(userids);
-		return list;
+	public List<Cloud_productModel> getMyUnderProducts(List<Integer> userids) throws Exception {
+		List<Cloud_productEntity> list = cloud_productRepository.searchProductIdsByProjectsUseridIn(userids);
+		return getModelsByEntitys(list);
 
 	}
 
@@ -80,4 +81,42 @@ public class Cloud_productService {
 		return ;
 
 	}
+
+	/*
+	 * EntityリストからModeリストl取得
+	 * @param entityList List<Cloud_deviceEntity> Entityリスト
+	 * @return List<Cloud_deviceModel> Modeリスト
+	 *
+	 */
+	public List<Cloud_productModel> getModelsByEntitys(List<Cloud_productEntity> entityList) throws Exception {
+		List<Cloud_productModel> modelList = new ArrayList();
+		for (Cloud_productEntity entity:entityList) {
+			modelList.add(getModelByEntity(entity));
+		}
+
+		return modelList;
+
+	}
+
+	/*
+	 * EntityからModel取得
+	 * @param entity Cloud_productEntity
+	 * @return Cloud_productModel
+	 *
+	 */
+	public Cloud_productModel getModelByEntity(Cloud_productEntity entity) throws Exception {
+		Cloud_productModel model = new Cloud_productModel();
+		model.setProductid(entity.getProductid());
+		model.setProductcode(entity.getProductcode());
+		model.setProductname(entity.getProductname());
+		model.setModel(entity.getModel());
+		model.setVersion(entity.getVersion());
+		model.setSimflag(entity.getSimflag());
+		model.setSummary(entity.getSummary());
+		model.setAlive(entity.getAlive());
+
+		return model;
+
+	}
+
 }

@@ -33,28 +33,28 @@ public class Cloud_userService {
 	@Autowired
 	private Cloud_companyService cloud_companyService ;
 
-	/*
-	 * ログイン認証
-	 *
-	 *
-	 */
-	public Cloud_userModel login(String loginid, String pswd) throws Exception {
-		Cloud_userModel model = new Cloud_userModel();
-		model.setUserid(-1);
-		List<Cloud_userEntity> list = cloud_userRepository.searchByLoginidAndPassword(loginid, pswd);
-		if (list != null && list.size() == 1) {
-			list.forEach(elm -> {
-				model.setUserid(elm.getUserid());
-				model.setUsername(elm.getUsername());
-				model.setCompanyid(elm.getCompanyid());
-				model.setLoginid(elm.getLoginid());
-				model.setRole(elm.getRole());
-				model.setUpperuserid(elm.getUpperuserid());
-			});
-		}
-		return model;
-
-	}
+//	/*
+//	 * ログイン認証
+//	 *
+//	 *
+//	 */
+//	public Cloud_userModel login(String loginid, String pswd) throws Exception {
+//		Cloud_userModel model = new Cloud_userModel();
+//		model.setUserid(-1);
+//		List<Cloud_userEntity> list = cloud_userRepository.searchByLoginidAndPassword(loginid, pswd);
+//		if (list != null && list.size() == 1) {
+//			list.forEach(elm -> {
+//				model.setUserid(elm.getUserid());
+//				model.setUsername(elm.getUsername());
+//				model.setCompanyid(elm.getCompanyid());
+//				model.setLoginid(elm.getLoginid());
+//				model.setRole(elm.getRole());
+//				model.setUpperuserid(elm.getUpperuserid());
+//			});
+//		}
+//		return model;
+//
+//	}
 
 	/*
 	 * アクセス権限チェック
@@ -114,7 +114,6 @@ public class Cloud_userService {
 				model.setUserid(elm.getUserid());
 				model.setUsername(elm.getUsername());
 				model.setCompanyid(elm.getCompanyid());
-				model.setLoginid(elm.getLoginid());
 				model.setRole(elm.getRole());
 				model.setUpperuserid(elm.getUpperuserid());
 				/* 会社情報取得 */
@@ -193,8 +192,6 @@ public class Cloud_userService {
 		// entity.setUserid(model.getUserid());  新規登録時に、useridがない。
 		entity.setCompanyid(model.getCompanyid());
 		entity.setUsername(model.getUsername());
-		entity.setLoginid(model.getLoginid());
-		entity.setPassword(model.getPassword());
 		entity.setRole(model.getRole());
 		entity.setUpperuserid(loginInfo.getLoginuserid());
 		entity.setI_uid(loginInfo.getLoginuserid());
@@ -276,14 +273,13 @@ public class Cloud_userService {
 
 		// 情報設定
 
-		Cloud_userEntity entity = new Cloud_userEntity();
+		Optional<Cloud_userEntity> tempEntity = cloud_userRepository.findById(model.getUserid());
+		Cloud_userEntity entity = tempEntity.get();
 		/* システム日時 */
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
 		entity.setUserid(model.getUserid());
 		entity.setCompanyid(model.getCompanyid());
 		entity.setUsername(model.getUsername());
-		entity.setLoginid(model.getLoginid());
-		entity.setPassword(model.getPassword());
 		entity.setRole(model.getRole());
 		entity.setU_uid(loginInfo.getLoginuserid());
 		entity.setU_time(systemTime);
