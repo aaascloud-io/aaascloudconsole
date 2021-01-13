@@ -12,6 +12,7 @@ public class ErrorConstant {
 	public static final String ERROR_CODE_0005 = "0005";
 	public static final String ERROR_CODE_0006 = "0006";
 	public static final String ERROR_CODE_0007 = "0007";
+	public static final String ERROR_CODE_0008 = "0008";
 
 	public static final String ERROR_CODE_0100 = "0100";
 	public static final String ERROR_CODE_0101 = "0101";
@@ -31,6 +32,7 @@ public class ErrorConstant {
 	public static final String ERROR_MSG_0005 = "認証エラー:";
 	public static final String ERROR_MSG_0006 = "アクセス権限取得エラー:";
 	public static final String ERROR_MSG_0007 = "DB存在チェックエラー:";
+	public static final String ERROR_MSG_0008 = "KeyCloak認証サーバー存在チェックエラー:";
 
 	public static final String ERROR_MSG_0100 = "登録失敗：";
 	public static final String ERROR_MSG_0101 = "更新失敗：";
