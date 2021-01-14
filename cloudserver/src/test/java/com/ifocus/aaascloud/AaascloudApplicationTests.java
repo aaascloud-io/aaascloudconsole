@@ -116,19 +116,20 @@ class AaascloudApplicationTests extends TestCase{
 			assertEquals(cloud_user.getUsername(), "www");
 		}
 	}
-	/*
-	 * findById
-	 * 正常系
-	 *
-	 */
-	@Test
-	public void testfindById() throws Exception {
 
-		Optional<Cloud_userEntity>  user =  cloud_userRepository.findById(1);
-
-		assertEquals( user.isEmpty(), false);
-
-	}
+//	/*
+//	 * findById
+//	 * 正常系
+//	 *
+//	 */
+//	@Test
+//	public void testfindById() throws Exception {
+//
+//		Optional<Cloud_userEntity>  user =  cloud_userRepository.findById(1);
+//
+//		assertEquals( user.isEmpty(), false);
+//
+//	}
 
 
 	/*
