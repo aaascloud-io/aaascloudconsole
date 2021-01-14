@@ -26,7 +26,7 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	 */
 	@Query("SELECT c FROM cloud_user c WHERE c.username = :username ")
 	@Autowired
-	public List<Cloud_userEntity> findByUsername(@Param("username") String username);
+	public Cloud_userEntity findByUsername(@Param("username") String username);
 	/*
 	 * ユーザ一覧
 	 *
