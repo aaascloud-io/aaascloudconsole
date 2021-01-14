@@ -1,5 +1,6 @@
 package com.ifocus.aaascloud.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +13,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
+import com.ifocus.aaascloud.entity.Cloud_userEntity;
+import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
+import com.ifocus.aaascloud.model.Cloud_errlogModel;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_deviceService;
+import com.ifocus.aaascloud.service.Cloud_errlogService;
 import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
@@ -37,6 +42,10 @@ public class DashboardController {
 	private Cloud_deviceService cloud_deviceService;
 	@Autowired
 	private Cloud_productService cloud_productService;
+	@Autowired
+	private Cloud_errlogService cloud_errlogService;
+	@Autowired
+	private Cloud_userRepository cloud_userRepository;
 
 	/**
 	 * ダッシュボード情報を取得する
@@ -55,11 +64,14 @@ public class DashboardController {
 		JSONObject resJasonObj = new JSONObject();
 
 		// ユーザID必須判定
-		if (null != cloud_userModel.getUserid()) {
+		if (null != cloud_userModel.getUsername()) {
 
 			try {
+				// ログインユーザ取得
+				Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername(cloud_userModel.getUsername());
+
 				// アクセス権限ユーザ一覧を取得する
-				List<Integer> list = accessService.getAccessUsers(cloud_userModel.getUserid());
+				List<Integer> list = accessService.getAccessUsers(loginUserEntity.getUserid());
 				// ユーザ数を設定する
 				resJasonObj.put("userCount", list.size());
 
@@ -91,9 +103,11 @@ public class DashboardController {
 
 
 				// エラーログ一覧を取得する
+				List<Cloud_errlogModel> errlogList = cloud_errlogService.getErrlogList(list,getImeiList(deviceList),getIccidList(deviceList),getSnList(deviceList));
 				// エラーログ一覧を設定する
+				resJasonObj.put("errlogList", getJsonErrlogList(errlogList));
 				// エラーログ数を設定する
-
+				resJasonObj.put("errlogCount", errlogList.size());
 
 			} catch (Exception e) {
 				/* 異常系 */
@@ -232,4 +246,102 @@ public class DashboardController {
 
 		return returnStr;
 	}
+
+	/**
+	 * モデルからIMEI取得
+	 * @param deviceList List<Cloud_deviceModel> デバイスリスト
+	 * @return List<String> デバイスのIMEIリスト
+	 */
+	private List<String> getImeiList(List<Cloud_deviceModel> deviceList) {
+		List<String> returnList = new ArrayList();
+		for (Cloud_deviceModel model:deviceList) {
+			if (model.getImei() != null) {
+				returnList.add(model.getImei().trim());
+			}
+		}
+		return returnList;
+	}
+
+	/**
+	 * モデルからICCID取得
+	 * @param deviceList List<Cloud_deviceModel> デバイスリスト
+	 * @return List<String> デバイスのICCIDリスト
+	 */
+	private List<String> getIccidList(List<Cloud_deviceModel> deviceList) {
+		List<String> returnList = new ArrayList();
+		for (Cloud_deviceModel model:deviceList) {
+			if (model.getIccid() != null) {
+				returnList.add(model.getIccid().trim());
+			}
+		}
+		return returnList;
+	}
+
+	/**
+	 * モデルからSN取得
+	 * @param deviceList List<Cloud_deviceModel> デバイスリスト
+	 * @return List<String> デバイスのSNリスト
+	 */
+	private List<String> getSnList(List<Cloud_deviceModel> deviceList) {
+		List<String> returnList = new ArrayList();
+		for (Cloud_deviceModel model:deviceList) {
+			if (model.getSn() != null) {
+				returnList.add(model.getSn().trim());
+			}
+		}
+		return returnList;
+	}
+
+	/**
+	 * エラーログリストからJson配列作成
+	 * @param errlogList List<Cloud_errlogModel> エラーログのリスト
+	 * @return String エラーログのJSON配列
+	 */
+	private String getJsonErrlogList(List<Cloud_errlogModel> errlogList) {
+
+		String returnStr = new String();
+		returnStr = returnStr + "[";
+
+		for (Cloud_errlogModel model:errlogList) {
+			if (returnStr.length() > 1) {
+				returnStr = returnStr + ",";
+			}
+			// エラーログ設定
+			returnStr = returnStr + getJsonErrlog(model);
+		}
+
+		returnStr = returnStr + "]";
+
+		return returnStr;
+	}
+
+	/**
+	 * エラーログからJson作成
+	 * @param model Cloud_errlogModel エラーログモデル
+	 * @return String エラーログJson
+	 */
+	private String getJsonErrlog(Cloud_errlogModel model) {
+
+		String returnStr = new String();
+		returnStr = returnStr + "{";
+
+		returnStr = returnStr + "rowid"       + ":" + model.getRowid() + ",";
+		returnStr = returnStr + "userid"      + ":" + model.getUserid() + ",";
+		returnStr = returnStr + "device"      + ":" + model.getDevice() + ",";
+		returnStr = returnStr + "statusflag"  + ":" + model.getStatusflag() + ",";
+		returnStr = returnStr + "datatime"    + ":" + model.getDatatime() + ",";
+		returnStr = returnStr + "systemsort"  + ":" + model.getSystemsort() + ",";
+		returnStr = returnStr + "systemid"    + ":" + model.getSystemid() + ",";
+		returnStr = returnStr + "componentid" + ":" + model.getComponentid() + ",";
+		returnStr = returnStr + "messageid"   + ":" + model.getMessageid() + ",";
+		returnStr = returnStr + "messagesort" + ":" + model.getMessagesort() + ",";
+		returnStr = returnStr + "errcode"     + ":" + model.getErrcode() + ",";
+		returnStr = returnStr + "errMessage"  + ":" + model.getErrMessage() + ",";
+		returnStr = returnStr + "alive"       + ":" + model.getAlive() ;
+
+		returnStr = returnStr + "}";
+
+		return returnStr;
+	}
+
 }

@@ -45,11 +45,14 @@ public class AccessController {
 		JSONObject resJasonObj = new JSONObject();
 
 		// ユーザID必須判定
-		if (null != cloud_userModel.getUserid()) {
+		if (null != cloud_userModel.getUsername()) {
 
 			try {
+				// ログインユーザ取得
+				Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername(cloud_userModel.getUsername());
+
 				// アクセス権限ユーザ一覧を取得する
-				List<Integer> list = accessService.getAccessUsers(cloud_userModel.getUserid());
+				List<Integer> list = accessService.getAccessUsers(loginUserEntity.getUserid());
 
 				// ユーザID情報設定
 				resJasonObj.put("accessableUserIdList", this.getJsonListFromUseridList(list));
@@ -98,11 +101,10 @@ public class AccessController {
 
 			try {
 				// ログインユーザ取得
-				List<Cloud_userEntity> loginUserlist = cloud_userRepository.findByUsername(cloud_userModel.getUsername());
+				Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername(cloud_userModel.getUsername());
 
 				// アクセス権限ユーザ一覧を取得する
-//				List<String> list = Arrays.asList("1256d6c5-542b-48da-8f84-31ee621f4a33", "40bb0466-cc74-4d32-be7a-b00aececbdb9");
-				List<Cloud_userModel> list = accessService.getAccessModelUsers(loginUserlist.get(0).getUserid());
+				List<Cloud_userModel> list = accessService.getAccessModelUsers(loginUserEntity.getUserid());
 
 				// ユーザID情報設定
 				resJasonObj.put("UIDList", util.getUIDJsonList(list));
