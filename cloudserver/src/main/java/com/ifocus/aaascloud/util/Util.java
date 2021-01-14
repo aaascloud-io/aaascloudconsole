@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.ifocus.aaascloud.model.Cloud_userModel;
-import com.ifocus.aaascloud.service.KeyCloakUserService;
 
 public class Util {
 
