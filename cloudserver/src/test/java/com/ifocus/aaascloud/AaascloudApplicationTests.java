@@ -18,6 +18,7 @@ import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
+import com.ifocus.aaascloud.model.Cloud_errlogModel;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
@@ -26,6 +27,7 @@ import com.ifocus.aaascloud.model.TargetUserInfo;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_deviceService;
+import com.ifocus.aaascloud.service.Cloud_errlogService;
 import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
@@ -57,6 +59,8 @@ class AaascloudApplicationTests extends TestCase{
 
 	@Autowired
 	private AccessController accessController;
+	@Autowired
+	private Cloud_errlogService cloud_errlogService;
 
 
 //	/*
@@ -582,11 +586,11 @@ class AaascloudApplicationTests extends TestCase{
 
 		Util util = new Util();
 
-		List<Cloud_userEntity> loginUserlist = cloud_userRepository.findByUsername("ifocus");
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("ifocus");
 
 		Cloud_userModel model = new Cloud_userModel();
-		model.setUsername(loginUserlist.get(0).getUsername());
-		model.setUserid(loginUserlist.get(0).getUserid());
+		model.setUsername(loginUserEntity.getUsername());
+		model.setUserid(loginUserEntity.getUserid());
 
 		BaseHttpResponse<String> response = accessController.getAccessUsersForTrackun(model);
 
@@ -609,6 +613,25 @@ class AaascloudApplicationTests extends TestCase{
 		List<Cloud_productEntity> list = cloud_productRepository.searchProductIdsByProjectsUseridIn(userList);
 
 		assertEquals( list.size(), 1);
+	}
+
+	/*
+	 * Cloud_errlogService
+	 * 一覧取得
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testgetErrlogList() throws Exception {
+
+		List<Integer> userList = Arrays.asList(1,2,3);
+		List<String> imeiList = Arrays.asList("123456");
+		List<String> iccidList = Arrays.asList("234567");
+		List<String> snList = Arrays.asList("56789");
+
+		List<Cloud_errlogModel> list = cloud_errlogService.getErrlogList(userList,imeiList,iccidList,snList);
+
+		assertEquals( list.size(), 4);
 	}
 
 }
