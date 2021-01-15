@@ -132,6 +132,58 @@ public class AccessController {
 	}
 
 	/**
+	 * 所属代理店を取得する(trackun用)
+	 * @param cloud_userModel Cloud_userModel
+	 *         userid
+	 * @return BaseHttpResponse<String> JSON形式
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getAgencyCompanyForTrackun", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> getAgencyCompanyForTrackun(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		Util util = new Util();
+		JSONObject resJasonObj = new JSONObject();
+
+		// ユーザ名必須判定
+		if (null != cloud_userModel.getUsername()) {
+
+			try {
+				// ログインユーザ取得
+				Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername(cloud_userModel.getUsername());
+
+				// アクセス権限ユーザ一覧を取得する
+				Cloud_userModel agencyCompany = accessService.getAgencyCompany(loginUserEntity.getUserid());
+
+				// ユーザID情報設定
+				resJasonObj.put("corporatenumber", agencyCompany.getCorporatenumber());
+
+			} catch (Exception e) {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0009);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0009 + "getAgencyCompanyForTrackun:" + e.getMessage());
+				return response;
+			}
+
+		} else {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "usernameが必須です。");
+			return response;
+		}
+
+		response.setStatus(200);
+		response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+		response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+		response.setData(resJasonObj.toString());
+		return response;
+	}
+
+	/**
 	 * リストから配列作成
 	 * @param useridList List<Integer> ユーザIDのリスト
 	 * @return String ユーザIDの配列
