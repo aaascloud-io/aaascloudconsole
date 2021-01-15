@@ -15,6 +15,7 @@ import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
+import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 
@@ -85,6 +86,51 @@ public class AccessService {
 			}
 			return returnList;
 		}
+	}
+
+	/*
+	 * 代理店情報を取得する
+	 * @param userid Integer ログインユーザID
+	 * @return Cloud_userModel 代理店情報モデル
+	 *
+	 */
+	public Cloud_userModel getAgencyCompany(Integer userid) throws Exception {
+
+		Cloud_userModel model = cloud_companyRepository.searchCompanyByUserid(userid);
+
+		if (model == null) {
+			return null;
+		} else {
+			while (model.getLevel() != 1) {
+				model = cloud_companyRepository.searchCompanyByUserid(model.getUpperuserid());
+				if (model == null) {
+					return null;
+				}
+			}
+		}
+		return model;
+
+	}
+
+	/*
+	 * 会社モデル取得
+	 * @param entity Cloud_companyEntity 会社エンティティ
+	 * @return Cloud_companyModel 会社モデル
+	 *
+	 */
+	public Cloud_companyModel getCompanyModel(Cloud_companyEntity entity) throws Exception {
+		Cloud_companyModel model = new Cloud_companyModel();
+		model.setCompanyid(entity.getCompanyid());
+		model.setCompanyname(entity.getCompanyname());
+		model.setCorporatenumber(entity.getCorporatenumber());
+		model.setAddress(entity.getAddress());
+		model.setIndustry(entity.getIndustry());
+		model.setMail(entity.getMail());
+		model.setTel(entity.getTel());
+		model.setFax(entity.getFax());
+		model.setLevel(entity.getLevel());
+		return model;
+
 	}
 
 	/*
