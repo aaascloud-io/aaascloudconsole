@@ -10,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
+import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.controller.AccessController;
+import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
+import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
@@ -56,6 +59,8 @@ class AaascloudApplicationTests extends TestCase{
 
 	@Autowired
 	private Cloud_productRepository cloud_productRepository;
+	@Autowired
+	private Cloud_deviceRepository cloud_deviceRepository;
 
 	@Autowired
 	private AccessController accessController;
@@ -635,4 +640,90 @@ class AaascloudApplicationTests extends TestCase{
 		assertEquals( list.size(), 4);
 	}
 
+	/*
+	 * Cloud_deviceRepository
+	 * 一覧取得searchUnderCompanyDevicesByCompanyidIn
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testsearchUnderCompanyDevicesByCompanyidIn() throws Exception {
+
+		List<Integer> companyidList = Arrays.asList(1);
+
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchUnderCompanyDevicesByCompanyidIn(companyidList);
+
+		assertEquals( list.size(), 5);
+	}
+
+	/*
+	 * Cloud_deviceRepository
+	 * 一覧取得findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testfindByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike() throws Exception {
+
+		List<Integer> companyidList = Arrays.asList(1);
+		String imei1 = CommonConstant.DEFAULT_MATCH_ALL;
+		String iccid1 = CommonConstant.DEFAULT_MATCH_ALL;
+		String sn1 = CommonConstant.DEFAULT_MATCH_ALL;
+		String productName1 = CommonConstant.DEFAULT_MATCH_ALL;
+		String projectName1 = CommonConstant.DEFAULT_MATCH_ALL;
+		String industry1 = CommonConstant.DEFAULT_MATCH_ALL;
+
+		List<Cloud_deviceEntity> list1 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei1,iccid1,sn1,productName1,projectName1,industry1);
+
+//		String imei2 = "%16%";
+//		String iccid2 = CommonConstant.DEFAULT_MATCH_ALL;
+//		String sn2 = CommonConstant.DEFAULT_MATCH_ALL;
+//		String productName2 = CommonConstant.DEFAULT_MATCH_ALL;
+//		String projectName2 = CommonConstant.DEFAULT_MATCH_ALL;
+//		String industry2 = CommonConstant.DEFAULT_MATCH_ALL;
+//
+//		List<Cloud_deviceEntity> list2 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei2,iccid2,sn2,productName2,projectName2,industry2);
+
+		assertEquals( list1.size(), 5);
+//		assertEquals( list2.size(), 1);
+	}
+
+	/*
+	 * Cloud_deviceRepository
+	 * 一覧取得findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike
+	 * 正常系2
+	 *
+	 */
+	@Test
+	public void test2findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike() throws Exception {
+
+		List<Integer> companyidList = Arrays.asList(1);
+		String imei1 = "'%16%'";
+		String iccid1 = CommonConstant.DEFAULT_MATCH_ALL;
+		String sn1 = CommonConstant.DEFAULT_MATCH_ALL;
+		String productName1 = CommonConstant.DEFAULT_MATCH_ALL;
+		String projectName1 = CommonConstant.DEFAULT_MATCH_ALL;
+		String industry1 = CommonConstant.DEFAULT_MATCH_ALL;
+
+		List<Cloud_deviceEntity> list1 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei1,iccid1,sn1,productName1,projectName1,industry1);
+
+		assertEquals( list1.size(), 1);
+	}
+
+	/*
+	 * AccessController
+	 * 代理店取得getAgencyCompanyForTrackun
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testgetAgencyCompanyForTrackun() throws Exception {
+
+		Cloud_userModel model = new Cloud_userModel();
+		model.setUsername("user3");
+
+		BaseHttpResponse<String> response = accessController.getAgencyCompanyForTrackun(model);
+
+		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0000);
+	}
 }
