@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ifocus.aaascloud.constant.CorporateNumberConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
+import com.ifocus.aaascloud.entity.Cloud_displaysettingsEntity;
+import com.ifocus.aaascloud.entity.Cloud_displaysettingsRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
+import com.ifocus.aaascloud.model.Cloud_displaysettingsModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 
@@ -29,6 +32,8 @@ public class AccessService {
 	private Cloud_userRepository cloud_userRepository ;
 	@Autowired
 	private Cloud_companyRepository cloud_companyRepository ;
+	@Autowired
+	private Cloud_displaysettingsRepository cloud_displaysettingsRepository;
 
 	/*
 	 * プロダクトアクセス権限をチェックする
@@ -96,19 +101,34 @@ public class AccessService {
 	 */
 	public Cloud_userModel getAgencyCompany(Integer userid) throws Exception {
 
-		Cloud_userModel model = cloud_companyRepository.searchCompanyByUserid(userid);
+		Cloud_userModel model = cloud_companyRepository.findCompanyByUserid(userid);
 
 		if (model == null) {
 			return null;
 		} else {
+			// レベル1級の代理店を探す
 			while (model.getLevel() != 1) {
-				model = cloud_companyRepository.searchCompanyByUserid(model.getUpperuserid());
+				model = cloud_companyRepository.findCompanyByUserid(model.getUpperuserid());
 				if (model == null) {
 					return null;
 				}
 			}
 		}
 		return model;
+
+	}
+
+	/*
+	 * 画面表示項目情報を取得する
+	 * @param companyid Integer 会社ID
+	 * @return Cloud_displaysettingsModel 画面表示項目情報モデル
+	 *
+	 */
+	public List<Cloud_displaysettingsModel> getCompanyDisplayInfo(Integer companyid) throws Exception {
+
+		List<Cloud_displaysettingsEntity> entityList = cloud_displaysettingsRepository.searchCompanyDisplayInfoByCompanyid(companyid);
+
+		return getModelsByEntitys(entityList);
 
 	}
 
@@ -146,4 +166,37 @@ public class AccessService {
 		return model;
 
 	}
+
+	/*
+	 * 画面表示項目設定Entityリストから画面表示項目設定Modeリストl取得
+	 * @param entityList List<Cloud_displaysettingsEntity> 画面表示項目設定Entityリスト
+	 * @return List<Cloud_displaysettingsModel> 画面表示項目設定Modeリスト
+	 *
+	 */
+	public List<Cloud_displaysettingsModel> getModelsByEntitys(List<Cloud_displaysettingsEntity> entityList) throws Exception {
+		List<Cloud_displaysettingsModel> modelList = new ArrayList();
+		for (Cloud_displaysettingsEntity entity:entityList) {
+			modelList.add(getDisplaysettingsModelModel(entity));
+		}
+
+		return modelList;
+
+	}
+
+	/*
+	 * 画面表示項目設定モデル取得
+	 * @param entity Cloud_companyEntity 画面表示項目設定エンティティ
+	 * @return Cloud_displaysettingsModel 画面表示項目設定モデル
+	 *
+	 */
+	public Cloud_displaysettingsModel getDisplaysettingsModelModel(Cloud_displaysettingsEntity entity) throws Exception {
+		Cloud_displaysettingsModel model = new Cloud_displaysettingsModel();
+		model.setCompanyid(entity.getCompanyid());
+		model.setDisplayorder(entity.getDisplayorder());
+		model.setTitleitemname(entity.getTitleitemname());
+		model.setTitledisplayname(entity.getTitledisplayname());
+		return model;
+
+	}
+
 }

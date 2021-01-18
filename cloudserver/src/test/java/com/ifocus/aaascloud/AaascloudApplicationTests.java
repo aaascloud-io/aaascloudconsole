@@ -592,7 +592,7 @@ class AaascloudApplicationTests extends TestCase{
 
 		Util util = new Util();
 
-		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("ifocus");
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
 
 		Cloud_userModel model = new Cloud_userModel();
 		model.setUsername(loginUserEntity.getUsername());
@@ -710,20 +710,20 @@ class AaascloudApplicationTests extends TestCase{
 		assertEquals( list1.size(), 1);
 	}
 
-	/*
-	 * AccessController
-	 * 代理店取得getAgencyCompanyForTrackun
-	 * 正常系
-	 *
-	 */
-	@Test
-	public void testgetAgencyCompanyForTrackun() throws Exception {
-
-		Cloud_userModel model = new Cloud_userModel();
-		model.setUsername("user3");
-
-		BaseHttpResponse<String> response = accessController.getAgencyCompanyForTrackun(model);
-
-		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0000);
-	}
+//	/*
+//	 * AccessController
+//	 * 代理店取得getAgencyCompanyForTrackun
+//	 * 正常系
+//	 *
+//	 */
+//	@Test
+//	public void testgetAgencyCompanyForTrackun() throws Exception {
+//
+//		Cloud_userModel model = new Cloud_userModel();
+//		model.setUsername("user3");
+//
+//		BaseHttpResponse<String> response = accessController.getAgencyCompanyForTrackun(model);
+//
+//		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0000);
+//	}
 }

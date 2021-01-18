@@ -14,6 +14,7 @@ import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
+import com.ifocus.aaascloud.model.Cloud_displaysettingsModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.util.Util;
@@ -106,8 +107,17 @@ public class AccessController {
 				// アクセス権限ユーザ一覧を取得する
 				List<Cloud_userModel> list = accessService.getAccessModelUsers(loginUserEntity.getUserid());
 
-				// ユーザID情報設定
+				// UID情報設定
 				resJasonObj.put("UIDList", util.getUIDJsonList(list));
+
+				// 代理店情報を取得する
+				Cloud_userModel agencyCompany = accessService.getAgencyCompany(loginUserEntity.getUserid());
+
+				// 画面表示項目情報を取得する
+				List<Cloud_displaysettingsModel> modelList = accessService.getCompanyDisplayInfo(agencyCompany.getCompanyid());
+
+				// 画面表示項目情報設定
+				resJasonObj.put("settingInfo", getSettingInfoJsonList(agencyCompany,modelList));
 
 			} catch (Exception e) {
 				/* 異常系 */
@@ -131,57 +141,57 @@ public class AccessController {
 		return response;
 	}
 
-	/**
-	 * 所属代理店を取得する(trackun用)
-	 * @param cloud_userModel Cloud_userModel
-	 *         userid
-	 * @return BaseHttpResponse<String> JSON形式
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/getAgencyCompanyForTrackun", method = RequestMethod.POST)
-	@ResponseBody
-	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getAgencyCompanyForTrackun(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
-
-		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
-
-		Util util = new Util();
-		JSONObject resJasonObj = new JSONObject();
-
-		// ユーザ名必須判定
-		if (null != cloud_userModel.getUsername()) {
-
-			try {
-				// ログインユーザ取得
-				Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername(cloud_userModel.getUsername());
-
-				// アクセス権限ユーザ一覧を取得する
-				Cloud_userModel agencyCompany = accessService.getAgencyCompany(loginUserEntity.getUserid());
-
-				// ユーザID情報設定
-				resJasonObj.put("corporatenumber", agencyCompany.getCorporatenumber());
-
-			} catch (Exception e) {
-				/* 異常系 */
-				response.setStatus(200);
-				response.setResultCode(ErrorConstant.ERROR_CODE_0009);
-				response.setResultMsg(ErrorConstant.ERROR_MSG_0009 + "getAgencyCompanyForTrackun:" + e.getMessage());
-				return response;
-			}
-
-		} else {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "usernameが必須です。");
-			return response;
-		}
-
-		response.setStatus(200);
-		response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-		response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-		response.setData(resJasonObj.toString());
-		return response;
-	}
+//	/**
+//	 * 所属代理店を取得する(trackun用)
+//	 * @param cloud_userModel Cloud_userModel
+//	 *         userid
+//	 * @return BaseHttpResponse<String> JSON形式
+//	 * @throws Exception
+//	 */
+//	@RequestMapping(value = "/getAgencyCompanyForTrackun", method = RequestMethod.POST)
+//	@ResponseBody
+//	@CrossOrigin(origins = "*", maxAge = 3600)
+//	public BaseHttpResponse<String> getAgencyCompanyForTrackun(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
+//
+//		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+//
+//		Util util = new Util();
+//		JSONObject resJasonObj = new JSONObject();
+//
+//		// ユーザ名必須判定
+//		if (null != cloud_userModel.getUsername()) {
+//
+//			try {
+//				// ログインユーザ取得
+//				Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername(cloud_userModel.getUsername());
+//
+//				// アクセス権限ユーザ一覧を取得する
+//				Cloud_userModel agencyCompany = accessService.getAgencyCompany(loginUserEntity.getUserid());
+//
+//				// ユーザID情報設定
+//				resJasonObj.put("corporatenumber", agencyCompany.getCorporatenumber());
+//
+//			} catch (Exception e) {
+//				/* 異常系 */
+//				response.setStatus(200);
+//				response.setResultCode(ErrorConstant.ERROR_CODE_0009);
+//				response.setResultMsg(ErrorConstant.ERROR_MSG_0009 + "getAgencyCompanyForTrackun:" + e.getMessage());
+//				return response;
+//			}
+//
+//		} else {
+//			response.setStatus(200);
+//			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
+//			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "usernameが必須です。");
+//			return response;
+//		}
+//
+//		response.setStatus(200);
+//		response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+//		response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+//		response.setData(resJasonObj.toString());
+//		return response;
+//	}
 
 	/**
 	 * リストから配列作成
@@ -224,6 +234,46 @@ public class AccessController {
 		}
 
 		returnStr = returnStr + "]";
+
+		return returnStr;
+	}
+
+	/**
+	 * 画面表示項目情報設定JSON作成
+	 * @param userModel Cloud_userModel 代理店情報モデル
+	 * @param modelList List<Cloud_displaysettingsModel> 画面表示項目情報のリスト
+	 * @return String 画面表示項目情報設定JSON
+	 */
+	private String getSettingInfoJsonList(Cloud_userModel userModel, List<Cloud_displaysettingsModel> modelList) {
+
+		String returnStr = new String();
+		returnStr = returnStr + "{";
+
+		// 代理店情報
+		returnStr = returnStr + "corporateNumber" + ":" + userModel.getCorporatenumber();
+		returnStr = returnStr + ",";
+
+		// 画面表示項目情報
+		returnStr = returnStr + "displayInfo" + ":" + "{";				// Start of displayInfo
+
+		String strSettingInfo = new String();
+		for (Cloud_displaysettingsModel model:modelList) {
+			if (strSettingInfo.length() > 1) {
+				strSettingInfo = strSettingInfo + ",";
+			}
+			// 項目英語名設定
+			strSettingInfo = strSettingInfo + model.getTitleitemname() + ":" + "{";		// Start of Item
+			// 表示順設定
+			strSettingInfo = strSettingInfo + "displayOrder" + ":" + model.getDisplayorder();
+			strSettingInfo = strSettingInfo + ",";
+			// 画面表示名設定
+			strSettingInfo = strSettingInfo + "title" + ":" + model.getTitledisplayname();
+			strSettingInfo = strSettingInfo + "}";										// End of Item
+		}
+		returnStr = returnStr + strSettingInfo;
+		returnStr = returnStr + "}";									// End of displayInfo
+
+		returnStr = returnStr + "}";
 
 		return returnStr;
 	}
