@@ -14,7 +14,7 @@ public interface  Cloud_displaysettingsRepository extends CrudRepository<Cloud_d
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_displaysettings c WHERE d.companyid = :companyid ORDER BY displayorder",nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_displaysettings c WHERE c.companyid = :companyid ORDER BY c.displayorder",nativeQuery = true)
 	public List<Cloud_displaysettingsEntity> searchCompanyDisplayInfoByCompanyid(@Param("companyid") Integer companyid);
 
 }
