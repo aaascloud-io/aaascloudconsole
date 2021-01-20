@@ -56,7 +56,7 @@ public class Cloud_userModel {
 	private String corporatenumber;
 	@Getter
 	@Setter
-	private String companyName;
+	private String companyname;
 	@Getter
 	@Setter
 	private String address;
