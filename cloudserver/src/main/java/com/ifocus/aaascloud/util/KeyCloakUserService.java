@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ifocus.aaascloud.model.UserModel;
+
 public class KeyCloakUserService {
 
-	private Map<String, String> userIdNameMap = new HashMap<String, String>();
+	private Map<String, UserModel> userIdNameMap = new HashMap<String, UserModel>();
 
 	public static KeyCloakUserService INSTANCE = new KeyCloakUserService();
 	private KeyCloakUserService() {
@@ -18,16 +20,17 @@ public class KeyCloakUserService {
 		List<org.keycloak.representations.idm.UserRepresentation> userReps = KeyCloakAdminClient.INSTANCE.getUserRepresentations();
 		// init map
 		for (org.keycloak.representations.idm.UserRepresentation userRep : userReps) {
-			userIdNameMap.put(userRep.getUsername(), userRep.getId());
+			UserModel userModel = new UserModel(userRep.getId(),userRep.getUsername(),userRep.getFirstName(),userRep.getLastName());
+			userIdNameMap.put(userRep.getUsername(), userModel);
 		}
 	}
 
 	/*
-	 * UID取得
+	 * UserModel取得
 	 * @param username String ユーザー名（CloudのログインID）
-	 * @return String UID
+	 * @return UserModel ユーザー情報
 	 */
-	public String getUidFromUsername(String username) {
+	public UserModel getUserModelFromUsername(String username) {
 		return userIdNameMap.get(username);
 	}
 
