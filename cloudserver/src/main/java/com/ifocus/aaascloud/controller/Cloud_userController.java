@@ -103,7 +103,7 @@ public class Cloud_userController {
 				resJasonObj.put("loginid", model.getLoginid());
 				resJasonObj.put("role", model.getRole());
 				resJasonObj.put("upperuserid", model.getUpperuserid());
-				resJasonObj.put("companyName", model.getCompanyName());
+				resJasonObj.put("companyName", model.getCompanyname());
 				resJasonObj.put("devicecount", model.getDevicecount());
 
 				returnList.add(resJasonObj);

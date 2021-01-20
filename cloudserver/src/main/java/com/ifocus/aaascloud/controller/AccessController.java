@@ -10,12 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
+import com.ifocus.aaascloud.model.AccessUserModel;
 import com.ifocus.aaascloud.model.Cloud_displaysettingsModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
+import com.ifocus.aaascloud.model.DisplayItem;
+import com.ifocus.aaascloud.model.SettingInfo;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.util.Util;
 
@@ -95,7 +99,7 @@ public class AccessController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		Util util = new Util();
-		JSONObject resJasonObj = new JSONObject();
+		Gson gson  = new Gson ();
 
 		// ユーザID必須判定
 		if (null != cloud_userModel.getUsername()) {
@@ -107,8 +111,8 @@ public class AccessController {
 				// アクセス権限ユーザ一覧を取得する
 				List<Cloud_userModel> list = accessService.getAccessModelUsers(loginUserEntity.getUserid());
 
-				// UID情報設定
-				resJasonObj.put("UIDList", util.getUIDJsonList(list));
+				// ユーザ情報設定
+				AccessUserModel accessUserModel = util.getAccessUserModel(list);
 
 				// 代理店情報を取得する
 				Cloud_userModel agencyCompany = accessService.getAgencyCompany(loginUserEntity.getUserid());
@@ -117,7 +121,13 @@ public class AccessController {
 				List<Cloud_displaysettingsModel> modelList = accessService.getCompanyDisplayInfo(agencyCompany.getCompanyid());
 
 				// 画面表示項目情報設定
-				resJasonObj.put("settingInfo", getSettingInfoJsonList(agencyCompany,modelList));
+				accessUserModel.setSettingInfo(getSettingInfo(agencyCompany,modelList));
+
+				/* 正常終了 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+				response.setData(gson.toJson(accessUserModel));
 
 			} catch (Exception e) {
 				/* 異常系 */
@@ -134,10 +144,6 @@ public class AccessController {
 			return response;
 		}
 
-		response.setStatus(200);
-		response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-		response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-		response.setData(resJasonObj.toString());
 		return response;
 	}
 
@@ -238,44 +244,63 @@ public class AccessController {
 		return returnStr;
 	}
 
+//	/**
+//	 * 画面表示項目情報設定JSON作成
+//	 * @param userModel Cloud_userModel 代理店情報モデル
+//	 * @param modelList List<Cloud_displaysettingsModel> 画面表示項目情報のリスト
+//	 * @return String 画面表示項目情報設定JSON
+//	 */
+//	private String getSettingInfoJsonList(Cloud_userModel userModel, List<Cloud_displaysettingsModel> modelList) {
+//
+//		String returnStr = new String();
+//		returnStr = returnStr + "{";
+//
+//		// 代理店情報
+//		returnStr = returnStr + "corporateNumber" + ":" + userModel.getCorporatenumber();
+//		returnStr = returnStr + ",";
+//
+//		// 画面表示項目情報
+//		returnStr = returnStr + "displayInfo" + ":" + "{";				// Start of displayInfo
+//
+//		String strSettingInfo = new String();
+//		for (Cloud_displaysettingsModel model:modelList) {
+//			if (strSettingInfo.length() > 1) {
+//				strSettingInfo = strSettingInfo + ",";
+//			}
+//			// 項目英語名設定
+//			strSettingInfo = strSettingInfo + model.getTitleitemname() + ":" + "{";		// Start of Item
+//			// 表示順設定
+//			strSettingInfo = strSettingInfo + "displayOrder" + ":" + model.getDisplayorder();
+//			strSettingInfo = strSettingInfo + ",";
+//			// 画面表示名設定
+//			strSettingInfo = strSettingInfo + "title" + ":" + model.getTitledisplayname();
+//			strSettingInfo = strSettingInfo + "}";										// End of Item
+//		}
+//		returnStr = returnStr + strSettingInfo;
+//		returnStr = returnStr + "}";									// End of displayInfo
+//
+//		returnStr = returnStr + "}";
+//
+//		return returnStr;
+//	}
+
 	/**
 	 * 画面表示項目情報設定JSON作成
 	 * @param userModel Cloud_userModel 代理店情報モデル
 	 * @param modelList List<Cloud_displaysettingsModel> 画面表示項目情報のリスト
 	 * @return String 画面表示項目情報設定JSON
 	 */
-	private String getSettingInfoJsonList(Cloud_userModel userModel, List<Cloud_displaysettingsModel> modelList) {
-
-		String returnStr = new String();
-		returnStr = returnStr + "{";
+	private SettingInfo getSettingInfo(Cloud_userModel userModel, List<Cloud_displaysettingsModel> modelList) {
 
 		// 代理店情報
-		returnStr = returnStr + "corporateNumber" + ":" + userModel.getCorporatenumber();
-		returnStr = returnStr + ",";
+		SettingInfo settingInfo = new SettingInfo(userModel.getCorporatenumber());
 
 		// 画面表示項目情報
-		returnStr = returnStr + "displayInfo" + ":" + "{";				// Start of displayInfo
-
 		String strSettingInfo = new String();
 		for (Cloud_displaysettingsModel model:modelList) {
-			if (strSettingInfo.length() > 1) {
-				strSettingInfo = strSettingInfo + ",";
-			}
-			// 項目英語名設定
-			strSettingInfo = strSettingInfo + model.getTitleitemname() + ":" + "{";		// Start of Item
-			// 表示順設定
-			strSettingInfo = strSettingInfo + "displayOrder" + ":" + model.getDisplayorder();
-			strSettingInfo = strSettingInfo + ",";
-			// 画面表示名設定
-			strSettingInfo = strSettingInfo + "title" + ":" + model.getTitledisplayname();
-			strSettingInfo = strSettingInfo + "}";										// End of Item
+			settingInfo.displayInfo.add(new DisplayItem(model.getDisplayorder(), model.getTitleitemname(),model.getTitledisplayname()));
 		}
-		returnStr = returnStr + strSettingInfo;
-		returnStr = returnStr + "}";									// End of displayInfo
 
-		returnStr = returnStr + "}";
-
-		return returnStr;
+		return settingInfo;
 	}
-
 }
