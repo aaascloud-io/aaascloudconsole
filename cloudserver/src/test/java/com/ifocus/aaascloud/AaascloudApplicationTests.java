@@ -593,6 +593,7 @@ class AaascloudApplicationTests extends TestCase{
 		Util util = new Util();
 
 		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+//		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("user32");
 
 		Cloud_userModel model = new Cloud_userModel();
 		model.setUsername(loginUserEntity.getUsername());
@@ -669,23 +670,13 @@ class AaascloudApplicationTests extends TestCase{
 		String imei1 = CommonConstant.DEFAULT_MATCH_ALL;
 		String iccid1 = CommonConstant.DEFAULT_MATCH_ALL;
 		String sn1 = CommonConstant.DEFAULT_MATCH_ALL;
-		String productName1 = CommonConstant.DEFAULT_MATCH_ALL;
 		String projectName1 = CommonConstant.DEFAULT_MATCH_ALL;
+		String productName1 = CommonConstant.DEFAULT_MATCH_ALL;
 		String industry1 = CommonConstant.DEFAULT_MATCH_ALL;
 
 		List<Cloud_deviceEntity> list1 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei1,iccid1,sn1,productName1,projectName1,industry1);
 
-//		String imei2 = "%16%";
-//		String iccid2 = CommonConstant.DEFAULT_MATCH_ALL;
-//		String sn2 = CommonConstant.DEFAULT_MATCH_ALL;
-//		String productName2 = CommonConstant.DEFAULT_MATCH_ALL;
-//		String projectName2 = CommonConstant.DEFAULT_MATCH_ALL;
-//		String industry2 = CommonConstant.DEFAULT_MATCH_ALL;
-//
-//		List<Cloud_deviceEntity> list2 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei2,iccid2,sn2,productName2,projectName2,industry2);
-
 		assertEquals( list1.size(), 5);
-//		assertEquals( list2.size(), 1);
 	}
 
 	/*
