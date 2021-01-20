@@ -119,7 +119,7 @@ public class Cloud_userService {
 				/* 会社情報取得 */
 				Optional<Cloud_companyEntity> entity = cloud_companyRepository.findById(model.getCompanyid());
 				if (entity != null ) {
-					model.setCompanyName(entity.get().getCompanyname());
+					model.setCompanyname(entity.get().getCompanyname());
 				}
 				/* デバイス数取得 Todo */
 				/* ユーザ数取得 Todo */
@@ -164,7 +164,7 @@ public class Cloud_userService {
 			// 情報設定
 			Cloud_companyEntity entity = new Cloud_companyEntity();
 			entity.setCorporatenumber(model.getCorporatenumber());
-			entity.setCompanyname(model.getCompanyName());
+			entity.setCompanyname(model.getCompanyname());
 			entity.setAddress(model.getAddress());
 			entity.setIndustry(model.getIndustry());
 			entity.setMail(model.getMail());
@@ -228,7 +228,7 @@ public class Cloud_userService {
 			Cloud_companyEntity entity = new Cloud_companyEntity();
 			entity.setCompanyid(model.getCompanyid());
 			entity.setCorporatenumber(model.getCorporatenumber());
-			entity.setCompanyname(model.getCompanyName());
+			entity.setCompanyname(model.getCompanyname());
 			entity.setAddress(model.getAddress());
 			entity.setIndustry(model.getIndustry());
 			entity.setMail(model.getMail());
@@ -253,7 +253,7 @@ public class Cloud_userService {
 			// 情報設定
 			Cloud_companyEntity entity = new Cloud_companyEntity();
 			entity.setCorporatenumber(model.getCorporatenumber());
-			entity.setCompanyname(model.getCompanyName());
+			entity.setCompanyname(model.getCompanyname());
 			entity.setAddress(model.getAddress());
 			entity.setIndustry(model.getIndustry());
 			entity.setMail(model.getMail());

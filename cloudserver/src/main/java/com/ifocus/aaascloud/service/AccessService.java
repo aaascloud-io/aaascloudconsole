@@ -101,17 +101,21 @@ public class AccessService {
 	 */
 	public Cloud_userModel getAgencyCompany(Integer userid) throws Exception {
 
-		Cloud_userModel model = cloud_companyRepository.findCompanyByUserid(userid);
+		Cloud_companyEntity companyEntity = cloud_companyRepository.findCompanyByUserid(userid);
+		Optional<Cloud_userEntity> userEntity = cloud_userRepository.findById(userid);
+		Cloud_userModel model = getUserModel(companyEntity, userEntity.get());
 
 		if (model == null) {
 			return null;
 		} else {
 			// レベル1級の代理店を探す
 			while (model.getLevel() != 1) {
-				model = cloud_companyRepository.findCompanyByUserid(model.getUpperuserid());
-				if (model == null) {
+				Cloud_companyEntity entity = cloud_companyRepository.findCompanyByUserid(model.getUpperuserid());
+				if (entity == null) {
 					return null;
 				}
+				Optional<Cloud_userEntity> cloud_userEntity = cloud_userRepository.findById(model.getUpperuserid());
+				model = getUserModel(companyEntity, userEntity.get());
 			}
 		}
 		return model;
@@ -163,6 +167,31 @@ public class AccessService {
 		Cloud_userModel model = new Cloud_userModel();
 		model.setUserid(entity.getUserid());
 		model.setUsername(entity.getUsername());
+		return model;
+
+	}
+
+	/*
+	 * ユーザモデル取得
+	 * @param entity Cloud_companyEntity 会社エンティティ
+	 * @param cloud_userEntity Cloud_userEntity ユーザエンティティ
+	 * @return Cloud_userModel ユーザモデル
+	 *
+	 */
+	public Cloud_userModel getUserModel(Cloud_companyEntity entity,Cloud_userEntity cloud_userEntity) throws Exception {
+		Cloud_userModel model = new Cloud_userModel();
+		model.setCompanyid(entity.getCompanyid());
+		model.setCompanyname(entity.getCompanyname());
+		model.setCorporatenumber(entity.getCorporatenumber());
+		model.setAddress(entity.getAddress());
+		model.setIndustry(entity.getIndustry());
+		model.setMail(entity.getMail());
+		model.setTel(entity.getTel());
+		model.setFax(entity.getFax());
+		model.setLevel(entity.getLevel());
+
+		model.setUserid(cloud_userEntity.getUserid());
+		model.setUsername(cloud_userEntity.getUsername());
 		return model;
 
 	}
