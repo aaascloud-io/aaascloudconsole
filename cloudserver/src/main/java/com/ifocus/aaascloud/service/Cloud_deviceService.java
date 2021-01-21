@@ -393,7 +393,7 @@ public class Cloud_deviceService {
 		model.setProjectid(entity.getProjectid());
 		model.setGroupid(entity.getGroupid());
 		model.setDevicename(entity.getDevicename());
-//		model.setImei(entity.getImei());
+		model.setImei(entity.getImei());
 		model.setIccid(entity.getIccid());
 		model.setSn(entity.getSn());
 		model.setSim_iccid(entity.getSim_iccid());
