@@ -1,13 +1,20 @@
 package com.ifocus.aaascloud.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.ifocus.aaascloud.model.AccessUserModel;
+import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.UserModel;
 
 public class Util {
+
+	private Util () {
+
+	}
 
 	public static int size(Iterable data) {
 
@@ -52,7 +59,7 @@ public class Util {
 	 * @param userList List<Cloud_userModel> ユーザのリスト
 	 * @return AccessUserModel ユーザIDの配列
 	 */
-	public AccessUserModel getAccessUserModel(List<Cloud_userModel> userList) {
+	public static AccessUserModel getAccessUserModel(List<Cloud_userModel> userList) {
 
 		// KeyCloakサービスを呼び出し
 		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
@@ -70,4 +77,59 @@ public class Util {
 		return accessUserModel;
 	}
 
+	/**
+	 * モデルからIMEI取得
+	 * @param deviceList List<Cloud_deviceModel> デバイスリスト
+	 * @return List<String> デバイスのIMEIリスト
+	 */
+	public static List<String> getImeiList(List<Cloud_deviceModel> deviceList) {
+		List<String> returnList = new ArrayList();
+		for (Cloud_deviceModel model:deviceList) {
+			if (model.getImei() != null) {
+				returnList.add(model.getImei().trim());
+			}
+		}
+		return returnList;
+	}
+
+	/**
+	 * モデルからICCID取得
+	 * @param deviceList List<Cloud_deviceModel> デバイスリスト
+	 * @return List<String> デバイスのICCIDリスト
+	 */
+	public static List<String> getIccidList(List<Cloud_deviceModel> deviceList) {
+		List<String> returnList = new ArrayList();
+		for (Cloud_deviceModel model:deviceList) {
+			if (model.getIccid() != null) {
+				returnList.add(model.getIccid().trim());
+			}
+		}
+		return returnList;
+	}
+
+	/**
+	 * モデルからSN取得
+	 * @param deviceList List<Cloud_deviceModel> デバイスリスト
+	 * @return List<String> デバイスのSNリスト
+	 */
+	public static List<String> getSnList(List<Cloud_deviceModel> deviceList) {
+		List<String> returnList = new ArrayList();
+		for (Cloud_deviceModel model:deviceList) {
+			if (model.getSn() != null) {
+				returnList.add(model.getSn().trim());
+			}
+		}
+		return returnList;
+	}
+
+	/**
+	 * モデルからSN取得
+	 * @param src Object 任意のJavaオブジェクト
+	 * @return String オブジェクトのJSON形式
+	 */
+	public static String getJsonString(Object src) {
+		Gson gson  = new Gson ();
+		return gson.toJson(src);
+
+	}
 }
