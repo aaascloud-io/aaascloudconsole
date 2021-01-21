@@ -1,6 +1,5 @@
 package com.ifocus.aaascloud.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,7 @@ import com.ifocus.aaascloud.service.Cloud_errlogService;
 import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
+import com.ifocus.aaascloud.util.Util;
 
 import net.sf.json.JSONObject;
 
@@ -103,7 +103,7 @@ public class DashboardController {
 
 
 				// エラーログ一覧を取得する
-				List<Cloud_errlogModel> errlogList = cloud_errlogService.getErrlogList(list,getImeiList(deviceList),getIccidList(deviceList),getSnList(deviceList));
+				List<Cloud_errlogModel> errlogList = cloud_errlogService.getErrlogList(list,Util.getImeiList(deviceList),Util.getIccidList(deviceList),Util.getSnList(deviceList));
 				// エラーログ一覧を設定する
 				resJasonObj.put("errlogList", getJsonErrlogList(errlogList));
 				// エラーログ数を設定する
@@ -245,51 +245,6 @@ public class DashboardController {
 		returnStr = returnStr + "}";
 
 		return returnStr;
-	}
-
-	/**
-	 * モデルからIMEI取得
-	 * @param deviceList List<Cloud_deviceModel> デバイスリスト
-	 * @return List<String> デバイスのIMEIリスト
-	 */
-	private List<String> getImeiList(List<Cloud_deviceModel> deviceList) {
-		List<String> returnList = new ArrayList();
-		for (Cloud_deviceModel model:deviceList) {
-			if (model.getImei() != null) {
-				returnList.add(model.getImei().trim());
-			}
-		}
-		return returnList;
-	}
-
-	/**
-	 * モデルからICCID取得
-	 * @param deviceList List<Cloud_deviceModel> デバイスリスト
-	 * @return List<String> デバイスのICCIDリスト
-	 */
-	private List<String> getIccidList(List<Cloud_deviceModel> deviceList) {
-		List<String> returnList = new ArrayList();
-		for (Cloud_deviceModel model:deviceList) {
-			if (model.getIccid() != null) {
-				returnList.add(model.getIccid().trim());
-			}
-		}
-		return returnList;
-	}
-
-	/**
-	 * モデルからSN取得
-	 * @param deviceList List<Cloud_deviceModel> デバイスリスト
-	 * @return List<String> デバイスのSNリスト
-	 */
-	private List<String> getSnList(List<Cloud_deviceModel> deviceList) {
-		List<String> returnList = new ArrayList();
-		for (Cloud_deviceModel model:deviceList) {
-			if (model.getSn() != null) {
-				returnList.add(model.getSn().trim());
-			}
-		}
-		return returnList;
 	}
 
 	/**

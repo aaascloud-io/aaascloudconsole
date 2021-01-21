@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
@@ -98,9 +97,6 @@ public class AccessController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		Util util = new Util();
-		Gson gson  = new Gson ();
-
 		// ユーザID必須判定
 		if (null != cloud_userModel.getUsername()) {
 
@@ -112,7 +108,7 @@ public class AccessController {
 				List<Cloud_userModel> list = accessService.getAccessModelUsers(loginUserEntity.getUserid());
 
 				// ユーザ情報設定
-				AccessUserModel accessUserModel = util.getAccessUserModel(list);
+				AccessUserModel accessUserModel = Util.getAccessUserModel(list);
 
 				// 代理店情報を取得する
 				Cloud_userModel agencyCompany = accessService.getAgencyCompany(loginUserEntity.getUserid());
@@ -127,7 +123,8 @@ public class AccessController {
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-				response.setData(gson.toJson(accessUserModel));
+//				response.setData(gson.toJson(accessUserModel));
+				response.setData(Util.getJsonString(accessUserModel));
 
 			} catch (Exception e) {
 				/* 異常系 */

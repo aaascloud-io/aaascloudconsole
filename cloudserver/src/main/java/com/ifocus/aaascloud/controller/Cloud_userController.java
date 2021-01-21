@@ -17,9 +17,12 @@ import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
+import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
+import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_companyService;
+import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.KeyCloakUserService;
 
@@ -28,6 +31,10 @@ import net.sf.json.JSONObject;
 @Controller
 public class Cloud_userController {
 
+	@Autowired
+	private AccessService accessService;
+	@Autowired
+	private Cloud_projectService cloud_projectService;
 	@Autowired
 	private Cloud_userService cloud_userService;
 	@Autowired
@@ -105,6 +112,17 @@ public class Cloud_userController {
 				resJasonObj.put("upperuserid", model.getUpperuserid());
 				resJasonObj.put("companyName", model.getCompanyname());
 				resJasonObj.put("devicecount", model.getDevicecount());
+
+
+				// アクセス権限ユーザ一覧を取得する
+				List<Integer> underUserList = accessService.getAccessUsers(model.getUserid());
+				// 配下ユーザ数
+				resJasonObj.put("userCount", underUserList.size());
+
+				// プロジェクト一覧を取得する
+				List<Cloud_projectModel> projectList = cloud_projectService.getMyUnderProjects(underUserList);
+				// 配下プロジェクト数
+				resJasonObj.put("projectCount", projectList.size());
 
 				returnList.add(resJasonObj);
 				responseData = responseData + resJasonObj.toString();
