@@ -13,6 +13,7 @@ import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.controller.AccessController;
+import com.ifocus.aaascloud.controller.Cloud_errlogController;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
@@ -34,7 +35,6 @@ import com.ifocus.aaascloud.service.Cloud_errlogService;
 import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
-import com.ifocus.aaascloud.util.Util;
 
 import junit.framework.TestCase;
 
@@ -66,6 +66,8 @@ class AaascloudApplicationTests extends TestCase{
 	private AccessController accessController;
 	@Autowired
 	private Cloud_errlogService cloud_errlogService;
+	@Autowired
+	private Cloud_errlogController cloud_errlogController;
 
 
 //	/*
@@ -590,8 +592,6 @@ class AaascloudApplicationTests extends TestCase{
 	public void testgetAccessUsersForTrackun() throws Exception {
 
 
-		Util util = new Util();
-
 		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
 //		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("user32");
 
@@ -629,7 +629,7 @@ class AaascloudApplicationTests extends TestCase{
 	 *
 	 */
 	@Test
-	public void testgetErrlogList() throws Exception {
+	public void testServicegetErrlogList() throws Exception {
 
 		List<Integer> userList = Arrays.asList(1,2,3);
 		List<String> imeiList = Arrays.asList("123456");
@@ -717,4 +717,27 @@ class AaascloudApplicationTests extends TestCase{
 //
 //		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0000);
 //	}
+
+	/*
+	 * Cloud_errlogController
+	 * エラーログ一覧情報を取得するテストgetErrlogList
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testgetErrlogList() throws Exception {
+
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+
+		Cloud_userModel model = new Cloud_userModel();
+		model.setUsername(loginUserEntity.getUsername());
+		model.setUserid(loginUserEntity.getUserid());
+
+		BaseHttpResponse<String> response = cloud_errlogController.getErrlogList(model);
+
+		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0000);
+		assertEquals( response.getCount(), 5);
+	}
+
 }
