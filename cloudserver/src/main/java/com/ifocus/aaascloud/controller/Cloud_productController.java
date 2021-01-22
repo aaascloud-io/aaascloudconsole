@@ -118,8 +118,8 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 権限チェック
-		if (!accessService.checkProductAccess(model.getLoginInfo())) {
+		// OEM権限チェック
+		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
@@ -165,8 +165,8 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 権限チェック
-		if (!accessService.checkProductAccess(model.getLoginInfo())) {
+		// OEM権限チェック
+		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
@@ -225,8 +225,8 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 権限チェック
-		if (!accessService.checkProductAccess(model.getLoginInfo())) {
+		// OEM権限チェック
+		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
