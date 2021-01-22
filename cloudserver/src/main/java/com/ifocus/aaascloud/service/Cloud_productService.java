@@ -28,6 +28,17 @@ public class Cloud_productService {
 	 *
 	 *
 	 */
+	public List<Cloud_productModel> getProductList() throws Exception {
+		List<Cloud_productEntity> list = getProductAll();
+		return getModelsByEntitys(list);
+
+	}
+
+	/*
+	 * プロダクト一覧取得
+	 *
+	 *
+	 */
 	public List<Cloud_productEntity> getProductAll() throws Exception {
 		List<Cloud_productEntity> returnList = new ArrayList();
 		Iterable<Cloud_productEntity> list = cloud_productRepository.findAll();

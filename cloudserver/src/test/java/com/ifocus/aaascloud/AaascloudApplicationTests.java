@@ -14,6 +14,7 @@ import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.controller.AccessController;
 import com.ifocus.aaascloud.controller.Cloud_errlogController;
+import com.ifocus.aaascloud.controller.Cloud_versionController;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
@@ -26,6 +27,7 @@ import com.ifocus.aaascloud.model.Cloud_errlogModel;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
+import com.ifocus.aaascloud.model.Cloud_versionModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.model.TargetUserInfo;
 import com.ifocus.aaascloud.service.AccessService;
@@ -68,6 +70,8 @@ class AaascloudApplicationTests extends TestCase{
 	private Cloud_errlogService cloud_errlogService;
 	@Autowired
 	private Cloud_errlogController cloud_errlogController;
+	@Autowired
+	private Cloud_versionController cloud_versionController;
 
 
 //	/*
@@ -738,6 +742,111 @@ class AaascloudApplicationTests extends TestCase{
 
 		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0000);
 		assertEquals( response.getCount(), 5);
+	}
+
+	/*
+	 * Cloud_versionController
+	 * 登録テストregisterVersion
+	 * 正常系（権限なし）
+	 *
+	 */
+	@Test
+	public void testRegisterVersionNoAccess() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		Cloud_versionModel model = new Cloud_versionModel();
+		model.setLoginInfo(loginInfo);
+		model.setProductid(1);
+		model.setVersioncode("2.0");
+		model.setVersionname("8.0.23.1234567");
+		model.setDownloadurl("http://X.X.X.X.xxx/XXXXXX.apk");
+		model.setDescription("新バージョン");
+
+		BaseHttpResponse<String> response = cloud_versionController.registerVersion(model);
+
+		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0002);
+	}
+
+	/*
+	 * Cloud_versionController
+	 * 登録テストregisterVersion
+	 * 正常系（権限あり）
+	 *
+	 */
+	@Test
+	public void testRegisterVersion() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("ifocus");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		Cloud_versionModel model = new Cloud_versionModel();
+		model.setLoginInfo(loginInfo);
+		model.setProductid(1);
+		model.setVersioncode("2.0");
+		model.setVersionname("8.0.23.1234567");
+		model.setDownloadurl("http://X.X.X.X.xxx/XXXXXX.apk");
+		model.setDescription("新バージョン");
+
+		BaseHttpResponse<String> response = cloud_versionController.registerVersion(model);
+
+		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0000);
+	}
+
+	/*
+	 * Cloud_versionController
+	 * 削除テストdeleteVersion
+	 * 正常系（権限あり）
+	 *
+	 */
+	@Test
+	public void testDeleteVersion() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("ifocus");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+
+		Cloud_versionModel model = new Cloud_versionModel();
+		model.setLoginInfo(loginInfo);
+		model.setRowid(21);
+
+		BaseHttpResponse<String> response = cloud_versionController.deleteVersion(model);
+
+		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0000);
+	}
+
+	/*
+	 * Cloud_versionController
+	 * 一覧テストgetVersionList
+	 * 正常系（権限なし）
+	 *
+	 */
+	@Test
+	public void testGetVersionListNoAccess() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		Cloud_userModel model = new Cloud_userModel();
+		model.setUsername(loginUserEntity.getUsername());
+		model.setUserid(loginUserEntity.getUserid());
+
+		BaseHttpResponse<String> response = cloud_versionController.getVersionList(model);
+
+		assertEquals( ErrorConstant.ERROR_CODE_0000, response.getResultCode());
+		assertEquals( 2, response.getCount());
+
 	}
 
 }

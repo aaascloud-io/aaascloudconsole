@@ -36,17 +36,17 @@ public class AccessService {
 	private Cloud_displaysettingsRepository cloud_displaysettingsRepository;
 
 	/*
-	 * プロダクトアクセス権限をチェックする
+	 * OEMアクセス権限をチェックする
 	 * @param loginInfo LoginInfo ログインユーザ情報
 	 * @return boolean
 	 *         true = アクセス可能
 	 *         false = アクセス不可
 	 *
 	 */
-	public boolean checkProductAccess(LoginInfo loginInfo) throws Exception {
+	public boolean checkOEMAccess(LoginInfo loginInfo) throws Exception {
 		try {
 			Optional<Cloud_companyEntity> entity = cloud_companyRepository.findById(loginInfo.getLogincompanyid());
-			return (entity.get().getCorporatenumber() == CorporateNumberConstant.COM_I_FOCUS);
+			return CorporateNumberConstant.COM_I_FOCUS.equals(entity.get().getCorporatenumber());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
