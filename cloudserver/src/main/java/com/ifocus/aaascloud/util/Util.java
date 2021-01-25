@@ -55,6 +55,22 @@ public class Util {
 //	}
 
 	/**
+	 * ユーザープロファイル取得
+	 * @param model Cloud_userModel ユーザモデル
+	 * @return UserModel UserModel
+	 */
+	public static UserModel getUserModel(Cloud_userModel model) {
+
+		// KeyCloakサービスを呼び出し
+		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
+
+		// ユーザ情報取得
+		UserModel userModel = keyCloakUserService.getUserModelFromUsername(model.getUsername());
+
+		return userModel;
+	}
+
+	/**
 	 * リストから配列作成
 	 * @param userList List<Cloud_userModel> ユーザのリスト
 	 * @return AccessUserModel ユーザIDの配列

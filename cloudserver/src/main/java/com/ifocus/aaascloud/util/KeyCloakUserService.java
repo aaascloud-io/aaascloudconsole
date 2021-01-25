@@ -20,7 +20,7 @@ public class KeyCloakUserService {
 		List<org.keycloak.representations.idm.UserRepresentation> userReps = KeyCloakAdminClient.INSTANCE.getUserRepresentations();
 		// init map
 		for (org.keycloak.representations.idm.UserRepresentation userRep : userReps) {
-			UserModel userModel = new UserModel(userRep.getId(),userRep.getUsername(),userRep.getFirstName(),userRep.getLastName());
+			UserModel userModel = new UserModel(userRep.getId(),userRep.getUsername(),userRep.getFirstName(),userRep.getLastName(),userRep.getEmail());
 			userIdNameMap.put(userRep.getUsername(), userModel);
 		}
 	}
