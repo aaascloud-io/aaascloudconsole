@@ -15,6 +15,7 @@ import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.controller.AccessController;
 import com.ifocus.aaascloud.controller.Cloud_errlogController;
 import com.ifocus.aaascloud.controller.Cloud_versionController;
+import com.ifocus.aaascloud.controller.ProfileController;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
@@ -72,6 +73,8 @@ class AaascloudApplicationTests extends TestCase{
 	private Cloud_errlogController cloud_errlogController;
 	@Autowired
 	private Cloud_versionController cloud_versionController;
+	@Autowired
+	private ProfileController profileController;
 
 
 //	/*
@@ -846,6 +849,32 @@ class AaascloudApplicationTests extends TestCase{
 
 		assertEquals( ErrorConstant.ERROR_CODE_0000, response.getResultCode());
 		assertEquals( 2, response.getCount());
+
+	}
+
+	/*
+	 * ProfileController
+	 * プロファイルを取得するテストgetUserProfile
+	 * 正常系（権限なし）
+	 *
+	 */
+	@Test
+	public void testGetUserProfile() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		Cloud_userModel model = new Cloud_userModel();
+		model.setUsername(loginUserEntity.getUsername());
+		model.setUserid(loginUserEntity.getUserid());
+
+		BaseHttpResponse<String> response = profileController.getUserProfile(model);
+
+		assertEquals( ErrorConstant.ERROR_CODE_0000, response.getResultCode());
+		assertEquals( 1, response.getCount());
 
 	}
 
