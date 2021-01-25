@@ -72,7 +72,7 @@ public class AccessController {
 		} else {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "useridが必須です。");
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "usernameが必須です。");
 			return response;
 		}
 
