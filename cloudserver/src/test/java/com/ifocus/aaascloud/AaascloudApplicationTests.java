@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
+import com.ifocus.aaascloud.constant.StatusFlagConstant;
 import com.ifocus.aaascloud.controller.AccessController;
 import com.ifocus.aaascloud.controller.Cloud_errlogController;
 import com.ifocus.aaascloud.controller.Cloud_versionController;
@@ -25,6 +26,7 @@ import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_errlogModel;
+import com.ifocus.aaascloud.model.Cloud_errresumeModel;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
@@ -35,9 +37,9 @@ import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_errlogService;
+import com.ifocus.aaascloud.service.Cloud_errresumeService;
 import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
-import com.ifocus.aaascloud.service.Cloud_userService;
 
 import junit.framework.TestCase;
 
@@ -48,7 +50,7 @@ class AaascloudApplicationTests extends TestCase{
 	private Cloud_userRepository cloud_userRepository;
 
 	@Autowired
-	private Cloud_userService cloud_userService;
+	private Cloud_errresumeService cloud_errresumeService;
 	@Autowired
 	private AccessService accessService;
 	@Autowired
@@ -875,6 +877,49 @@ class AaascloudApplicationTests extends TestCase{
 
 		assertEquals( ErrorConstant.ERROR_CODE_0000, response.getResultCode());
 		assertEquals( 1, response.getCount());
+
+	}
+
+	/*
+	 * Cloud_errresumeService
+	 * 登録テストregisterErrresume
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testRegisterErrresume() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		Cloud_errresumeModel model = new Cloud_errresumeModel();
+		model.setLoginInfo(loginInfo);
+		model.setErrlogid(1);
+		model.setDoneFlag(1);
+		model.setContents("対応完了。");
+
+		Cloud_errresumeModel response = cloud_errresumeService.registerErrresume(model);
+
+		assertEquals(StatusFlagConstant.FLAG_WIP, response.getStatusflagbefore());
+		assertEquals(StatusFlagConstant.FLAG_DONE, response.getStatusflagafter());
+
+	}
+
+	/*
+	 * Cloud_errresumeService
+	 * 一覧テストgetErrresumeList
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testGetErrresumeList() throws Exception {
+
+		List<Cloud_errresumeModel> response = cloud_errresumeService.getErrresumeList(1);
+
+		assertEquals(3, response.size());
 
 	}
 
