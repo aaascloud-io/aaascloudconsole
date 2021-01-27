@@ -87,16 +87,18 @@ public class Cloud_deviceService {
 
 		// 全社のデバイス一覧取得
 		List<Cloud_deviceEntity> list = new ArrayList();
+		// グループ指定なしの場合
 		if (model.getGroupForSearch() == CommonConstant.DEFAULT_MATCH_ALL ) {
-//			list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
-//					underUserCompanyIdList,
-//					model.getImeiForSearch(),
-//					model.getImeiForSearch(),
-//					model.getImeiForSearch(),
-//					model.getProductnameForSearch(),
-//					model.getProjectnameForSearch(),
-//					model.getIndustryForSearch()
-//					);
+			list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
+					underUserCompanyIdList,
+					model.getImeiForSearch(),
+					model.getImeiForSearch(),
+					model.getImeiForSearch(),
+					model.getProductnameForSearch(),
+					model.getProjectnameForSearch(),
+					model.getIndustryForSearch()
+					);
+		// グループ指定ありの場合
 		} else {
 			list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
 					underUserCompanyIdList,
