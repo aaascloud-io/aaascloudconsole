@@ -93,6 +93,70 @@ public class Cloud_deviceController {
 	}
 
 	/**
+	 * デバイスを検索する(デバイス管理検索用)
+	 * @param cloud_deviceModel Cloud_deviceModel デバイス情報
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/searchCompanyDevices", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> searchCompanyDevices(@RequestBody Cloud_deviceModel cloud_deviceModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		// 必須チェック
+		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
+
+			List<Cloud_deviceModel> list = new ArrayList();
+			if (cloud_deviceModel.getLoginInfo().getLoginuserid().equals(cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
+				try {
+					list = cloud_deviceService.getUnderCompanyDevicesByConditions(cloud_deviceModel);
+				} catch (Exception e) {
+					/* 異常系 */
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderCompanyDevicesByConditions:" + e.getMessage());
+					return response;
+				}
+			} else {
+				// 権限判断
+				if (cloud_userService.isAncestor(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
+					try {
+						list = cloud_deviceService.getUnderCompanyDevicesByConditions(cloud_deviceModel);
+					} catch (Exception e) {
+						/* 異常系 */
+						response.setStatus(200);
+						response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+						response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderCompanyDevicesByConditions:" + e.getMessage());
+						return response;
+					}
+				} else {
+					/* 異常系 */
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "cloud_userService.isAncestor");
+					return response;
+				}
+			}
+
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			response.setCount(list.size());
+			response.setData(this.getDeviceJsonString(list));
+		} else {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "userid&targetuseridが必須です。");
+			return response;
+		}
+
+		return response;
+	}
+
+	/**
 	 * デバイス詳細を取得する
 	 * @param cloud_deviceModel Cloud_deviceModel デバイス情報
 	 * @return BaseHttpResponse<String>
