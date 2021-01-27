@@ -688,29 +688,87 @@ class AaascloudApplicationTests extends TestCase{
 		assertEquals( list1.size(), 5);
 	}
 
+//	/*
+//	 * Cloud_deviceRepository
+//	 * 一覧取得findByCompanyidInProject_ProjectnameLike
+//	 * 正常系2
+//	 *
+//	 */
+//	@Test
+//	public void testFindByCompanyidInProject_ProjectnameLike() throws Exception {
+//
+//		List<Integer> companyidList = Arrays.asList(1);
+//		String projectName = "%販売分%";
+//
+//		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInProject_ProjectnameLike(companyidList,projectName);
+//
+//		assertEquals( 2, list.size() );
+//	}
+//
+//	/*
+//	 * Cloud_deviceRepository
+//	 * 一覧取得findByCompanyidInAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike
+//	 * 正常系2
+//	 *
+//	 */
+//	@Test
+//	public void testFindByCompanyidInAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike() throws Exception {
+//
+//		List<Integer> companyidList = Arrays.asList(1,2);
+//		String productName = "%FACE%";
+//		String projectName = "%販売分%";
+//		String industry = "%サービス%";
+//
+//		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList, productName, projectName, industry);
+//
+//		assertEquals( 3, list.size() );
+//	}
+//
+//	/*
+//	 * Cloud_deviceRepository
+//	 * 一覧取得findByCompanyidInAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike
+//	 * 正常系2
+//	 *
+//	 */
+//	@Test
+//	public void test2FindByCompanyidInAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike() throws Exception {
+//
+//		List<Integer> companyidList = Arrays.asList(1,2);
+//		String productName = "%FACE%";
+//		String projectName = "%販売分%";
+//		String industry = "%サービス%";
+//		String imei = "%104%";
+//		String iccid = "%104%";
+//		String sn = "%104%";
+//
+//		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList, imei, iccid, sn, productName, projectName, industry);
+//
+//		assertEquals( 1, list.size() );
+//	}
+
 	/*
 	 * Cloud_deviceRepository
 	 * 一覧取得findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike
-	 * 正常系2
+	 * 正常系(グループなし)
 	 *
 	 */
 	@Test
-	public void test2findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike() throws Exception {
+	public void testFindByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike() throws Exception {
 
-		List<Integer> companyidList = Arrays.asList(1);
-		String imei1 = "'%16%'";
-		String iccid1 = CommonConstant.DEFAULT_MATCH_ALL;
-		String sn1 = CommonConstant.DEFAULT_MATCH_ALL;
-		String productName1 = CommonConstant.DEFAULT_MATCH_ALL;
-		String projectName1 = CommonConstant.DEFAULT_MATCH_ALL;
-		String industry1 = CommonConstant.DEFAULT_MATCH_ALL;
+		List<Integer> companyidList = Arrays.asList(1,2);
+		String productName = "%FACE%";
+		String projectName = "%販売分%";
+		String industry = "%サービス%";
+		String imei = "%104%";
+		String iccid = "%104%";
+		String sn = "%104%";
 
-		List<Cloud_deviceEntity> list1 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei1,iccid1,sn1,productName1,projectName1,industry1);
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList, imei, iccid, sn, productName, projectName, industry);
 
-		assertEquals( list1.size(), 1);
+		assertEquals( 1, list.size() );
 	}
 
-//	/*
+	//	/*
 //	 * AccessController
 //	 * 代理店取得getAgencyCompanyForTrackun
 //	 * 正常系
