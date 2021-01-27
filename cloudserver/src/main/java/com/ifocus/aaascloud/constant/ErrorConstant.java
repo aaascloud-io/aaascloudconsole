@@ -2,9 +2,10 @@ package com.ifocus.aaascloud.constant;
 
 public class ErrorConstant {
 
-	// エラーコード
+	// 正常終了
 	public static final String ERROR_CODE_0000 = "0000";
 
+	// エラーコード
 	public static final String ERROR_CODE_0001 = "0001";
 	public static final String ERROR_CODE_0002 = "0002";
 	public static final String ERROR_CODE_0003 = "0003";
@@ -39,8 +40,6 @@ public class ErrorConstant {
 	public static final String ERROR_MSG_0100 = "登録失敗：";
 	public static final String ERROR_MSG_0101 = "更新失敗：";
 	public static final String ERROR_MSG_0102 = "削除失敗:";
-	public static final String ERROR_MSG_0103 = "XXX:";
-	public static final String ERROR_MSG_0104 = "XXX:";
 
 	public static final String ERROR_MSG_9999 = "システムエラー:";
 }
