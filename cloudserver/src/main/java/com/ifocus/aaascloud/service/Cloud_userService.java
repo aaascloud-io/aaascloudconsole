@@ -33,28 +33,18 @@ public class Cloud_userService {
 	@Autowired
 	private Cloud_companyService cloud_companyService ;
 
-//	/*
-//	 * ログイン認証
-//	 *
-//	 *
-//	 */
-//	public Cloud_userModel login(String loginid, String pswd) throws Exception {
-//		Cloud_userModel model = new Cloud_userModel();
-//		model.setUserid(-1);
-//		List<Cloud_userEntity> list = cloud_userRepository.searchByLoginidAndPassword(loginid, pswd);
-//		if (list != null && list.size() == 1) {
-//			list.forEach(elm -> {
-//				model.setUserid(elm.getUserid());
-//				model.setUsername(elm.getUsername());
-//				model.setCompanyid(elm.getCompanyid());
-//				model.setLoginid(elm.getLoginid());
-//				model.setRole(elm.getRole());
-//				model.setUpperuserid(elm.getUpperuserid());
-//			});
-//		}
-//		return model;
-//
-//	}
+	/*
+	 * ログイン認証
+	 * @param username String ユーザ名
+	 * @return Cloud_userModel ログインユーザー情報モデル
+	 *
+	 */
+	public Cloud_userModel login(String username) throws Exception {
+		// ログインユーザ取得
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername(username);
+		return getModelByEntity(loginUserEntity);
+
+	}
 
 	/*
 	 * アクセス権限チェック
@@ -327,4 +317,21 @@ public class Cloud_userService {
 
 	}
 
+	/*
+	 * EntityからModel取得
+	 * @param entity Cloud_deviceEntity
+	 * @return Cloud_userModel
+	 *
+	 */
+	public Cloud_userModel getModelByEntity(Cloud_userEntity entity) throws Exception {
+		Cloud_userModel model = new Cloud_userModel();
+		model.setUserid(entity.getUserid());
+		model.setUsername(entity.getUsername());
+		model.setCompanyid(entity.getCompanyid());
+		model.setRole(entity.getRole());
+		model.setUpperuserid(entity.getUpperuserid());
+
+		return model;
+
+	}
 }
