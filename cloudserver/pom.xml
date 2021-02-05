@@ -15,7 +15,7 @@
 	<description>AAASCloudConsole</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 
 	<dependencies>
@@ -121,15 +121,29 @@
 		</dependency>
 
 		<!-- 2020/01/08 added END -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.6</version>
+		</dependency>
 	</dependencies>
 
-	<build>
+  <build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-	</build>
+		<resources>
+           <resource>
+               <directory>src/main/resources</directory>
+               <includes>
+                   <include>**/*</include>
+               </includes>
+               <filtering>true</filtering>
+           </resource>
+       </resources>
+</build>
 
 </project>
