@@ -19,6 +19,7 @@ import com.ifocus.aaascloud.model.Cloud_errlogModel;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
+import com.ifocus.aaascloud.model.DashboardModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_errlogService;
@@ -26,8 +27,6 @@ import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.Util;
-
-import net.sf.json.JSONObject;
 
 @Controller
 public class DashboardController {
@@ -61,7 +60,7 @@ public class DashboardController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		JSONObject resJasonObj = new JSONObject();
+		DashboardModel dashboardModel = new DashboardModel();
 
 		// ユーザID必須判定
 		if (null != cloud_userModel.getUsername()) {
@@ -73,41 +72,40 @@ public class DashboardController {
 				// アクセス権限ユーザ一覧を取得する
 				List<Integer> list = accessService.getAccessUsers(loginUserEntity.getUserid());
 				// ユーザ数を設定する
-				resJasonObj.put("userCount", list.size());
+				dashboardModel.setUserCount(list.size());
 
 				// プロジェクト一覧を取得する
 				List<Cloud_projectModel> projectList = cloud_projectService.getMyUnderProjects(list);
 				// プロジェクト数を設定する
-				resJasonObj.put("projectCount", projectList.size());
+				dashboardModel.setProjectCount(projectList.size());
 
 				// プロダクト一覧を取得する
 				List<Cloud_productModel> productList = cloud_productService.getMyUnderProducts(list);
 				// プロダクト一覧を設定する
-				resJasonObj.put("productList", getJsonProductList(productList));
+				dashboardModel.setProductList(productList);
 				// プロダクト数を設定する
-				resJasonObj.put("productCount", productList.size());
+				dashboardModel.setProductCount(productList.size());
 
 				// デバイス数（全部）を取得する
 				List<Cloud_deviceModel> deviceList  = cloud_deviceService.getUnderCompanyDevicesByUserids(list);
 				// デバイス数（全部）を設定する
-				resJasonObj.put("deviceCount", deviceList.size());
+				dashboardModel.setDeviceCount(deviceList.size());
 
 				// デバイス数（オンライン数）を取得する todo
 				// デバイス数（オンライン数）を設定する
-				resJasonObj.put("onlineDeviceCount", 0);
+				dashboardModel.setOnlineDeviceCount(0);
 
 				// ユーザ一覧を取得する
 				List<Cloud_userModel> userList = cloud_userService.getSonUsers(cloud_userModel.getUserid());
 				// ユーザ一覧を設定する
-				resJasonObj.put("userList", getJsonUserList(userList));
-
+				dashboardModel.setUserList(userList);
 
 				// エラーログ一覧を取得する
 				List<Cloud_errlogModel> errlogList = cloud_errlogService.getErrlogList(list,Util.getImeiList(deviceList),Util.getIccidList(deviceList),Util.getSnList(deviceList));
 				// エラーログ一覧を設定する
-				resJasonObj.put("errlogList", getJsonErrlogList(errlogList));
+				dashboardModel.setErrlogList(errlogList);
 				// エラーログ数を設定する
-				resJasonObj.put("errlogCount", errlogList.size());
+				dashboardModel.setErrlogCount(errlogList.size());
 
 			} catch (Exception e) {
 				/* 異常系 */
@@ -120,14 +118,14 @@ public class DashboardController {
 		} else {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "useridが必須です。");
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "usernameが必須です。");
 			return response;
 		}
 
 		response.setStatus(200);
 		response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 		response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-		response.setData(resJasonObj.toString());
+		response.setData(Util.getJsonString(dashboardModel));
 		return response;
 	}
 
