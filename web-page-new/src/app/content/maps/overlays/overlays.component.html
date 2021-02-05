@@ -1,0 +1,91 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-header row mb-1">
+      <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+    </div>
+    <div class="content-body">
+      <!-- gmaps overlays section start -->
+      <section id="gmaps-overlays">
+        <!-- Polylines -->
+        <div class="row">
+          <div class="col-12" *blockUI="'polylines'; message: 'Loading'">
+            <m-card [options]="options" (reloadFunction)="reloadPolylines($event)">
+              <ng-container mCardHeaderTitle>
+                Polylines
+              </ng-container>
+              <ng-container mCardBody>
+                <p class="card-text">The path of the polyline is defined by an array of array of two (latitude and
+                  longitude).</p>
+                <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [scrollwheel]="null">
+                  <ng-container>
+                    <agm-polyline *ngFor="let polyline of polylines;let i = index;" [strokeColor]="polyline.color">
+                      <agm-polyline-point *ngFor="let point of polyline.path" [latitude]="point.latitude"
+                        [longitude]="point.longitude">
+                      </agm-polyline-point>
+                    </agm-polyline>
+                  </ng-container>
+                </agm-map>
+              </ng-container>
+            </m-card>
+          </div>
+        </div>
+
+        <!-- Polygons -->
+        <div class="row">
+          <div class="col-12" *blockUI="'polygons'; message: 'Loading'">
+            <m-card [options]="options" (reloadFunction)="reloadPolygons($event)">
+              <ng-container mCardHeaderTitle>
+                Polygons
+              </ng-container>
+              <ng-container mCardBody>
+                <p class="card-text">The path of a polygon can be defined as an array of:</p>
+
+                <ul>
+                  <li><code>google.maps.LatLng</code> objects, or
+                  </li>
+                  <li>arrays of coordinates, with index 0 and 1 as, respectively, <b>latitude</b> and <b>longitude</b>
+                    (as in the example)
+                  </li>
+                </ul>
+
+                <p class="card-text">Also, you can add a GeoJSON Polygon or MultiPolygon path using
+                  <code>useGeoJSON: true</code>.</p>
+
+                <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [scrollwheel]="null">
+                  <agm-polygon [paths]="paths" strokeColor="LightSkyBlue" [strokeWeight]="3" fillColor="LightSkyBlue">
+                  </agm-polygon>
+                </agm-map>
+              </ng-container>
+            </m-card>
+          </div>
+        </div>
+
+        <!-- GeoJSON Polygons -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">GeoJSON Polygons</h4>
+
+
+              </div>
+              <div class="card-content collapse show">
+                <div class="card-body">
+                  <p class="card-text">The GeoJSON Polygon should be surrounded by brackets, according the <a
+                      href="http://geojson.org/geojson-spec.html#id7">specification</a>.</p>
+                  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [scrollwheel]="null">
+                    <agm-polygon [paths]="multiPaths" strokeColor="LightSkyBlue" [strokeWeight]="3"
+                      fillColor="LightSkyBlue">
+                    </agm-polygon>
+                  </agm-map>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- // gmaps overlays section end -->
+    </div>
+  </div>
+</div>
+<!-- ////////////////////////////////////////////////////////////////////////////-->
