@@ -14,6 +14,7 @@ import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
+import com.ifocus.aaascloud.model.AccessModel;
 import com.ifocus.aaascloud.model.AccessUserModel;
 import com.ifocus.aaascloud.model.Cloud_displaysettingsModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
@@ -21,8 +22,6 @@ import com.ifocus.aaascloud.model.DisplayItem;
 import com.ifocus.aaascloud.model.SettingInfo;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.util.Util;
-
-import net.sf.json.JSONObject;
 
 @Controller
 public class AccessController {
@@ -46,7 +45,7 @@ public class AccessController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		JSONObject resJasonObj = new JSONObject();
+		AccessModel accessModel = new AccessModel();
 
 		// ユーザID必須判定
 		if (null != cloud_userModel.getUsername()) {
@@ -59,7 +58,7 @@ public class AccessController {
 				List<Integer> list = accessService.getAccessUsers(loginUserEntity.getUserid());
 
 				// ユーザID情報設定
-				resJasonObj.put("accessableUserIdList", this.getJsonListFromUseridList(list));
+				accessModel.setAccessableUserIdList(list);
 
 			} catch (Exception e) {
 				/* 異常系 */
@@ -79,7 +78,7 @@ public class AccessController {
 		response.setStatus(200);
 		response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 		response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-		response.setData(resJasonObj.toString());
+		response.setData(Util.getJsonString(accessModel));
 		return response;
 	}
 

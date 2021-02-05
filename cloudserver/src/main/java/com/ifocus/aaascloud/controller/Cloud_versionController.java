@@ -144,7 +144,7 @@ public class Cloud_versionController {
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/deleteVersion", method = RequestMethod.POST)
+	@RequestMapping(value = "/deleteVersion", method = RequestMethod.DELETE)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
 	public BaseHttpResponse<String> deleteVersion(@RequestBody Cloud_versionModel model) throws Exception {

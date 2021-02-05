@@ -218,7 +218,7 @@ public class Cloud_productController {
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/deleteProduct", method = RequestMethod.POST)
+	@RequestMapping(value = "/deleteProduct", method = RequestMethod.DELETE)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
 	public BaseHttpResponse<String> deleteProduct(@RequestBody Cloud_productModel model) throws Exception {

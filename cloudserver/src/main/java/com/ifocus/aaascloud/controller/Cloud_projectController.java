@@ -16,9 +16,10 @@ import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_groupModel;
 import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
-import com.ifocus.aaascloud.service.Cloud_companyService;
+import com.ifocus.aaascloud.model.ProjectDetailModel;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
+import com.ifocus.aaascloud.util.Util;
 
 import net.sf.json.JSONObject;
 
@@ -29,8 +30,6 @@ public class Cloud_projectController {
 	private Cloud_userService cloud_userService;
 	@Autowired
 	private Cloud_projectService cloud_projectService;
-	@Autowired
-	private Cloud_companyService cloud_companyService;
 
 	/**
 	 * プロジェクト一覧を取得する
@@ -56,7 +55,7 @@ public class Cloud_projectController {
 					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 					response.setCount(list.size());
-					response.setData(this.getProjectJsonString(list));
+					response.setData(Util.getJsonString(list));
 
 			} else {
 				/* 異常系 */
@@ -95,31 +94,26 @@ public class Cloud_projectController {
 				// プロジェクト詳細を取得する
 				Cloud_projectDetailModel model = cloud_projectService.getMyProject(cloud_projectModel.getProductid());
 
-				String responseData = new String();
-				responseData = responseData + "{";
-
-				JSONObject resJasonObj = new JSONObject();
+				ProjectDetailModel projectDetailModel = new ProjectDetailModel();
 				// 情報設定
-				resJasonObj.put("projectid", model.getProjectid());
-				resJasonObj.put("userid", model.getUserid());
-				resJasonObj.put("projectname", model.getProjectname());
-				resJasonObj.put("productid", model.getProductid());
-				resJasonObj.put("projectsummary", model.getProjectsummary());
-				resJasonObj.put("productname", model.getProductname());
-				resJasonObj.put("groupCounts", model.getGroupCounts());
-				resJasonObj.put("deviceCounts", model.getDeviceCounts());
+				projectDetailModel.setProjectid(model.getProjectid());
+				projectDetailModel.setUserid(model.getUserid());
+				projectDetailModel.setProjectname(model.getProjectname());
+				projectDetailModel.setProductid(model.getProductid());
+				projectDetailModel.setProjectsummary(model.getProjectsummary());
+				projectDetailModel.setProductname(model.getProductname());
+				projectDetailModel.setGroupCounts(model.getGroupCounts());
+				projectDetailModel.setDeviceCounts(model.getDeviceCounts());
 
 				// グループ一覧情報設定
-				resJasonObj.put("groupList", getGroupJsonString(model.getGroupList()));
+				projectDetailModel.setGroupList(model.getGroupList());
 				// デバイス一覧情報設定
-				resJasonObj.put("deviceList", getDeviceJsonString(model.getDeviceList()));
-
-				responseData = responseData + "}";
+				projectDetailModel.setDeviceList(model.getDeviceList());
 
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-				response.setData(responseData);
+				response.setData(Util.getJsonString(projectDetailModel));
 
 			} else {
 				/* 異常系 */
