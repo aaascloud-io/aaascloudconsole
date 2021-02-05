@@ -1,0 +1,14 @@
+<div (window:resize)="onResize($event)"></div>
+<app-navigation></app-navigation>
+<router-outlet></router-outlet>
+<div class="sidenav-overlay d-none" id="sidenav-overlay" (click)="rightbar($event)"></div>
+<app-footer></app-footer>
+<!-- <div *ngIf ="customizer === 'on'">
+<app-customizer *ngIf="layout === 'vertical'"></app-customizer>
+<app-horizontal-customizer *ngIf="layout === 'horizontal'"></app-horizontal-customizer>
+</div> -->
+<!-- <div *ngIf ="buybutton === 'on'">
+<div class="buy-now" >
+    <a href="https://1.envato.market/modern_admin_angular" target="_blank" class="btn bg-gradient-directional-purple round white btn-purple btn-glow px-2">Buy Now</a>
+</div>
+</div> -->

@@ -1,0 +1,1126 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-header row mb-1">
+      <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+    </div>
+    <div class="content-body">
+      <!-- Basic tabs start -->
+      <section id="basic-tabs-components">
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Basic Tabs</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Takes the basic nav from above and adds the <code>.nav-tabs</code> class to generate a tabbed
+                    interface. </p>
+
+                  <ngb-tabset>
+                    <!-- <div class="nav nav-tabs"> -->
+                    <ngb-tab title="Tab 1">
+                      <ng-template ngbTabContent>
+                        Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                        carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                        croissant..
+                      </ng-template>
+                    </ngb-tab>
+                    <ngb-tab>
+                      <ng-template ngbTabTitle>Tab 2</ng-template>
+                      <ng-template ngbTabContent>
+                        Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                        fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                        Jelly-o pie cupcake.
+                      </ng-template>
+                    </ngb-tab>
+                    <ngb-tab>
+                      <ng-template ngbTabTitle>Tab 3</ng-template>
+                      <ng-template ngbTabContent>
+                        Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                        cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                        jujubes powder sweet sesame snaps.
+                      </ng-template>
+                    </ngb-tab>
+                    <ngb-tab title="Disabled" [disabled]="true">
+                      <ng-template ngbTabContent>
+                      </ng-template>
+                    </ngb-tab>
+                    <!-- </div> -->
+                  </ngb-tabset>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Top Border Tabs</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-top-border .no-hover-bg</code> class for top bordered active type in Top Border Tabs.
+                  </p>
+                  <ul class="nav nav-tabs _bottom nav-top-border no-hover-bg tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab title="Tab 1">
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                        </ng-template>
+                      </ngb-tab>
+
+                    </ngb-tabset>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Topline with box</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-topline</code> class for topline box active type. </p>
+                  <ul class="nav nav-tabs nav-topline tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab title="Tab 1">
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Select an active Tab by ID</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <div class="card-block">
+                    <ngb-tabset #t="ngbTabset">
+                      <ngb-tab title="Tab1" id="foo">
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab id="bar">
+                        <ng-template ngbTabTitle>Tab2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                    <p>
+                      <button class="btn btn-outline-info" (click)="t.select('bar')">Selected tab with "bar" id</button>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+
+
+      <!-- With Bottom Border start -->
+      <section id="bottom-border">
+        <div class="row">
+          <div class="col-12 mt-3 mb-1">
+            <h4 class="text-uppercase">With Bottom Border</h4>
+            <p>Different bottom border styles for active tabs.</p>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Bottomline with box</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-underline</code> class for bottom bordered active type. </p>
+                  <ul class="nav nav-tabs _bottom nav-underline no-hover-bg tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab title="Tab 1">
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Bottomline with Triangle</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-linetriangle</code> class for bottom triangle active type. </p>
+                  <ul class="nav nav-tabs _bottom nav-linetriangle no-hover-bg tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab title="Tab 1">
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="tabs-with-icons">
+        <div class="row">
+          <div class="col-12 mt-3 mb-1">
+            <h4 class="text-uppercase">Tabs with Icons</h4>
+            <p>Icon on left,right &amp; both side of the tab. Only icons tabs also available.</p>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Basic Tabs</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <ul class="nav tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-play"></i>Tab 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-flag"></i>Tab 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-cog"></i>Tab 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title [disabled]="true">
+
+                        <ng-template ngbTabTitle><i class="la la-unlink"></i> Disable </ng-template>
+
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Basic Tabs with Bottom Line</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <ul class="nav nav-tabs _bottom nav-top-border no-hover-bg tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-play"></i>Tab 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-flag"></i>Tab 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-cog"></i>Tab 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title [disabled]="true">
+
+                        <ng-template ngbTabTitle><i class="la la-unlink"></i> Disable </ng-template>
+
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Basic Tabs with Bottom Line</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <ul class="nav nav-tabs _bottom nav-underline tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-play"></i>Tab 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-flag"></i>Tab 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-cog"></i>Tab 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title [disabled]="true">
+
+                        <ng-template ngbTabTitle><i class="la la-unlink"></i> Disable </ng-template>
+
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Basic Tabs with Bottom Arrow</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <ul class="nav nav-tabs _bottom nav-linetriangle tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-play"></i>Tab 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-flag"></i>Tab 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-cog"></i>Tab 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title [disabled]="true">
+                        <ng-template ngbTabTitle><i class="la la-unlink"></i> Disable </ng-template>
+
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Basic Tabs with Icon Fall</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-iconfall</code> class for icon fall for active state.</p>
+                  <ul class="nav nav-tabs nav-iconfall tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-play"></i>Tab 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-flag"></i>Tab 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-cog"></i>Tab 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title [disabled]="true">
+
+                        <ng-template ngbTabTitle><i class="la la-unlink"></i> Disable </ng-template>
+
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Tabs with Only Icon</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-only-icon</code> class when you use only icons, So that will increase font size.</p>
+                  <ul class="nav nav-tabs _bottom nav-only-icon nav-top-border no-hover-bg tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-play"></i></ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-flag"></i></ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle> <i class="la la-cog"></i></ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title [disabled]="true">
+
+                        <ng-template ngbTabTitle><i class="la la-unlink"></i></ng-template>
+
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <!-- Tabs with Labels & Pills start -->
+      <section id="tabs-with-labels-pills">
+        <div class="row">
+          <div class="col-12 mt-1">
+            <h4>Tabs with Labels &amp; Pills</h4>
+            <p>Labels &amp; pills on left &amp; right side of the tab.</p>
+            <hr>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Tabs with label</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>You can also use <code>.badge .badge-COLOR</code> classes to add label to the tab.</p>
+
+                  <ul class="nav tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab>
+                        <ng-template class="badge-success" ngbTabTitle><span
+                            class="badge badge-default badge-success">New</span>
+                          Tab 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Tab 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="feather ft-external-link"></i>Link</ng-template>
+                        <ng-template ngbTabContent>
+                          Cookie icing tootsie roll cupcake jelly-o sesame snaps. Gummies cookie dragée cake jelly
+                          marzipan donut pie macaroon. Gingerbread powder chocolate cake icing. Cheesecake gummi bears
+                          ice cream marzipan.
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Tabs with pills</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>You can also use <code>.badge .badge-pill .badge-COLOR</code> classes to add label pill to the tab.
+                  </p>
+                  <ul class="nav tabsborder">
+                    <ngb-tabset>
+                      <ngb-tab>
+                        <ng-template class="badge-success" ngbTabTitle><span
+                            class="badge badge-pill badge-glow badge-default badge-success">3</span>Tab
+                          1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant..
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><span
+                            class="badge badge-pill badge-glow badge-default badge-warning float-right">2</span>Tab
+                          2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><span
+                            class="badge badge-pill badge-glow badge-default badge-info float-right">5</span>Tab
+                          3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title [disabled]="true">
+
+                        <ng-template ngbTabTitle><i class="la la-unlink"></i> Disable </ng-template>
+
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <!-- Tabs with Labels & Pills end -->
+
+
+      <!-- Vertical Tabs start -->
+      <section id="vertical-tabs">
+        <div class="row">
+          <div class="col-12 mt-3 mb-1">
+            <h4 class="text-uppercase">Vertical Tabs</h4>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Vertical Left Tabs</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Wrap tabs and tab content with <code>.nav-vertical</code> class. To add left navigation use
+                    <code>.nav-left</code>
+                    class to <code>.nav.nav-tabs</code>.</p>
+                  <div class="nav-vertical">
+                    <div class="borderleft">
+                      <ul class="nav nav-tabs nav-left flex-column">
+                        <div class="nav nav-tabs">
+                          <ngb-tabset>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle>Tab 1</ng-template>
+
+                              <ng-template ngbTabContent ngclass="nav nav-tabs nav-left flex-column">
+                                Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate
+                                cake
+                                carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate.
+                              </ng-template>
+                            </ngb-tab>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle>Tab 2</ng-template>
+                              <ng-template ngbTabContent>Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+                                single-origin coffee squid.
+                                Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                                fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                                Jelly-o pie cupcake.
+                              </ng-template>
+                            </ngb-tab>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle>Tab 3</ng-template>
+                              <ng-template ngbTabContent>
+                                Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut.
+                                Toffee
+                                cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                                jujubes powder sweet sesame snaps.
+                              </ng-template>
+                            </ngb-tab>
+
+
+                          </ngb-tabset>
+                        </div>
+                      </ul>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Vertical Right Tabs</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Wrap tabs and tab content with <code>.nav-vertical</code> class. To add right navigation use
+                    <code>.nav-right</code>
+                    class to <code>.nav.nav-tabs</code>.</p>
+                  <div class="nav-vertical">
+                    <div class="borderright">
+                      <ul class="nav nav-tabs nav-right flex-column">
+                        <ngb-tabset>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle>Tab 1</ng-template>
+                            <ng-template ngbTabContent ngclass="nav nav-tabs nav-left flex-column">
+                              Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate
+                              cake
+                              carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies
+                              cupcake croissant.
+                            </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle>Tab 2</ng-template>
+                            <ng-template ngbTabContent>Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+                              single-origin coffee squid.
+                              Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                              fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                              Jelly-o pie cupcake.
+                            </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle>Tab 3</ng-template>
+                            <ng-template ngbTabContent>
+                              Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut.
+                              Toffee
+                              cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                              jujubes powder sweet sesame snaps.
+                            </ng-template>
+                          </ngb-tab>
+
+
+                        </ngb-tabset>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Tabs with Left Border</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Wrap tabs and tab content with <code>.nav-vertical</code> class. To add left navigation use
+                    <code>.nav-left</code>
+                    &amp; use <code>nav-border-left</code>class to <code>.nav.nav-tabs</code> for leftside border
+                    effect to tab.</p>
+                  <div class="nav-vertical">
+                    <div class="borderleft">
+                      <ul class="nav nav-tabs nav-border-left nav-left">
+                        <div class="nav nav-tabs">
+                          <ngb-tabset>
+
+                            <ngb-tab>
+                              <ng-template ngbTabTitle>Tab 1</ng-template>
+
+                              <ng-template ngbTabContent ngclass="nav nav-tabs nav-left flex-column">
+                                Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate
+                                cake
+                                carrot cake.
+                              </ng-template>
+                            </ngb-tab>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle>Tab 2</ng-template>
+                              <ng-template ngbTabContent>Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+                                single-origin coffee squid.
+                                Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                                fruitcake jelly chupa chups.
+                              </ng-template>
+                            </ngb-tab>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle>Tab 3</ng-template>
+                              <ng-template ngbTabContent>
+                                Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut.
+                                Toffee
+                                cotton candy liquorice.
+                              </ng-template>
+                            </ngb-tab>
+
+
+                          </ngb-tabset>
+                        </div>
+                      </ul>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Tabs with Right Border</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Wrap tabs and tab content with <code>.nav-vertical</code> class. To add right navigation use
+                    <code>.nav-right</code>
+                    &amp; use <code>nav-border-right</code>class to <code>.nav.nav-tabs</code> for leftside border
+                    effect to tab.</p>
+                  <div class="nav-vertical">
+                    <div class="borderright">
+                      <ul class="nav nav-tabs nav-right nav-border-right">
+                        <ngb-tabset>
+
+                          <ngb-tab>
+                            <ng-template ngbTabTitle>Tab 1</ng-template>
+
+                            <ng-template ngbTabContent>
+                              Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate
+                              cake
+                              carrot cake.
+                            </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle>Tab 2</ng-template>
+                            <ng-template ngbTabContent>Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+                              single-origin coffee squid.
+                              Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                              fruitcake jelly chupa chups.
+                            </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle>Tab 3</ng-template>
+                            <ng-template ngbTabContent>
+                              Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut.
+                              Toffee
+                              cotton candy liquorice.
+                            </ng-template>
+                          </ngb-tab>
+
+                        </ngb-tabset>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Tabs with Icon</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>You can also add icons to the tab name.</p>
+                  <div class="nav-vertical">
+                    <div class="borderleft">
+                      <ul class="nav nav-tabs nav-left ">
+                        <div class="nav nav-tabs">
+                          <ngb-tabset>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle><i class="la la-align-justify"></i> Home</ng-template>
+                              <ng-template ngbTabContent>
+                                Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate
+                                cake
+                                carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate.
+                              </ng-template>
+                            </ngb-tab>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle><i class="la la-header"></i>Profile</ng-template>
+                              <ng-template ngbTabContent>Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+                                single-origin coffee squid.
+                                Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                                fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                                Jelly-o pie cupcake.
+                              </ng-template>
+                            </ngb-tab>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle><i class="la la-send-o"></i>About</ng-template>
+                              <ng-template ngbTabContent>
+                                Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut.
+                                Toffee
+                                cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                                jujubes powder sweet sesame snaps.
+                              </ng-template>
+                            </ngb-tab>
+                          </ngb-tabset>
+                        </div>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Tabs with Icon</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>You can also add icons to the tab name.</p>
+                  <div class="nav-vertical">
+                    <div class="borderright">
+                      <ul class="nav nav-tabs nav-right">
+                        <ngb-tabset>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle><i class="la la-align-justify"></i> Home</ng-template>
+
+                            <ng-template ngbTabContent>
+                              Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate
+                              cake
+                              carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies
+                              cupcake croissant.
+                            </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle><i class="la la-header"></i>Profile</ng-template>
+                            <ng-template ngbTabContent>Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+                              single-origin coffee squid.
+                              Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                              fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                              Jelly-o pie cupcake.
+                            </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle><i class="la la-send-o"></i>About</ng-template>
+                            <ng-template ngbTabContent>
+                              Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut.
+                              Toffee
+                              cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                              jujubes powder sweet sesame snaps.
+                            </ng-template>
+                          </ngb-tab>
+
+
+                        </ngb-tabset>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Tabs with Labels, Pills &amp; Left Border</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <div class="nav-vertical">
+                    <div class="borderleft">
+                      <ul class="nav nav-tabs nav-left nav-border-left">
+                        <div class="nav nav-tabs">
+                          <ngb-tabset>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle><span
+                                  class="mr-1 badge badge-default badge-success">New</span>Home</ng-template>
+                              <ng-template ngbTabContent ngclass="nav nav-tabs nav-left flex-column">
+                                Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate
+                                cake
+                                carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate.
+                              </ng-template>
+                            </ngb-tab>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle><span
+                                  class="mr-1 badge badge-default badge-info">info</span>Profile</ng-template>
+                              <ng-template ngbTabContent>Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+                                single-origin coffee squid.
+                                Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                                fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                                Jelly-o pie cupcake.
+                              </ng-template>
+                            </ngb-tab>
+                            <ngb-tab>
+                              <ng-template ngbTabTitle><span
+                                  class="mr-1 badge badge-default badge-warning badge-pill badge-glow tabs">5</span>About
+                              </ng-template>
+                              <ng-template ngbTabContent>
+                                Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut.
+                                Toffee
+                                cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                                jujubes powder sweet sesame snaps.
+                              </ng-template>
+                            </ngb-tab>
+                          </ngb-tabset>
+                        </div>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Tabs with Labels, Pills &amp; Right Border</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <div class="nav-vertical">
+                    <div class="borderright">
+                      <ul class="nav nav-tabs nav-right nav-border-right">
+                        <ngb-tabset>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle><span
+                                class="ml-1 badge badge-pill badge-glow badge-default badge-danger float-right">2</span>Home
+                            </ng-template>
+
+                            <ng-template ngbTabContent ngclass="nav nav-tabs nav-left flex-column">
+                              Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate
+                              cake
+                              carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies
+                              cupcake croissant.
+                            </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle><span
+                                class="ml-1 badge badge-pill badge-glow badge-default badge-primary float-right">3</span>Profile
+                            </ng-template>
+                            <ng-template ngbTabContent>Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+                              single-origin coffee squid.
+                              Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                              fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                              Jelly-o pie cupcake.
+                            </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle><span
+                                class="ml-1 badge badge-default badge-warning float-right">New</span>About
+                            </ng-template>
+                            <ng-template ngbTabContent>
+                              Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut.
+                              Toffee
+                              cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                              jujubes powder sweet sesame snaps.
+                            </ng-template>
+                          </ngb-tab>
+                        </ngb-tabset>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Vertical Tabs end -->
+    </div>
+  </div>
+</div>
+<!-- ////////////////////////////////////////////////////////////////////////////-->

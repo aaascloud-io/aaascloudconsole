@@ -1,0 +1,72 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-header row mb-1">
+      <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+    </div>
+    <div class="content-body">
+      <!-- gmaps routes section start -->
+      <section id="gmaps-routes">
+        <!-- Routes -->
+        <div class="row">
+          <div class="col-12" *blockUI="'routes'; message: 'Loading'">
+            <m-card [options]="options" (reloadFunction)="reloadRoutes($event)">
+              <ng-container mCardHeaderTitle>
+                Routes
+              </ng-container>
+              <ng-container mCardBody>
+
+                <p class="card-text">You must define two points (<strong>origin</strong> and
+                  <strong>destination</strong>) and color, opacity and weight of the route in the map.</p>
+
+                <p class="card-text">Also, you can define a <code>travelMode</code>: <code>driving</code>,
+                  <code>bicycling</code> or <code>walking</code>. Default is <code>walking</code></p>
+                <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [scrollwheel]="null">
+                  <agm-direction [origin]="origin" [destination]="destination">
+                  </agm-direction>
+                </agm-map>
+              </ng-container>
+            </m-card>
+          </div>
+        </div>
+
+        <!-- Routes Advance -->
+        <div class="row">
+          <div class="col-12" *blockUI="'routesAdvance'; message: 'Loading'">
+            <m-card [options]="options" (reloadFunction)="reloadRoutesAdvance($event)">
+              <ng-container mCardHeaderTitle>
+                Routes Advance
+              </ng-container>
+              <ng-container mCardBody>
+
+                <p class="card-text">Same as <code>drawRoute</code>, you must define an <strong>origin</strong>,
+                  <strong>destination</strong> and <code>travelMode</code>. Also, you must define the function that
+                  GMaps will call every step in the route.</p>
+
+                <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [scrollwheel]="null">
+                  <agm-direction [origin]="origin" [destination]="destination" (onResponse)="onResponse($event)">
+                  </agm-direction>
+                </agm-map>
+
+                <div class="row">
+                  <div class="col-2">
+                    <button type="submit" class="btn btn-primary mt-1" (click)="startInstructions()">Start
+                      Travel</button>
+                  </div>
+                  <div class="col-10" *ngIf="clickOnStartTravel">
+                    <ul>
+                      <li *ngFor="let detail of routeArray">
+                        <div [innerHtml]="detail.instructions"></div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </ng-container>
+            </m-card>
+          </div>
+        </div>
+      </section>
+      <!-- // gmaps routes section end -->
+    </div>
+  </div>
+</div>
+<!-- ////////////////////////////////////////////////////////////////////////////-->

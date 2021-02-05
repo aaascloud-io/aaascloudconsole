@@ -1,0 +1,50 @@
+
+
+ :host ::ng-deep .tab-content{
+    margin-top: 15px;
+  }
+
+:host ::ng-deep ._bottom {
+  border-bottom : 0px !important;
+}
+
+  :host ::ng-deep .nav-vertical .borderleft .nav-tabs{
+    float: left;
+    border-bottom: 0;
+    border-radius: 0;
+    display: table;
+
+  }
+  :host ::ng-deep .nav-vertical .borderright .nav-tabs{
+    float: right;
+    border-bottom: 0;
+    border-radius: 0;
+    display: table;
+
+  }
+:host ::ng-deep .card {
+  margin-bottom: 1.875rem;
+  border: none;
+  /* height: 283px; */
+  -webkit-box-shadow: 0 1px 15px 1px rgba(62, 57, 107, .07);
+  box-shadow: 0 1px 15px 1px rgba(62, 57, 107, .07);
+}
+:host ::ng-deep .nav-vertical .nav-left.nav-tabs li.nav-item a.nav-link {
+  min-width: 7.5rem;
+  border-right: 1px solid #ddd;
+}
+:host ::ng-deep .nav-vertical .nav-left.nav-tabs.nav-border-left li.nav-item a.nav-link.active {
+  color: #555;
+  border-left: 3px solid #ff4961;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: white;
+}
+
+:host ::ng-deep .nav-vertical .nav-left.nav-tabs.nav-left li.nav-item a.nav-link.active {
+  color: #555;
+  border-right: white;
+}
+:host ::ng-deep .nav .nav-tabs .justify-content-start{
+  margin-right: 10px;
+}

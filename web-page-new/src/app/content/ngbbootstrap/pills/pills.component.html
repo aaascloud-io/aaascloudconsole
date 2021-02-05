@@ -1,0 +1,730 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-header row mb-1">
+      <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+    </div>
+    <div class="content-body">
+      <!-- Basic Pills start -->
+      <section id="basic-pills">
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Basic Pills</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Takes the basic nav pills from above and adds the <code>.nav-pills</code> class to generate a
+                    pilled interface. </p>
+                  <ul class="nav nav-pills">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                          <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                            diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                            luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                            pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                            volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                            ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                            penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                            lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Bordered Pills</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-pill-bordered</code> class to <code>.nav-pills</code> for bordered type pills. </p>
+                  <ul class="nav nav-pills nav-pill-bordered">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                          <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                            diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                            luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                            pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                            volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                            ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                            penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                            lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Bordered Pills with Active Border</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-pill-with-active-bordered</code> class to <code>.nav-pills</code> for bordered type
+                    pills. </p>
+                  <ul class="nav nav-pills nav-pill-with-active-bordered">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                          <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                            diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                            luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                            pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                            volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                            ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                            penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                            lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Active Border Pills</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-active-bordered-pill</code> class to <code>.nav-pills</code> for bordered type
+                    pills. </p>
+                  <ul class="nav nav-pills nav-active-bordered-pill">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                          <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                            diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                            luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                            pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                            volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                            ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                            penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                            lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Toolbar Pills</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-pill-toolbar</code> class to <code>.nav-pills</code> for bordered type pills. </p>
+                  <ul class="nav nav-pills nav-pill-toolbar">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                          <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                            diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                            luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                            pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                            volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                            ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                            penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                            lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Basic Justified Pills</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-justified</code> class to set Pills justified.</p>
+                  <ul class="nav nav-pills nav-justified">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                          <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                            diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                            luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                            pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                            volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                            ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                            penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                            lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Basic Pills end -->
+      <!-- Stacked Pills start -->
+      <section id="stacked-pills">
+        <div class="row">
+          <div class="col-12 mt-3 mb-1">
+            <h4 class="text-uppercase">Stacked Pills</h4>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Basic Stacked Pills</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.flex-column</code> class with <code>.nav.nav-pills</code> to stack them vertically. Each
+                    <code>.nav-link</code> becomes block-level, allowing for larger hit areas via mouse or tap. </p>
+                  <ul class="nav nav-pills flex-column">
+                    <ngb-tabset type="pills" [orientation]="'vertical'">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 1</ng-template>
+                       </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 2</ng-template>
+                        </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 3</ng-template>
+                        </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                       </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Stacked Pills Toolbar</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use <code>.nav-pill-toolbar</code> class to <code>.flex-column</code> for bordered type pills.</p>
+                  <ul class="nav nav-pills flex-column nav-pill-toolbar">
+                    <ngb-tabset type="pills" [orientation]="'vertical'">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 1</ng-template>
+                        <ng-template ngbTabContent>
+
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 2</ng-template>
+                        <ng-template ngbTabContent>
+
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 3</ng-template>
+                        <ng-template ngbTabContent>
+
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                          <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                            diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                            luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                            pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                            volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                            ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                            penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                            lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <!-- Stacked Pills end -->
+
+      <!-- Pills Elements start -->
+      <section id="pills-elements">
+        <div class="row">
+          <div class="col-12 mt-3 mb-1">
+            <h4 class="text-uppercase">Pills Elements</h4>
+          </div>
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Pills with Left Icon</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use font icons before pill name to get pills with icon.</p>
+                  <ul class="nav nav-pills">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-asterisk"></i>Pill 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-bars"></i>Pill 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-refresh"></i>Pill 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+
+                      <ngb-tab title [disabled]="true">
+                        <ng-template ngbTabTitle><i class="la la-ban"></i>Disabled</ng-template>
+
+                        <ng-template ngbTabContent>
+                          Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                          diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                          luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                          pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                          volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                          ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                          penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                          lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.
+                        </ng-template>
+                      </ngb-tab>
+
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Pills with Right Icon</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <ul class="nav nav-pills">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-asterisk"></i>Pill 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-bars"></i>Pill 2</ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-refresh"></i>Pill 3</ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title [disabled]="true">
+                        <ng-template ngbTabTitle><i class="la la-ban"></i>Disabled</ng-template>
+
+                        <ng-template ngbTabContent>
+                          Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                          diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                          luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                          pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                          volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                          ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                          penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                          lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="row" matchHeight="card">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Pills with Only Icon</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>Use font icons as pill name to get Icon pills.</p>
+                  <ul class="nav nav-pills">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-asterisk"></i></ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-bars"></i></ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><i class="la la-refresh"></i></ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title [disabled]="true">
+                        <ng-template ngbTabTitle><i class="la la-ban"></i></ng-template>
+
+                        <ng-template ngbTabContent>
+                          Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                          diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                          luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                          pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                          volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                          ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                          penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                          lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Pills with Label</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>You can also use <code>.badge.badge-COLOR</code> classes to add label to pill.</p>
+                  <ul class="nav nav-pills">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><span class="badge badge-default badge-success">New</span>Pill 1
+                        </ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 2<span
+                            class="badge badge-default badge-primary ml-1">Latest</span></ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 3<span class="badge badge-default badge-danger ml-1">Bug</span>
+                        </ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                          <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                            diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                            luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                            pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                            volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                            ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                            penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                            lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-6 col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Pills with Label</h4>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <p>You can also use <code>.badge.badge-pill.badge-glow.badge-COLOR</code> classes to add label
+                    pill(badge) to pill.</p>
+                  <ul class="nav nav-pills">
+                    <ngb-tabset type="pills">
+                      <ngb-tab>
+                        <ng-template ngbTabTitle><span
+                            class="badge badge-pill badge-glow badge-default badge-success">2</span>Pill 1</ng-template>
+                        <ng-template ngbTabContent>
+                          Oat cake marzipan cake lollipop caramels wafer pie jelly beans. Icing halvah chocolate cake
+                          carrot cake. Jelly beans carrot cake marshmallow gingerbread chocolate cake. Gummies cupcake
+                          croissant.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 2<span
+                            class="badge badge-pill badge-glow badge-default badge-primary ml-1">3</span></ng-template>
+                        <ng-template ngbTabContent>
+                          Sugar plum tootsie roll biscuit caramels. Liquorice brownie pastry cotton candy oat cake
+                          fruitcake jelly chupa chups. Pudding caramels pastry powder cake soufflé wafer caramels.
+                          Jelly-o pie cupcake.
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab>
+                        <ng-template ngbTabTitle>Pill 3<span
+                            class="badge badge-pill badge-glow badge-default badge-danger ml-1">7</span></ng-template>
+                        <ng-template ngbTabContent>
+                          Biscuit ice cream halvah candy canes bear claw ice cream cake chocolate bar donut. Toffee
+                          cotton candy liquorice. Oat cake lemon drops gingerbread dessert caramels. Sweet dessert
+                          jujubes powder sweet sesame snaps.
+                        </ng-template>
+                      </ngb-tab>
+
+                      <ngb-tab title="Disabled" [disabled]="true">
+                        <ng-template ngbTabContent>
+                          <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id
+                            diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis,
+                            luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus
+                            pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                            volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique
+                            ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
+                            penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac
+                            lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <!-- Pills Elements end -->
+    </div>
+  </div>
+</div>
+<!-- ////////////////////////////////////////////////////////////////////////////-->

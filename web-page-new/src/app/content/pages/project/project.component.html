@@ -1,0 +1,56 @@
+<div class="app-content content">
+    <div class="content-wrapper">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Recent Sales</h4>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a [routerLink]="" class="btn btn-sm btn-danger box-shadow-2 round btn-min-width pull-right"
+                                (click)="rotueInvoice()">View
+                                all</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-content mt-1">
+                <div class="table-responsive" fxFlex="auto">
+                    <table class="table border_bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="border-top-0">Product</th>
+                                <th scope="col" class="border-top-0">Customers</th>
+                                <th scope="col" class="border-top-0">Categories</th>
+                                <th scope="col" class="border-top-0">Popularity</th>
+                                <th scope="col" class="border-top-0">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of rows">
+                                <td class="text-truncate">
+                                    {{row.product}}
+                                </td>
+                                <td class="text-truncate p-1">
+                                    <ul class="list-unstyled users-list m-0">
+                                        <li class="avatar avatar-sm pull-up" *ngFor="let imageUrl of row.image">
+                                            <img class="media-object rounded-circle" [src]="imageUrl" alt="Avatar">
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td class="text-truncate">
+                                    <span>
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-{{row.type}} round">{{row.buttonname}}</button>
+                                    </span>
+                                </td>
+                                <td class="text-truncate">
+                                    <ngb-progressbar height="7px" type="{{row.type}}" [value]=row.value>
+                                    </ngb-progressbar>
+                                </td>
+                                <td class="text-truncate">{{ row.amount }} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
