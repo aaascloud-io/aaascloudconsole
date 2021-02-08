@@ -4,20 +4,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.ifocus.aaascloud.model.UserModel;
 
+@Component
 public class KeyCloakUserService {
+	
+	@Autowired
+	private KeyCloakAdminClient keyCloakAdminClient;
 
 	private Map<String, UserModel> userIdNameMap = new HashMap<String, UserModel>();
 
-	public static KeyCloakUserService INSTANCE = new KeyCloakUserService();
-	private KeyCloakUserService() {
-		init();
-	}
-
+	@PostConstruct
 	private void init() {
 		// fetch all users
-		List<org.keycloak.representations.idm.UserRepresentation> userReps = KeyCloakAdminClient.INSTANCE.getUserRepresentations();
+		List<org.keycloak.representations.idm.UserRepresentation> userReps = keyCloakAdminClient.getUserRepresentations();
 		// init map
 		for (org.keycloak.representations.idm.UserRepresentation userRep : userReps) {
 			UserModel userModel = new UserModel(userRep.getId(),userRep.getUsername(),userRep.getFirstName(),userRep.getLastName(),userRep.getEmail());
@@ -44,14 +50,16 @@ public class KeyCloakUserService {
 	 */
 	public boolean isValidUsername(String username) {
 		boolean  flag = false;
-		// fetch all users
-		List<org.keycloak.representations.idm.UserRepresentation> userReps = KeyCloakAdminClient.INSTANCE.getUserRepresentations();
+		if (!StringUtils.isEmpty(username)) {
+			// fetch all users
+			List<org.keycloak.representations.idm.UserRepresentation> userReps = keyCloakAdminClient.getUserRepresentations();
 
-		for (org.keycloak.representations.idm.UserRepresentation userRep:userReps) {
-			if (userRep.getUsername() == username) {
-				// 有効
-				flag = true;
-				break;
+			for (org.keycloak.representations.idm.UserRepresentation userRep:userReps) {
+				if (username.equals(userRep.getUsername())) {
+					// 有効
+					flag = true;
+					break;
+				}
 			}
 		}
 		return flag;
