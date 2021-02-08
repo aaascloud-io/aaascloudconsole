@@ -1,6 +1,10 @@
 package com.ifocus.aaascloud.service;
 
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ifocus.aaascloud.constant.AliveConstant;
+import com.ifocus.aaascloud.constant.CorporateNumberConstant;
+import com.ifocus.aaascloud.constant.InitialDataConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
@@ -17,9 +24,30 @@ import com.ifocus.aaascloud.model.Cloud_companyModel;
 @Service
 @Transactional
 public class Cloud_companyService {
-
+	
 	@Autowired
 	private Cloud_companyRepository cloud_companyRepository ;
+	
+	@PostConstruct
+	private void initBaseDataIfNotExists() {
+		List<Cloud_companyEntity> list = cloud_companyRepository.findByCorporatenumber(CorporateNumberConstant.COM_I_FOCUS);
+		if (list == null || list.size() == 0) {
+			// 初期化データなしの場合、追加
+			Cloud_companyEntity initalCompanyEntity = new Cloud_companyEntity();
+			initalCompanyEntity.setCompanyid(InitialDataConstant.INITIAL_COMPANY_ID);
+			initalCompanyEntity.setCorporatenumber(CorporateNumberConstant.COM_I_FOCUS);
+			initalCompanyEntity.setCompanyname(InitialDataConstant.INITIAL_COMPANY_NAME);
+			initalCompanyEntity.setAddress(InitialDataConstant.INITIAL_COMPANY_ADDRESS);
+			initalCompanyEntity.setIndustry(InitialDataConstant.INITIAL_COMPANY_INDUSTRY);
+			initalCompanyEntity.setMail(InitialDataConstant.INITIAL_COMPANY_MAIL);
+			initalCompanyEntity.setTel(InitialDataConstant.INITIAL_COMPANY_TEL);
+			initalCompanyEntity.setFax(InitialDataConstant.INITIAL_COMPANY_FAX);
+			initalCompanyEntity.setLevel(InitialDataConstant.INITIAL_COMPANY_LEVEL);
+			initalCompanyEntity.setAlive(AliveConstant.ALIVE);
+			initalCompanyEntity.setI_time(new Timestamp(System.currentTimeMillis()));
+			cloud_companyRepository.save(initalCompanyEntity);
+		}
+	}
 
 	/*
 	 * 会社情報取得

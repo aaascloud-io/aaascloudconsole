@@ -41,7 +41,7 @@ public class Cloud_userController {
 	private Cloud_companyService cloud_companyService;
 	@Autowired
 	private Cloud_userRepository cloud_userRepository;
-
+	@Autowired
 	private KeyCloakUserService keyCloakUserService;
 
 	/**
@@ -155,7 +155,7 @@ public class Cloud_userController {
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> registerUser(@RequestBody LoginInfo loginInfo,Cloud_userModel cloud_userModel) throws Exception {
+	public BaseHttpResponse<String> registerUser(@RequestBody LoginInfo loginInfo, @RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
