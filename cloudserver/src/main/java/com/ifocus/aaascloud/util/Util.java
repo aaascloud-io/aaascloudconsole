@@ -4,16 +4,37 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.google.gson.Gson;
 import com.ifocus.aaascloud.model.AccessUserModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.UserModel;
 
+@Component
 public class Util {
+
+	private static final Logger LOG = LoggerFactory.getLogger(Util.class);
 
 	private Util () {
 
+	private static KeyCloakUserService keyCloakUserService;
+	
+	@Autowired
+	private KeyCloakUserService autoWiredKUS;
+	
+	@PostConstruct
+	public void setKeyCloakUserService() {
+		Util.keyCloakUserService = autoWiredKUS;
 	}
 
 	public static int size(Iterable data) {
@@ -61,13 +82,60 @@ public class Util {
 	 */
 	public static UserModel getUserModel(Cloud_userModel model) {
 
+		LOG.info("getUserModel() START");
+
 		// KeyCloakサービスを呼び出し
 		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
 
 		// ユーザ情報取得
 		UserModel userModel = keyCloakUserService.getUserModelFromUsername(model.getUsername());
 
+		LOG.info("getUserModel() END");
 		return userModel;
+	}
+
+	/**
+	 * ユーザープロファイルリスト取得
+	 * @param modelList List<Cloud_userModel> ユーザモデルリスト
+	 * @return List<UserModel> UserModelリスト
+	 */
+	public static List<UserModel> getUserModels(List<Cloud_userModel> modelList) {
+
+		LOG.info("getUserModels() START");
+
+		// KeyCloakサービスを呼び出し
+		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
+
+		List<UserModel> returnList = new ArrayList();
+		for (Cloud_userModel model:modelList) {
+			// ユーザ情報取得
+			UserModel userModel = keyCloakUserService.getUserModelFromUsername(model.getUsername());
+			returnList.add(userModel);
+		}
+
+		LOG.info("getUserModels() END");
+		return returnList;
+	}
+
+	/**
+	 * ユーザープロファイルリスト取得
+	 * @param modelList List<Cloud_userModel> ユーザモデルリスト
+	 * @return List<UserModel> UserModelリスト
+	 */
+	public static List<UserModel> getUserModels(List<Cloud_userModel> modelList) {
+
+		LOG.info("getUserModels() START");
+
+		// KeyCloakサービスを呼び出し
+		List<UserModel> returnList = new ArrayList();
+		for (Cloud_userModel model:modelList) {
+			// ユーザ情報取得
+			UserModel userModel = keyCloakUserService.getUserModelFromUsername(model.getUsername());
+			returnList.add(userModel);
+		}
+
+		LOG.info("getUserModels() END");
+		return returnList;
 	}
 
 	/**
@@ -148,4 +216,5 @@ public class Util {
 		return gson.toJson(src);
 
 	}
+
 }
