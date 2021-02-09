@@ -34,14 +34,9 @@ export const MenuSettingsConfig: MenuConfig = {
         submenu: {
           items: [
             {
-              title: 'Sales',
-              icon: 'la-dollar',
-              page: '/dashboard/sales'
-            },
-            {
-              title: 'Ecommerce',
+              title: 'dashboard',
               icon: 'la-cart-plus',
-              page: '/dashboard/ecommerce'
+              page: '/dashboard'
             },
           ]
         }
@@ -889,16 +884,17 @@ export const MenuSettingsConfig: MenuConfig = {
       //   submenu: {
       //     items: [
       //      {
-      //         title: 'Sales',
-      //         page: '/dashboard/sales'
-      //       },
-      //       {
-      //         title: 'Ecommerce',
-      //         page: '/dashboard/ecommerce'
+      //         title: 'ダッシュボード',
+      //         page: '/dashboard'
       //       },
       //     ]
       //   }
       // },
+      {
+        title: 'ダッシュボード',
+        icon: 'la-home',
+        page: '/dashboard'
+      },
       // {
       //   title: 'Templates',
       //   icon: 'la-television',

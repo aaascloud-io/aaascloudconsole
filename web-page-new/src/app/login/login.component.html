@@ -12,13 +12,14 @@
                                 <div class="card-title text-center">
                                     <img src="assets/custom/images/logo.png" alt="branding logo">
                                 </div>
-                                <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2">
-                                    <span>Easily Using</span></h6>
+                                <h6 class="card-subtitle text-muted text-center font-small-3 pt-2">
+                                    <span>i-focus</span></h6>
                             </div>
                             <div class="card-content">
-                                <app-social-signin></app-social-signin>
-                                <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1">
-                                    <span>OR Using Account Details</span></p>
+                                <!-- <app-social-signin></app-social-signin> -->
+                                <p class="card-subtitle text-muted text-center font-small-3 mx-2 my-1">
+                                    <span>NB-IoT プラットフォーム</span></p>
+
                                 <div class="card-body">
                                     <form class="form-horizontal" [formGroup]="loginForm" (ngSubmit)="tryLogin()">
                                         <fieldset class="form-group position-relative has-icon-left">
@@ -44,24 +45,24 @@
                                             </div>
 
                                         </fieldset>
-                                        <div class="form-group row">
-                                            <div class="col-md-6 col-12 text-center text-sm-left pr-0">
-                                                <fieldset>
-                                                    <div class="icheckbox_square-blue" id="icheckbox" (click)="addCheckbox($event)" style="position: relative;">
-                                                        <input type="checkbox" class="chk-remember"
-                                                            formControlName="rememberMe" name="remember-me"
-                                                            id="remember-me" style="position: absolute; opacity: 0;">
-                                                        <ins class="iCheck-helper"
-                                                            style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                    </div>
-                                                    <label class="lb-remember" for="remember-me">Remember Me</label>
-
-                                                </fieldset>
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                            <input type="text" formControlName="checkcode" class="form-control"
+                                                [ngClass]="{ 'is-invalid': submitted && f.checkcode.errors }"
+                                                placeholder="Check Code" required>
+                                            <div class="form-control-position">
+                                                <!-- <i class="la la-expeditedssl"></i> -->
+                                                <!-- <i class="la la-shield"></i> -->
+                                                <i class="la la-lock"></i>
                                             </div>
-                                            <div class="col-md-6 col-12 float-sm-left text-center text-sm-right"><a
-                                                    href="recover-password.html" class="card-link">Forgot Password?</a>
+                                            <div *ngIf="submitted && f.checkcode.errors" class="invalid-feedback">
+                                                <div *ngIf="f.checkcode.errors.required">Check Code is required</div>
                                             </div>
-                                        </div>
+                                        </fieldset>
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                            <div class="verifyDiv float-left" (click)="resetCheckCode()">
+                                                <canvas #myCanvas class="verifyCanvas"></canvas>
+                                            </div>
+                                        </fieldset>
                                         <button type="submit" class="btn btn-outline-info btn-block">
                                             <i class="fa fa-refresh fa-spin" *ngIf="submitted"></i>
                                             <i class="feather ft-unlock" *ngIf="!submitted"></i> Login
@@ -70,20 +71,6 @@
                                 </div>
                                 <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1">
                                     <span>New to AaaSCloud ?</span></p>
-                                <div class="card-body">
-                                    <a [routerLink]="['/register']" class="btn btn-outline-danger btn-block"><i
-                                            class="la la-user"></i> Register</a>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <a [routerLink]="['/privacypolicy']" target="_blank">Privacy Policy</a>
-                                        </div>
-                                        <div class="col-md-6 terms">
-                                            <a [routerLink]="['/termCondition']" target="_blank">Terms & Conditions</a>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

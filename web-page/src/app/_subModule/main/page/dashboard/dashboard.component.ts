@@ -19,10 +19,7 @@ export class DashboardComponent implements OnInit {
   pageModel = {
 
     //プロダクト
-    products: [
-      {productId:'00001', productName:'顔識別', type:'1.2.3'},
-      {productId:'00002', productName:'watch', type:'20.0'}
-    ],
+    products: [],
     productLength: 0,//プロダクト数
     userLength: 0,//ユーザー数
     projectLength: 0,//プロジェクト数
@@ -34,12 +31,9 @@ export class DashboardComponent implements OnInit {
     // ユーザー属性(デフォルトは一般ユーザー)
     superUserFlg: false,
     // 管理ユーザー時、ユーザー一覧
-    superUserList: [
-      {uid:'000000', adminId:'00000', companyName:'I-focus', loginId:'ifocus'},
-      {uid:'000001', adminId:'00001', companyName:'山田電機', loginId:'yamada'},
-      {uid:'000002', adminId:'00002', companyName:'ドン・キホーテ', loginId:'donki'},
-      {uid:'000003', adminId:'00003', companyName:'XX学校', loginId:'XXgakkou'},
-    ],
+    superUserList: [],
+    errlogList: [],
+    errlogLength: 0,//プロダクト数
   }
   UserInfo: UserInfo
 
@@ -47,21 +41,37 @@ export class DashboardComponent implements OnInit {
     // ユーザー情報を取得する
     // this.UserInfo = JSON.parse(this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id));
     // プロダクト数を検索API
-    // this.httpService.usePost('dashboard/getProductList', { "makeruid":this.UserInfo.uid,"role": this.UserInfo.role }).then(item => {
-    //   try {
-    //     if (item.result) {
-    //       let jsonItem = typeof item == 'string' ? JSON.parse(item) : item;
-    //       this.pageModel.products = jsonItem.productList;
-    //       this.pageModel.productLength = jsonItem.productList.length;
-    //       // ユーザー数を検索
-    //       this.getUserListLengthApi(this.UserInfo.role, this.UserInfo.uid)
-    //     } else {
-    //       console.log('ユーザー数を検索API エラー　発生しました。');
-    //     }
-    //   } catch (e) {
-    //     console.log('ユーザー数数を検索API エラー　発生しました。');
-    //   }
-    // })
+    
+    // this.httpService.usePost('/getDashboardInfo', { "username":this.UserInfo.username }).then(item => {
+    this.httpService.usePost('/getDashboardInfo', { "username":"ifocus" }).then(item => {
+      try {
+        if (item.resultCode == "0000") {
+          if(item.data!= null){
+            let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
+
+        
+          //   jsonItem.productList.forEach((elem) => {
+          //     let product_info = JSON.parse(elem);
+          //     this.pageModel.products.push(product_info)
+          //  });
+          //   this.pageModel.productLength = jsonItem.productCount;
+
+
+          this.pageModel.products=[{productid:1,productcode:"code004",productname:"テスト用プロダクト",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0},{productid:2,productcode:"code004",productname:"テスト用プロダクト2",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0}];
+           this.pageModel.productLength = 0;  
+          // ユーザー数を検索
+            // this.getUserListLengthApi(this.UserInfo.role, this.UserInfo.uid)
+          }
+        } else {
+          console.log('ユーザー数を検索API エラー　発生しました。');
+        }
+      } catch (e) {
+        console.log('ユーザー数数を検索API エラー　発生しました。');
+      }
+    })
+
+
+
   }
 
   /*

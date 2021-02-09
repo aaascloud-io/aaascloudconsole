@@ -68,7 +68,12 @@ import { ToastrModule } from 'ngx-toastr';
 import { UserService } from './_api/user/user.service';
 import { PrivacyPolicyComponent } from './login/privacy-policy/privacy-policy.component';
 import { TermsConditionComponent } from './login/terms-condition/terms-condition.component';;
-
+//service
+import { HttpService } from './_services/HttpService';
+import { DataFatoryService } from './_services/DataFatoryService';
+import { AuthSignService } from './_services/AuthSignService';
+import { AuthSignListener } from './_services/AuthSignListener';
+import { BaseService } from './_services/BaseService';
 
 
 @NgModule({
@@ -138,6 +143,11 @@ import { TermsConditionComponent } from './login/terms-condition/terms-condition
         },
         NgbCarouselConfig,
         NgbModalConfig,
+        HttpService,
+        DataFatoryService,
+        AuthSignService,
+        AuthSignListener,
+        BaseService,
     ],
     bootstrap: [AppComponent],
     exports: [RouterModule]

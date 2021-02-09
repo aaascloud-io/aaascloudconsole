@@ -4,8 +4,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.ifocus.aaascloud.model.AccessUserModel;
@@ -13,12 +23,23 @@ import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.UserModel;
 
+@Component
 public class Util {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Util.class);
 
 	private Util () {
+		
+	}
 
+	private static KeyCloakUserService keyCloakUserService;
+	
+	@Autowired
+	private KeyCloakUserService autoWiredKUS;
+	
+	@PostConstruct
+	public void setKeyCloakUserService() {
+		Util.keyCloakUserService = autoWiredKUS;
 	}
 
 	public static int size(Iterable data) {
@@ -69,8 +90,6 @@ public class Util {
 		LOG.info("getUserModel() START");
 
 		// KeyCloakサービスを呼び出し
-		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
-
 		// ユーザ情報取得
 		UserModel userModel = keyCloakUserService.getUserModelFromUsername(model.getUsername());
 
@@ -88,8 +107,6 @@ public class Util {
 		LOG.info("getUserModels() START");
 
 		// KeyCloakサービスを呼び出し
-		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
-
 		List<UserModel> returnList = new ArrayList();
 		for (Cloud_userModel model:modelList) {
 			// ユーザ情報取得
@@ -109,8 +126,6 @@ public class Util {
 	public static AccessUserModel getAccessUserModel(List<Cloud_userModel> userList) {
 
 		// KeyCloakサービスを呼び出し
-		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
-
 		AccessUserModel accessUserModel = new AccessUserModel();
 
 		for (Cloud_userModel model:userList) {
@@ -179,4 +194,5 @@ public class Util {
 		return gson.toJson(src);
 
 	}
+
 }

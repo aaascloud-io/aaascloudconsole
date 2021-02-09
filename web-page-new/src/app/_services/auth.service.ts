@@ -108,7 +108,7 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       if (firebase.auth().currentUser) {
         localStorage.removeItem('currentUser');
-        localStorage.removeItem('remember');
+        // localStorage.removeItem('remember');
         this.afAuth.auth.signOut();
         resolve();
       } else {
