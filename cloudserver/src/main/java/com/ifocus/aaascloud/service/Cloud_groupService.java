@@ -76,26 +76,26 @@ public class Cloud_groupService {
 	 *
 	 */
 	public void registerGroups(List<Cloud_groupModel> groupList) throws Exception {
+		if (groupList != null && groupList.size() > 0) {
+			for (Cloud_groupModel model:groupList) {
 
-		for (Cloud_groupModel model:groupList) {
+				////////////////////////////////////////////////////////
+				// グループ登録
+				////////////////////////////////////////////////////////
+				this.registerGroup(this.getModelByEntity(model));
 
-			////////////////////////////////////////////////////////
-			// グループ登録
-			////////////////////////////////////////////////////////
-			Cloud_groupModel returnModel = this.registerGroup(this.getModelByEntity(model));
+				////////////////////////////////////////////////////////
+				// グループデバイス更新
+				////////////////////////////////////////////////////////
 
-			////////////////////////////////////////////////////////
-			// グループデバイス更新
-			////////////////////////////////////////////////////////
-
-			// 更新対象デバイス取得
-			Iterable<Cloud_deviceEntity> entityList = cloud_deviceRepository.findAllById(model.getDeviceIdList());
-			// 更新情報設定
-			this.setUpdateInfoToEntityForGroupDevice(model, entityList);
-			// グループデバイス一括更新
-			cloud_deviceRepository.saveAll(entityList);
+				// 更新対象デバイス取得
+				Iterable<Cloud_deviceEntity> entityList = cloud_deviceRepository.findAllById(model.getDeviceIdList());
+				// 更新情報設定
+				this.setUpdateInfoToEntityForGroupDevice(model, entityList);
+				// グループデバイス一括更新
+				cloud_deviceRepository.saveAll(entityList);
+			}
 		}
-		return;
 	}
 
 	/*
@@ -122,25 +122,27 @@ public class Cloud_groupService {
 	 *
 	 */
 	public void updateGroups(List<Cloud_groupModel> groupList) throws Exception {
+		if (groupList != null && !groupList.isEmpty()) {
+			for (Cloud_groupModel model:groupList) {
 
-		for (Cloud_groupModel model:groupList) {
+				////////////////////////////////////////////////////////
+				// グループ更新
+				////////////////////////////////////////////////////////
+				Cloud_groupModel returnModel = this.updateGroup(this.getModelByEntity(model));
 
-			////////////////////////////////////////////////////////
-			// グループ更新
-			////////////////////////////////////////////////////////
-			Cloud_groupModel returnModel = this.updateGroup(this.getModelByEntity(model));
+				////////////////////////////////////////////////////////
+				// グループデバイス更新
+				////////////////////////////////////////////////////////
 
-			////////////////////////////////////////////////////////
-			// グループデバイス更新
-			////////////////////////////////////////////////////////
-
-			// 更新対象デバイス取得
-			Iterable<Cloud_deviceEntity> entityList = cloud_deviceRepository.findAllById(model.getDeviceIdList());
-			// 更新情報設定
-			this.setUpdateInfoToEntityForGroupDevice(model, entityList);
-			// グループデバイス一括更新
-			cloud_deviceRepository.saveAll(entityList);
+				// 更新対象デバイス取得
+				Iterable<Cloud_deviceEntity> entityList = cloud_deviceRepository.findAllById(model.getDeviceIdList());
+				// 更新情報設定
+				this.setUpdateInfoToEntityForGroupDevice(model, entityList);
+				// グループデバイス一括更新
+				cloud_deviceRepository.saveAll(entityList);
+			}
 		}
+
 		return;
 	}
 
@@ -169,14 +171,17 @@ public class Cloud_groupService {
 	 */
 	public void deleteGroups(List<Cloud_groupModel> groupList) throws Exception {
 
-		for (Cloud_groupModel model:groupList) {
+		if (groupList != null && !groupList.isEmpty()) {
+			for (Cloud_groupModel model:groupList) {
 
-			////////////////////////////////////////////////////////
-			// グループ削除
-			////////////////////////////////////////////////////////
-			this.deleteGroup(this.getModelByEntity(model));
+				////////////////////////////////////////////////////////
+				// グループ削除
+				////////////////////////////////////////////////////////
+				this.deleteGroup(this.getModelByEntity(model));
 
+			}
 		}
+		
 		return;
 	}
 
@@ -214,11 +219,12 @@ public class Cloud_groupService {
 	 * @return List<Cloud_groupModel>
 	 */
 	public List<Cloud_groupModel> getModelsByEntitys(List<Cloud_groupEntity> entityList) throws Exception {
-		List<Cloud_groupModel> modelList = new ArrayList();
-		for (Cloud_groupEntity entity:entityList) {
-			modelList.add(getModelByEntity(entity));
+		List<Cloud_groupModel> modelList = new ArrayList<Cloud_groupModel>();
+		if (entityList != null && entityList.size() > 0) {
+			for (Cloud_groupEntity entity:entityList) {
+				modelList.add(getModelByEntity(entity));
+			}
 		}
-
 		return modelList;
 
 	}
@@ -301,16 +307,16 @@ public class Cloud_groupService {
 	 */
 	public void clearProjectAndGroupInfoToEntity(LoginInfo loginInfo, List<Cloud_deviceEntity> entityList) throws Exception {
 
-		/* システム日時 */
-		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
-		entityList.forEach(entity ->{
-			entity.setProjectid(CommonConstant.PROJECT_NOT_SET);
-			entity.setGroupid(CommonConstant.GROUP_NOT_SET);
-			entity.setU_uid(loginInfo.getLoginuserid());
-			entity.setU_time(systemTime);
-		});
-
-		return ;
+		if (entityList != null && !entityList.isEmpty()) {
+			/* システム日時 */
+			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+			entityList.forEach(entity ->{
+				entity.setProjectid(CommonConstant.PROJECT_NOT_SET);
+				entity.setGroupid(CommonConstant.GROUP_NOT_SET);
+				entity.setU_uid(loginInfo.getLoginuserid());
+				entity.setU_time(systemTime);
+			});
+		}
 
 	}
 
