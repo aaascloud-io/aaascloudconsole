@@ -5,17 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ifocus.aaascloud.constant.AliveConstant;
-import com.ifocus.aaascloud.constant.CorporateNumberConstant;
-import com.ifocus.aaascloud.constant.InitialDataConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
@@ -24,6 +19,8 @@ import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
+import com.ifocus.aaascloud.model.UserModel;
+import com.ifocus.aaascloud.util.Util;
 
 @SpringBootApplication
 @RestController
@@ -37,26 +34,6 @@ public class Cloud_userService {
 	private Cloud_companyRepository cloud_companyRepository ;
 	@Autowired
 	private Cloud_companyService cloud_companyService ;
-	
-	@PostConstruct
-	private void initBaseDataIfNotExists() {
-		List<Cloud_companyEntity> list = cloud_companyRepository.findByCorporatenumber(CorporateNumberConstant.COM_I_FOCUS);
-		if (list != null && list.size() > 0) {
-			Cloud_companyEntity initialCompany = list.get(0);
-			List<Cloud_userEntity> users = cloud_userRepository.findByCompanyid(initialCompany.getCompanyid());
-			if (users == null || users.size() == 0) {
-				// 初期化データなしの場合、追加
-				Cloud_userEntity cloud_userEntity = new Cloud_userEntity();
-				cloud_userEntity.setUserid(InitialDataConstant.INITIAL_USER_ID);
-				cloud_userEntity.setCompanyid(initialCompany.getCompanyid());
-				cloud_userEntity.setUsername(InitialDataConstant.INITIAL_USER_NAME);
-				cloud_userEntity.setRole(InitialDataConstant.INITIAL_USER_ROLE);
-				cloud_userEntity.setAlive(AliveConstant.ALIVE);
-				cloud_userEntity.setI_time(new Timestamp(System.currentTimeMillis()));
-				cloud_userRepository.save(cloud_userEntity);
-			}
-		}
-	}
 
 	/*
 	 * ログイン認証
@@ -339,6 +316,45 @@ public class Cloud_userService {
 			underUserCompanyIdList.add(model.getTargetUserInfo().getTargetuserCompanyid());
 		}
 		return underUserCompanyIdList;
+
+	}
+
+	/*
+	 * EntityリストからModelリスト取得
+	 * @param entityList List<Cloud_userEntity>
+	 * @return List<UserModel>
+	 *
+	 */
+	public List<UserModel> getUserModelsByEntitys(List<Cloud_userEntity> entityList) throws Exception {
+
+
+		List<Cloud_userModel> modelList = getModelsByEntitys(entityList);
+		List<UserModel> userModelList = Util.getUserModels(modelList);
+//		for (UserModel userModel:userModelList) {
+//			// 会社情報を取得する
+//			Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(userModel.getCompanyid());
+//			// 会社情報を設定する
+//			userModel.setCompanyname(company.get().getCompanyname());
+//
+//			userModelList.add(userModel);
+//		}
+		return userModelList;
+
+	}
+
+	/*
+	 * EntityリストからModelリスト取得
+	 * @param entityList List<Cloud_userEntity>
+	 * @return List<Cloud_userModel>
+	 *
+	 */
+	public List<Cloud_userModel> getModelsByEntitys(List<Cloud_userEntity> entityList) throws Exception {
+
+		List<Cloud_userModel> modelList = new ArrayList();
+		for (Cloud_userEntity entity:entityList) {
+			modelList.add(getModelByEntity(entity));
+		}
+		return modelList;
 
 	}
 
