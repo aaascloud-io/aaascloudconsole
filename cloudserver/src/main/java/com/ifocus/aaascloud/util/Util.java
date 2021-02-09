@@ -26,6 +26,8 @@ public class Util {
 	private static final Logger LOG = LoggerFactory.getLogger(Util.class);
 
 	private Util () {
+		
+	}
 
 	private static KeyCloakUserService keyCloakUserService;
 	
@@ -106,27 +108,6 @@ public class Util {
 		// KeyCloakサービスを呼び出し
 		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
 
-		List<UserModel> returnList = new ArrayList();
-		for (Cloud_userModel model:modelList) {
-			// ユーザ情報取得
-			UserModel userModel = keyCloakUserService.getUserModelFromUsername(model.getUsername());
-			returnList.add(userModel);
-		}
-
-		LOG.info("getUserModels() END");
-		return returnList;
-	}
-
-	/**
-	 * ユーザープロファイルリスト取得
-	 * @param modelList List<Cloud_userModel> ユーザモデルリスト
-	 * @return List<UserModel> UserModelリスト
-	 */
-	public static List<UserModel> getUserModels(List<Cloud_userModel> modelList) {
-
-		LOG.info("getUserModels() START");
-
-		// KeyCloakサービスを呼び出し
 		List<UserModel> returnList = new ArrayList();
 		for (Cloud_userModel model:modelList) {
 			// ユーザ情報取得
