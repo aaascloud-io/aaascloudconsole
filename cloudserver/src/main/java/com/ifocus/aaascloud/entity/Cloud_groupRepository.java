@@ -15,7 +15,7 @@ public interface  Cloud_groupRepository extends CrudRepository<Cloud_groupEntity
 	 *
 	 *
 	 */
-	@Query("SELECT c FROM cloud_group c WHERE c.projectid = :projectid")
+	@Query("SELECT * FROM cloud_group c WHERE c.projectid = :projectid")
 	@Autowired
 	public List<Cloud_groupEntity> searchGroupsByProjectid(@Param("projectid") Integer projectid);
 
@@ -24,7 +24,7 @@ public interface  Cloud_groupRepository extends CrudRepository<Cloud_groupEntity
 	 *
 	 *
 	 */
-	@Query("SELECT COUNT(c) FROM cloud_group c WHERE c.projectid = :projectid")
+	@Query("SELECT COUNT(c.projectid) FROM cloud_group c WHERE c.projectid = :projectid")
 	@Autowired
 	public Integer getProjectGroupCountsByProjectid(@Param("projectid") Integer projectid);
 

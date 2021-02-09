@@ -28,7 +28,7 @@ public class DashboardModel {
 	private Integer onlineDeviceCount;
 
 	// ユーザ一覧を設定する
-	private List<Cloud_userModel> userList;
+	private List<UserModel> userList;
 
 	// エラーログ一覧を設定する
 	private List<Cloud_errlogModel> errlogList;

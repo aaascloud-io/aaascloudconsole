@@ -73,7 +73,8 @@ export class AppComponent implements OnInit {
           }
         }
         if (this.title && this.router.url !== '/') {
-          this.titleService.setTitle(this.title + ' - ' + this._themeSettingsConfig.defaultTitleSuffix);
+          // this.titleService.setTitle(this.title + ' - ' + this._themeSettingsConfig.defaultTitleSuffix);
+          this.titleService.setTitle(this.title);
         } else {
           if ((this.router.url === '/' || this.router.url === '/login' || this.router.url === '/register') &&
               !localStorage.getItem('remember')) {

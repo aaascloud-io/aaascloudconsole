@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,8 +90,6 @@ public class Util {
 		LOG.info("getUserModel() START");
 
 		// KeyCloakサービスを呼び出し
-		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
-
 		// ユーザ情報取得
 		UserModel userModel = keyCloakUserService.getUserModelFromUsername(model.getUsername());
 
@@ -106,8 +107,6 @@ public class Util {
 		LOG.info("getUserModels() START");
 
 		// KeyCloakサービスを呼び出し
-		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
-
 		List<UserModel> returnList = new ArrayList();
 		for (Cloud_userModel model:modelList) {
 			// ユーザ情報取得
@@ -127,8 +126,6 @@ public class Util {
 	public static AccessUserModel getAccessUserModel(List<Cloud_userModel> userList) {
 
 		// KeyCloakサービスを呼び出し
-		KeyCloakUserService keyCloakUserService = KeyCloakUserService.INSTANCE;
-
 		AccessUserModel accessUserModel = new AccessUserModel();
 
 		for (Cloud_userModel model:userList) {

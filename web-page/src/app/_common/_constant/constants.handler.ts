@@ -9,7 +9,9 @@ export class ConstantsHandler {
     // static keycloakServer = "https://auth.trackun.jp/"
     // static keycloakServer = "https://auth.aaascloud.io/"
     // static keycloakServer = "http://192.168.0.195:8080/"
-    static keycloakServer = "http://localhost:8080/"
+    // static keycloakServer = "http://localhost:8080/"
+    static keycloakServer = "https://auth.aaascloud.io/auth/realms/trackun/"
+
     static keycloak_client_id = "trackun";
 
     static TOKEN = {

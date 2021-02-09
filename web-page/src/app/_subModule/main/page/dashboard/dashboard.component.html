@@ -128,7 +128,7 @@
                 <h4 class="mbm"> プロダクト一覧</h4>
                 <div class="project-list">
                   <a class="list-group-item" *ngFor="let item of pageModel.products;let i = index;">
-                    {{item.productId}}   {{item.productName}}<span class="badge badge-success pull-right">{{item.type}}</span>
+                    {{item.productid}}   {{item.productname}}<span class="badge badge-success pull-right">{{item.model}}</span>
                   </a>
                 </div>
               </div>
@@ -149,10 +149,14 @@
             <span class="badge badge-info pull-right">5</span>
             <div class="caption">
               エラーリスト
-
             </div>
           </div>
           <div class="portlet-body">
+            <div class="errlog-list">
+              <a class="list-group-item" *ngFor="let item of pageModel.errlogList;let i = index;">
+                {{item.productId}}   {{item.productName}}<span class="badge badge-success pull-right">{{item.type}}</span>
+              </a>
+            </div>
             <ul class="alertList-ul">
               <li class="">
                 <div class="note note-danger li-div">

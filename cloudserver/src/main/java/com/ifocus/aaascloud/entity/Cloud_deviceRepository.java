@@ -171,7 +171,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT COUNT(c) FROM cloud_device c WHERE c.projectid = :projectid", nativeQuery = true)
+	@Query(value = "SELECT COUNT(c.projectid) FROM cloud_device c WHERE c.projectid = :projectid", nativeQuery = true)
 	public Integer getProjectDeviceCountsByProjectid(@Param("projectid") Integer projectid);
 
 	/*

@@ -17,6 +17,8 @@ public class UserModel {
 
 	private String email;
 
+	private String companyname;
+
 	public UserModel(String uid, String username, String firstName, String lastName, String email) {
 		this.uid = uid;
 		this.username = username;

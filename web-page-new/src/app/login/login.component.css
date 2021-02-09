@@ -33,3 +33,14 @@
 :host ::ng-deep .icheckbox_square-blue.checked {
     background-position: -48px 0;
 }
+.verifyDiv {
+    height: 40px !important;
+    width: 100px !important;
+    background-color: grey;
+    vertical-align: middle;
+}
+.verifyCanvas {
+width: 100px !important;
+height: 40px !important;
+cursor: pointer; 
+}

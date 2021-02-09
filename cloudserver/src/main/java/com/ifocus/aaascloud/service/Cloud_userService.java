@@ -19,6 +19,8 @@ import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
+import com.ifocus.aaascloud.model.UserModel;
+import com.ifocus.aaascloud.util.Util;
 
 @SpringBootApplication
 @RestController
@@ -314,6 +316,45 @@ public class Cloud_userService {
 			underUserCompanyIdList.add(model.getTargetUserInfo().getTargetuserCompanyid());
 		}
 		return underUserCompanyIdList;
+
+	}
+
+	/*
+	 * EntityリストからModelリスト取得
+	 * @param entityList List<Cloud_userEntity>
+	 * @return List<UserModel>
+	 *
+	 */
+	public List<UserModel> getUserModelsByEntitys(List<Cloud_userEntity> entityList) throws Exception {
+
+
+		List<Cloud_userModel> modelList = getModelsByEntitys(entityList);
+		List<UserModel> userModelList = Util.getUserModels(modelList);
+//		for (UserModel userModel:userModelList) {
+//			// 会社情報を取得する
+//			Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(userModel.getCompanyid());
+//			// 会社情報を設定する
+//			userModel.setCompanyname(company.get().getCompanyname());
+//
+//			userModelList.add(userModel);
+//		}
+		return userModelList;
+
+	}
+
+	/*
+	 * EntityリストからModelリスト取得
+	 * @param entityList List<Cloud_userEntity>
+	 * @return List<Cloud_userModel>
+	 *
+	 */
+	public List<Cloud_userModel> getModelsByEntitys(List<Cloud_userEntity> entityList) throws Exception {
+
+		List<Cloud_userModel> modelList = new ArrayList();
+		for (Cloud_userEntity entity:entityList) {
+			modelList.add(getModelByEntity(entity));
+		}
+		return modelList;
 
 	}
 

@@ -19,8 +19,8 @@ export class ChartApiService {
   loadInvoiceDataURL = null;
   constructor(private http: HttpClient) {
     this.loadDataURL = `${this.apiBaseURL}/chartist/charts/chartist.json`;
-    this.loadSalesDataURL = `${this.apiBaseURL}/dashboard/sales/chartist.json`;
-    this.loadEcommerceDataURL = `${this.apiBaseURL}/dashboard/ecommerce/chartist.json`;
+    // this.loadSalesDataURL = `${this.apiBaseURL}/dashboard/sales/chartist.json`;
+    // this.loadEcommerceDataURL = `${this.apiBaseURL}/dashboard/ecommerce/chartist.json`;
     this.loadStatisticsDataURL = `${this.apiBaseURL}/advancecard/statistics/chartist.json`;
     this.loadStatisticsDataURL = `${this.apiBaseURL}/advancecard/statistics/chartist.json`;
     this.loadTimelineDataURL = `${this.apiBaseURL}/user-profile/user-profile.json`;

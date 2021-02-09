@@ -54,12 +54,14 @@ public class Cloud_projectDetailModel {
 	 *  新規グループリスト
 	 */
 	public List<Cloud_groupModel> getRegisterGroupList() {
-		List<Cloud_groupModel> returnList = new ArrayList();
-		this.getGroupList().forEach(model->{
-			if (model.getGroupid() == null) {
-				returnList.add(model);
-			}
-		});
+		List<Cloud_groupModel> returnList = new ArrayList<Cloud_groupModel>();
+		if (this.getGroupList() != null && !this.getGroupList().isEmpty() ) {
+			this.getGroupList().forEach(model->{
+				if (model.getGroupid() == null) {
+					returnList.add(model);
+				}
+			});
+		}
 		return returnList;
 	}
 
@@ -67,12 +69,14 @@ public class Cloud_projectDetailModel {
 	 *  更新グループリスト
 	 */
 	public List<Cloud_groupModel> getUpdateGroupList() {
-		List<Cloud_groupModel> returnList = new ArrayList();
-		this.getGroupList().forEach(model->{
-			if (model.getGroupid() != null && model.getAlive() == AliveConstant.ALIVE) {
-				returnList.add(model);
-			}
-		});
+		List<Cloud_groupModel> returnList = new ArrayList<Cloud_groupModel>();
+		if (this.getGroupList() != null && !this.getGroupList().isEmpty()) {
+			this.getGroupList().forEach(model->{
+				if (model.getGroupid() != null && model.getAlive() == AliveConstant.ALIVE) {
+					returnList.add(model);
+				}
+			});
+		}
 		return returnList;
 	}
 
@@ -80,12 +84,14 @@ public class Cloud_projectDetailModel {
 	 *  削除グループリスト
 	 */
 	public List<Cloud_groupModel> getDeleteGroupList() {
-		List<Cloud_groupModel> returnList = new ArrayList();
-		this.getGroupList().forEach(model->{
-			if (model.getGroupid() != null && model.getAlive() == AliveConstant.NOT_ALIVE) {
-				returnList.add(model);
-			}
-		});
+		List<Cloud_groupModel> returnList = new ArrayList<Cloud_groupModel>();
+		if (this.getGroupList() != null && !this.getGroupList().isEmpty()) {
+			this.getGroupList().forEach(model->{
+				if (model.getGroupid() != null && model.getAlive() == AliveConstant.NOT_ALIVE) {
+					returnList.add(model);
+				}
+			});
+		}
 		return returnList;
 	}
 

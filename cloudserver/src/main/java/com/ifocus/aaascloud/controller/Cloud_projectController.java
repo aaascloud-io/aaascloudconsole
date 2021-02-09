@@ -1,6 +1,8 @@
 package com.ifocus.aaascloud.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +21,6 @@ import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.ProjectDetailModel;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
-import com.ifocus.aaascloud.util.Util;
 
 import net.sf.json.JSONObject;
 
@@ -40,9 +41,9 @@ public class Cloud_projectController {
 	@RequestMapping(value = "/getProjects", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getProjects(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
+	public BaseHttpResponse<List<Cloud_projectModel>> getProjects(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
 
-		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+		BaseHttpResponse<List<Cloud_projectModel>> response = new BaseHttpResponse<List<Cloud_projectModel>>();
 
 		try {
 			// 権限チェック
@@ -55,7 +56,7 @@ public class Cloud_projectController {
 					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 					response.setCount(list.size());
-					response.setData(Util.getJsonString(list));
+					response.setData(list);
 
 			} else {
 				/* 異常系 */
@@ -82,9 +83,9 @@ public class Cloud_projectController {
 	@RequestMapping(value = "/getProject", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getProject(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
+	public BaseHttpResponse<ProjectDetailModel> getProject(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
 
-		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+		BaseHttpResponse<ProjectDetailModel> response = new BaseHttpResponse<ProjectDetailModel>();
 
 		try {
 
@@ -92,28 +93,32 @@ public class Cloud_projectController {
 			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
 
 				// プロジェクト詳細を取得する
-				Cloud_projectDetailModel model = cloud_projectService.getMyProject(cloud_projectModel.getProductid());
+				Cloud_projectDetailModel model = cloud_projectService.getMyProject(cloud_projectModel.getProjectid());
 
-				ProjectDetailModel projectDetailModel = new ProjectDetailModel();
-				// 情報設定
-				projectDetailModel.setProjectid(model.getProjectid());
-				projectDetailModel.setUserid(model.getUserid());
-				projectDetailModel.setProjectname(model.getProjectname());
-				projectDetailModel.setProductid(model.getProductid());
-				projectDetailModel.setProjectsummary(model.getProjectsummary());
-				projectDetailModel.setProductname(model.getProductname());
-				projectDetailModel.setGroupCounts(model.getGroupCounts());
-				projectDetailModel.setDeviceCounts(model.getDeviceCounts());
+				if (model != null) {
+					ProjectDetailModel projectDetailModel = new ProjectDetailModel();
+					// 情報設定
+					projectDetailModel.setProjectid(model.getProjectid());
+					projectDetailModel.setUserid(model.getUserid());
+					projectDetailModel.setProjectname(model.getProjectname());
+					projectDetailModel.setProductid(model.getProductid());
+					projectDetailModel.setProjectsummary(model.getProjectsummary());
+					projectDetailModel.setProductname(model.getProductname());
+					projectDetailModel.setGroupCounts(model.getGroupCounts());
+					projectDetailModel.setDeviceCounts(model.getDeviceCounts());
 
-				// グループ一覧情報設定
-				projectDetailModel.setGroupList(model.getGroupList());
-				// デバイス一覧情報設定
-				projectDetailModel.setDeviceList(model.getDeviceList());
-
+					// グループ一覧情報設定
+					projectDetailModel.setGroupList(model.getGroupList());
+					// デバイス一覧情報設定
+					projectDetailModel.setDeviceList(model.getDeviceList());
+					response.setData(projectDetailModel);
+				}else {
+					response.setData(null);
+				}
+				
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-				response.setData(Util.getJsonString(projectDetailModel));
 
 			} else {
 				/* 異常系 */
@@ -142,9 +147,9 @@ public class Cloud_projectController {
 	@RequestMapping(value = "/registerProject", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> registerProject(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
+	public BaseHttpResponse<Map<String, Object>> registerProject(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
 
-		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+		BaseHttpResponse<Map<String, Object>> response = new BaseHttpResponse<Map<String, Object>>();
 
 		try {
 
@@ -155,19 +160,13 @@ public class Cloud_projectController {
 				Integer projectid = cloud_projectService.registerProject(cloud_projectDetailModel);
 
 				if (projectid != null) {
-					String responseData = new String();
-					responseData = responseData + "{";
-
-					JSONObject resJasonObj = new JSONObject();
 					// 情報設定
-					resJasonObj.put("projectid", projectid);
-
-					responseData = responseData + "}";
-
+					Map<String, Object> returnObj = new HashMap<>();
+					returnObj.put("projectid", projectid);
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-					response.setData(responseData);
+					response.setData(returnObj);
 				} else {
 					/* 異常系 */
 					response.setStatus(200);
@@ -200,9 +199,9 @@ public class Cloud_projectController {
 	@RequestMapping(value = "/updateProject", method = RequestMethod.PUT)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> updateProject(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
+	public BaseHttpResponse<Map<String, Object>> updateProject(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
 
-		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+		BaseHttpResponse<Map<String, Object>> response = new BaseHttpResponse<Map<String, Object>>();
 
 		try {
 
@@ -213,20 +212,13 @@ public class Cloud_projectController {
 				Integer projectid = cloud_projectService.updateProject(cloud_projectDetailModel);
 
 				if (projectid != null) {
-
-					String responseData = new String();
-					responseData = responseData + "{";
-
-					JSONObject resJasonObj = new JSONObject();
 					// 情報設定
-					resJasonObj.put("updateCount", 1);
-
-					responseData = responseData + "}";
-
+					Map<String, Object> returnObj = new HashMap<>();
+					returnObj.put("updateCount", 1);
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-					response.setData(responseData);
+					response.setData(returnObj);
 				} else {
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0101);
@@ -259,9 +251,9 @@ public class Cloud_projectController {
 	@RequestMapping(value = "/deleteProject", method = RequestMethod.DELETE)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> deleteProject(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
+	public BaseHttpResponse<Map<String, Object>> deleteProject(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
 
-		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+		BaseHttpResponse<Map<String, Object>> response = new BaseHttpResponse<Map<String, Object>>();
 
 		try {
 
@@ -271,19 +263,14 @@ public class Cloud_projectController {
 				// プロジェクトを削除する
 				cloud_projectService.deleteProject(cloud_projectModel);
 
-				String responseData = new String();
-				responseData = responseData + "{";
-
-				JSONObject resJasonObj = new JSONObject();
 				// 情報設定
-				resJasonObj.put("deleteCount", 1);
-
-				responseData = responseData + "}";
+				Map<String, Object> returnObj = new HashMap<>();
+				returnObj.put("deleteCount", 1);
 
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-				response.setData(responseData);
+				response.setData(returnObj);
 
 			} else {
 				/* 異常系 */

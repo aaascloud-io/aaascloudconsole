@@ -5,10 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.AuthorizationResource;
 import org.keycloak.admin.client.resource.PermissionsResource;
@@ -28,49 +29,43 @@ import org.keycloak.representations.idm.authorization.ResourceRepresentation;
 import org.keycloak.representations.idm.authorization.ScopePermissionRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import jp.co.ifocus.commons.config.ServerConfig;
-import jp.co.ifocus.commons.config.ServerConfig.Keys;
-import jp.co.ifocus.commons.log.MessageIdConstants;
+import com.ifocus.aaascloud.config.KeycloakConfig;
 
-/**
- * to avoid google-api-services http provider conflict,
- * use plain http instead of keycloakAdminClient library
- * @author misit
- *
- */
+@Component
 public class KeyCloakAdminClient {
-
-	public static KeyCloakAdminClient INSTANCE = new KeyCloakAdminClient();
+	
+	@Autowired
+	private KeycloakConfig keycloakAdminConfig;
 
 	private Logger LOG = LoggerFactory.getLogger(this.getClass());
-
-	private static final String AUTH_ADMIN_REALM_NAME = "master";
 
 	private Keycloak keyCloakInstance;
 	private String clientId;
 
-	private KeyCloakAdminClient() {
+	@PostConstruct
+	private void init() {
 		newKeycloakInstance();
 	}
 
 	private void newKeycloakInstance() {
-		this.keyCloakInstance =  Keycloak.getInstance(
-				ServerConfig.getDefualt().getString(Keys.AUTH_SERVER_URL),
-				AUTH_ADMIN_REALM_NAME,
-				ServerConfig.getDefualt().getString(Keys.AUTH_ADMIN_USER_USERNAME),
-				ServerConfig.getDefualt().getString(Keys.AUTH_ADMIN_USER_PASSWORD),
-				ServerConfig.getDefualt().getString(Keys.AUTH_ADMIN_CLIENT_NAME));
+		this.keyCloakInstance =  Keycloak.getInstance(keycloakAdminConfig.getAuthServerUrl(),
+				keycloakAdminConfig.getAdminRealmName(),
+				keycloakAdminConfig.getAdminUsername(),
+				keycloakAdminConfig.getAdminPassword(),
+				keycloakAdminConfig.getAdminClientId());
 		setClientId();
 	}
 
 	private void setClientId() {
 		List<ClientRepresentation> clients = this.keyCloakInstance
-				.realm(ServerConfig.getDefualt().getString(Keys.AUTH_REALM_NAME))
+				.realm(keycloakAdminConfig.getAuthRealm())
 				.clients()
-				.findByClientId(ServerConfig.getDefualt().getString(Keys.AUTH_CLIENT_NAME));
+				.findByClientId(keycloakAdminConfig.getAuthClientId());
 		if (clients == null || clients.size() == 0) {
-			throw new RuntimeException("cannot find client id of Client: " + ServerConfig.getDefualt().getString(Keys.AUTH_CLIENT_NAME));
+			throw new RuntimeException("cannot find client id of Client: " + keycloakAdminConfig.getAuthClientId());
 		}
 		this.clientId = clients.get(0).getId();
 	}
@@ -106,7 +101,7 @@ public class KeyCloakAdminClient {
 				}
 			}
 		} catch (Exception e) {
-			LOG.warn(MessageIdConstants.W12066, permissionName, e);
+			LOG.warn("Exception occur when fetching permission by name={} from authority server.", permissionName, e);
 		}
 		return null;
 	}
@@ -132,7 +127,7 @@ public class KeyCloakAdminClient {
 				}
 			}
 		} catch (Exception e) {
-			LOG.warn(MessageIdConstants.W12067, roleName, e);
+			LOG.warn("Exception occur when fetching role by name={} from authority server.", roleName, e);
 		}
 		return null;
 	}
@@ -205,7 +200,7 @@ public class KeyCloakAdminClient {
 	}
 
 	public RealmResource getAuthorizationTargetRealmProxy() {
-		return this.keyCloakInstance.realms().realm(ServerConfig.getDefualt().getString(Keys.AUTH_REALM_NAME));
+		return this.keyCloakInstance.realms().realm(keycloakAdminConfig.getAuthRealm());
 	}
 
 	public PermissionsResource getPermissionServiceProxy() {
@@ -244,12 +239,12 @@ public class KeyCloakAdminClient {
 				return roleId;
 			}
 		} catch (Exception e) {}
-		LOG.info(MessageIdConstants.I12016, roleName);
+		LOG.info("Role={} is not found, to be created.", roleName);
 		getRealmRoleServiceProxy().create(new RoleRepresentation(roleName, "", false));
 		try {
 			 return getRealmRoleIdByName(roleName);
 		} catch (Exception e) {
-			LOG.error(MessageIdConstants.E12015, roleName, e);
+			LOG.error("Role={} creation fail.", roleName, e);
 			throw e;
 		}
 	}
@@ -281,7 +276,7 @@ public class KeyCloakAdminClient {
 	}
 
 	public List<UserRepresentation> getUserRepresentations() {
-		return this.keyCloakInstance.realm(ServerConfig.getDefualt().getString(Keys.AUTH_REALM_NAME)).users().list();
+		return this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().list();
 	}
 
 }

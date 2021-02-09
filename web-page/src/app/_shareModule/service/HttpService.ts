@@ -11,6 +11,7 @@ import { LoginInfo } from 'src/app/_common/_interface/userInfo';
 
 @Injectable()
 export class HttpService {
+    private cookieExpireTime: Date;
 
     public loginInfo: LoginInfo;
 
@@ -278,15 +279,17 @@ export class HttpService {
         return this.fetchFromKeycloak(formData);
     }
 
-    accessToken(loginid: string, password: string): Promise<any> {
+    accessToken(username: string, password: string): Promise<any> {
         ///var formData = "grant_type=password&client_id=" + ConstantsHandler.keycloak_client_id + "&username=" + username + "&password=" + password + "&client_secret=385935b8-85e3-41df-94b9-6365c5a39056";
         // var formData = "grant_type=password&client_id=" + ConstantsHandler.keycloak_client_id + "&username=" + username + "&password=" + password + "&client_secret=385935b8-85e3-41df-94b9-6365c5a39056";
         // var formData = "&loginid=" + username  + "&password=" + password ;
 
-        var formData = {
-            loginid: loginid,
-            password: password
-        };
+        // var formData = {
+        //     loginid: loginid,
+        //     password: password
+        // };
+
+        var formData = "grant_type=password&client_id=" + ConstantsHandler.keycloak_client_id + "&username=" + username + "&password=" + password + "&client_secret=385935b8-85e3-41df-94b9-6365c5a39056";
         return this.fetchFromKeycloak(formData);
     }
 
@@ -298,20 +301,49 @@ export class HttpService {
         this._router.navigate(["login"]);
     }
 
-    private fetchFromKeycloak(formData: any) {
+    // private fetchFromKeycloak(formData: any) {
+    //     var obj = this;
+    //     // var url = ConstantsHandler.keycloakServer + "v1.0/user/login";
+    //     var url = ConstantsHandler.keycloakServer + "getuser";
+    //     var options = {
+    //         headers: new HttpHeaders({
+    //             //TODO クライアント側が値をx-www-form-urlencodedで送信するときに使用します。(＠ModelAttribute)
+    //             //'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    //             //TODO クライアント側が値をJSONで送信するときに使用します。(@RequestBody)
+    //             'Content-Type': 'application/json'
+    //         }),
+    //     };
+    //     return this._http.post(url, formData, options)
+    //         .toPromise()
+    //         .then(function (res) {
+    //             // save token
+    //             ConstantsHandler.TOKEN.access_token = res["access_token"];
+    //             ConstantsHandler.TOKEN.access_token_fetch_time = Date.parse(new Date().toString());
+    //             ConstantsHandler.TOKEN.access_token_valid_time = res["expires_in"] * 1000;
+    //             ConstantsHandler.TOKEN.refresh_token = res["refresh_token"];
+    //             ConstantsHandler.TOKEN.refresh_token_fetch_time = ConstantsHandler.TOKEN.access_token_fetch_time;
+    //             ConstantsHandler.TOKEN.refresh_token_valid_time = res["refresh_expires_in"] * 1000;
+
+    //             var timeout = new Date(new Date().getTime() + ConstantsHandler.GLOBAL_TOKEN.interval);
+    //             // save to cookies
+    //             obj.cookieService.set(ConstantsHandler.TOKEN.cookieName, JSON.stringify(ConstantsHandler.TOKEN), timeout);
+    //             return res;
+    //         }).catch((err) => {
+    //             if (err.status == 401) {
+    //                 // obj.alertService.danger("ユーザー名又はパスワードの値は不正確です")
+    //             } else if (err.status == 400) {
+    //                 // obj.alertService.danger("アカウントの設定が未完成です")
+    //             }
+    //             throw err;
+    //         });
+    // }
+
+    private fetchFromKeycloak(formData: string) {
         var obj = this;
-        // var url = ConstantsHandler.keycloakServer + "v1.0/user/login";
-        var url = ConstantsHandler.keycloakServer + "getuser";
-        var options = {
-            headers: new HttpHeaders({
-                //TODO クライアント側が値をx-www-form-urlencodedで送信するときに使用します。(＠ModelAttribute)
-                //'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-                //TODO クライアント側が値をJSONで送信するときに使用します。(@RequestBody)
-                'Content-Type': 'application/json'
-            }),
-        };
-        return this._http.post(url, formData, options)
-            .toPromise()
+        var uri = ConstantsHandler.keycloakServer + "protocol/openid-connect/token";
+        return this._http.post(uri, formData, {
+            headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8')
+        }).toPromise()
             .then(function (res) {
                 // save token
                 ConstantsHandler.TOKEN.access_token = res["access_token"];
@@ -326,9 +358,9 @@ export class HttpService {
                 obj.cookieService.set(ConstantsHandler.TOKEN.cookieName, JSON.stringify(ConstantsHandler.TOKEN), timeout);
                 return res;
             }).catch((err) => {
-                if (err.status == 401) {
+                if(err.status == 401){
                     // obj.alertService.danger("ユーザー名又はパスワードの値は不正確です")
-                } else if (err.status == 400) {
+                }else if(err.status == 400){
                     // obj.alertService.danger("アカウントの設定が未完成です")
                 }
                 throw err;
@@ -345,31 +377,48 @@ export class HttpService {
     processUserInfo(res: any): void {
         if (res) {
             // save user info
-            var userInfo = res["data"];
-            // let temp = userInfo;
-            // if(userInfo["attributes"]){
-            //     if(userInfo["attributes"].block){
-            //         temp.block = true;
-            //     }
-            //     if(userInfo["attributes"].uid instanceof Array){
-            //         temp.userid = userInfo["attributes"].uid[0];
-            //     }
-            // }
-            userInfo = JSON.parse(userInfo);
-            this.loginInfo = userInfo;
-            this.dataFatoryService.setLoginUser(userInfo);
+            var userInfo = res["userInfo"];
+            let temp = {
+                uid: userInfo.id,
+                login_id: userInfo.username,
+                uname: this.getString(userInfo.firstName) + " " +  this.getString(userInfo.lastName),
+                block: false,
+                permissions: res["permissions"],
+            }
+            if(userInfo["attributes"]){
+                if(userInfo["attributes"].block){
+                    temp.block = true;
+                }
+                if(userInfo["attributes"].uid instanceof Array){
+                    temp.uid = userInfo["attributes"].uid[0];
+                }
+            }
+            this.dataFatoryService.setLoginUser(temp);
 
             var timeout = new Date(new Date().getTime() + ConstantsHandler.GLOBAL_TOKEN.interval);
             //save in cookie
-            this.cookieService.set(ConstantsHandler.GLOBAL_TOKEN.id, JSON.stringify(userInfo), timeout);
+            // this.cookieService.set(ConstantsHandler.GLOBAL_TOKEN.id, JSON.stringify(temp), timeout);
+            this.cookieService.set(ConstantsHandler.GLOBAL_TOKEN.id, JSON.stringify(temp), new Date(new Date().getTime() + ConstantsHandler.GLOBAL_TOKEN.timeZone + ConstantsHandler.GLOBAL_TOKEN.interval));
             // save valid period in cookie
-            this.cookieService.set(ConstantsHandler.TOKEN.cookieName, JSON.stringify(ConstantsHandler.TOKEN), timeout);
-            return res;
+            // this.cookieService.set(ConstantsHandler.TOKEN.cookieName, JSON.stringify(ConstantsHandler.TOKEN), timeout);
+             this.cookieService.set(ConstantsHandler.TOKEN.cookieName, JSON.stringify(ConstantsHandler.TOKEN), new Date(new Date().getTime() + ConstantsHandler.GLOBAL_TOKEN.timeZone + ConstantsHandler.GLOBAL_TOKEN.interval));
+            
+             this.setTokenCookie(temp);
+             return res;
         } else {
             // TODO
             // this.alertService.danger("ユーザー情報取得できませんでした")
         }
     }
+       // Set time expired for token
+   setTokenCookie(data: any) {
+    this.cookieService.set('token_store', JSON.stringify(data), this.getCookieExpireTime());
+}
+
+   // Get time expired 
+   getCookieExpireTime(): Date {
+    return this.cookieExpireTime;
+}
 
     getUserInfo(callback: Function): Promise<any> {
         var obj = this;

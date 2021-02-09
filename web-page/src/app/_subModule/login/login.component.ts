@@ -39,6 +39,7 @@ export class LoginComponent extends AbstractComponent implements OnInit {
   constructor(
     protected injector: Injector,
     private httpService: HttpService,
+    private userService: UserService,
     private dataFatoryService: DataFatoryService
   ) {
     super(injector);
@@ -65,21 +66,26 @@ export class LoginComponent extends AbstractComponent implements OnInit {
           this.pageModel.user.username,
           this.pageModel.user.password
         );
-        if (res.resultCode === codes.RETCODE.NORMAL) {
-          this.pageModel.result.retcode = res.resultCode;
-          this.pageModel.result.message = res.resultMsg;
-          ///保存
-          this.httpService.processUserInfo(res);
-          ///画面遷移
-          this.router.navigate(["/main/page/dashboard"]);
-        } else {
-          this.alert.warning('ユーザー名またはパスワードは間違った。');
-          flg = false;
-        }
+        // if (res.resultCode === codes.RETCODE.NORMAL) {
+        //   this.pageModel.result.retcode = res.resultCode;
+        //   this.pageModel.result.message = res.resultMsg;
+        //   ///保存
+        //   this.httpService.processUserInfo(res);
+        //   ///画面遷移
+        //   this.router.navigate(["/main/page/dashboard"]);
+        // } else {
+        //   this.alert.warning('ユーザー名またはパスワードは間違った。');
+        //   flg = false;
+        // }
+
         ///権限チェック
         // var res = await this.userService.authorized().toPromise();
-        ///自身の情報取得
-        // var res = await this.userService.getMyInfo().toPromise();
+        // 自身の情報取得
+        var res = await this.userService.getMyInfo().toPromise();
+        ///保存
+        this.httpService.processUserInfo(res);
+        ///画面遷移
+        this.router.navigate(["/main/page/dashboard"]);
       } catch (err) {
         this.handleError('操作失敗', err);
       }
