@@ -16,6 +16,7 @@ import com.ifocus.aaascloud.constant.StatusFlagConstant;
 import com.ifocus.aaascloud.controller.AccessController;
 import com.ifocus.aaascloud.controller.Cloud_errlogController;
 import com.ifocus.aaascloud.controller.Cloud_versionController;
+import com.ifocus.aaascloud.controller.DashboardController;
 import com.ifocus.aaascloud.controller.ProfileController;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
@@ -77,7 +78,8 @@ class AaascloudApplicationTests extends TestCase{
 	private Cloud_versionController cloud_versionController;
 	@Autowired
 	private ProfileController profileController;
-
+	@Autowired
+	private DashboardController dashboardController;
 
 //	/*
 //	 * Cloud_userService:login
@@ -262,7 +264,7 @@ class AaascloudApplicationTests extends TestCase{
 
 		Optional<Cloud_productEntity> entity = cloud_productRepository.findById(4);
 
-		assertEquals( entity.isEmpty(), true);
+		assertEquals( entity.empty(), true);
 	}
 
 	/*
@@ -768,6 +770,29 @@ class AaascloudApplicationTests extends TestCase{
 		assertEquals( 1, list.size() );
 	}
 
+	/*
+	 * Cloud_deviceRepository
+	 * 一覧取得findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike
+	 * 正常系(グループあり)
+	 *
+	 */
+	@Test
+	public void testFindByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike() throws Exception {
+
+		List<Integer> companyidList = Arrays.asList(1,2);
+		String productName = "%FACE%";
+		String projectName = "%入庫%";
+		String industry = "%サービス%";
+		String imei = "%0%";
+		String iccid = "%0%";
+		String sn = "%0%";
+		String groupName = "%A%";
+
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(companyidList, imei, iccid, sn, productName, projectName, industry, groupName);
+
+		assertEquals( 2, list.size() );
+	}
+
 	//	/*
 //	 * AccessController
 //	 * 代理店取得getAgencyCompanyForTrackun
@@ -922,10 +947,10 @@ class AaascloudApplicationTests extends TestCase{
 	public void testGetUserProfile() throws Exception {
 
 		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
-		LoginInfo loginInfo = new LoginInfo();
-		loginInfo.setLoginusername(loginUserEntity.getUsername());
-		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
-		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+//		LoginInfo loginInfo = new LoginInfo();
+//		loginInfo.setLoginusername(loginUserEntity.getUsername());
+//		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+//		loginInfo.setLoginuserid(loginUserEntity.getUserid());
 
 		Cloud_userModel model = new Cloud_userModel();
 		model.setUsername(loginUserEntity.getUsername());
@@ -981,4 +1006,27 @@ class AaascloudApplicationTests extends TestCase{
 
 	}
 
+	/*
+	 * DashboardController
+	 * ダッシュボードテストgetDashboardInfo
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testGetDashboardInfo() throws Exception {
+
+//		Cloud_userModel model = new Cloud_userModel();
+//		model.setUsername("wang");
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("ifocus");
+
+		Cloud_userModel model = new Cloud_userModel();
+		model.setUsername(loginUserEntity.getUsername());
+		model.setUserid(loginUserEntity.getUserid());
+
+		BaseHttpResponse<String> response = dashboardController.getDashboardInfo(model);
+
+		assertEquals(200, response.getStatus());
+
+	}
 }
