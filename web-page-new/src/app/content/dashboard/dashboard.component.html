@@ -1,0 +1,227 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-header row mb-1">
+    </div>
+    <div class="content-body">
+      <!-- Dashboard statistic -->
+      <div class="row">
+        <div class="col-xl-3 col-lg-6 col-12">
+          <div class="card pull-up">
+            <div class="card-content">
+              <div class="card-body card_padding">
+                <div class="media d-flex">
+                  <div class="media-body text-left">
+                    <h3 class="purple">{{pageModel.userLength}}</h3>
+                    <h6>ユーザー数</h6>
+                  </div>
+                  <div>
+                    <i class="fa fa-users purple font-large-2 float-right"></i>
+                  </div>
+                </div>
+                <div class="mb-0 mt-1">
+                  <ngb-progressbar height="7px" width="100%" type="gradient-x-purple" [value]="75"></ngb-progressbar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-12">
+          <div class="card pull-up">
+            <div class="card-content">
+              <div class="card-body card_padding">
+                <div class="media d-flex">
+                  <div class="media-body text-left">
+                    <h3 class="success">{{pageModel.projectLength}}</h3>
+                    <h6>プロジェクト数</h6>
+                  </div>
+                  <div>
+                    <i class="fa fa-file-text success font-large-2 float-right"></i>
+                  </div>
+                </div>
+                <div class="mb-0 mt-1">
+                  <ngb-progressbar height="7px" width="100%" type="gradient-x-success" [value]="80"></ngb-progressbar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-12">
+          <div class="card pull-up">
+            <div class="card-content">
+              <div class="card-body card_padding">
+                <div class="media d-flex">
+                  <div class="media-body text-left">
+                    <h3 class="red">{{pageModel.productLength}}</h3>
+                    <h6>プロダクト</h6>
+                  </div>
+                  <div>
+                    <i class="fa fa-paper-plane red font-large-2 float-right"></i>
+                  </div>
+                </div>
+                <div class="mb-0 mt-1">
+                  <ngb-progressbar height="7px" width="100%" type="gradient-x-red" [value]="80"></ngb-progressbar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-12">
+          <div class="card pull-up">
+            <div class="card-content">
+              <div class="card-body card_padding">
+                <div class="media d-flex">
+                  <div class="media-body text-left">
+                    <code style="font-size: 5px;float: left;color: #5bc0de; ">オンライン</code>
+                    <code style="font-size: 5px;float: right;color: #5bc0de; ">事前定義総数</code>
+                    <h3 class="info" style="padding-left: 75px">{{pageModel.deviceOnlLength}}/{{pageModel.deciveLength}}</h3>
+                    <h6>IoTデバイス数</h6>
+                  </div>
+                  <div>
+                    <i class="fa fa-hdd-o info font-large-2 float-right" style="padding-left: 10px"></i>
+                  </div>
+                </div>
+                <div class="mb-0 mt-1">
+                  <ngb-progressbar height="7px" width="100%" type="gradient-x-info" [value]="65">
+                  </ngb-progressbar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-12">
+          <div class="card pull-up">
+            <div class="card-content">
+              <div class="card-body card_padding">
+                <div class="media d-flex">
+                  <div class="media-body text-left">
+                    <h3 class="warning">{{pageModel.errlogLength}}</h3>
+                    <h6>エラー</h6>
+                  </div>
+                  <div>
+                    <i class="fa fa-bug warning font-large-2 float-right"></i>
+                  </div>
+                </div>
+                <div class="mb-0 mt-1">
+                  <ngb-progressbar height="7px" width="100%" type="gradient-x-warning" [value]="85"></ngb-progressbar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--/ Dashboard statistic -->
+      <div class="row">
+        <!-- ユーザー一覧 -->
+        <div class="col-xl-4 col-12">
+          <m-card [options]="options" >
+            <ng-container mCardHeaderTitle>
+              ユーザー一覧
+            </ng-container>
+            <ng-container mCardContent>
+              <div id="new-orders" class="media-list position-relative">
+                <div class="table-responsive">
+                  <table id="new-orders-table" class="table table-hover table-xl mb-0 order-tbl_change">
+                    <thead>
+                      <tr>
+                        <th class="border-top-0">No.</th>
+                        <th class="border-top-0">ログインID</th>
+                        <th class="border-top-0">姓</th>
+                        <th class="border-top-0">名</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="text-truncate" *ngFor="let item of pageModel.userList;let i = index;">
+                        <td class="text-truncate">{{i+1}}</td>
+                        <td class="text-truncate">{{item.loginId}}  </td>
+                        <td class="text-truncate">{{item.companyName}}  </td>
+                        <td class="text-truncate">{{item.loginId}}  </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </ng-container>
+          </m-card>
+        </div>
+        <!-- プロダクト一覧 -->
+        <div class="col-xl-8 col-lg-12" *blockUI="'newOrders'; message: 'Loading'">
+          <m-card [options]="options" (reloadFunction)="reloadNewOrders($event)">
+            <ng-container mCardHeaderTitle>
+              プロダクト一覧
+            </ng-container>
+            <ng-container mCardContent>
+              <div id="new-orders" class="media-list position-relative">
+                <div class="table-responsive">
+                  <table id="new-orders-table" class="table table-hover table-xl mb-0 order-tbl_change">
+                    <thead>
+                      <tr>
+                        <th class="border-top-0">No.</th>
+                        <th class="border-top-0">プロダクトID</th>
+                        <th class="border-top-0">プロダクト名</th>
+                        <th class="border-top-0">住所</th>
+                        <th class="border-top-0">概要</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="text-truncate" *ngFor="let item of pageModel.products;let i = index;">
+                        <td class="text-truncate">{{i+1}}</td>
+                        <td class="text-truncate">{{item.productid}}  </td>
+                        <td class="text-truncate">{{item.productname}}  </td>
+                        <td class="text-truncate">{{item.model}}  </td>
+                        <td class="text-truncate">{{item.productid}}  </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </ng-container>
+          </m-card>
+        </div>
+      </div>
+      <!-- エラー一覧 -->
+      <div class="row match_height">
+        <div id="recent-transactions" class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">エラーリスト</h4>
+
+              <div class="heading-elements invoice">
+                <!-- <ul class="list-inline mb-0">
+                  <li><a [routerLink]=""
+                      class="btn btn-sm btn-danger box-shadow-2 round btn-min-width pull-right" (click)="rotueInvoice()">Invoice Summary</a></li>
+                </ul> -->
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="table-responsive" fxFlex="auto" [perfectScrollbar]="config">
+                <table class="table table-hover table-xl border_bottom">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="border-top-0">No.</th>
+                      <th scope="col" class="border-top-0">エラーコード</th>
+                      <th scope="col" class="border-top-0">デバイスID</th>
+                      <th scope="col" class="border-top-0">管理者</th>
+                      <th scope="col" class="border-top-0">発生日時</th>
+                      <th scope="col" class="border-top-0">対応ステータス</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-truncate" *ngFor="let item of pageModel.errlogList;let i = index;">
+                      <td class="text-truncate">{{i+1}}</td>
+                      <td class="text-truncate">{{item.errcode}}  </td>
+                      <td class="text-truncate">{{item.device}}  </td>
+                      <td class="text-truncate">{{item.userid}}  </td>
+                      <td class="text-truncate">{{item.datatime}}  </td>
+                      <td class="text-truncate">{{item.statusflag}}  </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ////////////////////////////////////////////////////////////////////////////-->
