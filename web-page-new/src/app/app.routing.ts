@@ -49,6 +49,8 @@ const appRoutes: Routes = [
       { path: 'changelog', component: ChangelogComponent, canActivate: [AuthGuard] },
       { path: 'dashboard', loadChildren: () => import('../app/content/dashboard/dashboard.module').then(m => m.DashboardModule)
       , canActivate: [AuthGuard] },
+      { path: 'device', loadChildren: () => import('../app/content/device/device.module').then(m => m.DeviceModule)
+      , canActivate: [AuthGuard] },
       {
         path: 'components', loadChildren: () => import('../app/content/ngbbootstrap/components.module').then(m => m.ComponentsModule),
         canActivate: [AuthGuard]
