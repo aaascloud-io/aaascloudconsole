@@ -35,6 +35,6 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
     ])
   ],
   declarations: [DashboardComponent],
-  exports: [RouterModule]
+  exports: [RouterModule] 
 })
 export class DashboardModule { }

@@ -895,6 +895,11 @@ export const MenuSettingsConfig: MenuConfig = {
         icon: 'la-home',
         page: '/dashboard'
       },
+      {
+        title: 'デバイス管理',
+        icon: 'la-tablet',
+        page: '/device'
+      },
       // {
       //   title: 'Templates',
       //   icon: 'la-television',
