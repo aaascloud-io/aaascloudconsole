@@ -26,8 +26,8 @@ export interface Chart {
 export class DashboardComponent implements OnInit {
 
   @BlockUI('newOrders') blockUINewOrders: NgBlockUI;
+  
   public config: PerfectScrollbarConfigInterface = { wheelPropagation: true };
-
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
   @ViewChild(PerfectScrollbarDirective) directiveRef?: PerfectScrollbarDirective;
 
@@ -432,7 +432,7 @@ export class DashboardComponent implements OnInit {
 
               this.pageModel.projectLength = item.projectCount;
               this.pageModel.deciveLength = item.deviceCount;
-              this.pageModel.deviceOnlLength = 3;
+              this.pageModel.deviceOnlLength = 0;
 
 
               // this.pageModel.products=[{productid:1,productcode:"code004",productname:"テスト用プロダクト",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0},{productid:2,productcode:"code004",productname:"テスト用プロダクト2",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0}];

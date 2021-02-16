@@ -132,9 +132,9 @@
                     <tbody>
                       <tr class="text-truncate" *ngFor="let item of pageModel.userList;let i = index;">
                         <td class="text-truncate">{{i+1}}</td>
-                        <td class="text-truncate">{{item.loginId}}  </td>
-                        <td class="text-truncate">{{item.companyName}}  </td>
-                        <td class="text-truncate">{{item.loginId}}  </td>
+                        <td class="text-truncate">{{item.username}}  </td>
+                        <td class="text-truncate">{{item.lastName}}  </td>
+                        <td class="text-truncate">{{item.firstName}}  </td>
                       </tr>
                     </tbody>
                   </table>
@@ -193,7 +193,7 @@
               </div>
             </div>
             <div class="card-content">
-              <div class="table-responsive" fxFlex="auto" [perfectScrollbar]="config">
+              <div class="table-responsive"  [perfectScrollbar]="config" style="height: 400px;">
                 <table class="table table-hover table-xl border_bottom">
                   <thead>
                     <tr>
