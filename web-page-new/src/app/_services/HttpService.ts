@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { BaseService } from './BaseService';
 import { AuthSignService } from './AuthSignService';
 import { DataFatoryService } from './DataFatoryService';
@@ -11,14 +11,31 @@ import { UrlHandler } from 'src/app/_common/_constant/url.handler';
 
 @Injectable()
 export class HttpService {
+
     static times = 0;
     validTimePaddingInMs: number;
     constructor(private dataFatoryService:DataFatoryService, private _http : HttpClient,private _authSignService :AuthSignService , private _router : Router,private baseService:BaseService,private cookieService:CookieService){
     }
 
-    post(fullUrl:string, data: any, header: any) : Promise<any> {
-        return this._http.post(fullUrl, data, header)
-        .toPromise();
+    // common
+    post(path:string, data: any) : Promise<any> {
+        return this._http.post(this.baseService.getPath(path), 
+            data, 
+            this.baseService.getHeader()).toPromise();
+    }
+
+    put(path: string, data: any) : Promise<any> {
+        return this._http.put(this.baseService.getPath(path),
+            data,
+            this.baseService.getHeader()).toPromise();
+    }
+
+    delete(path: string, data: any): Promise<any> {
+        return this._http.request(
+            new HttpRequest("DELETE", 
+                this.baseService.getPath(path), 
+                data, 
+                this.baseService.getDefaultHeader())).toPromise();
     }
 
     usePost(path:string, data: any) : Promise<any> {
