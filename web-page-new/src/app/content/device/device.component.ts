@@ -107,7 +107,8 @@ export class DeviceComponent implements OnInit {
    */
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
-      windowClass: 'animated fadeInDown'
+      windowClass: 'animated fadeInDown modal-xl'
+      ,size:'lg'
     });
     this.contactFlag = true;
   }

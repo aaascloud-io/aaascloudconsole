@@ -368,3 +368,8 @@
   :host ::ng-deep .content-right {
     width: calc(100% - -30px) !important;
   }
+
+  ::ng-deep .modal-xl .modal-lg {
+    max-width: 90%;
+    width: 90%;
+  }

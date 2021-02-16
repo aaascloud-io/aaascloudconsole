@@ -10,8 +10,6 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BreadcrumbModule } from 'src/app/_layout/breadcrumb/breadcrumb.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { AlertService } from '../../_services/alert.service';
-
 
 @NgModule({
   imports: [
