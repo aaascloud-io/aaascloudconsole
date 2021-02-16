@@ -1,0 +1,43 @@
+.font-color-white{
+    color: white !important;
+}
+
+.content .slide.show{
+  transform: translateX(9%);
+}
+
+.content .right-slide{
+    height: calc(100vh - 8.3rem);
+    width: 400px;
+    border-radius: 0.25rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: #fff;
+    position: absolute;
+    transform: translateX(120%);
+    transition: all .3s ease-in-out;
+    z-index: 8;
+    right: 2.6rem;
+    bottom: 0;
+}
+
+.content .left-slide{
+    height: calc(100vh - 8.3rem);
+    width: 400px;
+    border-radius: 0.25rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: #fff;
+    position: absolute;
+    transform: translateX(120%);
+    transition: all .3s ease-in-out;
+    z-index: 8;
+    left: 2.6rem;
+    bottom: 0;
+}
+
+@media (max-width: 575.98px) {
+  .todo-new-task-sidebar {
+    width : 88%;
+  }
+}

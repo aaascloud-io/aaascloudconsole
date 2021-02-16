@@ -71,13 +71,12 @@ export class ConstantsHandler {
         Devdevelopment: {
             protocal: 'http',
             host: 'localhost',
-            port: '8080',
-            root: 'pfweb.api',
+            port: '9000',
+            root: '/',
         }
     };
 
     static getEnvCfg(): Object {
-
         return this.environmentCfg[this.environment];
     }
 
