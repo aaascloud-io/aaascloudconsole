@@ -402,3 +402,9 @@
   border: 15px solid transparent;
   border-top-color: rgba(255, 255, 255, 0.8);
 }
+
+.titlewidth{
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 20%;
+}

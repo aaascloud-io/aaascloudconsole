@@ -5,7 +5,7 @@
     <div class="content-body">
       <!-- Dashboard statistic -->
       <div class="row">
-        <div class="col-xl-3 col-lg-6 col-12">
+        <div class="titlewidth">
           <div class="card pull-up">
             <div class="card-content">
               <div class="card-body card_padding">
@@ -25,7 +25,8 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-lg-6 col-12">
+        <div class="titlewidth">
+
           <div class="card pull-up">
             <div class="card-content">
               <div class="card-body card_padding">
@@ -45,7 +46,8 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-lg-6 col-12">
+        <div class="titlewidth">
+
           <div class="card pull-up">
             <div class="card-content">
               <div class="card-body card_padding">
@@ -65,14 +67,15 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-lg-6 col-12">
+        <div class="titlewidth">
+
           <div class="card pull-up">
             <div class="card-content">
               <div class="card-body card_padding">
                 <div class="media d-flex">
                   <div class="media-body text-left">
-                    <code style="font-size: 5px;float: left;color: #5bc0de; ">オンライン</code>
-                    <code style="font-size: 5px;float: right;color: #5bc0de; ">事前定義総数</code>
+                    <!-- <code style="font-size: 5px;float: left;color: #5bc0de; ">オンライン</code> -->
+                    <!-- <code style="font-size: 5px;float: right;color: #5bc0de; ">事前定義総数</code> -->
                     <h3 class="info" style="padding-left: 75px">{{pageModel.deviceOnlLength}}/{{pageModel.deciveLength}}</h3>
                     <h6>IoTデバイス数</h6>
                   </div>
@@ -88,7 +91,8 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-lg-6 col-12">
+        <div class="titlewidth">
+
           <div class="card pull-up">
             <div class="card-content">
               <div class="card-body card_padding">
@@ -145,7 +149,7 @@
         </div>
         <!-- プロダクト一覧 -->
         <div class="col-xl-8 col-lg-12" *blockUI="'newOrders'; message: 'Loading'">
-          <m-card [options]="options" (reloadFunction)="reloadNewOrders($event)">
+          <m-card >
             <ng-container mCardHeaderTitle>
               プロダクト一覧
             </ng-container>
@@ -193,7 +197,7 @@
               </div>
             </div>
             <div class="card-content">
-              <div class="table-responsive"  [perfectScrollbar]="config" style="height: 400px;">
+              <div class="table-responsive" style="height: 400px;">
                 <table class="table table-hover table-xl border_bottom">
                   <thead>
                     <tr>
