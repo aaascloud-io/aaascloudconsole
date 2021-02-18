@@ -13,13 +13,11 @@ export interface UserInfo{
 	set_2:string;
 	set_3:string;
 	role:number;
-}
-
-//ログインしたユーザーの情報（cookieに格納）
-export interface loginUser{
-	uid:string;
+	upperuserid:string;
+　　//既存todo
+	// uid:string;
 	uname:string;
-	login_id:string;
+	// login_id:string;
 	block: boolean;
 	permissions: Array<String>;
 }

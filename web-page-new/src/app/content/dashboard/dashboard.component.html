@@ -116,7 +116,7 @@
       <!--/ Dashboard statistic -->
       <div class="row">
         <!-- ユーザー一覧 -->
-        <div class="col-xl-4 col-12">
+        <div class="col-xl-5 col-12">
           <m-card [options]="options" >
             <ng-container mCardHeaderTitle>
               ユーザー一覧
@@ -148,7 +148,7 @@
           </m-card>
         </div>
         <!-- プロダクト一覧 -->
-        <div class="col-xl-8 col-lg-12" *blockUI="'newOrders'; message: 'Loading'">
+        <div class="col-xl-7 col-lg-12" *blockUI="'newOrders'; message: 'Loading'">
           <m-card >
             <ng-container mCardHeaderTitle>
               プロダクト一覧
@@ -201,12 +201,12 @@
                 <table class="table table-hover table-xl border_bottom">
                   <thead>
                     <tr>
-                      <th scope="col" class="border-top-0">No.</th>
-                      <th scope="col" class="border-top-0">エラーコード</th>
-                      <th scope="col" class="border-top-0">デバイスID</th>
-                      <th scope="col" class="border-top-0">管理者</th>
-                      <th scope="col" class="border-top-0">発生日時</th>
-                      <th scope="col" class="border-top-0">対応ステータス</th>
+                      <th scope="col" class="border-top-0 fixed01">No.</th>
+                      <th scope="col" class="border-top-0 fixed01">エラーコード</th>
+                      <th scope="col" class="border-top-0 fixed01">デバイスID</th>
+                      <th scope="col" class="border-top-0 fixed01">管理者</th>
+                      <th scope="col" class="border-top-0 fixed01">発生日時</th>
+                      <th scope="col" class="border-top-0 fixed01">対応ステータス</th>
                     </tr>
                   </thead>
                   <tbody>

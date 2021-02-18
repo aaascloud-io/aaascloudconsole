@@ -408,3 +408,10 @@
   padding-right: 15px;
   width: 20%;
 }
+
+.fixed01{
+  position: sticky;
+  top: 0;
+  color: #6B6F82;
+  background: #fff;
+}

@@ -96,11 +96,6 @@
                         (click)="addTableDataModal(addTableDatasModalContent)">
                         <i class="d-md-none d-block feather ft-plus white"></i>
                         <span class="d-md-block d-none">一括登録</span></button>
-                        <!-- <button class="btn btn-primary btn-sm gap_contact"
-                        style="margin-left:5px" 
-                        (click)="deleteCheckedRow()">
-                        <i class="d-md-none d-block feather ft-plus white"></i>
-                        <span class="d-md-block d-none">リロード</span></button> -->
                         <button class="btn btn-primary btn-sm gap_contact"
                         style="margin-left:5px" 
                         (click)="addTableDataModal(addGroupModalContent)">
@@ -116,7 +111,6 @@
                     <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
                       [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
                       (select)='onSelectContact($event)' fxFlex="auto" [perfectScrollbar]="config">
-  
                       <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
                         <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
                           let-selectFn="selectFn">
@@ -135,19 +129,24 @@
                           </div>
                         </ng-template>
                       </ngx-datatable-column>
-                      <ngx-datatable-column name="Name" [flexGrow]="1" [minWidth]="140">
+                      <ngx-datatable-column name="No." [flexGrow]="1" [minWidth]="40" [maxWidth]="50">
+                        <ng-template ngx-datatable-cell-template let-value="value" let-row="row" let-rowIndex="rowIndex">
+                            {{rowIndex + 1}}
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="SN" [flexGrow]="1" [minWidth]="140">
                         <ng-template ngx-datatable-cell-template let-row="row">
                           <span class="avatar avatar-sm avatar-{{row.isActive}} rounded-circle">
                             <img [src]="row.image"><i></i></span>{{row.name}}
                         </ng-template>
                       </ngx-datatable-column>
-                      <ngx-datatable-column name="Email" [flexGrow]="1" [minWidth]="140">
+                      <ngx-datatable-column name="IMEI" [flexGrow]="1" [minWidth]="140">
                         <ng-template ngx-datatable-cell-template let-row="row">
                           <a [routerLink]="">{{row.email}}</a>
                         </ng-template>
                       </ngx-datatable-column>
-                      <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column>
-                      <ngx-datatable-column name="Favorite" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
+                      <ngx-datatable-column name="ICCID" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column>
+                      <ngx-datatable-column name="SIMICCID" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
                         <ng-template ngx-datatable-cell-template let-row="row">
                           <img src="../../assets/images/raty/star-off.png" class="favoriteChange"
                             *ngIf="!row.isFavorite" (click)="favoriteChange(row)">
@@ -155,7 +154,9 @@
                             (click)="favoriteChange(row)">
                         </ng-template>
                       </ngx-datatable-column>
-                      <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
+                      <ngx-datatable-column name="状態" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column>
+                      <ngx-datatable-column name="所有者" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column>
+                      <ngx-datatable-column name="操作" [flexGrow]="1" [minWidth]="100">
                         <ng-template ngx-datatable-cell-template let-row="row">
                           <a [routerLink]="" class="primary edit mr-1 mrless"
                             (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
