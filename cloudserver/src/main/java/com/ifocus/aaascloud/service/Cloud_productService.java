@@ -118,7 +118,7 @@ public class Cloud_productService {
 	public Cloud_productModel getModelByEntity(Cloud_productEntity entity) throws Exception {
 		Cloud_productModel model = new Cloud_productModel();
 		model.setProductid(entity.getProductid());
-		model.setProducttypeid(entity.getProductTypeId());
+		model.setProducttypeid(entity.getProducttypeid());
 		model.setProductcode(entity.getProductcode());
 		model.setProductname(entity.getProductname());
 		model.setModel(entity.getModel());
