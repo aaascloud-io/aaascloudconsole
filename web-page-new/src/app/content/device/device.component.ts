@@ -74,6 +74,25 @@ export class DeviceComponent implements OnInit {
     addList: [],
     dataAll: [],
     deviceList: [],
+    addDeviceDetailList:[],
+    deviceObj: {
+      imei: '',
+      iccid: '',
+      sn: '',
+      companyid: '',
+      //todo
+      // 暗号化通信
+      // 暗号化キー
+      // 接続サーバアドレス
+      // 接続サーバポート番号
+      // バンディング済みフラグ
+      //業界
+      projectid: '',
+      sim_imei: '',
+      sim_tel: '',
+      sim_iccid: ''
+    },
+
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -97,85 +116,119 @@ export class DeviceComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-    this.rows.push(new Contact(1, 'Scott Marsh', 'scott@gmail.com', '(954)-654-5641',
-      '../../assets/images/portrait/small/avatar-s-5.png', false, 'online'));
-    this.rows.push(new Contact(2, 'Russell Bry', 'russell@gmail.com', '(235)-654-5642',
-      '../../assets/images/portrait/small/avatar-s-3.png', false, 'busy'));
-    this.rows.push(new Contact(3, 'james john', 'john@gmail.com', '(125)-654-5643',
-      '../../assets/images/portrait/small/avatar-s-1.png', true, 'away'));
-    this.rows.push(new Contact(4, 'Cynth Tuck', 'tuck@gmail.com', '(974)-654-5644',
-      '../../assets/images/portrait/small/avatar-s-4.png', false, 'busy'));
-    this.rows.push(new Contact(5, 'Margi Govan', 'govan@gmail.com', '(954)-654-5645',
-      '../../assets/images/portrait/small/avatar-s-6.png', true, 'online'));
-    this.rows.push(new Contact(6, 'Eugene Wood', 'wood@gmail.com', '(987)-654-5646',
-      '../../assets/images/portrait/small/avatar-s-9.png', false, 'busy'));
-    this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
-      '../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
-
+    this.Init(null);
+  }
+  // 新規
+  insert(): void {
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    if (item!=null){
-         //to do ユーザー名で　ロケーションデータを取る
-    this.pageModel.LoginUser.loginuserid = item.uid;
-    this.pageModel.LoginUser.loginusername = item.login_id;
-    this.pageModel.LoginUser.loginrole = item.role;
-    this.pageModel.LoginUser.logincompanyid = item.company;
-
-    var param = {
-      "loginInfo":{
-        "loginuserid": this.pageModel.LoginUser.loginuserid,
-        "loginusername": this.pageModel.LoginUser.loginusername,
-        "loginrole": this.pageModel.LoginUser.loginrole,
-        "logincompanyid": this.pageModel.LoginUser.logincompanyid
-    },
-    "targetUserInfo":{
-      "targetuserid":this.pageModel.LoginUser.loginuserid,
-      "targetuserCompanyid":this.pageModel.LoginUser.logincompanyid
-    }
-  }
-
-    this.httpService.usePost('/getCompanyDevices', param).then(item => {
-      try {
-
-        if (item != null) {
-
-          this.pageModel.deviceList = item.deviceList;
-          // this.pageModel.products = item.productList;
-          // this.pageModel.productLength = item.productCount;
-          // this.pageModel.userList = item.userList;
-          // this.pageModel.userLength = item.userCount;
-          // this.pageModel.products = item.productList;
-          // this.pageModel.errlogList = item.errlogList;
-          // this.pageModel.errlogLength = item.errlogCount;
-
-          // this.pageModel.projectLength = item.projectCount;
-          // this.pageModel.deciveLength = item.deviceCount;
-          // this.pageModel.deviceOnlLength = 0;
-
-        }
-
-      } catch (e) {
-        console.log('ユーザー数数を検索API エラー　発生しました。');
+    if (item != null) {
+      //to do ユーザー名で　ロケーションデータを取る
+      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
+      var param = {
+        "loginInfo": {
+          "loginuserid": item.uid,
+          "loginusername": item.login_id,
+          "loginrole": item.role,
+          "logincompanyid": item.company
+        },
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.LoginUser.loginuserid,
+          "targetuserCompanyid": this.pageModel.LoginUser.logincompanyid
+        },
+        "deviceDetail":this.pageModel.deviceObj
       }
-    })
     }
- 
-
+    this.httpService.usePost('registerDevice', param).then(item => {
+      let data = JSON.parse(item);
+      try {
+        if (data.result) {
+          this.Init(null);
+          // $("#addinfo").hide();
+          // $('.modal-backdrop').remove();
+          alert('デバイス情報を登録しました');
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
   }
 
+
+
+  Init(pre: any) {
+    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    if (item != null) {
+      //to do ユーザー名で　ロケーションデータを取る
+      this.pageModel.LoginUser.loginuserid = item.uid;
+      this.pageModel.LoginUser.loginusername = item.login_id;
+      this.pageModel.LoginUser.loginrole = item.role;
+      this.pageModel.LoginUser.logincompanyid = item.company;
+
+      var param = {
+        "loginInfo": {
+          "loginuserid": this.pageModel.LoginUser.loginuserid,
+          "loginusername": this.pageModel.LoginUser.loginusername,
+          "loginrole": this.pageModel.LoginUser.loginrole,
+          "logincompanyid": this.pageModel.LoginUser.logincompanyid
+        },
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.LoginUser.loginuserid,
+          "targetuserCompanyid": this.pageModel.LoginUser.logincompanyid
+        }
+      }
+
+      this.httpService.usePost('/getCompanyDevices', param).then(item => {
+        try {
+
+          if (item != null) {
+            this.pageModel.deviceList = item;
+          }
+
+        } catch (e) {
+          console.log('ユーザー数数を検索API エラー　発生しました。');
+        }
+      })
+    }
+  }
   /**
  * Add new contact
  *
  * @param addTableDataModalContent      Id of the add contact modal;
  */
-  addTableDataModal(addTableDataModalContent) {
+  addLargeModal(addTableDataModalContent) {
+    this.addModal = this.modal.open(addTableDataModalContent, {
+      windowClass: 'animated fadeInDown'
+      , size: 'lg'
+    });
+    this.contactFlag = true;
+  }
+
+  /**
+* Add new contact
+*
+* @param addTableDataModalContent      Id of the add contact modal;
+*/
+  addMaxModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown modal-xl'
       , size: 'lg'
     });
     this.contactFlag = true;
   }
+
+  /**
+* Add new contact
+*
+* @param addTableDataModalContent      Id of the add contact modal;
+*/
+  addTableDataModal(addTableDataModalContent) {
+    this.addModal = this.modal.open(addTableDataModalContent, {
+      windowClass: 'animated fadeInDown'
+    });
+    this.contactFlag = true;
+  }
+
   /**
      * Edit selected contact row.
      *
