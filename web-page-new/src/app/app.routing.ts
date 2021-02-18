@@ -41,7 +41,7 @@ const appRoutes: Routes = [
       }
     ]
   },
-  // Private layout
+  // Private layout  
   {
     path: '',
     component: PrivateLayoutComponent,
@@ -72,7 +72,7 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'contacts', loadChildren: () => import('../app/content/applications/contacts/contacts.module').then(m => m.ContactsModule),
+        path: 'errorlist', loadChildren: () => import('../app/content/errorlist/errorlist.module').then(m => m.ErrorlistModule),
         canActivate: [AuthGuard]
       },
       // {
