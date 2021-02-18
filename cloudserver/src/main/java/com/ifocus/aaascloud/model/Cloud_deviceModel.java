@@ -81,6 +81,9 @@ public class Cloud_deviceModel {
 	@Getter
 	@Setter
 	private List<Cloud_deviceDetailModel> deviceDetailList;	// デバイス詳細のリスト
+	@Getter
+	@Setter
+	private Cloud_deviceDetailModel deviceDetail;	// デバイス詳細
 
 	// 検索条件
 
