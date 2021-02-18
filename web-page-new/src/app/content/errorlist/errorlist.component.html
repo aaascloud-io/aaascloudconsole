@@ -1,0 +1,165 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-header row mb-1 ml-1"><h4>エラー管理</h4></div>
+    <div class=""> 
+      <div class="content-body">
+        <div class="content-overlay" id='content-overlay' (click)="contentOverlay($event)"></div>
+        <section class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-header">
+                  <h4 class="card-title">プロダクト一覧</h4>
+                  
+                </div>
+              </div>
+              <div class="card-content">
+                <div class="card-body">
+                  <!-- Task List table -->
+
+                  <!-- <div class="table-responsive">
+                    <table class="table table-hover table-xl mb-0 order-tbl_change">
+                      <thead>
+                        <tr>
+                          <th class="border-top-0">No</th>
+                          <th class="border-top-0">エラーコード</th>
+                          <th class="border-top-0">デバイスID</th>
+                          <th class="border-top-0">管理者</th>
+                          <th class="border-top-0">発生日時</th>
+                          <th class="border-top-0">対応ステータス</th>
+                          <th class="border-top-0">操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of pageModel.data;let i = index;">
+                          <td>{{i+1}}</td>
+                          <td>{{item.errcode}}</td>
+                          <td>{{item.device}}</td>
+                          <td>{{item.userid}}</td>
+                          <td>{{item.datatime | date:'yyyy/MM/dd hh:mm:ss'}}</td>
+                          <td>{{item.statusflag}}</td>
+                          <td>
+                            <a [routerLink]="" class="primary edit mr-1 mrless" (click)="editTableDataModal(editTableDataModalContent, item)"><i class="la la-pencil"></i></a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div> -->
+
+
+                  <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
+                    [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
+                    (select)='onSelectContact($event)' fxFlex="auto" [perfectScrollbar]="config">
+
+                    <ngx-datatable-column name="NO." [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        {{row.rowid}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="エラーコード" [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        {{row.errcode}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="デバイスID" [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        {{row.device}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="管理者" [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        {{row.userid}}
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="発生日時" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        {{row.datatime | date:'yyyy/MM/dd hh:mm:ss'}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="対応ステータス" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        {{row.statusflag}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="操作" [flexGrow]="1" [minWidth]="100">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        <a [routerLink]="" class="primary edit mr-1 mrless"
+                          (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
+                        </a>
+                        <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
+                        
+                      </ng-template>
+
+                    </ngx-datatable-column>
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    
+  </div>
+</div>
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+
+<ng-template #editTableDataModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">エラー詳細</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group col-12">
+        <label >エラーコード</label>
+        <input type="text" [(ngModel)]="selectedErrorItem.errcode" #editname="ngModel" name="errcode" id="errcode"
+          class="name form-control" placeholder="Name" disabled
+          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+        <!-- <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+          <div *ngIf="editname.errors.required">Name is required</div>
+        </div> -->
+      </div>
+
+
+      <div class="form-group col-12">
+        <label >デバイスID</label>
+        <input type="text" [(ngModel)]="selectedErrorItem.device" disabled #editemail="ngModel" name="email" id="email"
+          class="email form-control" 
+          [ngClass]="{ 'is-invalid':editForm.submitted && editemail.invalid }" required email>
+      </div>
+
+
+      <div class="form-group col-12">
+        <label >管理者</label>
+        <input type="text" [(ngModel)]="selectedErrorItem.userid" disabled #editphone="ngModel" name="phone" id="phone"
+          class="phone form-control" placeholder="Phone Number" (keyup)="onFormat()" maxlength="14">
+      </div>
+
+
+      <div class="form-group col-12">
+        <label >発生日時</label>
+        <input type="text" [(ngModel)]="selectedErrorItem.datatime" disabled #editTime="ngModel" name="time" id="time"
+          class="phone form-control" placeholder="Phone Number" (keyup)="onFormat()" maxlength="14">
+      </div>
+
+      <div class="form-group col-12">
+        <label >対応ステータス</label>
+        <input type="text" [(ngModel)]="selectedErrorItem.statusflag" disabled #editStatus="ngModel" name="status" id="status"
+          class="phone form-control" placeholder="Phone Number" (keyup)="onFormat()" maxlength="14">
+      </div>
+  
+
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+

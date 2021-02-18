@@ -71,9 +71,9 @@ export const MenuSettingsConfig: MenuConfig = {
               page: '/todo-app'
             },
             {
-              title: 'Contacts',
+              title: 'errorlist',
               icon: 'la-users',
-              page: '/contacts'
+              page: '/errorlist'
             },
             {
               title: 'Email Application',
@@ -927,7 +927,7 @@ export const MenuSettingsConfig: MenuConfig = {
       {
         title: 'エラー管理',
         icon: 'la-users',
-        page: '/contacts'
+        page: '/errorlist'
         // page: '/errorlist'
       },
       // {
