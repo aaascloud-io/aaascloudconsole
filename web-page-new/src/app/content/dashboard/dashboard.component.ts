@@ -407,44 +407,44 @@ export class DashboardComponent implements OnInit {
       this.ChartistData = Response;
       this.getlineArea();
       });
-      this.tableApiservice.getEcommerceTableData().subscribe(Response => {
-        this.datatableData = Response;
-        this.getTabledata();
-        });
-        this.httpService.usePost('/getDashboardInfo', { "username":"ifocus" }).then(item => {
-          try {
-     
-              if(item!= null){
-               // let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
-              //   jsonItem.productList.forEach((elem) => {
-              //     let product_info = JSON.parse(elem);
-              //     this.pageModel.products.push(product_info)
-              //  });
-              //   this.pageModel.productLength = jsonItem.productCount;
+    this.tableApiservice.getEcommerceTableData().subscribe(Response => {
+      this.datatableData = Response;
+      this.getTabledata();
+      });
+      this.httpService.usePost('/getDashboardInfo', { "username":"ifocus" }).then(item => {
+        try {
     
-              this.pageModel.products = item.productList;
-              this.pageModel.productLength = item.productCount;
-              this.pageModel.userList = item.userList;
-              this.pageModel.userLength = item.userCount;
-              this.pageModel.products = item.productList;
-              this.pageModel.errlogList = item.errlogList;
-              this.pageModel.errlogLength = item.errlogCount;
+            if(item!= null){
+              // let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
+            //   jsonItem.productList.forEach((elem) => {
+            //     let product_info = JSON.parse(elem);
+            //     this.pageModel.products.push(product_info)
+            //  });
+            //   this.pageModel.productLength = jsonItem.productCount;
+  
+            this.pageModel.products = item.productList;
+            this.pageModel.productLength = item.productCount;
+            this.pageModel.userList = item.userList;
+            this.pageModel.userLength = item.userCount;
+            this.pageModel.products = item.productList;
+            this.pageModel.errlogList = item.errlogList;
+            this.pageModel.errlogLength = item.errlogCount;
 
-              this.pageModel.projectLength = item.projectCount;
-              this.pageModel.deciveLength = item.deviceCount;
-              this.pageModel.deviceOnlLength = 0;
+            this.pageModel.projectLength = item.projectCount;
+            this.pageModel.deciveLength = item.deviceCount;
+            this.pageModel.deviceOnlLength = 0;
 
 
-              // this.pageModel.products=[{productid:1,productcode:"code004",productname:"テスト用プロダクト",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0},{productid:2,productcode:"code004",productname:"テスト用プロダクト2",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0}];
-              //  this.pageModel.productLength = 0;  
-              // ユーザー数を検索
-                // this.getUserListLengthApi(this.UserInfo.role, this.UserInfo.uid)
-              }
+            // this.pageModel.products=[{productid:1,productcode:"code004",productname:"テスト用プロダクト",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0},{productid:2,productcode:"code004",productname:"テスト用プロダクト2",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0}];
+            //  this.pageModel.productLength = 0;  
+            // ユーザー数を検索
+              // this.getUserListLengthApi(this.UserInfo.role, this.UserInfo.uid)
+            }
 
-          } catch (e) {
-            console.log('ユーザー数数を検索API エラー　発生しました。');
-          }
-        })
+        } catch (e) {
+          console.log('ユーザー数数を検索API エラー　発生しました。');
+        }
+      })
   }
   reloadNewOrders() {
     this.blockUINewOrders.start('Loading..');

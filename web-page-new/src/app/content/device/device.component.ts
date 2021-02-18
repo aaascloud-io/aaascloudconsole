@@ -1,10 +1,15 @@
-import { Component, OnInit ,ViewChild, EventEmitter, Output, Renderer2} from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, Output, Renderer2 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import * as XLSX from 'xlsx';
 import { AlertService } from '../../_services/alert.service';
+import { HttpService } from 'src/app/_services/HttpService';
+import { DataFatoryService } from 'src/app/_services/DataFatoryService';
+import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
+import { number } from 'ngx-custom-validators/src/app/number/validator';
+
 
 class Contact {
   constructor(
@@ -51,15 +56,24 @@ export class DeviceComponent implements OnInit {
   temp2 = this.rows;
   singlebasicSelected: any;
 
-  public config: PerfectScrollbarConfigInterface = { };
+  public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
   public multipleSelectArray = formInputData.multipleSelectArray;
   public singleSelectArray = selectData.singleSelectArray;
 
   protected pageModel = {
+    //Login情報
+    LoginUser: {
+      loginuserid: '',
+      logincompanyid: '',
+      loginrole: null,
+      loginusername: '',
+      loginupperuserid: '',
+    },
     // 一括登録のデバイス定義リスト
     addList: [],
     dataAll: [],
+    deviceList: [],
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -78,46 +92,95 @@ export class DeviceComponent implements OnInit {
     private modal: NgbModal,
     private _renderer: Renderer2,
     private alertService: AlertService,
-    ) { }
+    private httpService: HttpService,
+    private dataFatoryService: DataFatoryService,
+  ) { }
 
   ngOnInit(): void {
 
     this.rows.push(new Contact(1, 'Scott Marsh', 'scott@gmail.com', '(954)-654-5641',
-    '../../assets/images/portrait/small/avatar-s-5.png', false, 'online'));
-  this.rows.push(new Contact(2, 'Russell Bry', 'russell@gmail.com', '(235)-654-5642',
-    '../../assets/images/portrait/small/avatar-s-3.png', false, 'busy'));
-  this.rows.push(new Contact(3, 'james john', 'john@gmail.com', '(125)-654-5643',
-    '../../assets/images/portrait/small/avatar-s-1.png', true, 'away'));
-  this.rows.push(new Contact(4, 'Cynth Tuck', 'tuck@gmail.com', '(974)-654-5644',
-    '../../assets/images/portrait/small/avatar-s-4.png', false, 'busy'));
-  this.rows.push(new Contact(5, 'Margi Govan', 'govan@gmail.com', '(954)-654-5645',
-    '../../assets/images/portrait/small/avatar-s-6.png', true, 'online'));
-  this.rows.push(new Contact(6, 'Eugene Wood', 'wood@gmail.com', '(987)-654-5646',
-    '../../assets/images/portrait/small/avatar-s-9.png', false, 'busy'));
-  this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
-    '../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
+      '../../assets/images/portrait/small/avatar-s-5.png', false, 'online'));
+    this.rows.push(new Contact(2, 'Russell Bry', 'russell@gmail.com', '(235)-654-5642',
+      '../../assets/images/portrait/small/avatar-s-3.png', false, 'busy'));
+    this.rows.push(new Contact(3, 'james john', 'john@gmail.com', '(125)-654-5643',
+      '../../assets/images/portrait/small/avatar-s-1.png', true, 'away'));
+    this.rows.push(new Contact(4, 'Cynth Tuck', 'tuck@gmail.com', '(974)-654-5644',
+      '../../assets/images/portrait/small/avatar-s-4.png', false, 'busy'));
+    this.rows.push(new Contact(5, 'Margi Govan', 'govan@gmail.com', '(954)-654-5645',
+      '../../assets/images/portrait/small/avatar-s-6.png', true, 'online'));
+    this.rows.push(new Contact(6, 'Eugene Wood', 'wood@gmail.com', '(987)-654-5646',
+      '../../assets/images/portrait/small/avatar-s-9.png', false, 'busy'));
+    this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
+      '../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
+
+    let item: UserInfo = this.dataFatoryService.getLoginUser();
+
+
+    //to do ユーザー名で　ロケーションデータを取る
+    this.pageModel.LoginUser.loginuserid = item.uid;
+    this.pageModel.LoginUser.loginusername = item.login_id;
+    this.pageModel.LoginUser.loginrole = item.role;
+    this.pageModel.LoginUser.logincompanyid = item.company;
+
+    let param = {
+      LoginInfo:{
+      loginuserid: this.pageModel.LoginUser.loginuserid,
+      loginusername: this.pageModel.LoginUser.loginusername,
+      loginrole: this.pageModel.LoginUser.loginrole,
+      logincompanyid: this.pageModel.LoginUser.logincompanyid
+    },
+    TargetUserInfo:{
+      targetuserid:this.pageModel.LoginUser.loginuserid,
+      targetuserCompanyid:this.pageModel.LoginUser.logincompanyid
+    }
+  }
+
+    this.httpService.usePost('/getCompanyDevices', param).then(item => {
+      try {
+
+        if (item != null) {
+
+          this.pageModel.deviceList = item.deviceList;
+          // this.pageModel.products = item.productList;
+          // this.pageModel.productLength = item.productCount;
+          // this.pageModel.userList = item.userList;
+          // this.pageModel.userLength = item.userCount;
+          // this.pageModel.products = item.productList;
+          // this.pageModel.errlogList = item.errlogList;
+          // this.pageModel.errlogLength = item.errlogCount;
+
+          // this.pageModel.projectLength = item.projectCount;
+          // this.pageModel.deciveLength = item.deviceCount;
+          // this.pageModel.deviceOnlLength = 0;
+
+        }
+
+      } catch (e) {
+        console.log('ユーザー数数を検索API エラー　発生しました。');
+      }
+    })
 
   }
 
-    /**
-   * Add new contact
-   *
-   * @param addTableDataModalContent      Id of the add contact modal;
-   */
+  /**
+ * Add new contact
+ *
+ * @param addTableDataModalContent      Id of the add contact modal;
+ */
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown modal-xl'
-      ,size:'lg'
+      , size: 'lg'
     });
     this.contactFlag = true;
   }
-/**
-   * Edit selected contact row.
-   *
-   * @param editTableDataModalContent     Id of the edit contact model.
-   * @param row     The row which needs to be edited.
-   */
+  /**
+     * Edit selected contact row.
+     *
+     * @param editTableDataModalContent     Id of the edit contact model.
+     * @param row     The row which needs to be edited.
+     */
   editTableDataModal(editTableDataModalContent, row) {
     this.selectedContact = Object.assign({}, row);
     this.editModal = this.modal.open(editTableDataModalContent, {
@@ -363,17 +426,17 @@ export class DeviceComponent implements OnInit {
     }
   }
 
-    /**
-   * 一括登録用サンプルのダウンロード(画面より)
-   * 
-   */
+  /**
+ * 一括登録用サンプルのダウンロード(画面より)
+ * 
+ */
   protected downloadSampleFiles() {
     let link = document.createElement("a");
     link.download = "deviceInsert.xlsx";
     link.href = "assets/excel/deviceInsert.xlsx";
     link.click();
   }
-  
+
   /**
    * 一括登録用ファイルのロード(画面より)
    * 
@@ -398,7 +461,7 @@ export class DeviceComponent implements OnInit {
       }
       reader.onerror = (event) => {
         // obj.alert.danger("ファイル読み込み失敗しました");
-      this.alertService.error("ファイル読み込み失敗しました");
+        this.alertService.error("ファイル読み込み失敗しました");
 
       }
       ///読み込み実施

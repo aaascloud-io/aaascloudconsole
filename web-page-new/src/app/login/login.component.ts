@@ -93,8 +93,8 @@ export class LoginComponent implements OnInit {
         this.f.email.value,
         this.f.password.value
       );
-      ///権限チェック
-      await this.userService.authorized().toPromise();
+      // ///権限チェック
+      // await this.userService.authorized().toPromise();
       ///自身の情報取得
       var res = await this.userService.getMyInfo().toPromise();
       ///保存

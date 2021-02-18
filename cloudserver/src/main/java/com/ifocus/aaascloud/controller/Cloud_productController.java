@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
+import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.model.Cloud_productModel;
@@ -269,13 +270,15 @@ public class Cloud_productController {
 
 		/* システム日時 */
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+
+		entity.setProductTypeId(model.getProducttypeid());
 		entity.setProductcode(model.getProductcode());
 		entity.setProductname(model.getProductname());
 		entity.setModel(model.getModel());
 		entity.setVersion(model.getVersion());
 		entity.setSimflag(model.getSimflag());
 		entity.setSummary(model.getSummary());
-		entity.setAlive(0);						// セロ固定
+		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
