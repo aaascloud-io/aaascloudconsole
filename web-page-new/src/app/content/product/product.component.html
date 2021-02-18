@@ -44,17 +44,24 @@
                         </div>
                       </ng-template>
                     </ngx-datatable-column> -->
-                    <ngx-datatable-column name="Name" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="タイプ" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.name}}
+                        <a *ngIf="row.producttypeid===1">TRACKER</a>
+                        <a *ngIf="row.producttypeid===2">FACE</a>
+                        <a *ngIf="row.producttypeid===3">WATCH</a>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="Email" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="プロダクトコード" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="">{{row.email}}</a>
+                        <a [routerLink]="">{{row.productcode}}</a>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column>
+                    <!-- <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column> -->
+                    <ngx-datatable-column name="型番" [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        <a>{{row.model}}</a>
+                      </ng-template>
+                    </ngx-datatable-column>
                     <ngx-datatable-column name="プロダクトID" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a>{{row.productid}}</a>
@@ -80,9 +87,6 @@
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
-                        </a>
-                        <a [routerLink]="" class="primary edit mr-1 mrless"
-                          (click)="editTableDataModal(detailedTableDataModalContent, row)"><i class="la la-pencil"></i>
                         </a>
                         <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
                       </ng-template>
@@ -110,6 +114,7 @@
     </div>
     <div class="modal-body">
       <div class="form-group col-12">
+        <h6>プロダクトタイプ</h6>
         <select class="form-control" id="typeId" name="typeId" [(ngModel)]="selectedContact.producttypeid"
           #editname="ngModel" name="producttypeid" id="producttypeid"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
@@ -121,10 +126,11 @@
           class="name form-control" placeholder="Name"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required> -->
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">Name is required</div>
+          <div *ngIf="editname.errors.required">プロダクトタイプを選択してください。</div>
         </div>
       </div>
       <div class="form-group col-12">
+        <h6>プロダクト名</h6>
         <input type="text" [(ngModel)]="selectedContact.productname" #editname="ngModel" name="name" id="name"
           class="name form-control" placeholder="プロダクト名"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
@@ -133,18 +139,22 @@
         </div>
       </div>
       <div class="form-group col-12">
+        <h6>プロダクトコード</h6>
         <input type="text" [(ngModel)]="selectedContact.productcode" #editmodel="ngModel" name="productcode"
           id="productcode" class="name form-control" placeholder="プロダクトコード">
       </div>
       <div class="form-group col-12">
+        <h6>型番</h6>
         <input type="text" [(ngModel)]="selectedContact.model" #editmodel="ngModel" name="model" id="model"
           class="name form-control" placeholder="型番">
       </div>
       <div class="form-group col-12">
+        <h6>バージョン</h6>
         <input type="text" [(ngModel)]="selectedContact.version" #editversion="ngModel" name="version" id="version"
           class="name form-control" placeholder="バージョン">
       </div>
       <div class="form-group col-12">
+        <h6>SIMカード有無</h6>
         <select class="form-control" id="sim" name="sim" [(ngModel)]="selectedContact.simflag">
           <option [value]=0>有</option>
           <option [value]=1>無</option>
@@ -153,6 +163,7 @@
           class="name form-control" placeholder="SIMカード"> -->
       </div>
       <div class="form-group col-12">
+        <h6>説明</h6>
         <textarea id="summary" rows="5" class="form-control square" name="message" [(ngModel)]="selectedContact.summary"
           placeholder="message"></textarea>
       </div>
@@ -167,39 +178,6 @@
     </div>
   </form>
 </ng-template>
-<ng-template #detailedTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Edit Contact</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group col-12">
-        <input type="text" [(ngModel)]="selectedContact.name" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="Name"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">Name is required</div>
-        </div>
-      </div>
-      <div class="form-group col-12">
-        <input type="text" [(ngModel)]="selectedContact.email" #editemail="ngModel" name="email" id="email"
-          class="email form-control" placeholder="Email"
-          [ngClass]="{ 'is-invalid':editForm.submitted && editemail.invalid }" required email>
-        <div *ngIf="editForm.submitted && editemail.invalid" class="invalid-feedback">
-          <div *ngIf="editemail.errors.required">Email is required</div>
-          <div *ngIf="editemail.errors.email">Email must be a valid email address</div>
-        </div>
-      </div>
-      <div class="form-group col-12">
-        <input type="text" [(ngModel)]="selectedContact.phone" #editphone="ngModel" name="phone" id="phone"
-          class="phone form-control" placeholder="Phone Number" (keyup)="onFormat()" maxlength="14">
-      </div>
-    </div>
-  </form>
-</ng-template>
 <ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="addNewContact()" #editForm="ngForm">
     <div class="modal-header">
@@ -210,6 +188,7 @@
     </div>
     <div class="modal-body">
       <div class="form-group col-12">
+        <h6>プロダクトタイプ</h6>
         <select class="form-control" id="typeId" name="typeId" [(ngModel)]="pageModel.addProduct.productTypeId"
           #editname="ngModel" name="productTypeId" id="productTypeId"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
@@ -225,6 +204,7 @@
         </div>
       </div>
       <div class="form-group col-12">
+        <h6>プロダクト名</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.productName" #editname="ngModel" name="name" id="name"
           class="name form-control" placeholder="プロダクト名"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
@@ -233,18 +213,22 @@
         </div>
       </div>
       <div class="form-group col-12">
+        <h6>プロダクトコード</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.productcode" #editmodel="ngModel" name="productcode"
           id="productcode" class="name form-control" placeholder="プロダクトコード">
       </div>
       <div class="form-group col-12">
+        <h6>型番</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.model" #editmodel="ngModel" name="model" id="model"
           class="name form-control" placeholder="型番">
       </div>
       <div class="form-group col-12">
+        <h6>バージョン</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.version" #editversion="ngModel" name="version" id="version"
           class="name form-control" placeholder="バージョン">
       </div>
       <div class="form-group col-12">
+        <h6>SIMカード有無</h6>
         <select class="form-control" id="sim" name="sim" [(ngModel)]="pageModel.addProduct.sim">
           <option [value]=0>有</option>
           <option [value]=1>無</option>
@@ -253,8 +237,9 @@
           class="name form-control" placeholder="SIMカード"> -->
       </div>
       <div class="form-group col-12">
-        <textarea id="summary" rows="5" class="form-control square" name="message"
-          [(ngModel)]="pageModel.addProduct.summary" placeholder="message"></textarea>
+        <h6>説明</h6>
+        <textarea id="summary" rows="5" class="form-control square" name="summary"
+          [(ngModel)]="pageModel.addProduct.summary" placeholder="summary"></textarea>
       </div>
 
     </div>

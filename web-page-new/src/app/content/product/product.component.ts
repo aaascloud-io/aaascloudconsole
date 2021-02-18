@@ -7,6 +7,8 @@ import * as XLSX from 'xlsx';
 import { AlertService } from '../../_services/alert.service';
 import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from '../../_common/_interface/userInfo'
+import { DataFatoryService } from 'src/app/_services/DataFatoryService';
+import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 
 class Contact {
   constructor(
@@ -14,7 +16,7 @@ class Contact {
     public name: string,
     public email: string,
     public phone: string,
-    public productTypeId: any,
+    public producttypeid: any,
     public productid: any,
     public productcode: any,
     public productname: string,
@@ -61,6 +63,7 @@ export class ProductComponent implements OnInit {
   temp2 = this.rows;
   singlebasicSelected: any;
 
+
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
   public multipleSelectArray = formInputData.multipleSelectArray;
@@ -90,7 +93,13 @@ export class ProductComponent implements OnInit {
       sim: 0,
       summary: ''
     },
-
+    loginUser: {
+      loginuserid: '',
+      loginusername: '',
+      loginrole: null,
+      logincompanyid: '',
+    },
+    userInfoParame: {}
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -110,6 +119,7 @@ export class ProductComponent implements OnInit {
     private _renderer: Renderer2,
     private alertService: AlertService,
     private httpService: HttpService,
+    private dataFatoryService: DataFatoryService,
   ) {
     this.getProductAll();
   }
@@ -131,7 +141,26 @@ export class ProductComponent implements OnInit {
     // this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
     //   '../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
+    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
 
+    //to do ユーザー名で　ロケーションデータを取る
+    this.pageModel.loginUser.loginuserid = item.uid;
+    this.pageModel.loginUser.loginusername = item.login_id;
+    this.pageModel.loginUser.loginrole = item.role;
+    this.pageModel.loginUser.logincompanyid = item.company;
+
+    this.pageModel.userInfoParame = {
+      "loginInfo": {
+        "loginuserid": this.pageModel.loginUser.loginuserid,
+        "loginusername": this.pageModel.loginUser.loginusername,
+        "loginrole": this.pageModel.loginUser.loginrole,
+        "logincompanyid": this.pageModel.loginUser.logincompanyid
+      },
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginuserid,
+        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
+      }
+    }
   }
 
   /**
@@ -215,8 +244,8 @@ export class ProductComponent implements OnInit {
     // this.rows = temp;
     var query = {
       "loginInfo": {
-        "loginuserid": 100,
-        "logincompanyid": 1
+        "loginuserid": this.pageModel.loginUser.loginuserid,
+        "logincompanyid": this.pageModel.loginUser.logincompanyid
       },
       "productid": row.productid,
     }
@@ -254,20 +283,20 @@ export class ProductComponent implements OnInit {
 
     var query = {
       "loginInfo": {
-        "loginuserid": 1,
-        "logincompanyid": 1
+        "loginuserid": this.pageModel.loginUser.loginuserid,
+        "logincompanyid": this.pageModel.loginUser.logincompanyid
       },
       "targetUserInfo": {
         "targetuserid": 3
       },
 
       "productid": this.selectedContact.productid,
-      "producttypeid": this.selectedContact.productTypeId,
+      "producttypeid": this.selectedContact.producttypeid,
       "productcode": this.selectedContact.productcode,
       "productname": this.selectedContact.productname,
       "model": this.selectedContact.model,
       "version": this.selectedContact.version,
-      "simflag": this.selectedContact.sim,
+      "simflag": this.selectedContact.simflag,
       "summary": this.selectedContact.summary
     }
 
@@ -345,11 +374,8 @@ export class ProductComponent implements OnInit {
 
     var query = {
       "loginInfo": {
-        "loginuserid": 1,
-        "logincompanyid": 1
-      },
-      "targetUserInfo": {
-        "targetuserid": 3
+        "loginuserid": this.pageModel.loginUser.loginuserid,
+        "logincompanyid": this.pageModel.loginUser.logincompanyid
       },
 
       "producttypeid": this.pageModel.addProduct.productTypeId,
