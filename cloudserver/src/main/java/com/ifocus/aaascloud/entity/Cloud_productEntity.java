@@ -21,7 +21,7 @@ public class Cloud_productEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer productid;
-	private Integer productTypeId;
+	private Integer producttypeid;
 	private String productcode;
 	private String productname;
 	private String model;

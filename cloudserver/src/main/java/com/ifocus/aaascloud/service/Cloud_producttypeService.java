@@ -70,10 +70,10 @@ public class Cloud_producttypeService {
 	 */
 	public Cloud_producttypeModel getModelByEntity(Cloud_producttypeEntity entity) throws Exception {
 		Cloud_producttypeModel model = new Cloud_producttypeModel();
-		model.setProductTypeId(entity.getProductTypeId());
-		model.setProductTypeName(entity.getProductTypeName());
+		model.setProducttypeid(entity.getProducttypeid());
+		model.setProducttypename(entity.getProducttypename());
 		model.setSummary(entity.getSummary());
-		model.setReleaseDate(entity.getReleaseDate());
+		model.setReleasedate(entity.getReleasedate());
 
 		return model;
 

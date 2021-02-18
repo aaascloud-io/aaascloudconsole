@@ -19,10 +19,10 @@ import lombok.Setter;
 public class Cloud_producttypeEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer productTypeId;
-	private String productTypeName;
+	private Integer producttypeid;
+	private String producttypename;
 	private String summary;
-	private Date releaseDate;
+	private Date releasedate;
 	private Integer alive;
 	@Column(updatable = false)
 	private Integer i_uid;

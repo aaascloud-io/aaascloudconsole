@@ -10,10 +10,10 @@ import lombok.Setter;
 @Setter
 public class Cloud_producttypeModel {
 
-	private Integer productTypeId;
-	private String productTypeName;
+	private Integer producttypeid;
+	private String producttypename;
 	private String summary;
-	private Date releaseDate;
+	private Date releasedate;
 	private Integer alive;
 	private Integer i_uid;
 	private Timestamp i_time;

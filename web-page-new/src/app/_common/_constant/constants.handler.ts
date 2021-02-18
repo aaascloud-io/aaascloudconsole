@@ -2,8 +2,8 @@
 export class ConstantsHandler {
 
     // static server = "https://demo.trackun.jp/iotPF";
-    static server = "https://demo.trackun.jp/v1.0";
-    // static server = "http://localhost:8080";
+    // static server = "https://demo.trackun.jp/v1.0";
+    static server = "http://localhost:8080";
     static bsServer = "https://demo.trackun.jp/bs";
     // static bsServer = "http://localhost:8081";
     // static keycloakServer = "https://auth.trackun.jp/auth/realms/trackun/"
