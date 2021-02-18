@@ -37,6 +37,10 @@ class ErrorList{
   styleUrls: ['./contacts.component.css']
 })
 export class ContactsComponent implements OnInit {
+  selectedErrorItem:any;
+
+
+
   columns: any = [];
   contactName: any;
   contactEmail: any;
@@ -82,6 +86,15 @@ export class ContactsComponent implements OnInit {
     private httpService: HttpService
     ) { }
 
+    pageModel = {
+      data:[],
+      selectedData : {},
+    };
+    public tempppppp:any;
+    
+
+    
+
     /**
      * OnInit
      */
@@ -108,12 +121,29 @@ export class ContactsComponent implements OnInit {
     var param = {
       username:"ifocus"
     };
+
+
     var res = await this.httpService.post("/getErrlogList",param);
     console.log("这是res的值");
     console.log(res);
+
+    let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+    console.log("这是jsonItem的值");
+    console.log(jsonItem);
+    jsonItem.forEach(element => {
+      this.pageModel.data.push(element);
+      this.rows.push(element);
+    });
+    console.log("这是rows的data值");
+    console.log(this.rows);
+
+    // jsonItem.productList.forEach((elem) => {
+    //   let product_info = JSON.parse(elem);
+    //   this.pageModel.products.push(product_info)
+    // });
+    // this.pageModel.productLength = jsonItem.productCount;
+
   }
-
-
 
 
 
@@ -139,8 +169,26 @@ export class ContactsComponent implements OnInit {
    * @param editTableDataModalContent     Id of the edit contact model.
    * @param row     The row which needs to be edited.
    */
+  // editTableDataModal(editTableDataModalContent, row) {
+  //   console.log("模态框导入row");
+  //   console.log(row);
+  //   this.pageModel.selectedData = Object.assign({},row)
+  //   console.log("模态框导入selectedData");
+  //   console.log(this.pageModel.selectedData);
+
+    
+  //   this.editModal = this.modal.open(editTableDataModalContent, {
+  //     windowClass: 'animated fadeInDown'
+  //   });
+  //   this.contactFlag = false;
+  // }
+
   editTableDataModal(editTableDataModalContent, row) {
     this.selectedContact = Object.assign({}, row);
+
+    // 把选中的 row 对象内的东西全部给全局变量 selectedErrorItem
+    this.selectedErrorItem = Object.assign({},row);
+    // 打开模态框
     this.editModal = this.modal.open(editTableDataModalContent, {
       windowClass: 'animated fadeInDown'
     });

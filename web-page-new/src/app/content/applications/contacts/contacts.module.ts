@@ -8,6 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BreadcrumbModule } from 'src/app/_layout/breadcrumb/breadcrumb.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -21,7 +22,8 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
         path: '',
         component: ContactsComponent
       }
-    ])
+    ]),
+
   ],
   declarations: [ContactsComponent],
   exports: [RouterModule]

@@ -8,6 +8,8 @@ import { ChangelogComponent } from './changelog/changelog.component';
 import { FullLayoutComponent } from './_layout/full-layout/full-layout.component';
 import { PrivacyPolicyComponent } from './login/privacy-policy/privacy-policy.component';
 import { TermsConditionComponent } from './login/terms-condition/terms-condition.component';
+
+
 const appRoutes: Routes = [
   { path: 'privacypolicy', component: PrivacyPolicyComponent },
   { path: 'termCondition', component: TermsConditionComponent },
@@ -71,6 +73,9 @@ const appRoutes: Routes = [
         path: 'contacts', loadChildren: () => import('../app/content/applications/contacts/contacts.module').then(m => m.ContactsModule),
         canActivate: [AuthGuard]
       },
+      // {
+      //   path: 'errorlist', component: ErrorListComponent, canActivate: [AuthGuard] 
+      // },
       { path: 'chartjs', loadChildren: () => import('../app/content/charts-maps/chartjs/chartjs.module').then(m => m.ChartjsModule)
       , canActivate: [AuthGuard] },
       {
