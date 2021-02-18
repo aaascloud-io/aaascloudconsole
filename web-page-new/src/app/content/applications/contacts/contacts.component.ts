@@ -84,7 +84,9 @@ export class ContactsComponent implements OnInit {
     private _renderer: Renderer2,
     private _httpClient: HttpClient,
     private httpService: HttpService
-    ) { }
+    ) { 
+      // this.initData();
+    }
 
     pageModel = {
       data:[],
@@ -121,7 +123,7 @@ export class ContactsComponent implements OnInit {
     var param = {
       username:"ifocus"
     };
-
+    this.rows = [];
 
     var res = await this.httpService.post("/getErrlogList",param);
     console.log("这是res的值");
@@ -136,6 +138,7 @@ export class ContactsComponent implements OnInit {
     });
     console.log("这是rows的data值");
     console.log(this.rows);
+    this.rows = [...this.rows];
 
     // jsonItem.productList.forEach((elem) => {
     //   let product_info = JSON.parse(elem);

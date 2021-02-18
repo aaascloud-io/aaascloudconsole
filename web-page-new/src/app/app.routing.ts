@@ -41,7 +41,7 @@ const appRoutes: Routes = [
       }
     ]
   },
-  // Private layout
+  // Private layout  
   {
     path: '',
     component: PrivateLayoutComponent,
