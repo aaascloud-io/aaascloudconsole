@@ -73,7 +73,9 @@ import { HttpService } from './_services/HttpService';
 import { DataFatoryService } from './_services/DataFatoryService';
 import { AuthSignService } from './_services/AuthSignService';
 import { AuthSignListener } from './_services/AuthSignListener';
-import { BaseService } from './_services/BaseService';;
+import { BaseService } from './_services/BaseService';
+
+
 
 
 @NgModule({
@@ -125,7 +127,7 @@ import { BaseService } from './_services/BaseService';;
         BlockTemplateComponent,
         FullLayoutComponent,
         PrivacyPolicyComponent,
-        TermsConditionComponent
+        TermsConditionComponent,
         ],
     providers: [
         AuthGuard,

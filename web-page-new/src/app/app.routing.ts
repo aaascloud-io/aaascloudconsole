@@ -8,6 +8,8 @@ import { ChangelogComponent } from './changelog/changelog.component';
 import { FullLayoutComponent } from './_layout/full-layout/full-layout.component';
 import { PrivacyPolicyComponent } from './login/privacy-policy/privacy-policy.component';
 import { TermsConditionComponent } from './login/terms-condition/terms-condition.component';
+
+
 const appRoutes: Routes = [
   { path: 'privacypolicy', component: PrivacyPolicyComponent },
   { path: 'termCondition', component: TermsConditionComponent },
@@ -39,7 +41,7 @@ const appRoutes: Routes = [
       }
     ]
   },
-  // Private layout
+  // Private layout  
   {
     path: '',
     component: PrivateLayoutComponent,
@@ -50,6 +52,10 @@ const appRoutes: Routes = [
       { path: 'dashboard', loadChildren: () => import('../app/content/dashboard/dashboard.module').then(m => m.DashboardModule)
       , canActivate: [AuthGuard] },
       { path: 'device', loadChildren: () => import('../app/content/device/device.module').then(m => m.DeviceModule)
+      , canActivate: [AuthGuard] },
+      { path: 'product', loadChildren: () => import('../app/content/product/product.module').then(m => m.ProductModule)
+      , canActivate: [AuthGuard] },
+      { path: 'user', loadChildren: () => import('../app/content/user/user.module').then(m => m.UserModule)
       , canActivate: [AuthGuard] },
       {
         path: 'components', loadChildren: () => import('../app/content/ngbbootstrap/components.module').then(m => m.ComponentsModule),
@@ -66,9 +72,12 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'contacts', loadChildren: () => import('../app/content/applications/contacts/contacts.module').then(m => m.ContactsModule),
+        path: 'errorlist', loadChildren: () => import('../app/content/errorlist/errorlist.module').then(m => m.ErrorlistModule),
         canActivate: [AuthGuard]
       },
+      // {
+      //   path: 'errorlist', component: ErrorListComponent, canActivate: [AuthGuard] 
+      // },
       { path: 'chartjs', loadChildren: () => import('../app/content/charts-maps/chartjs/chartjs.module').then(m => m.ChartjsModule)
       , canActivate: [AuthGuard] },
       {
