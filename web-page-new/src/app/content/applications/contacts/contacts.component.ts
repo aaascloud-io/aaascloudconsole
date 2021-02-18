@@ -4,6 +4,11 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 
+import { HttpService } from 'src/app/_services/HttpService';
+import { HttpClient } from '@angular/common/http';
+
+
+
 class Contact {
   constructor(
     public id: number,
@@ -14,6 +19,16 @@ class Contact {
     public isFavorite: boolean,
     public isActive: string
   ) { }
+}
+
+class ErrorList{
+  constructor(
+    public errorCode: number,
+    public deviceId: number,
+    public adminUser: string,
+    public happenTime: object,
+    public status:any,
+  ){}
 }
 
 @Component({
@@ -62,28 +77,49 @@ export class ContactsComponent implements OnInit {
    */
   constructor(
     private modal: NgbModal,
-    private _renderer: Renderer2
+    private _renderer: Renderer2,
+    private _httpClient: HttpClient,
+    private httpService: HttpService
     ) { }
 
     /**
      * OnInit
      */
   ngOnInit() {
-    this.rows.push(new Contact(1, 'Scott Marsh', 'scott@gmail.com', '(954)-654-5641',
-      '../../../assets/images/portrait/small/avatar-s-5.png', false, 'online'));
-    this.rows.push(new Contact(2, 'Russell Bry', 'russell@gmail.com', '(235)-654-5642',
-      '../../../assets/images/portrait/small/avatar-s-3.png', false, 'busy'));
-    this.rows.push(new Contact(3, 'james john', 'john@gmail.com', '(125)-654-5643',
-      '../../../assets/images/portrait/small/avatar-s-1.png', true, 'away'));
-    this.rows.push(new Contact(4, 'Cynth Tuck', 'tuck@gmail.com', '(974)-654-5644',
-      '../../../assets/images/portrait/small/avatar-s-4.png', false, 'busy'));
-    this.rows.push(new Contact(5, 'Margi Govan', 'govan@gmail.com', '(954)-654-5645',
-      '../../../assets/images/portrait/small/avatar-s-6.png', true, 'online'));
-    this.rows.push(new Contact(6, 'Eugene Wood', 'wood@gmail.com', '(987)-654-5646',
-      '../../../assets/images/portrait/small/avatar-s-9.png', false, 'busy'));
-    this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
-      '../../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
+    // this.rows.push(new Contact(1, 'Scott Marsh', 'scott@gmail.com', '(954)-654-5641',
+    //   '../../../assets/images/portrait/small/avatar-s-5.png', false, 'online'));
+    // this.rows.push(new Contact(2, 'Russell Bry', 'russell@gmail.com', '(235)-654-5642',
+    //   '../../../assets/images/portrait/small/avatar-s-3.png', false, 'busy'));
+    // this.rows.push(new Contact(3, 'james john', 'john@gmail.com', '(125)-654-5643',
+    //   '../../../assets/images/portrait/small/avatar-s-1.png', true, 'away'));
+    // this.rows.push(new Contact(4, 'Cynth Tuck', 'tuck@gmail.com', '(974)-654-5644',
+    //   '../../../assets/images/portrait/small/avatar-s-4.png', false, 'busy'));
+    // this.rows.push(new Contact(5, 'Margi Govan', 'govan@gmail.com', '(954)-654-5645',
+    //   '../../../assets/images/portrait/small/avatar-s-6.png', true, 'online'));
+    // this.rows.push(new Contact(6, 'Eugene Wood', 'wood@gmail.com', '(987)-654-5646',
+    //   '../../../assets/images/portrait/small/avatar-s-9.png', false, 'busy'));
+    // this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
+    //   '../../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
+    this.initData();
+    
   }
+
+  async initData(){
+    var param = {
+      username:"ifocus"
+    };
+    var res = await this.httpService.post("/getErrlogList",param);
+    console.log("这是res的值");
+    console.log(res);
+  }
+
+
+
+
+
+
+
+
 
   /**
    * Add new contact
