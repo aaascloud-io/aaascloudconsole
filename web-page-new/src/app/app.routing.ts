@@ -55,6 +55,8 @@ const appRoutes: Routes = [
       , canActivate: [AuthGuard] },
       { path: 'product', loadChildren: () => import('../app/content/product/product.module').then(m => m.ProductModule)
       , canActivate: [AuthGuard] },
+      { path: 'user', loadChildren: () => import('../app/content/user/user.module').then(m => m.UserModule)
+      , canActivate: [AuthGuard] },
       {
         path: 'components', loadChildren: () => import('../app/content/ngbbootstrap/components.module').then(m => m.ComponentsModule),
         canActivate: [AuthGuard]

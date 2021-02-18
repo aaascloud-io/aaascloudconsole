@@ -930,6 +930,12 @@ export const MenuSettingsConfig: MenuConfig = {
         page: '/contacts'
         // page: '/errorlist'
       },
+      {
+        title: 'ユーザー管理',
+        icon: 'la-users',
+        page: '/user'
+        // page: '/errorlist'
+      },
       // {
       //   title: 'Email Application',
       //   icon: 'la-envelope',
