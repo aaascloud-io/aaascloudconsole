@@ -922,7 +922,7 @@ export const MenuSettingsConfig: MenuConfig = {
       {
         title: 'プロダクト管理',
         icon: 'la-edit',
-        page: '/todo-app'
+        page: '/product'
       },
       {
         title: 'エラー管理',
