@@ -7,14 +7,17 @@ import { Router } from '@angular/router';
 import {ConstantsHandler, ServerType} from '../_common/_constant/constants.handler';
 import { CookieService } from 'ngx-cookie-service';
 import { UrlHandler } from 'src/app/_common/_constant/url.handler';
-
+import { Observable } from 'rxjs';
+import { Logger } from 'src/app/_common/_utils/logger';
+import { tap } from 'rxjs/operators';
+import { AlertService } from '../_services/alert.service';
 
 @Injectable()
 export class HttpService {
 
     static times = 0;
     validTimePaddingInMs: number;
-    constructor(private dataFatoryService:DataFatoryService, private _http : HttpClient,private _authSignService :AuthSignService , private _router : Router,private baseService:BaseService,private cookieService:CookieService){
+    constructor(private dataFatoryService:DataFatoryService, private _http : HttpClient,private _authSignService :AuthSignService , private _router : Router,private baseService:BaseService,private alertService:AlertService,private cookieService:CookieService){
     }
 
     // common
@@ -334,26 +337,50 @@ export class HttpService {
         return string;
     }
 
+    // processUserInfo(res: any): void{
+    //     if(res){
+    //         // save user info
+    //         var userInfo = res["userInfo"];
+    //         let temp = {
+    //             uid: userInfo.id,
+    //             login_id: userInfo.username,
+    //             uname: this.getString(userInfo.firstName) + " " +  this.getString(userInfo.lastName),
+    //             block: false,
+    //             permissions: res["permissions"],
+    //         }
+    //         if(userInfo["attributes"]){
+    //             if(userInfo["attributes"].block){
+    //                 temp.block = true;
+    //             }
+    //             if(userInfo["attributes"].uid instanceof Array){
+    //                 temp.uid = userInfo["attributes"].uid[0];
+    //             }
+    //         }
+    //         this.dataFatoryService.setLoginUser(temp);
+
+    //         var timeout = new Date(new Date().getTime() + ConstantsHandler.GLOBAL_TOKEN.interval);
+    //         //save in cookie
+    //         this.cookieService.set(ConstantsHandler.GLOBAL_TOKEN.id, JSON.stringify(temp), timeout);
+    //         // save valid period in cookie
+    //         this.cookieService.set(ConstantsHandler.TOKEN.cookieName, JSON.stringify(ConstantsHandler.TOKEN), timeout);
+    //         return res;
+    //     }else{
+    //         // TODO
+    //         // this.alertService.danger("ユーザー情報取得できませんでした")
+    //     }
+    // }
+
     processUserInfo(res: any): void{
         if(res){
             // save user info
-            var userInfo = res["userInfo"];
             let temp = {
-                uid: userInfo.id,
-                login_id: userInfo.username,
-                uname: this.getString(userInfo.firstName) + " " +  this.getString(userInfo.lastName),
-                block: false,
-                permissions: res["permissions"],
+                uid: res.loginuserid,
+                login_id: res.loginusername,
+                company: res.logincompanyid,
+                role: res.loginrole,
+                upperuserid: res.loginupperuserid
             }
-            if(userInfo["attributes"]){
-                if(userInfo["attributes"].block){
-                    temp.block = true;
-                }
-                if(userInfo["attributes"].uid instanceof Array){
-                    temp.uid = userInfo["attributes"].uid[0];
-                }
-            }
-            this.dataFatoryService.setLoginUser(temp);
+            this.dataFatoryService.setRouteIdIF(temp);
 
             var timeout = new Date(new Date().getTime() + ConstantsHandler.GLOBAL_TOKEN.interval);
             //save in cookie
@@ -362,8 +389,7 @@ export class HttpService {
             this.cookieService.set(ConstantsHandler.TOKEN.cookieName, JSON.stringify(ConstantsHandler.TOKEN), timeout);
             return res;
         }else{
-            // TODO
-            // this.alertService.danger("ユーザー情報取得できませんでした")
+            this.alertService.error("ユーザー情報取得できませんでした");
         }
     }
 

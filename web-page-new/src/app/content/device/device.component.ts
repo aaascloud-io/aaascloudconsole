@@ -7,7 +7,7 @@ import * as XLSX from 'xlsx';
 import { AlertService } from '../../_services/alert.service';
 import { HttpService } from 'src/app/_services/HttpService';
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
-import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
+import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { number } from 'ngx-custom-validators/src/app/number/validator';
 
 
@@ -114,25 +114,24 @@ export class DeviceComponent implements OnInit {
       '../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
 
-    let item: UserInfo = this.dataFatoryService.getLoginUser();
-
-
-    //to do ユーザー名で　ロケーションデータを取る
+    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    if (item!=null){
+         //to do ユーザー名で　ロケーションデータを取る
     this.pageModel.LoginUser.loginuserid = item.uid;
     this.pageModel.LoginUser.loginusername = item.login_id;
     this.pageModel.LoginUser.loginrole = item.role;
     this.pageModel.LoginUser.logincompanyid = item.company;
 
-    let param = {
-      LoginInfo:{
-      loginuserid: this.pageModel.LoginUser.loginuserid,
-      loginusername: this.pageModel.LoginUser.loginusername,
-      loginrole: this.pageModel.LoginUser.loginrole,
-      logincompanyid: this.pageModel.LoginUser.logincompanyid
+    var param = {
+      "loginInfo":{
+        "loginuserid": this.pageModel.LoginUser.loginuserid,
+        "loginusername": this.pageModel.LoginUser.loginusername,
+        "loginrole": this.pageModel.LoginUser.loginrole,
+        "logincompanyid": this.pageModel.LoginUser.logincompanyid
     },
-    TargetUserInfo:{
-      targetuserid:this.pageModel.LoginUser.loginuserid,
-      targetuserCompanyid:this.pageModel.LoginUser.logincompanyid
+    "targetUserInfo":{
+      "targetuserid":this.pageModel.LoginUser.loginuserid,
+      "targetuserCompanyid":this.pageModel.LoginUser.logincompanyid
     }
   }
 
@@ -160,6 +159,8 @@ export class DeviceComponent implements OnInit {
         console.log('ユーザー数数を検索API エラー　発生しました。');
       }
     })
+    }
+ 
 
   }
 

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Renderer2 ,ViewChild, ElementRef} from '@angular/core';
+﻿import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
@@ -14,8 +14,8 @@ import { UserService } from '../_services/UserService';
 })
 export class LoginComponent implements OnInit {
 
-    /** 描画用キャンバス */
-    @ViewChild('myCanvas') protected canvas: ElementRef;
+  /** 描画用キャンバス */
+  @ViewChild('myCanvas') protected canvas: ElementRef;
 
   loginForm: FormGroup;
   loading = false;
@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
-  async　tryLogin() {
+  async tryLogin() {
     this.submitted = true;
 
     if (this.f.checkcode.value !== this.checkcodeList) {
@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-    
+
     const value = {
       email: this.f.email.value,
       password: this.f.password.value
@@ -96,17 +96,29 @@ export class LoginComponent implements OnInit {
       // ///権限チェック
       // await this.userService.authorized().toPromise();
       ///自身の情報取得
-      var res = await this.userService.getMyInfo().toPromise();
-      ///保存
-      this.httpService.processUserInfo(res);
-      ///画面遷移
-        this.setUserInStorage(res);
-        localStorage.removeItem('currentLayoutStyle');
-        let returnUrl = '/dashboard';
-        if (this.returnUrl) {
-          returnUrl = this.returnUrl;
+      // var res = await this.userService.getMyInfo().toPromise();
+
+      var param ={ "username":　this.f.email.value };
+      var resUser = await this.httpService.usePost('/login', param).then(item => {
+        try {
+          if (item != null) {
+            ///保存
+            this.httpService.processUserInfo(item);
+            ///画面遷移
+            this.setUserInStorage(item);
+            localStorage.removeItem('currentLayoutStyle');
+            let returnUrl = '/dashboard';
+            if (this.returnUrl) {
+              returnUrl = this.returnUrl;
+            }
+            this.router.navigate([returnUrl]);
+          }
+
+        } catch (e) {
+          console.log('ユーザーを検索API エラー　発生しました。');
         }
-        this.router.navigate([returnUrl]);
+      })
+
       // this.router.navigate(["/main/page/dashboard"]);
     } catch (err) {
       // this.handleError('操作失敗', err);
@@ -130,14 +142,14 @@ export class LoginComponent implements OnInit {
     //   }
     // );
   }
-// addCheckbox(event) {
-//   const toggle = document.getElementById('icheckbox');
-//   if (event.currentTarget.className === 'icheckbox_square-blue') {
-//      this.renderer.addClass(toggle, 'checked');
-//   } else if (event.currentTarget.className === 'icheckbox_square-blue checked') {
-//     this.renderer.removeClass(toggle, 'checked');
-//   }
-// }
+  // addCheckbox(event) {
+  //   const toggle = document.getElementById('icheckbox');
+  //   if (event.currentTarget.className === 'icheckbox_square-blue') {
+  //      this.renderer.addClass(toggle, 'checked');
+  //   } else if (event.currentTarget.className === 'icheckbox_square-blue checked') {
+  //     this.renderer.removeClass(toggle, 'checked');
+  //   }
+  // }
   setUserInStorage(res) {
     if (res.user) {
       localStorage.setItem('currentUser', JSON.stringify(res.user));
