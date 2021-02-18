@@ -14,7 +14,7 @@ export class DataFatoryService {
   constructor() {
   }
 
-  public setLoginUser(info: UserInfo): void {
+  public setLoginUser(info: any): void {
     this.user = JSON.parse(JSON.stringify(info));
   }
 

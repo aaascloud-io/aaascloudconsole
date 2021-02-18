@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
             // this.title = 'Login with Background Image';
             // this.titleService.setTitle(this.title + '' + this._themeSettingsConfig.defaultTitleSuffix);
             // this.title = '';
-            this.titleService.setTitle("i-focus - AaaSCloud");
+            this.titleService.setTitle("i-focus - AAASCloud");
           }
         }
       }

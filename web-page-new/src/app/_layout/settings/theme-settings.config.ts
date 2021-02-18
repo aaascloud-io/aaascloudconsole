@@ -21,7 +21,7 @@ export const ThemeSettingsConfig = {
     email: 'on' // on, off
   },
   brand: {
-    brand_name: 'AaasCloud',
+    brand_name: 'AAASCloud',
     logo: {
       type: 'internal', // internal, url
       value: 'assets/custom/images/logo.png' // recommended location for custom images
