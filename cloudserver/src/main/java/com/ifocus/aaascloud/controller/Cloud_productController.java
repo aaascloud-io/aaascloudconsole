@@ -270,9 +270,8 @@ public class Cloud_productController {
 
 		/* システム日時 */
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
-
-		entity.setProductTypeId(model.getProducttypeid());
 		entity.setProductcode(model.getProductcode());
+		entity.setProducttypeid(model.getProducttypeid());
 		entity.setProductname(model.getProductname());
 		entity.setModel(model.getModel());
 		entity.setVersion(model.getVersion());
@@ -300,6 +299,7 @@ public class Cloud_productController {
 		JSONObject resJasonObj = new JSONObject();
 		// 情報設定
 		resJasonObj.put("productid", entity.getProductid());
+		resJasonObj.put("producttypeid", entity.getProducttypeid());
 		resJasonObj.put("productcode", entity.getProductcode());
 		resJasonObj.put("productname", entity.getProductname());
 		resJasonObj.put("model", entity.getModel());

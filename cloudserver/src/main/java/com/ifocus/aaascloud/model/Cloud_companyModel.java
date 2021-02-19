@@ -6,6 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class Cloud_companyModel {
+
+	@Getter
+	@Setter
+	private LoginInfo loginInfo;
+	@Getter
+	@Setter
+	private TargetUserInfo targetUserInfo;
+
 	@Getter
 	@Setter
 	private Integer companyid;

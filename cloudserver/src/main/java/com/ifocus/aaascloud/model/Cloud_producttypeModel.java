@@ -10,6 +10,9 @@ import lombok.Setter;
 @Setter
 public class Cloud_producttypeModel {
 
+	private LoginInfo loginInfo;
+	private TargetUserInfo targetUserInfo;
+
 	private Integer producttypeid;
 	private String producttypename;
 	private String summary;

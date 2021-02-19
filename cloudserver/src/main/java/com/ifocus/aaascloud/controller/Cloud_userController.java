@@ -19,7 +19,6 @@ import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
-import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
@@ -41,7 +40,7 @@ public class Cloud_userController {
 	private Cloud_companyService cloud_companyService;
 	@Autowired
 	private Cloud_userRepository cloud_userRepository;
-	@Autowired
+
 	private KeyCloakUserService keyCloakUserService;
 
 	/**
@@ -53,12 +52,12 @@ public class Cloud_userController {
 	@RequestMapping(value = "/getSonUsers", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getSonUsers(@RequestBody LoginInfo loginInfo,Cloud_userModel cloud_userModel) throws Exception {
+	public BaseHttpResponse<String> getSonUsers(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		Integer loginuserid = loginInfo.getLoginuserid();
-		Integer targetuserid = cloud_userModel.getTargetuserid();
+		Integer loginuserid = cloud_userModel.getLoginInfo().getLoginuserid();
+		Integer targetuserid = cloud_userModel.getTargetUserInfo().getTargetuserid();
 
 		if (null != loginuserid && null != targetuserid) {
 
@@ -155,12 +154,12 @@ public class Cloud_userController {
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> registerUser(@RequestBody LoginInfo loginInfo, @RequestBody Cloud_userModel cloud_userModel) throws Exception {
+	public BaseHttpResponse<String> registerUser(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		// admin権限以外の場合、
-		if (1 != loginInfo.getLoginrole() ) {
+		if (1 != cloud_userModel.getLoginInfo().getLoginrole() ) {
 			/* 異常系 */
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
@@ -169,7 +168,7 @@ public class Cloud_userController {
 		}
 
 		// KeyCloakに存在しない場合、
-		if (!keyCloakUserService.isValidUsername(loginInfo.getLoginusername())) {
+		if (!keyCloakUserService.isValidUsername(cloud_userModel.getLoginInfo().getLoginusername())) {
 			/* 異常系 */
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0008);
@@ -178,7 +177,7 @@ public class Cloud_userController {
 		}
 
 		try {
-			Integer registeredUserid = cloud_userService.registerSonUser(loginInfo,cloud_userModel);
+			Integer registeredUserid = cloud_userService.registerSonUser(cloud_userModel.getLoginInfo(),cloud_userModel);
 
 			if (null != registeredUserid ) {
 				/* 正常系 */
@@ -212,7 +211,7 @@ public class Cloud_userController {
 	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> updateUser(@RequestBody LoginInfo loginInfo,Cloud_userModel cloud_userModel) throws Exception {
+	public BaseHttpResponse<String> updateUser(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
@@ -239,7 +238,7 @@ public class Cloud_userController {
 		}
 
 		try {
-			Integer registeredUserid = cloud_userService.updateSonUser(loginInfo,cloud_userModel);
+			Integer registeredUserid = cloud_userService.updateSonUser(cloud_userModel.getLoginInfo(),cloud_userModel);
 
 			if (null != registeredUserid ) {
 				/* 正常系 */
@@ -272,7 +271,7 @@ public class Cloud_userController {
 	@RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> deleteUser(@RequestBody LoginInfo loginInfo,Cloud_userModel cloud_userModel) throws Exception {
+	public BaseHttpResponse<String> deleteUser(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
@@ -297,7 +296,7 @@ public class Cloud_userController {
 			}
 
 			// ユーザを削除する
-			cloud_userService.deleteSonUser(loginInfo,cloud_userModel);
+			cloud_userService.deleteSonUser(cloud_userModel.getLoginInfo(),cloud_userModel);
 
 		} catch (Exception e) {
 			/* 異常系 */

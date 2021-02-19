@@ -17,6 +17,11 @@ public interface  Cloud_companyRepository extends CrudRepository<Cloud_companyEn
 	@Query(value = "SELECT c.* FROM cloud_company c INNER JOIN cloud_user d ON c.companyid = d.companyid WHERE d.userid = :userid",nativeQuery = true)
 	public Cloud_companyEntity findCompanyByUserid(@Param("userid") Integer userid);
 
-	public List<Cloud_companyEntity> findByCorporatenumber(String corporatenumber);
-
+	/*
+	 * 配下会社一覧情報取得
+	 * @param userids List<Integer> 配下ユーザIDリスト
+	 *
+	 */
+	@Query(value = "SELECT DISTINCTROW c.* FROM cloud_company c INNER JOIN cloud_user u ON c.companyid = u.companyid WHERE u.userid IN :userids",nativeQuery = true)
+	public List<Cloud_companyEntity> findUnderCompanyListByUseridIn(@Param("userids") List<Integer> userids);
 }

@@ -7,6 +7,13 @@ public class Cloud_displaysettingsModel {
 
 	@Getter
 	@Setter
+	private LoginInfo loginInfo;
+	@Getter
+	@Setter
+	private TargetUserInfo targetUserInfo;
+
+	@Getter
+	@Setter
 	private Integer rowid;
 	@Getter
 	@Setter

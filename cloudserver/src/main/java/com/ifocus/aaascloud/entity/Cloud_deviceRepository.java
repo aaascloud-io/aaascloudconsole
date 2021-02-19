@@ -171,7 +171,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT COUNT(c.projectid) FROM cloud_device c WHERE c.projectid = :projectid", nativeQuery = true)
+	@Query(value = "SELECT COUNT(c) FROM cloud_device c WHERE c.projectid = :projectid", nativeQuery = true)
 	public Integer getProjectDeviceCountsByProjectid(@Param("projectid") Integer projectid);
 
 	/*
@@ -197,5 +197,19 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 */
 	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.userid IN :userids ORDER BY c.productid,c.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchUnderCompanyDevicesByUseridIn(@Param("userids") List<Integer> userids);
+
+	/*
+	 * 配下各社プロダクトタイプ別デバイス一覧取得(ダッシュボード画面用)
+	 *
+	 *
+	 */
+	@Query(value = "SELECT d.* "
+			+ "FROM cloud_device d "
+			+ "INNER JOIN cloud_product pd ON d.productId = pd.productId "
+			+ "INNER JOIN cloud_producttype pt ON pd.productTypeId = pt.productTypeId "
+			+ "WHERE pt.productTypeName = :producttype "
+			+ "AND d.userid IN :userids "
+			+ "ORDER BY d.productid,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> searchUnderCompanyDevicesByProducttypeAndUseridIn( @Param("producttype") String producttype, @Param("userids") List<Integer> userids);
 
 }

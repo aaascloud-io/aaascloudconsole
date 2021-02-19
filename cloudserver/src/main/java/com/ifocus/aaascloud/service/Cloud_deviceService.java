@@ -365,6 +365,13 @@ public class Cloud_deviceService {
 		model.setSim_iccid(entity.getSim_iccid());
 		model.setSim_imsi(entity.getSim_imsi());
 		model.setSim_tel(entity.getSim_tel());
+		model.setEncryptedcommunications(entity.getEncryptedcommunications());
+		model.setEncryptedkey(entity.getEncryptedkey());
+		model.setConnectserverurl(entity.getConnectserverurl());
+		model.setConnectserverport(entity.getConnectserverport());
+		model.setBindingflag(entity.getBindingflag());
+		model.setFmlastestversion(entity.getFmlastestversion());
+		model.setVersioncomfirmtime(entity.getVersioncomfirmtime());
 		model.setCompanyid(entity.getCompanyid());
 		model.setUserid(entity.getUserid());
 		model.setLastprojectId(entity.getLastprojectId());
@@ -403,6 +410,13 @@ public class Cloud_deviceService {
 		model.setSim_iccid(entity.getSim_iccid());
 		model.setSim_imsi(entity.getSim_imsi());
 		model.setSim_tel(entity.getSim_tel());
+		model.setEncryptedcommunications(entity.getEncryptedcommunications());
+		model.setEncryptedkey(entity.getEncryptedkey());
+		model.setConnectserverurl(entity.getConnectserverurl());
+		model.setConnectserverport(entity.getConnectserverport());
+		model.setBindingflag(entity.getBindingflag());
+		model.setFmlastestversion(entity.getFmlastestversion());
+		model.setVersioncomfirmtime(entity.getVersioncomfirmtime());
 		model.setCompanyid(entity.getCompanyid());
 		model.setUserid(entity.getUserid());
 		model.setLastprojectId(entity.getLastprojectId());
@@ -464,6 +478,21 @@ public class Cloud_deviceService {
 	}
 
 	/*
+	 * 全社のプロダクトタイプ別デバイス一覧取得(ダッシュボード用)
+	 * @param producttype String プロダクトタイプ
+	 * @param useridList List<Integer> ユーザーIDリスト
+	 * @return List<Cloud_deviceModel> デバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getUnderCompanyDevicesByProducttypeAndUserids(String producttype, List<Integer> useridList) throws Exception {
+
+		// 全社のデバイス一覧取得
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchUnderCompanyDevicesByProducttypeAndUseridIn(producttype, useridList);
+		return this.getModelsByEntitys(list);
+
+	}
+
+	/*
 	 * ModelからEntity取得
 	 * @param entity Cloud_deviceEntity
 	 * @return Cloud_deviceModel
@@ -486,6 +515,13 @@ public class Cloud_deviceService {
 		entity.setSim_iccid(model.getSim_iccid());
 		entity.setSim_imsi(model.getSim_imsi());
 		entity.setSim_tel(model.getSim_tel());
+		entity.setEncryptedcommunications(model.getEncryptedcommunications());
+		entity.setEncryptedkey(model.getEncryptedkey());
+		entity.setConnectserverurl(model.getConnectserverurl());
+		entity.setConnectserverport(model.getConnectserverport());
+		entity.setBindingflag(model.getBindingflag());
+		entity.setFmlastestversion(model.getFmlastestversion());
+		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
 		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
 		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
 		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
@@ -534,6 +570,15 @@ public class Cloud_deviceService {
 		entity.setSim_imsi(model.getSim_imsi());
 		entity.setSim_tel(model.getSim_tel());
 		entity.setProductid(model.getProductid());
+		entity.setEncryptedcommunications(model.getEncryptedcommunications());
+		entity.setEncryptedkey(model.getEncryptedkey());
+		entity.setConnectserverurl(model.getConnectserverurl());
+		entity.setConnectserverport(model.getConnectserverport());
+		entity.setBindingflag(model.getBindingflag());
+//		entity.setFmlastestversion(model.getFmlastestversion());
+//		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
+		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
+		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
 		entity.setCompanyid(model.getCompanyid());
 		entity.setUserid(model.getUserid());
 		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
@@ -573,6 +618,13 @@ public class Cloud_deviceService {
 		entity.setSim_iccid(model.getSim_iccid());
 		entity.setSim_imsi(model.getSim_imsi());
 		entity.setSim_tel(model.getSim_tel());
+		entity.setEncryptedcommunications(model.getEncryptedcommunications());
+		entity.setEncryptedkey(model.getEncryptedkey());
+		entity.setConnectserverurl(model.getConnectserverurl());
+		entity.setConnectserverport(model.getConnectserverport());
+		entity.setBindingflag(model.getBindingflag());
+//		entity.setFmlastestversion(model.getFmlastestversion());
+//		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
 		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
 		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
 		entity.setLastprojectId(model.getLastprojectId());
