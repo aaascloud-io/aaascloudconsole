@@ -1,10 +1,8 @@
 package com.ifocus.aaascloud.service;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,9 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ifocus.aaascloud.constant.AliveConstant;
-import com.ifocus.aaascloud.constant.CorporateNumberConstant;
-import com.ifocus.aaascloud.constant.InitialDataConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
@@ -24,29 +19,27 @@ import com.ifocus.aaascloud.model.Cloud_companyModel;
 @Service
 @Transactional
 public class Cloud_companyService {
-	
+
 	@Autowired
 	private Cloud_companyRepository cloud_companyRepository ;
-	
-	@PostConstruct
-	private void initBaseDataIfNotExists() {
-		List<Cloud_companyEntity> list = cloud_companyRepository.findByCorporatenumber(CorporateNumberConstant.COM_I_FOCUS);
-		if (list == null || list.size() == 0) {
-			// 初期化データなしの場合、追加
-			Cloud_companyEntity initalCompanyEntity = new Cloud_companyEntity();
-			initalCompanyEntity.setCompanyid(InitialDataConstant.INITIAL_COMPANY_ID);
-			initalCompanyEntity.setCorporatenumber(CorporateNumberConstant.COM_I_FOCUS);
-			initalCompanyEntity.setCompanyname(InitialDataConstant.INITIAL_COMPANY_NAME);
-			initalCompanyEntity.setAddress(InitialDataConstant.INITIAL_COMPANY_ADDRESS);
-			initalCompanyEntity.setIndustry(InitialDataConstant.INITIAL_COMPANY_INDUSTRY);
-			initalCompanyEntity.setMail(InitialDataConstant.INITIAL_COMPANY_MAIL);
-			initalCompanyEntity.setTel(InitialDataConstant.INITIAL_COMPANY_TEL);
-			initalCompanyEntity.setFax(InitialDataConstant.INITIAL_COMPANY_FAX);
-			initalCompanyEntity.setLevel(InitialDataConstant.INITIAL_COMPANY_LEVEL);
-			initalCompanyEntity.setAlive(AliveConstant.ALIVE);
-			initalCompanyEntity.setI_time(new Timestamp(System.currentTimeMillis()));
-			cloud_companyRepository.save(initalCompanyEntity);
-		}
+	@Autowired
+	private AccessService accessService ;
+
+	/*
+	 * 配下会社一覧取得
+	 * @param loginUserId Integer ログインユーザーID
+	 * @return List<Cloud_companyModel> 配下会社一覧
+	 *
+	 */
+	public List<Cloud_companyModel> getUnderCompanies(Integer loginUserId) throws Exception {
+
+		// アクセス権限ユーザ一覧を取得する
+		List<Integer> accessUsers = accessService.getAccessUsers(loginUserId);
+		// 配下各社ID一覧を取得する
+		List<Cloud_companyEntity> underCompanyList = cloud_companyRepository.findUnderCompanyListByUseridIn(accessUsers);
+
+		return getModelsByEntitys(underCompanyList);
+
 	}
 
 	/*
@@ -120,5 +113,42 @@ public class Cloud_companyService {
 	 */
 	public void deleteCompany(Cloud_companyEntity entity) throws Exception {
 		cloud_companyRepository.deleteById(entity.getCompanyid());
+	}
+
+	/*
+	 * EntityリストからModeリストl取得
+	 * @param entityList List<Cloud_companyEntity> Entityリスト
+	 * @return List<Cloud_deviceModel> Modeリスト
+	 *
+	 */
+	public List<Cloud_companyModel> getModelsByEntitys(List<Cloud_companyEntity> entityList) throws Exception {
+		List<Cloud_companyModel> modelList = new ArrayList();
+		for (Cloud_companyEntity entity:entityList) {
+			modelList.add(getModelByEntity(entity));
+		}
+
+		return modelList;
+
+	}
+
+	/*
+	 * EntityからModel取得
+	 * @param entity Cloud_deviceEntity
+	 * @return Cloud_companyModel
+	 *
+	 */
+	public Cloud_companyModel getModelByEntity(Cloud_companyEntity entity) throws Exception {
+		Cloud_companyModel model = new Cloud_companyModel();
+		model.setCompanyid(entity.getCompanyid());
+		model.setCompanyname(entity.getCompanyname());
+		model.setAddress(entity.getAddress());
+		model.setIndustry(entity.getIndustry());
+		model.setMail(entity.getMail());
+		model.setTel(entity.getTel());
+		model.setFax(entity.getFax());
+		model.setLevel(entity.getLevel());
+
+		return model;
+
 	}
 }
