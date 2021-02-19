@@ -17,6 +17,7 @@ import com.ifocus.aaascloud.model.Cloud_deviceDetailModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_userService;
+import com.ifocus.aaascloud.util.Util;
 
 import net.sf.json.JSONObject;
 
@@ -80,7 +81,7 @@ public class Cloud_deviceController {
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 			response.setCount(list.size());
-			response.setData(this.getDeviceJsonString(list));
+			response.setData(Util.getJsonString(list));
 		} else {
 			/* 異常系 */
 			response.setStatus(200);
@@ -144,7 +145,7 @@ public class Cloud_deviceController {
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 			response.setCount(list.size());
-			response.setData(this.getDeviceJsonString(list));
+			response.setData(Util.getJsonString(list));
 		} else {
 			/* 異常系 */
 			response.setStatus(200);
@@ -182,7 +183,7 @@ public class Cloud_deviceController {
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-					response.setData(getDeviceDetailJsonString(detailModel));
+					response.setData(Util.getJsonString(detailModel));
 				} else {
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0004);
@@ -291,7 +292,7 @@ public class Cloud_deviceController {
 					response.setCount(productErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkProductExistedInDB");
-					response.setData(getDeviceDetailsJsonString(productErrorList));
+					response.setData(Util.getJsonString(productErrorList));
 				}
 
 				// プロジェクト存在チェックを行う
@@ -304,7 +305,7 @@ public class Cloud_deviceController {
 					response.setCount(projectErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkProjectExistedInDB");
-					response.setData(getDeviceDetailsJsonString(projectErrorList));
+					response.setData(Util.getJsonString(projectErrorList));
 				}
 
 				// グループ存在チェックを行う
@@ -317,7 +318,7 @@ public class Cloud_deviceController {
 					response.setCount(groupErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkGroupExistedInDB");
-					response.setData(getDeviceDetailsJsonString(groupErrorList));
+					response.setData(Util.getJsonString(groupErrorList));
 				}
 
 				// デバイスを一括登録する
@@ -571,44 +572,6 @@ public class Cloud_deviceController {
 		return response;
 	}
 
-	/**
-	 * デバイスリストのJsonを取得する
-	 * @param list List<Cloud_projectModel>
-	 * @return String Json形式
-	 */
-	private String getDeviceJsonString(List<Cloud_deviceModel> list) {
-
-		String responseData = new String();
-		responseData = responseData + "[";
-		for (Cloud_deviceModel model:list) {
-			if (responseData.length() > 1) {
-				responseData = responseData + ",";
-			}
-			JSONObject resJasonObj = new JSONObject();
-			// 情報設定
-			resJasonObj.put("deviceid", model.getDeviceid());
-			resJasonObj.put("projectid", model.getProjectid());
-			resJasonObj.put("groupid", model.getGroupid());
-			resJasonObj.put("devicename", model.getDevicename());
-			resJasonObj.put("imei", model.getImei());
-			resJasonObj.put("iccid", model.getIccid());
-			resJasonObj.put("sn", model.getSn());
-			resJasonObj.put("sim_iccid", model.getSim_iccid());
-			resJasonObj.put("sim_imei", model.getSim_imei());
-			resJasonObj.put("sim_tel", model.getSim_tel());
-			resJasonObj.put("companyid", model.getCompanyid());
-			resJasonObj.put("userid", model.getUserid());
-			resJasonObj.put("lastprojectId", model.getLastprojectId());
-			resJasonObj.put("lastgroupid", model.getLastgroupid());
-			resJasonObj.put("alive", model.getAlive());
-
-			responseData = responseData + resJasonObj.toString();
-		}
-		responseData = responseData + "]";
-
-		return responseData;
-
-	}
 
 	/**
 	 * デバイス詳細のJsonを取得する
@@ -627,7 +590,6 @@ public class Cloud_deviceController {
 		resJasonObj.put("iccid", model.getIccid());
 		resJasonObj.put("sn", model.getSn());
 		resJasonObj.put("sim_iccid", model.getSim_iccid());
-		resJasonObj.put("sim_imei", model.getSim_imei());
 		resJasonObj.put("sim_tel", model.getSim_tel());
 		resJasonObj.put("companyid", model.getCompanyid());
 		resJasonObj.put("userid", model.getUserid());
