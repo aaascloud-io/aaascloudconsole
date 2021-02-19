@@ -47,7 +47,7 @@ public class Cloud_deviceModel {
 	private String sim_iccid;
 	@Getter
 	@Setter
-	private String sim_imei;
+	private String sim_imsi;
 	@Getter
 	@Setter
 	private String sim_tel;

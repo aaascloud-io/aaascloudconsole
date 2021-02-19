@@ -44,7 +44,7 @@ public class Cloud_deviceEntity {
 	private String sim_iccid;
 	@Getter
 	@Setter
-	private String sim_imei;
+	private String sim_imsi;
 	@Getter
 	@Setter
 	private String sim_tel;

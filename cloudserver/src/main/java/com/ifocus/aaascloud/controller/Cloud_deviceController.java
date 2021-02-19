@@ -594,7 +594,7 @@ public class Cloud_deviceController {
 			resJasonObj.put("iccid", model.getIccid());
 			resJasonObj.put("sn", model.getSn());
 			resJasonObj.put("sim_iccid", model.getSim_iccid());
-			resJasonObj.put("sim_imei", model.getSim_imei());
+			resJasonObj.put("sim_imsi", model.getSim_imsi());
 			resJasonObj.put("sim_tel", model.getSim_tel());
 			resJasonObj.put("companyid", model.getCompanyid());
 			resJasonObj.put("userid", model.getUserid());
@@ -627,7 +627,7 @@ public class Cloud_deviceController {
 		resJasonObj.put("iccid", model.getIccid());
 		resJasonObj.put("sn", model.getSn());
 		resJasonObj.put("sim_iccid", model.getSim_iccid());
-		resJasonObj.put("sim_imei", model.getSim_imei());
+		resJasonObj.put("sim_imei", model.getSim_imsi());
 		resJasonObj.put("sim_tel", model.getSim_tel());
 		resJasonObj.put("companyid", model.getCompanyid());
 		resJasonObj.put("userid", model.getUserid());

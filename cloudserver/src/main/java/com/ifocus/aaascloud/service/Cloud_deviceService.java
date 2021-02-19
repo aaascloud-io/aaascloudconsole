@@ -27,6 +27,8 @@ import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_deviceDetailModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
+import com.ifocus.aaascloud.model.LoginInfo;
+
 import com.ifocus.aaascloud.util.Util;
 
 @SpringBootApplication
@@ -184,7 +186,7 @@ public class Cloud_deviceService {
 		// 会社IDを設定する
 		this.setCompanyIDToModel(model);
 		// デバイス登録
-		Cloud_deviceEntity insertedEntity = cloud_deviceRepository.save(this.getEntitByDetailModel(model.getDeviceDetail()));
+		Cloud_deviceEntity insertedEntity = cloud_deviceRepository.save(this.getEntitByDetailModel(model.getDeviceDetail(),model.getLoginInfo()));
 		return insertedEntity.getDeviceid();
 		
 	}
@@ -204,7 +206,7 @@ public class Cloud_deviceService {
 		// デバイス登録
 		Integer count = 0;
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
-			Cloud_deviceEntity insertedEntity = cloud_deviceRepository.save(getEntitByDetailModel(deviceDetailModel));
+			Cloud_deviceEntity insertedEntity = cloud_deviceRepository.save(getEntitByDetailModel(deviceDetailModel,model.getLoginInfo()));
 			count++;
 		}
 		return count;
@@ -361,7 +363,7 @@ public class Cloud_deviceService {
 		model.setIccid(entity.getIccid());
 		model.setSn(entity.getSn());
 		model.setSim_iccid(entity.getSim_iccid());
-		model.setSim_imei(entity.getSim_imei());
+		model.setSim_imsi(entity.getSim_imsi());
 		model.setSim_tel(entity.getSim_tel());
 		model.setCompanyid(entity.getCompanyid());
 		model.setUserid(entity.getUserid());
@@ -399,7 +401,7 @@ public class Cloud_deviceService {
 		model.setIccid(entity.getIccid());
 		model.setSn(entity.getSn());
 		model.setSim_iccid(entity.getSim_iccid());
-		model.setSim_imei(entity.getSim_imei());
+		model.setSim_imsi(entity.getSim_imsi());
 		model.setSim_tel(entity.getSim_tel());
 		model.setCompanyid(entity.getCompanyid());
 		model.setUserid(entity.getUserid());
@@ -482,7 +484,7 @@ public class Cloud_deviceService {
 		entity.setIccid(model.getIccid());
 		entity.setSn(model.getSn());
 		entity.setSim_iccid(model.getSim_iccid());
-		entity.setSim_imei(model.getSim_imei());
+		entity.setSim_imsi(model.getSim_imsi());
 		entity.setSim_tel(model.getSim_tel());
 		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
 		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
@@ -504,7 +506,7 @@ public class Cloud_deviceService {
 	 * @return Cloud_deviceDetailModel
 	 *
 	 */
-	private Cloud_deviceEntity getEntitByDetailModel(Cloud_deviceDetailModel model) throws Exception {
+	private Cloud_deviceEntity getEntitByDetailModel(Cloud_deviceDetailModel model,LoginInfo lmodel) throws Exception {
 
 		Cloud_deviceEntity entity = new Cloud_deviceEntity();
 
@@ -518,28 +520,28 @@ public class Cloud_deviceService {
 			entity.setProjectid(model.getProjectid());
 		}
 
-		if (model.getProjectid() == null) {
+		if (model.getGroupid() == null) {
 			entity.setGroupid(CommonConstant.GROUP_NOT_SET);
 		} else {
 			entity.setGroupid(model.getGroupid());
 		}
-
+		
 		entity.setDevicename(model.getDevicename());
 		entity.setImei(model.getImei());
 		entity.setIccid(model.getIccid());
 		entity.setSn(model.getSn());
 		entity.setSim_iccid(model.getSim_iccid());
-		entity.setSim_imei(model.getSim_imei());
+		entity.setSim_imsi(model.getSim_imsi());
 		entity.setSim_tel(model.getSim_tel());
 		entity.setProductid(model.getProductid());
-		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
-		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
+		entity.setCompanyid(model.getCompanyid());
+		entity.setUserid(model.getUserid());
 		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
 		entity.setLastgroupid(CommonConstant.GROUP_NOT_SET);
 		entity.setAlive(AliveConstant.ALIVE);
-		entity.setI_uid(model.getLoginInfo().getLoginuserid());
+		entity.setI_uid(lmodel.getLoginuserid());
 		entity.setI_time(systemTime);
-		entity.setU_uid(model.getLoginInfo().getLoginuserid());
+		entity.setU_uid(lmodel.getLoginuserid());
 		entity.setU_time(systemTime);
 
 		return entity;
@@ -569,7 +571,7 @@ public class Cloud_deviceService {
 		entity.setIccid(model.getIccid());
 		entity.setSn(model.getSn());
 		entity.setSim_iccid(model.getSim_iccid());
-		entity.setSim_imei(model.getSim_imei());
+		entity.setSim_imsi(model.getSim_imsi());
 		entity.setSim_tel(model.getSim_tel());
 		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
 		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
