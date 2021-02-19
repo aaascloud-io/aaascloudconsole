@@ -165,9 +165,9 @@
                     </ngx-datatable-column>
                     <ngx-datatable-column name="操作" [flexGrow]="1" [minWidth]="50" [maxWidth]="100">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="" class="primary edit mr-1 mrless"
+                        <!-- <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
-                        </a>
+                        </a> -->
                         <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
                       </ng-template>
                     </ngx-datatable-column>
@@ -184,7 +184,7 @@
 </div>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 
-<ng-template #editTableDataModalContent let-c="close" let-d="dismiss">
+<!-- <ng-template #editTableDataModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Edit Contact</h5>
@@ -222,10 +222,9 @@
       </div>
     </div>
   </form>
-</ng-template>
+</ng-template> -->
 
 <ng-template #addModalContent let-c="close" let-d="dismiss">
-  <form #addForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">登録</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -234,23 +233,24 @@
     </div>
     <div class="modal-body">
       <div class="form-group col-12">
+        <h6>デバイス名</h6>
+        <input type="text"  [(ngModel)]="pageModel.deviceDetail.devicename" name="devicename" class="form-control" placeholder="">
+      </div>
+      <div class="form-group col-12">
         <h6>IMEI</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceObj.imei" name="name" id="contact-name"
-          class="contact-name form-control" placeholder="IMEI" #contactname="ngModel"
-          [ngClass]="{ 'is-invalid': addForm.submitted && contactname.invalid }" required>
-        <div *ngIf="addForm.submitted && contactname.invalid" class="invalid-feedback">
-        </div>
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.imei" name="imei" 
+          class="contact-name form-control" placeholder="IMEI">
+
       </div>
       <div class="form-group col-12">
         <h6>ICCID</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceObj.iccid" name="email" id="contact-email"
-          class="contact-email form-control" placeholder="ICCID" #contactemail="ngModel"
-          [ngClass]="{ 'is-invalid':addForm.submitted && contactemail.invalid }" required email>
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.iccid" name="iccid" 
+          class="contact-email form-control" placeholder="ICCID">
       </div>
       <div class="form-group col-12">
         <h6>SN</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceObj.sn" name="contactPhone" #contactphone="ngModel"
-          id="contact-phone" class="contact-phone form-control" placeholder="SN" (keyup)="onFormat()" maxlength="14">
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.sn" name="sn" 
+          id="contact-phone" class="contact-phone form-control" placeholder="SN" maxlength="14">
       </div>
       <div class="form-group col-12">
         <h6>所有者</h6>
@@ -260,46 +260,42 @@
       </div>
       <div class="form-group col-12">
         <h6>暗号化通信</h6>
-        <ng-select [searchable]="true" bindLabel="item_text" placeholder="暗号化通信" [(ngModel)]="singlebasicSelected">
+        <ng-select [searchable]="true" bindLabel="item_text" placeholder="暗号化通信" [(ngModel)]="singlebasicSelected" >
           <option value=0 selected>OFF</option>
           <option value=1>ON</option>
         </ng-select>
       </div>
       <div class="form-group col-12">
         <h6>暗号化キー</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
+        <input type="text" class="form-control" name="devicename1" placeholder="空白の場合、サーバーで自動生成します">
       </div>
       <div class="form-group col-12">
         <h6>接続サーバーアドレス</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
+        <input type="text" class="form-control" name="devicename2" placeholder="空白の場合、サーバーで自動生成します">
       </div>
       <div class="form-group col-12">
         <h6>接続サーバーポート番号</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
+        <input type="text" class="form-control" name="devicename3" placeholder="空白の場合、サーバーで自動生成します">
       </div>
       <div class="form-group col-12">
         <h6>バンディング済みフラグ</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
-      </div>
-      <div class="form-group col-12">
-        <h6>業界</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceObj.sn" class="form-control" id="" placeholder="">
+        <input type="text" class="form-control" name="devicename4" placeholder="空白の場合、サーバーで自動生成します">
       </div>
       <div class="form-group col-12">
         <h6>プロダクト</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceObj.sn" class="form-control" id="" placeholder="">
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.productid" name="productid" class="form-control" placeholder="">
       </div>
       <div class="form-group col-12">
         <h6>SIMカードIMSI</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceObj.sn" class="form-control" id="" placeholder="">
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_imsi" name="simimsi" class="form-control" placeholder="">
       </div>
       <div class="form-group col-12">
         <h6>SIMカード電話番号</h6>
-        <input type="text" class="form-control" id="" placeholder="SIMカード電話番号">
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="simtel" class="form-control" placeholder="SIMカード電話番号">
       </div>
       <div class="form-group col-12">
         <h6>SIMカードICCID</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceObj.sn" class="form-control" id="" placeholder="">
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_iccid" name="simiccid" class="form-control" placeholder="">
       </div>
     </div>
     <div class="modal-footer">
@@ -308,7 +304,6 @@
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
       </div>
     </div>
-  </form>
 </ng-template>
 
 <ng-template #addExcelModalContent let-c="close" let-d="dismiss">
@@ -334,6 +329,8 @@
         <thead>
           <tr>
             <th scope="col">no.</th>
+            <th scope="col">deviceName</th>
+            <th scope="col">productid</th>
             <th scope="col">imei</th>
             <th scope="col">iccid</th>
             <th scope="col">imsi</th>
@@ -346,8 +343,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of pageModel.dataAll; let i = index;">
+          <tr *ngFor="let item of pageModel.addDeviceDetailList; let i = index;">
             <td data-label="no.">{{i + 1}}</td>
+            <td data-label="imei">{{item.deviceName}}</td>
+            <td data-label="imei">{{item.productid}}</td>
             <td data-label="imei">{{item.imei}}</td>
             <td data-label="iccid">{{item.iccid}}</td>
             <td data-label="imsi">{{item.imsi}}</td>
@@ -361,9 +360,6 @@
         </tbody>
       </table>
     </div>
-
-
-
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
@@ -372,12 +368,12 @@
       </div>
     </div>
   </form>
-</ng-template>
+</ng-template> 
 <ng-template #addGroupModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">グループ選択</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <button type="button" name="groupSelect" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
