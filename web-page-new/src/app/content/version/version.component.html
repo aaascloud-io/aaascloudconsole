@@ -1,6 +1,6 @@
 <div class="app-content content">
   <div class="content-wrapper">
-    <div class="content-header row mb-1 ml-1"><h4>エラー管理</h4></div>
+    <div class="content-header row mb-1 ml-1"><h4>バージョン管理</h4></div>
     <div class=""> 
       <div class="content-body">
         <div class="content-overlay" id='content-overlay' (click)="contentOverlay($event)"></div>
@@ -9,7 +9,7 @@
             <div class="card">
               <div class="card-head">
                 <div class="card-header">
-                  <h4 class="card-title">プロダクト一覧</h4>
+                  <h4 class="card-title">ナージョン情報一覧</h4>
                   
                 </div>
               </div>
@@ -45,7 +45,13 @@
                       </tbody>
                     </table>
                   </div> -->
-
+                  <div class="row">
+                    <div class="">
+                      <button type="button" class="btn btn-primary" (click)="deleteCheckedRow()">設定追加</button>
+                      <button type="button" class="btn btn-info" (click)="deleteCheckedRow()">選択アップグレード</button>
+                      <button type="button" class="btn btn-success" (click)="deleteCheckedRow()">全部アップグレード</button>
+                    </div>
+                  </div>
 
                   <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
                     [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
