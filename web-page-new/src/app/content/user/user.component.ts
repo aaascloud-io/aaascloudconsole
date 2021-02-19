@@ -6,10 +6,9 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import * as XLSX from 'xlsx';
 import { AlertService } from '../../_services/alert.service';
 import { HttpService } from 'src/app/_services/HttpService';
+import { UserInfo } from '../../_common/_interface/userInfo'
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
-import { number } from 'ngx-custom-validators/src/app/number/validator';
-
 
 class Contact {
   constructor(
@@ -17,20 +16,28 @@ class Contact {
     public name: string,
     public email: string,
     public phone: string,
-    public image: any,
-    public isFavorite: boolean,
-    public isActive: string
+    public producttypeid: any,
+    public productid: any,
+    public productcode: any,
+    public productname: string,
+    public model: string,
+    public simflag: number,
+    public version: string,
+    public summary: string,
   ) { }
 }
 const formInputData = require('../../../assets/data/forms/form-elements/form-inputs.json');
 const selectData = require('../../../assets/data/forms/form-elements/select.json');
 
 @Component({
-  selector: 'app-device',
-  templateUrl: './device.component.html',
-  styleUrls: ['./device.component.css']
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.css']
 })
-export class DeviceComponent implements OnInit {
+export class UserComponent implements OnInit {
+
+  userInfo: UserInfo;
+
   columns: any = [];
   contactName: any;
   contactEmail: any;
@@ -56,43 +63,43 @@ export class DeviceComponent implements OnInit {
   temp2 = this.rows;
   singlebasicSelected: any;
 
+
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
   public multipleSelectArray = formInputData.multipleSelectArray;
   public singleSelectArray = selectData.singleSelectArray;
 
   protected pageModel = {
-    //Login情報
-    LoginUser: {
-      loginuserid: '',
-      logincompanyid: '',
-      loginrole: null,
-      loginusername: '',
-      loginupperuserid: '',
-    },
     // 一括登録のデバイス定義リスト
     addList: [],
     dataAll: [],
-    deviceList: [],
-    addDeviceDetailList:[],
-    deviceObj: {
-      imei: '',
-      iccid: '',
-      sn: '',
-      companyid: '',
-      //todo
-      // 暗号化通信
-      // 暗号化キー
-      // 接続サーバアドレス
-      // 接続サーバポート番号
-      // バンディング済みフラグ
-      //業界
-      projectid: '',
-      sim_imei: '',
-      sim_tel: '',
-      sim_iccid: ''
+    productList: [],
+    addProduct: {
+      productTypeId: 0,
+      productcode: '',
+      productName: '',
+      model: '',
+      version: '',
+      sim: 0,
+      summary: ''
     },
-
+    updataProduct: {
+      productId: 0,
+      productTypeId: 0,
+      productcode: '',
+      productName: '',
+      model: '',
+      version: '',
+      sim: 0,
+      summary: ''
+    },
+    loginUser: {
+      loginuserid: '',
+      loginusername: '',
+      loginrole: null,
+      logincompanyid: '',
+    },
+    userInfoParame: {}
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -113,122 +120,60 @@ export class DeviceComponent implements OnInit {
     private alertService: AlertService,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
-  ) { }
+  ) {
+    this.getProductAll();
+  }
 
   ngOnInit(): void {
+
+    // this.rows.push(new Contact(1, 'Scott Marsh', 'scott@gmail.com', '(954)-654-5641',
+    //   '../../assets/images/portrait/small/avatar-s-5.png', false, 'online'));
+    // this.rows.push(new Contact(2, 'Russell Bry', 'russell@gmail.com', '(235)-654-5642',
+    //   '../../assets/images/portrait/small/avatar-s-3.png', false, 'busy'));
+    // this.rows.push(new Contact(3, 'james john', 'john@gmail.com', '(125)-654-5643',
+    //   '../../assets/images/portrait/small/avatar-s-1.png', true, 'away'));
+    // this.rows.push(new Contact(4, 'Cynth Tuck', 'tuck@gmail.com', '(974)-654-5644',
+    //   '../../assets/images/portrait/small/avatar-s-4.png', false, 'busy'));
+    // this.rows.push(new Contact(5, 'Margi Govan', 'govan@gmail.com', '(954)-654-5645',
+    //   '../../assets/images/portrait/small/avatar-s-6.png', true, 'online'));
+    // this.rows.push(new Contact(6, 'Eugene Wood', 'wood@gmail.com', '(987)-654-5646',
+    //   '../../assets/images/portrait/small/avatar-s-9.png', false, 'busy'));
+    // this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
+    //   '../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
-    this.Init(null);
-  }
-  // 新規
-  insert(): void {
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    if (item != null) {
-      //to do ユーザー名で　ロケーションデータを取る
-      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
-      var param = {
-        "loginInfo": {
-          "loginuserid": item.uid,
-          "loginusername": item.login_id,
-          "loginrole": item.role,
-          "logincompanyid": item.company
-        },
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.LoginUser.loginuserid,
-          "targetuserCompanyid": this.pageModel.LoginUser.logincompanyid
-        },
-        "deviceDetail":this.pageModel.deviceObj
+
+    //to do ユーザー名で　ロケーションデータを取る
+    this.pageModel.loginUser.loginuserid = item.uid;
+    this.pageModel.loginUser.loginusername = item.login_id;
+    this.pageModel.loginUser.loginrole = item.role;
+    this.pageModel.loginUser.logincompanyid = item.company;
+
+    this.pageModel.userInfoParame = {
+      "loginInfo": {
+        "loginuserid": this.pageModel.loginUser.loginuserid,
+        "loginusername": this.pageModel.loginUser.loginusername,
+        "loginrole": this.pageModel.loginUser.loginrole,
+        "logincompanyid": this.pageModel.loginUser.logincompanyid
+      },
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginuserid,
+        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
       }
     }
-    this.httpService.usePost('registerDevice', param).then(item => {
-      let data = JSON.parse(item);
-      try {
-        if (data.result) {
-          this.Init(null);
-          // $("#addinfo").hide();
-          // $('.modal-backdrop').remove();
-          alert('デバイス情報を登録しました');
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    });
   }
 
-
-
-  Init(pre: any) {
-    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    if (item != null) {
-      //to do ユーザー名で　ロケーションデータを取る
-      this.pageModel.LoginUser.loginuserid = item.uid;
-      this.pageModel.LoginUser.loginusername = item.login_id;
-      this.pageModel.LoginUser.loginrole = item.role;
-      this.pageModel.LoginUser.logincompanyid = item.company;
-
-      var param = {
-        "loginInfo": {
-          "loginuserid": this.pageModel.LoginUser.loginuserid,
-          "loginusername": this.pageModel.LoginUser.loginusername,
-          "loginrole": this.pageModel.LoginUser.loginrole,
-          "logincompanyid": this.pageModel.LoginUser.logincompanyid
-        },
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.LoginUser.loginuserid,
-          "targetuserCompanyid": this.pageModel.LoginUser.logincompanyid
-        }
-      }
-
-      this.httpService.usePost('/getCompanyDevices', param).then(item => {
-        try {
-
-          if (item != null) {
-            this.pageModel.deviceList = item;
-          }
-
-        } catch (e) {
-          console.log('ユーザー数数を検索API エラー　発生しました。');
-        }
-      })
-    }
-  }
   /**
  * Add new contact
  *
  * @param addTableDataModalContent      Id of the add contact modal;
  */
-  addLargeModal(addTableDataModalContent) {
-    this.addModal = this.modal.open(addTableDataModalContent, {
-      windowClass: 'animated fadeInDown'
-      , size: 'lg'
-    });
-    this.contactFlag = true;
-  }
-
-  /**
-* Add new contact
-*
-* @param addTableDataModalContent      Id of the add contact modal;
-*/
-  addMaxModal(addTableDataModalContent) {
-    this.addModal = this.modal.open(addTableDataModalContent, {
-      windowClass: 'animated fadeInDown modal-xl'
-      , size: 'lg'
-    });
-    this.contactFlag = true;
-  }
-
-  /**
-* Add new contact
-*
-* @param addTableDataModalContent      Id of the add contact modal;
-*/
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown'
     });
     this.contactFlag = true;
   }
-
   /**
      * Edit selected contact row.
      *
@@ -287,16 +232,35 @@ export class DeviceComponent implements OnInit {
    * @param row     Selected row for delete contact
    */
   deleteRow(row) {
-    let index = 0;
-    const temp = [...this.rows];
-    for (const tempRow of temp) {
-      if (tempRow.id === row.id) {
-        temp.splice(index, 1);
-        break;
-      }
-      index++;
+    // let index = 0;
+    // const temp = [...this.rows];
+    // for (const tempRow of temp) {
+    //   if (tempRow.id === row.id) {
+    //     temp.splice(index, 1);
+    //     break;
+    //   }
+    //   index++;
+    // }
+    // this.rows = temp;
+    var query = {
+      "loginInfo": {
+        "loginuserid": this.pageModel.loginUser.loginuserid,
+        "logincompanyid": this.pageModel.loginUser.logincompanyid
+      },
+      "productid": row.productid,
     }
-    this.rows = temp;
+    this.httpService.delete('deleteProduct', query).then(item => {
+      try {
+        if (item.body.resultCode === "0000") {
+
+          this.getProductAll();
+        } else {
+          console.log('削除失敗です。');
+        }
+      } catch (e) {
+        console.log('削除失敗です。');
+      }
+    });
   }
 
   /**
@@ -305,17 +269,48 @@ export class DeviceComponent implements OnInit {
    * @param editForm      Edit form for values check
    * @param id      Id match to the selected row Id
    */
-  onUpdate(editForm: NgForm, id) {
-    for (const row of this.rows) {
-      if (row.id === id && editForm.valid === true) {
-        row.name = this.selectedContact['name'];
-        row.email = this.selectedContact['email'];
-        row.phone = this.selectedContact['phone'];
-        this.editModal.close(editForm.resetForm);
-        break;
-      }
+  onUpdate() {
+    // for (const row of this.rows) {
+    //   if (row.id === id && editForm.valid === true) {
+    //     row.name = this.selectedContact['name'];
+    //     row.email = this.selectedContact['email'];
+    //     row.phone = this.selectedContact['phone'];
+    //     row.phone = this.selectedContact['phone'];
+    //     this.editModal.close(editForm.resetForm);
+    //     break;
+    //   }
+    // }
+
+    var query = {
+      "loginInfo": {
+        "loginuserid": this.pageModel.loginUser.loginuserid,
+        "logincompanyid": this.pageModel.loginUser.logincompanyid
+      },
+      "targetUserInfo": {
+        "targetuserid": 3
+      },
+
+      "productid": this.selectedContact.productid,
+      "producttypeid": this.selectedContact.producttypeid,
+      "productcode": this.selectedContact.productcode,
+      "productname": this.selectedContact.productname,
+      "model": this.selectedContact.model,
+      "version": this.selectedContact.version,
+      "simflag": this.selectedContact.simflag,
+      "summary": this.selectedContact.summary
     }
+
+    this.httpService.put('updateProduct', query).then(item => {
+      try {
+        console.log('更新成功です。');
+        console.log(item);
+        this.getProductAll();
+      } catch (e) {
+        console.log('更新失敗です。');
+      }
+    });
   }
+
 
   /**
    * Contact changed to favorite or non-favorite
@@ -370,38 +365,41 @@ export class DeviceComponent implements OnInit {
    *
    * @param addForm     Add contact form
    */
-  addNewContact(addForm: NgForm) {
-    if (this.contactImage == null) {
-      this.contactImage = '../../assets/images/portrait/small/default.png';
-    } else {
-      this.contactImage = this.contactImage;
+  addNewContact() {
+    // if (this.contactactive === undefined) {
+    //   this.contactactive = 'away';
+    // } else {
+    //   this.contactactive = this.contactactive;
+    // }
+
+    var query = {
+      "loginInfo": {
+        "loginuserid": this.pageModel.loginUser.loginuserid,
+        "logincompanyid": this.pageModel.loginUser.logincompanyid
+      },
+
+      "producttypeid": this.pageModel.addProduct.productTypeId,
+      "productcode": this.pageModel.addProduct.productcode,
+      "productname": this.pageModel.addProduct.productName,
+      "model": this.pageModel.addProduct.model,
+      "version": this.pageModel.addProduct.version,
+      "simflag": this.pageModel.addProduct.sim,
+      "summary": this.pageModel.addProduct.summary
     }
 
-    if (this.contactactive === undefined) {
-      this.contactactive = 'away';
-    } else {
-      this.contactactive = this.contactactive;
-    }
+    this.httpService.usePost('registerProduct', query).then(item => {
+      try {
+        console.log('登録成功です。');
+        console.log(item);
+        this.getProductAll();
+      } catch (e) {
+        console.log('登録失敗です。');
+      }
+    });
 
-    /**
-     * Add contact if valid addform value
-     */
-    if (addForm.valid === true) {
-      this.rows.push(
-        new Contact(
-          this.rows.length + 1,
-          this.contactName,
-          this.contactEmail,
-          this.contactPhone,
-          this.contactImage,
-          this.contactFavorite,
-          this.contactactive
-        )
-      );
-      this.rows = [...this.rows];
-      addForm.reset();
-      this.addModal.close(addForm.resetForm);
-    }
+    // addForm.reset();
+    // this.addModal.close(addForm.resetForm);
+
   }
 
   /**
@@ -486,8 +484,8 @@ export class DeviceComponent implements OnInit {
  */
   protected downloadSampleFiles() {
     let link = document.createElement("a");
-    link.download = "deviceInsert.xlsx";
-    link.href = "assets/excel/deviceInsert.xlsx";
+    link.download = "productInsert.xlsx";
+    link.href = "assets/excel/productInsert.xlsx";
     link.click();
   }
 
@@ -521,5 +519,60 @@ export class DeviceComponent implements OnInit {
       ///読み込み実施
       reader.readAsBinaryString(file);
     }
+  }
+
+  /**
+   * プロダクト一覧取得
+   */
+  protected async getProductAll() {
+    this.httpService.usePost('getProductAll', {}).then(item => {
+      try {
+        this.rows = [];
+        console.log(item);
+        var index = 1;
+        this.pageModel.productList = item;
+        if (item != null) {
+          item.forEach((elem) => {
+            this.rows.push(new Contact(
+              index,
+              elem.productname,
+              "EMAIL",
+              "080-0000-000",
+              elem.producttypeid,
+              elem.productid,
+              elem.productcode,
+              elem.productname,
+              elem.model,
+              elem.simflag,
+              elem.version,
+              elem.summary
+            ));
+            index++;
+          });
+          this.rows = [...this.rows];
+
+          // this.pageModel.products = item.productList;
+          // this.pageModel.productLength = item.productCount;
+          // this.pageModel.userList = item.userList;
+          // this.pageModel.userLength = item.userCount;
+          // this.pageModel.products = item.productList;
+          // this.pageModel.errlogList = item.errlogList;
+          // this.pageModel.errlogLength = item.errlogCount;
+
+          // this.pageModel.projectLength = item.projectCount;
+          // this.pageModel.deciveLength = item.deviceCount;
+          // this.pageModel.deviceOnlLength = 0;
+
+
+          // this.pageModel.products=[{productid:1,productcode:"code004",productname:"テスト用プロダクト",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0},{productid:2,productcode:"code004",productname:"テスト用プロダクト2",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0}];
+          //  this.pageModel.productLength = 0;  
+          // ユーザー数を検索
+          // this.getUserListLengthApi(this.UserInfo.role, this.UserInfo.uid)
+        }
+
+      } catch (e) {
+        console.log('ユーザー数数を検索API エラー　発生しました。');
+      }
+    });
   }
 }

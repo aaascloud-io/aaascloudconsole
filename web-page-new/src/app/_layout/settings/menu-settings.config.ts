@@ -71,9 +71,9 @@ export const MenuSettingsConfig: MenuConfig = {
               page: '/todo-app'
             },
             {
-              title: 'Contacts',
+              title: 'errorlist',
               icon: 'la-users',
-              page: '/contacts'
+              page: '/errorlist'
             },
             {
               title: 'Email Application',
@@ -922,13 +922,19 @@ export const MenuSettingsConfig: MenuConfig = {
       {
         title: 'プロダクト管理',
         icon: 'la-edit',
-        page: '/todo-app'
+        page: '/product'
       },
       {
         title: 'エラー管理',
-        icon: 'la-users',
-        page: '/contacts'
+        icon: 'la-bell',
+        page: '/errorlist'
       },
+      {
+        title: 'ユーザー管理',
+        icon: 'la-users',
+        page: '/user'
+      },
+     
       // {
       //   title: 'Email Application',
       //   icon: 'la-envelope',
@@ -1245,6 +1251,11 @@ export const MenuSettingsConfig: MenuConfig = {
       },
       {
         title: 'バージョン管理',
+        page: '/version',
+        icon: 'la-fire'
+      },
+      {
+        title: 'TEST',
         icon: 'la-fire',
         page: 'null',
         submenu: {

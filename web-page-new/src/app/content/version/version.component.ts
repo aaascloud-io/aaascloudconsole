@@ -32,11 +32,11 @@ class ErrorList{
 }
 
 @Component({
-  selector: 'app-contacts',
-  templateUrl: './contacts.component.html',
-  styleUrls: ['./contacts.component.css']
+  selector: 'app-version',
+  templateUrl: './version.component.html',
+  styleUrls: ['./version.component.css']
 })
-export class ContactsComponent implements OnInit {
+export class VersionComponent implements OnInit {
   selectedErrorItem:any;
 
 

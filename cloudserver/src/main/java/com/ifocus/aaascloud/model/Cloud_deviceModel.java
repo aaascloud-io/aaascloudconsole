@@ -45,6 +45,9 @@ public class Cloud_deviceModel {
 
 	private List<Integer> deviceidlist;	// デバイスIDのリスト
 	private List<Cloud_deviceDetailModel> deviceDetailList;	// デバイス詳細のリスト
+	@Getter
+	@Setter
+	private Cloud_deviceDetailModel deviceDetail;	// デバイス詳細
 
 	// 検索条件
 

@@ -184,9 +184,9 @@ public class Cloud_deviceService {
 		// 会社IDを設定する
 		this.setCompanyIDToModel(model);
 		// デバイス登録
-		Cloud_deviceEntity insertedEntity = cloud_deviceRepository.save(this.getEntitByModel(model));
+		Cloud_deviceEntity insertedEntity = cloud_deviceRepository.save(this.getEntitByDetailModel(model.getDeviceDetail()));
 		return insertedEntity.getDeviceid();
-
+		
 	}
 
 	/*

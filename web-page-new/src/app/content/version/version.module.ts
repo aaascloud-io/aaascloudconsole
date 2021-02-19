@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContactsComponent } from './contacts.component';
+import { VersionComponent } from './version.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -20,12 +20,12 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
     RouterModule.forChild([
       {
         path: '',
-        component: ContactsComponent
+        component: VersionComponent
       }
     ]),
 
   ],
-  declarations: [ContactsComponent],
+  declarations: [VersionComponent],
   exports: [RouterModule]
 })
-export class ContactsModule { }
+export class VersionModule { }
