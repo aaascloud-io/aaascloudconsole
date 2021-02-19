@@ -359,41 +359,4 @@ public class Cloud_projectController {
 		return responseData;
 
 	}
-
-	/**
-	 * デバイスリストのJsonを取得する
-	 * @param list List<Cloud_deviceModel>
-	 * @return String Json形式
-	 */
-	private String getDeviceJsonString(List<Cloud_deviceModel> list) {
-
-		String responseData = new String();
-		responseData = responseData + "[";
-		for (Cloud_deviceModel model:list) {
-			if (responseData.length() > 1) {
-				responseData = responseData + ",";
-			}
-			JSONObject resJasonObj = new JSONObject();
-			// 情報設定
-			resJasonObj.put("deviceid",model.getDeviceid());
-			resJasonObj.put("projectid",model.getProjectid());
-			resJasonObj.put("groupid",model.getGroupid());
-			resJasonObj.put("devicename",model.getDevicename());
-			resJasonObj.put("imei",model.getImei());
-			resJasonObj.put("iccid",model.getIccid());
-			resJasonObj.put("sn",model.getSn());
-			resJasonObj.put("sim_iccid",model.getSim_iccid());
-			resJasonObj.put("sim_imsi",model.getSim_imsi());
-			resJasonObj.put("sim_tel",model.getSim_tel());
-			resJasonObj.put("companyid",model.getCompanyid());
-			resJasonObj.put("userid",model.getUserid());
-			resJasonObj.put("alive",model.getAlive());
-
-			responseData = responseData + resJasonObj.toString();
-		}
-		responseData = responseData + "]";
-
-		return responseData;
-
-	}
 }
