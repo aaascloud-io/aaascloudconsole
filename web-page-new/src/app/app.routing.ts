@@ -75,9 +75,11 @@ const appRoutes: Routes = [
         path: 'errorlist', loadChildren: () => import('../app/content/errorlist/errorlist.module').then(m => m.ErrorlistModule),
         canActivate: [AuthGuard]
       },
-      // {
-      //   path: 'errorlist', component: ErrorListComponent, canActivate: [AuthGuard] 
-      // },
+      {
+        path: 'version', loadChildren: () => import('../app/content/version/version.module').then(m => m.VersionModule),
+        canActivate: [AuthGuard]
+      },
+      
       { path: 'chartjs', loadChildren: () => import('../app/content/charts-maps/chartjs/chartjs.module').then(m => m.ChartjsModule)
       , canActivate: [AuthGuard] },
       {

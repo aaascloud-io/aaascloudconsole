@@ -926,16 +926,15 @@ export const MenuSettingsConfig: MenuConfig = {
       },
       {
         title: 'エラー管理',
-        icon: 'la-users',
+        icon: 'la-bell',
         page: '/errorlist'
-        // page: '/errorlist'
       },
       {
         title: 'ユーザー管理',
         icon: 'la-users',
         page: '/user'
-        // page: '/errorlist'
       },
+     
       // {
       //   title: 'Email Application',
       //   icon: 'la-envelope',
@@ -1252,6 +1251,11 @@ export const MenuSettingsConfig: MenuConfig = {
       },
       {
         title: 'バージョン管理',
+        page: '/version',
+        icon: 'la-fire'
+      },
+      {
+        title: 'TEST',
         icon: 'la-fire',
         page: 'null',
         submenu: {
