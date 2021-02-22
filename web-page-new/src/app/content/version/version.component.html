@@ -9,7 +9,7 @@
             <div class="card">
               <div class="card-head">
                 <div class="card-header">
-                  <h4 class="card-title">ナージョン情報一覧</h4>
+                  <h4 class="card-title">バージョン情報一覧</h4>
                   
                 </div>
               </div>
@@ -47,7 +47,7 @@
                   </div> -->
                   <div class="row">
                     <div class="">
-                      <button type="button" class="btn btn-primary mr-2" (click)="deleteCheckedRow()">設定追加</button>
+                      <button type="button" class="btn btn-primary mr-2" (click)="addTableDataModal(addTableDataModalContent)">設定追加</button>
                       <button type="button" class="btn btn-info mr-2" (click)="deleteCheckedRow()">選択アップグレード</button>
                       <button type="button" class="btn btn-success mr-2" (click)="deleteCheckedRow()">全部アップグレード</button>
                     </div>
@@ -75,24 +75,19 @@
                         </div>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="Name" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="RowID" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <span class="avatar avatar-sm avatar-{{row.isActive}} rounded-circle">
-                          <img [src]="row.image"><i></i></span>{{row.rowid}}
+                        {{row.rowid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="Email" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="productID" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="">{{row.email}}</a>
+                        {{row.rowid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column>
                     <ngx-datatable-column name="Favorite" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <img src="../../../assets/images/raty/star-off.png" class="favoriteChange"
-                          *ngIf="!row.isFavorite" (click)="favoriteChange(row)">
-                        <img src="../../../assets/images/raty/star-on.png" class="favoriteChange" *ngIf="row.isFavorite"
-                          (click)="favoriteChange(row)">
+                        {{row.rowid}}
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
@@ -101,34 +96,9 @@
                           (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
                         </a>
                         <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
-                        <span class="dropdown" ngbDropdown placement="left">
-                          <a [routerLink]="" id="btnSearchDrop27" ngbDropdownToggle id="dropdownBasic1"
-                            class="mrless"><i class="la la-ellipsis-v"></i></a>
-                          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                            <a [routerLink]="" class="dropdown-item edit space"
-                              (click)="editTableDataModal(editTableDataModalContent, row)"><i
-                                class="feather ft-edit-2"></i>Edit</a>
-                            <a [routerLink]="" class="dropdown-item delete space" (click)="deleteRow(row)"><i
-                                class="feather ft-trash-2"></i> Delete</a>
-                            <a [routerLink]="" class="dropdown-item space"><i class="feather ft-plus-circle primary"></i>
-                              Projects</a>
-                            <a [routerLink]="" class="dropdown-item space"><i class="feather ft-plus-circle info"></i>
-                              Team</a>
-                            <a [routerLink]="" class="dropdown-item space"><i class="feather ft-plus-circle warning"></i>
-                              Clients</a>
-                            <a [routerLink]="" class="dropdown-item space"><i class="feather ft-plus-circle success"></i>
-                              Friends</a>
-                          </div>
-
-                        </span>
                       </ng-template>
-
                     </ngx-datatable-column>
                   </ngx-datatable>
-
-
-
-
                 </div>
               </div>
             </div>
@@ -136,7 +106,6 @@
         </section>
       </div>
     </div>
-    
   </div>
 </div>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
@@ -189,6 +158,35 @@
       </div>
   
 
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- 新規追加 -->
+<ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">新規追加</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- <div class="form-group col-12">
+        <label >エラーコード</label>
+        <input type="text" [(ngModel)]="selectedErrorItem.errcode" #editname="ngModel" name="errcode" id="errcode"
+          class="name form-control" placeholder="Name" disabled
+          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+      </div> -->
+  
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">

@@ -125,7 +125,7 @@ export class VersionComponent implements OnInit {
     };
     this.rows = [];
 
-    var res = await this.httpService.post("/getVersionList",param);
+    var res = await this.httpService.post("/getErrlogList",param);
     console.log("这是res的值");
     console.log(res);
 
