@@ -47,9 +47,9 @@
                   </div> -->
                   <div class="row">
                     <div class="">
-                      <button type="button" class="btn btn-primary" (click)="deleteCheckedRow()">設定追加</button>
-                      <button type="button" class="btn btn-info" (click)="deleteCheckedRow()">選択アップグレード</button>
-                      <button type="button" class="btn btn-success" (click)="deleteCheckedRow()">全部アップグレード</button>
+                      <button type="button" class="btn btn-primary mr-2" (click)="deleteCheckedRow()">設定追加</button>
+                      <button type="button" class="btn btn-info mr-2" (click)="deleteCheckedRow()">選択アップグレード</button>
+                      <button type="button" class="btn btn-success mr-2" (click)="deleteCheckedRow()">全部アップグレード</button>
                     </div>
                   </div>
 
@@ -57,45 +57,78 @@
                     [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
                     (select)='onSelectContact($event)' fxFlex="auto" [perfectScrollbar]="config">
 
-                    <ngx-datatable-column name="NO." [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.rowid}}
+                    <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
+                      <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
+                        let-selectFn="selectFn">
+                        <span class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="selectAll" [checked]="allRowsSelected"
+                            (change)="selectFn(!allRowsSelected)" />
+                          <label class="custom-control-label" for="selectAll"></label>
+                        </span>
+                      </ng-template>
+                      <ng-template ngx-datatable-cell-template let-value="value" let-row="row" let-rowIndex="rowIndex"
+                        let-onCheckboxChangeFn="onCheckboxChangeFn" let-isSelected="isSelected">
+                        <div class="custom-control custom-checkbox _center">
+                          <input type="checkbox" class="custom-control-input" id="select{{rowIndex}}"
+                            [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
+                          <label class="custom-control-label" for="select{{rowIndex}}"></label>
+                        </div>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="エラーコード" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="Name" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.errcode}}
+                        <span class="avatar avatar-sm avatar-{{row.isActive}} rounded-circle">
+                          <img [src]="row.image"><i></i></span>{{row.rowid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="デバイスID" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="Email" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.device}}
+                        <a [routerLink]="">{{row.email}}</a>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="管理者" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column>
+                    <ngx-datatable-column name="Favorite" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.userid}}
+                        <img src="../../../assets/images/raty/star-off.png" class="favoriteChange"
+                          *ngIf="!row.isFavorite" (click)="favoriteChange(row)">
+                        <img src="../../../assets/images/raty/star-on.png" class="favoriteChange" *ngIf="row.isFavorite"
+                          (click)="favoriteChange(row)">
                       </ng-template>
                     </ngx-datatable-column>
-
-                    <ngx-datatable-column name="発生日時" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.datatime | date:'yyyy/MM/dd hh:mm:ss'}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="対応ステータス" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.statusflag}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="操作" [flexGrow]="1" [minWidth]="100">
+                    <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
                         </a>
+                        <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
+                        <span class="dropdown" ngbDropdown placement="left">
+                          <a [routerLink]="" id="btnSearchDrop27" ngbDropdownToggle id="dropdownBasic1"
+                            class="mrless"><i class="la la-ellipsis-v"></i></a>
+                          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <a [routerLink]="" class="dropdown-item edit space"
+                              (click)="editTableDataModal(editTableDataModalContent, row)"><i
+                                class="feather ft-edit-2"></i>Edit</a>
+                            <a [routerLink]="" class="dropdown-item delete space" (click)="deleteRow(row)"><i
+                                class="feather ft-trash-2"></i> Delete</a>
+                            <a [routerLink]="" class="dropdown-item space"><i class="feather ft-plus-circle primary"></i>
+                              Projects</a>
+                            <a [routerLink]="" class="dropdown-item space"><i class="feather ft-plus-circle info"></i>
+                              Team</a>
+                            <a [routerLink]="" class="dropdown-item space"><i class="feather ft-plus-circle warning"></i>
+                              Clients</a>
+                            <a [routerLink]="" class="dropdown-item space"><i class="feather ft-plus-circle success"></i>
+                              Friends</a>
+                          </div>
+
+                        </span>
                       </ng-template>
+
                     </ngx-datatable-column>
                   </ngx-datatable>
+
+
+
+
                 </div>
               </div>
             </div>
