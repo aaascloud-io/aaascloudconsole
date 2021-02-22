@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,10 +29,10 @@ public class Cloud_companyController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getUnderCompanies", method = RequestMethod.GET)
+	@RequestMapping(value = "/getUnderCompanies", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getUnderCompanies(LoginInfo loginInfo) throws Exception {
+	public BaseHttpResponse<String> getUnderCompanies(@RequestBody LoginInfo loginInfo) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 

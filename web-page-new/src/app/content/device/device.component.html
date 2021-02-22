@@ -49,8 +49,8 @@
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">所有者</label>
-                        <ng-select [items]="singleSelectArray" [searchable]="true" bindLabel="item_text"
-                          [(ngModel)]="singlebasicSelected">
+                        <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname"
+                          [(ngModel)]="conpanySelected">
                         </ng-select>
                       </div>
                     </div>
@@ -225,6 +225,7 @@
 </ng-template> -->
 
 <ng-template #addModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="addNewDecice(addDeviceForm)" #addDeviceForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">登録</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -240,7 +241,6 @@
         <h6>IMEI</h6>
         <input type="text" [(ngModel)]="pageModel.deviceDetail.imei" name="imei" 
           class="contact-name form-control" placeholder="IMEI">
-
       </div>
       <div class="form-group col-12">
         <h6>ICCID</h6>
@@ -254,32 +254,35 @@
       </div>
       <div class="form-group col-12">
         <h6>所有者</h6>
-        <ng-select [items]="singleSelectArray" [searchable]="true" bindLabel="item_text" placeholder="所有者"
-          [(ngModel)]="singlebasicSelected">
+        <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname" placeholder="所有者"  name="company" 
+          [(ngModel)]="pageModel.deviceDetail.companyid" value="companySelectArray.companyid">
         </ng-select>
       </div>
       <div class="form-group col-12">
         <h6>暗号化通信</h6>
-        <ng-select [searchable]="true" bindLabel="item_text" placeholder="暗号化通信" [(ngModel)]="singlebasicSelected" >
-          <option value=0 selected>OFF</option>
-          <option value=1>ON</option>
+        <ng-select [items]="sslSelectArray" [searchable]="true" bindLabel="item_text" placeholder="暗号化通信" name="ssl" 
+        [(ngModel)]="pageModel.deviceDetail.encryptedCommunications">
         </ng-select>
       </div>
       <div class="form-group col-12">
         <h6>暗号化キー</h6>
-        <input type="text" class="form-control" name="devicename1" placeholder="空白の場合、サーバーで自動生成します">
+        <input type="text" class="form-control" name="encryptedKey" placeholder="空白の場合、サーバーで自動生成します"
+        [(ngModel)]="pageModel.deviceDetail.encryptedKey">
       </div>
       <div class="form-group col-12">
         <h6>接続サーバーアドレス</h6>
-        <input type="text" class="form-control" name="devicename2" placeholder="空白の場合、サーバーで自動生成します">
+        <input type="text" class="form-control" name="connectserverurl" placeholder="空白の場合、サーバーで自動生成します" 
+        [(ngModel)]="pageModel.deviceDetail.connectserverurl">
       </div>
       <div class="form-group col-12">
         <h6>接続サーバーポート番号</h6>
-        <input type="text" class="form-control" name="devicename3" placeholder="空白の場合、サーバーで自動生成します">
+        <input type="text" class="form-control" name="connectserverport" placeholder="空白の場合、サーバーで自動生成します" 
+        [(ngModel)]="pageModel.deviceDetail.connectserverport">
       </div>
       <div class="form-group col-12">
         <h6>バンディング済みフラグ</h6>
-        <input type="text" class="form-control" name="devicename4" placeholder="空白の場合、サーバーで自動生成します">
+        <input type="text" class="form-control" name="bindingflag" placeholder="空白の場合、サーバーで自動生成します" 
+        [(ngModel)]="pageModel.deviceDetail.bindingflag">
       </div>
       <div class="form-group col-12">
         <h6>プロダクト</h6>
@@ -300,14 +303,15 @@
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
-        <button type="button" id="add-contact-item" (click)="insert()" class="btn btn-info add-contact-item"><i
+        <button type="submit" id="add-contact-item"  class="btn btn-info add-contact-item"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
       </div>
     </div>
+  </form>
 </ng-template>
 
 <ng-template #addExcelModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
+  <form (ngSubmit)="addNewContact(addExeclForm)" #addExeclForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">一括登録</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -370,7 +374,7 @@
   </form>
 </ng-template> 
 <ng-template #addGroupModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
+  <form (ngSubmit)="addNewContact(groupSelectForm)" #groupSelectForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">グループ選択</h5>
       <button type="button" name="groupSelect" class="close" aria-label="Close" (click)="d('Cross click')">

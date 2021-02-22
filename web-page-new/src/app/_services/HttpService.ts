@@ -68,6 +68,20 @@ export class HttpService {
         })
     }
 
+    useRpPost(path: string, datas: any): Promise<any> {
+        return this._http.post(this.baseService.getPath(path), datas, this.baseService.getHeader())
+            .toPromise()
+            .then((result: any) => {
+                return result;
+            })
+            .catch((err) => {
+                if (err.status === 401 && err.error.result === false) {
+                    this.loginFail(err);
+                }
+                console.log('post error = ' + JSON.stringify(err));
+            });
+    }
+
     useVerify(path:string,data:any) : Promise<any>{
         return this._http.post(this.baseService.getPath(path),JSON.stringify(data),this.baseService.getHeader())
         .toPromise()

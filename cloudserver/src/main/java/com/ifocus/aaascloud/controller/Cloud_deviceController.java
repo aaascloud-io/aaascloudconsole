@@ -229,19 +229,19 @@ public class Cloud_deviceController {
 
 				if (deviceid != null) {
 
-					String responseData = new String();
-					responseData = responseData + "{";
-
-					JSONObject resJasonObj = new JSONObject();
-					// 情報設定
-					resJasonObj.put("registerCount", 1);
-
-					responseData = responseData + "}";
+//					String responseData = new String();
+//					responseData = responseData + "{";
+//
+//					JSONObject resJasonObj = new JSONObject();
+//					// 情報設定
+//					resJasonObj.put("registerCount", 1);
+//
+//					responseData = responseData + "}";
 
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-					response.setData(responseData);
+					response.setData(deviceid.toString());
 				} else {
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0100);

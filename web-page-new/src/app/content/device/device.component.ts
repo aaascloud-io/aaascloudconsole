@@ -60,6 +60,20 @@ export class DeviceComponent implements OnInit {
   multipleMultiSelect: any;
   public multipleSelectArray = formInputData.multipleSelectArray;
   public singleSelectArray = selectData.singleSelectArray;
+  //所有者
+  public companySelectArray = [];
+  conpanySelected: any;
+  //暗号化
+  public sslSelectArray: [
+    {
+      "item_id": 1, "item_text": "OFF"
+    },
+    {
+      "item_id": 2, "item_text": "ON"
+    }
+  ]
+  sslSelected: any;
+
 
   public pageModel = {
     //Login情報
@@ -73,20 +87,20 @@ export class DeviceComponent implements OnInit {
     //一覧用
     deviceList: [],
     // 一括登録のデバイス定義リスト
-    addDeviceDetailList:[],
+    addDeviceDetailList: [],
     deviceDetail: {
       devicename: '',
       imei: '',
       iccid: '',
       sn: '',
       companyid: '',
-      //todo
-      // 暗号化通信
-      // 暗号化キー
-      // 接続サーバアドレス
-      // 接続サーバポート番号
-      // バンディング済みフラグ
-      //業界
+      encryptedCommunications:'',
+      encryptedKey:'',
+      connectserverurl:'',
+      connectserverport:'',
+      bindingflag:'',
+      fmlastestversion:'',
+      versioncomfirmtime:'',
       productid: '',
       sim_imsi: '',
       sim_tel: '',
@@ -116,37 +130,39 @@ export class DeviceComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.singlebasicSelected = this.singleSelectArray[0].item_text;
+
+    // this.singlebasicSelected = this.singleSelectArray[0].item_text;
+    // this.conpanySelected = this.companySelectArray[0].item_text;
     this.Init(null);
   }
   // 新規
   insert(): void {
-    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    if (item != null) {
+    let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    if (routeif != null) {
       //to do ユーザー名で　ロケーションデータを取る
       // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
       var param = {
         "loginInfo": {
-          "loginuserid": item.uid,
-          "loginusername": item.login_id,
-          "loginrole": item.role,
-          "logincompanyid": item.company
+          "loginuserid": routeif.uid,
+          "loginusername": routeif.login_id,
+          "loginrole": routeif.role,
+          "logincompanyid": routeif.company
         },
         "targetUserInfo": {
-          "targetuserid": item.uid,
-          "targetuserCompanyid": item.company
+          "targetuserid": routeif.uid,
+          "targetuserCompanyid": routeif.company
         },
-        "deviceDetail":this.pageModel.deviceDetail
+        "deviceDetail": this.pageModel.deviceDetail
       }
     }
-    this.httpService.usePost('registerDevice', param).then(item => {
-      let data = JSON.parse(item);
+    this.httpService.useRpPost('registerDevice', param).then(item => {
       try {
-        if (data.result) {
+        if (item.resultCode == "0000") {
+
           this.Init(null);
           // $("#addinfo").hide();
           // $('.modal-backdrop').remove();
-          alert('デバイス情報を登録しました');
+          // alert('デバイス情報を登録しました');
         }
       } catch (e) {
         console.log(e);
@@ -157,6 +173,7 @@ export class DeviceComponent implements OnInit {
 
 
   Init(pre: any) {
+    this.getCompanyList();
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     if (item != null) {
       var param = {
@@ -185,6 +202,23 @@ export class DeviceComponent implements OnInit {
       })
     }
   }
+
+  getCompanyList() {
+    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    var param = {
+      "loginuserid": item.uid
+    };
+    this.httpService.usePost('/getUnderCompanies', param).then(item => {
+      try {
+        if (item != null) {
+          this.companySelectArray = item;
+        }
+      } catch (e) {
+        console.log('配下会社一覧を取得API エラー　発生しました。');
+      }
+    })
+  }
+
   /**
  * Add new contact
  *
@@ -226,8 +260,56 @@ export class DeviceComponent implements OnInit {
   /**
    * New contact add to the table
    *
-   * @param addForm     Add contact form
+   * @param addDeviceForm     Add contact form
    */
+  addNewDecice(addDeviceForm: NgForm) {
+    let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    if (routeif != null) {
+      //to do ユーザー名で　ロケーションデータを取る
+      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
+      var param = {
+        "loginInfo": {
+          "loginuserid": routeif.uid,
+          "loginusername": routeif.login_id,
+          "loginrole": routeif.role,
+          "logincompanyid": routeif.company
+        },
+        "targetUserInfo": {
+          "targetuserid": routeif.uid,
+          "targetuserCompanyid": routeif.company
+        },
+        "deviceDetail": this.pageModel.deviceDetail
+      }
+    }
+    this.httpService.useRpPost('registerDevice', param).then(item => {
+      try {
+        if (item.resultCode == "0000") {
+
+          this.Init(null);
+          // $("#addinfo").hide();
+          // $('.modal-backdrop').remove();
+          alert('デバイス情報を登録しました');
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    /**
+     * Add contact if valid addform value
+     */
+    if (addDeviceForm.valid === true) {
+
+      addDeviceForm.reset();
+      this.addModal.close(addDeviceForm.resetForm);
+    }
+  }
+
+  /**
+ * New contact add to the table
+ *
+ * @param addForm     Add contact form
+ */
   addNewContact(addForm: NgForm) {
 
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
@@ -245,7 +327,7 @@ export class DeviceComponent implements OnInit {
           "targetuserid": item.uid,
           "targetuserCompanyid": item.company
         },
-        "deviceDetail":this.pageModel.addDeviceDetailList
+        "deviceDetail": this.pageModel.addDeviceDetailList
       }
     }
     this.httpService.usePost('registerDevice', param).then(item => {
