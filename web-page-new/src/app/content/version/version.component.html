@@ -9,7 +9,7 @@
             <div class="card">
               <div class="card-head">
                 <div class="card-header">
-                  <h4 class="card-title">ナージョン情報一覧</h4>
+                  <h4 class="card-title">バージョン情報一覧</h4>
                   
                 </div>
               </div>
@@ -47,9 +47,9 @@
                   </div> -->
                   <div class="row">
                     <div class="">
-                      <button type="button" class="btn btn-primary" (click)="deleteCheckedRow()">設定追加</button>
-                      <button type="button" class="btn btn-info" (click)="deleteCheckedRow()">選択アップグレード</button>
-                      <button type="button" class="btn btn-success" (click)="deleteCheckedRow()">全部アップグレード</button>
+                      <button type="button" class="btn btn-primary mr-2" (click)="addTableDataModal(addTableDataModalContent)">設定追加</button>
+                      <button type="button" class="btn btn-info mr-2" (click)="deleteCheckedRow()">選択アップグレード</button>
+                      <button type="button" class="btn btn-success mr-2" (click)="deleteCheckedRow()">全部アップグレード</button>
                     </div>
                   </div>
 
@@ -57,42 +57,45 @@
                     [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
                     (select)='onSelectContact($event)' fxFlex="auto" [perfectScrollbar]="config">
 
-                    <ngx-datatable-column name="NO." [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
+                      <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
+                        let-selectFn="selectFn">
+                        <span class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="selectAll" [checked]="allRowsSelected"
+                            (change)="selectFn(!allRowsSelected)" />
+                          <label class="custom-control-label" for="selectAll"></label>
+                        </span>
+                      </ng-template>
+                      <ng-template ngx-datatable-cell-template let-value="value" let-row="row" let-rowIndex="rowIndex"
+                        let-onCheckboxChangeFn="onCheckboxChangeFn" let-isSelected="isSelected">
+                        <div class="custom-control custom-checkbox _center">
+                          <input type="checkbox" class="custom-control-input" id="select{{rowIndex}}"
+                            [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
+                          <label class="custom-control-label" for="select{{rowIndex}}"></label>
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="RowID" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         {{row.rowid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="エラーコード" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="productID" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.errcode}}
+                        {{row.rowid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="デバイスID" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="Favorite" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.device}}
+                        {{row.rowid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="管理者" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.userid}}
-                      </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column name="発生日時" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.datatime | date:'yyyy/MM/dd hh:mm:ss'}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="対応ステータス" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.statusflag}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="操作" [flexGrow]="1" [minWidth]="100">
+                    <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
                         </a>
+                        <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
                       </ng-template>
                     </ngx-datatable-column>
                   </ngx-datatable>
@@ -103,7 +106,6 @@
         </section>
       </div>
     </div>
-    
   </div>
 </div>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
@@ -156,6 +158,35 @@
       </div>
   
 
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- 新規追加 -->
+<ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">新規追加</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- <div class="form-group col-12">
+        <label >エラーコード</label>
+        <input type="text" [(ngModel)]="selectedErrorItem.errcode" #editname="ngModel" name="errcode" id="errcode"
+          class="name form-control" placeholder="Name" disabled
+          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+      </div> -->
+  
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">

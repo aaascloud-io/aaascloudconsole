@@ -9,6 +9,7 @@ import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from '../../_common/_interface/userInfo'
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
+// import { USERCODE } from '../../_common/_utils/codes-utils';
 
 class Contact {
   constructor(
@@ -62,7 +63,7 @@ export class ProductComponent implements OnInit {
   temp = [];
   temp2 = this.rows;
   singlebasicSelected: any;
-
+  productTypes = [];
 
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
@@ -70,12 +71,12 @@ export class ProductComponent implements OnInit {
   public singleSelectArray = selectData.singleSelectArray;
 
   protected pageModel = {
-    // 一括登録のデバイス定義リスト
+    USERCODE:null,
     addList: [],
     dataAll: [],
     productList: [],
     addProduct: {
-      productTypeId: 0,
+      productTypeId: null,
       productcode: '',
       productName: '',
       model: '',
@@ -94,7 +95,7 @@ export class ProductComponent implements OnInit {
       summary: ''
     },
     loginUser: {
-      loginuserid: '',
+      loginuserid: null,
       loginusername: '',
       loginrole: null,
       logincompanyid: '',
@@ -161,6 +162,7 @@ export class ProductComponent implements OnInit {
         "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
       }
     }
+    this.getProductTypes();
   }
 
   /**
@@ -550,24 +552,6 @@ export class ProductComponent implements OnInit {
             index++;
           });
           this.rows = [...this.rows];
-
-          // this.pageModel.products = item.productList;
-          // this.pageModel.productLength = item.productCount;
-          // this.pageModel.userList = item.userList;
-          // this.pageModel.userLength = item.userCount;
-          // this.pageModel.products = item.productList;
-          // this.pageModel.errlogList = item.errlogList;
-          // this.pageModel.errlogLength = item.errlogCount;
-
-          // this.pageModel.projectLength = item.projectCount;
-          // this.pageModel.deciveLength = item.deviceCount;
-          // this.pageModel.deviceOnlLength = 0;
-
-
-          // this.pageModel.products=[{productid:1,productcode:"code004",productname:"テスト用プロダクト",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0},{productid:2,productcode:"code004",productname:"テスト用プロダクト2",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0}];
-          //  this.pageModel.productLength = 0;  
-          // ユーザー数を検索
-          // this.getUserListLengthApi(this.UserInfo.role, this.UserInfo.uid)
         }
 
       } catch (e) {
@@ -575,4 +559,23 @@ export class ProductComponent implements OnInit {
       }
     });
   }
+  /**
+   * プロダクト一覧取得
+   */
+  protected async getProductTypes() {
+    this.httpService.useGet('getProductTypeAll').then(item => {
+      try {
+        if (item) {
+          this.productTypes = item;
+          console.log(item);
+          console.log("プロダクトタイプの取得は成功しました。");
+        } else {
+          console.log("プロダクトタイプの取得は失敗しました。");
+        }
+      } catch (e) {
+        console.log("プロダクトタイプの取得は失敗しました。");
+      }
+    });
+  }
+
 }

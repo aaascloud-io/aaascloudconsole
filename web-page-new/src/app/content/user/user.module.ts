@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserComponent } from './user.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { ProductRoutingModule } from './user-routing.module';
+import { UserRoutingModule } from './user-routing.module';
 
 import { FormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -14,7 +14,7 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 @NgModule({
   imports: [
     CommonModule,
-    ProductRoutingModule,
+    UserRoutingModule,
     NgxDatatableModule,
     BreadcrumbModule,
     FormsModule,

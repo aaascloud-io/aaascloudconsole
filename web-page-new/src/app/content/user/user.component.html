@@ -15,10 +15,10 @@
                         (click)="addTableDataModal(addTableDataModalContent)">
                         <i class="d-md-none d-block feather ft-plus white"></i>
                         <span class="d-md-block d-none">新　規</span></button>
-                      <!-- <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
+                      <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
                         (click)="deleteCheckedRow()">
                         <i class="d-md-none d-block feather ft-plus white"></i>
-                        <span class="d-md-block d-none">削　除</span></button> -->
+                        <span class="d-md-block d-none">削　除</span></button>
                     </div>
                   </div>
                   <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'"
@@ -26,7 +26,7 @@
                     [selectionType]="'checkbox'" (select)='onSelectContact($event)' fxFlex="auto"
                     [perfectScrollbar]="config">
 
-                    <!-- <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
+                    <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
                       <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
                         let-selectFn="selectFn">
                         <span class="custom-control custom-checkbox">
@@ -43,44 +43,36 @@
                           <label class="custom-control-label" for="select{{rowIndex}}"></label>
                         </div>
                       </ng-template>
-                    </ngx-datatable-column> -->
-                    <ngx-datatable-column name="タイプ" [flexGrow]="1" [minWidth]="140">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="ユーザー名" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a *ngIf="row.producttypeid===1">TRACKER</a>
-                        <a *ngIf="row.producttypeid===2">FACE</a>
-                        <a *ngIf="row.producttypeid===3">WATCH</a>
+                        <a>{{row.username}}</a>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="プロダクトコード" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="会社名" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="">{{row.productcode}}</a>
+                        <a>{{row.companyName}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <!-- <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column> -->
-                    <ngx-datatable-column name="型番" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="アドレス" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.model}}</a>
+                        <a>{{row.userid}}</a>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="プロダクトID" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="メール" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.productid}}</a>
+                        <a>{{row.companyid}}</a>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="プロダクト名" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="ユーザー数" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.productname}}</a>
+                        <a [routerLink]="">{{row.userCount}}</a>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="SIMカード" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="デバイス数" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a *ngIf="row.simflag==0">有</a>
-                        <a *ngIf="row.simflag==1">無</a>
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="バージョン" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.version}}</a>
+                        <a [routerLink]="">{{row.devicecount}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
@@ -118,9 +110,12 @@
         <select class="form-control" id="typeId" name="typeId" [(ngModel)]="selectedContact.producttypeid"
           #editname="ngModel" name="producttypeid" id="producttypeid"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-          <option [value]=2>TRACKER</option>
+          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+            {{type.producttypename}}
+          </option>
+          <!-- <option [value]=2>TRACKER</option>
           <option [value]=1>FACE</option>
-          <option [value]=3>WATCH</option>
+          <option [value]=3>WATCH</option> -->
         </select>
         <!-- <input type="text" [(ngModel)]="selectedContact.name" #editname="ngModel" name="name" id="name"
           class="name form-control" placeholder="Name"
@@ -179,7 +174,7 @@
   </form>
 </ng-template>
 <ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact()" #editForm="ngForm">
+  <form (ngSubmit)="addUser()" #editForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">新規</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -188,58 +183,54 @@
     </div>
     <div class="modal-body">
       <div class="form-group col-12">
-        <h6>プロダクトタイプ</h6>
-        <select class="form-control" id="typeId" name="typeId" [(ngModel)]="pageModel.addProduct.productTypeId"
+        <h6>会社名</h6>
+        <!-- <select class="form-control" id="typeId" name="typeId" [(ngModel)]="pageModel.addProduct.productTypeId"
           #editname="ngModel" name="productTypeId" id="productTypeId"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-          <option [value]=2>TRACKER</option>
-          <option [value]=1>FACE</option>
-          <option [value]=3>WATCH</option>
-        </select>
-        <!-- <input type="text" [(ngModel)]="pageModel.addProduct.productTypeId" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="プロダクトタイプ"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required> -->
+          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+            {{type.producttypename}}
+          </option>
+        </select> -->
+        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyid" #editname="ngModel" name="name" id="name"
+          class="name form-control" placeholder="会社名"
+          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">プロダクトタイプを選んでください</div>
         </div>
       </div>
       <div class="form-group col-12">
-        <h6>プロダクト名</h6>
-        <input type="text" [(ngModel)]="pageModel.addProduct.productName" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="プロダクト名"
+        <h6>ユーザー名</h6>
+        <input type="text" [(ngModel)]="pageModel.adduserInfo.username" #editname="ngModel" name="username"
+          id="username" class="name form-control" placeholder="ユーザー名"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">プロダクト名を入力してください</div>
         </div>
       </div>
       <div class="form-group col-12">
-        <h6>プロダクトコード</h6>
-        <input type="text" [(ngModel)]="pageModel.addProduct.productcode" #editmodel="ngModel" name="productcode"
-          id="productcode" class="name form-control" placeholder="プロダクトコード">
+        <h6>パスワード</h6>
+        <input type="text" [(ngModel)]="pageModel.adduserInfo.passwrod" #editmodel="ngModel" name="passwrod"
+          id="passwrod" class="name form-control" placeholder="パスワード">
       </div>
       <div class="form-group col-12">
-        <h6>型番</h6>
-        <input type="text" [(ngModel)]="pageModel.addProduct.model" #editmodel="ngModel" name="model" id="model"
-          class="name form-control" placeholder="型番">
+        <h6>パスワード確認</h6>
+        <input type="text" [(ngModel)]="pageModel.adduserInfo.passwrod2" #editmodel="ngModel" name="passwrod2"
+          id="passwrod2" class="name form-control" placeholder="パスワード確認">
       </div>
       <div class="form-group col-12">
-        <h6>バージョン</h6>
-        <input type="text" [(ngModel)]="pageModel.addProduct.version" #editversion="ngModel" name="version" id="version"
-          class="name form-control" placeholder="バージョン">
+        <h6>アドレス</h6>
+        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.address" #editversion="ngModel" name="address"
+          id="address" class="name form-control" placeholder="アドレス">
       </div>
       <div class="form-group col-12">
-        <h6>SIMカード有無</h6>
-        <select class="form-control" id="sim" name="sim" [(ngModel)]="pageModel.addProduct.sim">
-          <option [value]=0>有</option>
-          <option [value]=1>無</option>
-        </select>
-        <!-- <input type="text" [(ngModel)]="pageModel.addProduct.sim" #editsim="ngModel" name="sim" id="sim"
-          class="name form-control" placeholder="SIMカード"> -->
+        <h6>メール</h6>
+        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.address" #editversion="ngModel" name="address"
+          id="address" class="name form-control" placeholder="メール">
       </div>
       <div class="form-group col-12">
-        <h6>説明</h6>
-        <textarea id="summary" rows="5" class="form-control square" name="summary"
-          [(ngModel)]="pageModel.addProduct.summary" placeholder="summary"></textarea>
+        <h6>電話</h6>
+        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.phone" #editversion="ngModel" name="phone"
+          id="phone" class="name form-control" placeholder="電話">
       </div>
 
     </div>
