@@ -26,11 +26,6 @@ public class Cloud_deviceModel {
 	private String sn;
 	private String sim_iccid;
 	private String sim_imsi;
-	@Getter
-	@Setter
-	private String sim_imsi;
-	@Getter
-	@Setter
 	private String sim_tel;
 	private Integer encryptedcommunications;
 	private String encryptedkey;
