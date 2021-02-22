@@ -13,24 +13,23 @@ import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 class Contact {
   constructor(
     public id: number,
-    public name: string,
-    public email: string,
-    public phone: string,
-    public producttypeid: any,
-    public productid: any,
-    public productcode: any,
-    public productname: string,
-    public model: string,
-    public simflag: number,
-    public version: string,
-    public summary: string,
+    public userid: number,
+    public username: string,
+    public companyid: number,
+    public loginid: string,
+    public role: number,
+    public upperuserid: string,
+    public companyName: string,
+    public devicecount: number,
+    public userCount: number,
+    public projectCount: number,
   ) { }
 }
 const formInputData = require('../../../assets/data/forms/form-elements/form-inputs.json');
 const selectData = require('../../../assets/data/forms/form-elements/select.json');
 
 @Component({
-  selector: 'app-user',
+  selector: 'app-product',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
@@ -59,10 +58,11 @@ export class UserComponent implements OnInit {
   value: any;
   loadingIndicator: true;
   selected = [];
+  selectedUserid = [];
   temp = [];
   temp2 = this.rows;
   singlebasicSelected: any;
-
+  productTypes = [];
 
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
@@ -73,15 +73,17 @@ export class UserComponent implements OnInit {
     // 一括登録のデバイス定義リスト
     addList: [],
     dataAll: [],
-    productList: [],
-    addProduct: {
-      productTypeId: 0,
-      productcode: '',
-      productName: '',
-      model: '',
-      version: '',
-      sim: 0,
-      summary: ''
+    userList: [],
+    adduserInfo: {
+      username: '',
+      passwrod: '',
+      passwrod2: '',
+      companyid: '',
+      companyInfo: {
+        address: '',
+        phone: '',
+        mail: '',
+      }
     },
     updataProduct: {
       productId: 0,
@@ -99,7 +101,11 @@ export class UserComponent implements OnInit {
       loginrole: null,
       logincompanyid: '',
     },
-    userInfoParame: {}
+    userInfoParame: {
+      loginInfo: {},
+      targetUserInfo: {}
+
+    }
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -121,7 +127,7 @@ export class UserComponent implements OnInit {
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
   ) {
-    this.getProductAll();
+    this.getUserAll();
   }
 
   ngOnInit(): void {
@@ -149,18 +155,17 @@ export class UserComponent implements OnInit {
     this.pageModel.loginUser.loginrole = item.role;
     this.pageModel.loginUser.logincompanyid = item.company;
 
-    this.pageModel.userInfoParame = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "loginusername": this.pageModel.loginUser.loginusername,
-        "loginrole": this.pageModel.loginUser.loginrole,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
-      }
+    this.pageModel.userInfoParame.loginInfo = {
+      "loginuserid": this.pageModel.loginUser.loginuserid,
+      "loginusername": this.pageModel.loginUser.loginusername,
+      "loginrole": this.pageModel.loginUser.loginrole,
+      "logincompanyid": this.pageModel.loginUser.logincompanyid
     }
+    this.pageModel.userInfoParame.targetUserInfo = {
+      "targetuserid": this.pageModel.loginUser.loginuserid,
+      "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
+    }
+    this.getUserAll();
   }
 
   /**
@@ -228,7 +233,7 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * Delete contact row
+   * 単一ユーザーを削除する
    * @param row     Selected row for delete contact
    */
   deleteRow(row) {
@@ -242,23 +247,74 @@ export class UserComponent implements OnInit {
     //   index++;
     // }
     // this.rows = temp;
+    this.selectedUserid.push({ "userid": row.userid });
     var query = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-      "productid": row.productid,
+      "loginInfo": this.pageModel.userInfoParame.loginInfo,
+      "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
+      "cloud_userModelList": this.selectedUserid,
     }
-    this.httpService.delete('deleteProduct', query).then(item => {
+    this.httpService.delete('deleteUser', query).then(item => {
       try {
         if (item.body.resultCode === "0000") {
-
-          this.getProductAll();
+          this.selectedUserid = [];
+          this.selected = [];
+          this.getUserAll();
         } else {
           console.log('削除失敗です。');
+          this.selectedUserid = [];
+          this.selected = [];
         }
       } catch (e) {
         console.log('削除失敗です。');
+        this.selectedUserid = [];
+        this.selected = [];
+      }
+    });
+  }
+
+  /**
+   * 複数のユーザーを削除する
+   */
+  deleteCheckedRow() {
+    // let index = 0;
+    // const removedIndex = [];
+    // const temp = [...this.rows];
+    // for (const row of temp) {
+    //   for (const selectedRow of this.selected) {
+    //     if (row.id === selectedRow.id) {
+    //       removedIndex.push(index);
+    //     }
+    //   }
+    //   index++;
+    // }
+    // for (let i = removedIndex.length - 1; i >= 0; i--) {
+    //   temp.splice(removedIndex[i], 1);
+    // }
+    // this.rows = temp;
+    for (var selecteUser of this.selected) {
+      this.selectedUserid.push({ "userid": selecteUser.userid });
+    }
+    var query = {
+      "loginInfo": this.pageModel.userInfoParame.loginInfo,
+      "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
+      "cloud_userModelList": this.selectedUserid,
+    }
+
+    this.httpService.delete('deleteUser', query).then(item => {
+      try {
+        if (item.body.resultCode === "0000") {
+          this.selectedUserid = [];
+          this.selected = [];
+          this.getUserAll();
+        } else {
+          console.log('削除失敗です。');
+          this.selectedUserid = [];
+          this.selected = [];
+        }
+      } catch (e) {
+        console.log('削除失敗です。');
+        this.selectedUserid = [];
+        this.selected = [];
       }
     });
   }
@@ -304,7 +360,7 @@ export class UserComponent implements OnInit {
       try {
         console.log('更新成功です。');
         console.log(item);
-        this.getProductAll();
+        this.getUserAll();
       } catch (e) {
         console.log('更新失敗です。');
       }
@@ -326,28 +382,6 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * Delete selected contact
-   */
-  deleteCheckedRow() {
-    let index = 0;
-    const removedIndex = [];
-    const temp = [...this.rows];
-    for (const row of temp) {
-      for (const selectedRow of this.selected) {
-        if (row.id === selectedRow.id) {
-          removedIndex.push(index);
-        }
-      }
-      index++;
-    }
-    for (let i = removedIndex.length - 1; i >= 0; i--) {
-      temp.splice(removedIndex[i], 1);
-    }
-    this.rows = temp;
-    this.selected = [];
-  }
-
-  /**
    * favorite set when add contact
    *
    * @param event     favorite set on click event
@@ -365,33 +399,27 @@ export class UserComponent implements OnInit {
    *
    * @param addForm     Add contact form
    */
-  addNewContact() {
-    // if (this.contactactive === undefined) {
-    //   this.contactactive = 'away';
-    // } else {
-    //   this.contactactive = this.contactactive;
-    // }
-
+  addUser() {
     var query = {
       "loginInfo": {
         "loginuserid": this.pageModel.loginUser.loginuserid,
         "logincompanyid": this.pageModel.loginUser.logincompanyid
       },
 
-      "producttypeid": this.pageModel.addProduct.productTypeId,
-      "productcode": this.pageModel.addProduct.productcode,
-      "productname": this.pageModel.addProduct.productName,
-      "model": this.pageModel.addProduct.model,
-      "version": this.pageModel.addProduct.version,
-      "simflag": this.pageModel.addProduct.sim,
-      "summary": this.pageModel.addProduct.summary
+      "companyid": this.pageModel.adduserInfo.companyid,
+      "username": this.pageModel.adduserInfo.username,
+      "passwrod": this.pageModel.adduserInfo.passwrod,
+      "passwrod2": this.pageModel.adduserInfo.passwrod2,
+      // "address": this.pageModel.adduserInfo.companyInfo.address,
+      // "mail": this.pageModel.adduserInfo.companyInfo.mail,
+      // "phone": this.pageModel.adduserInfo.companyInfo.phone,
     }
 
-    this.httpService.usePost('registerProduct', query).then(item => {
+    this.httpService.usePost('registerUser', query).then(item => {
       try {
         console.log('登録成功です。');
         console.log(item);
-        this.getProductAll();
+        this.getUserAll();
       } catch (e) {
         console.log('登録失敗です。');
       }
@@ -522,57 +550,106 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * プロダクト一覧取得
+   * ユーザー一覧取得
    */
-  protected async getProductAll() {
-    this.httpService.usePost('getProductAll', {}).then(item => {
+  protected async getUserAll() {
+    var query = {
+      "loginInfo": this.pageModel.userInfoParame.loginInfo,
+      "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
+    }
+    this.httpService.usePost('getSonUsers', query).then(item => {
       try {
         this.rows = [];
         console.log(item);
         var index = 1;
-        this.pageModel.productList = item;
-        if (item != null) {
-          item.forEach((elem) => {
-            this.rows.push(new Contact(
-              index,
-              elem.productname,
-              "EMAIL",
-              "080-0000-000",
-              elem.producttypeid,
-              elem.productid,
-              elem.productcode,
-              elem.productname,
-              elem.model,
-              elem.simflag,
-              elem.version,
-              elem.summary
-            ));
-            index++;
-          });
-          this.rows = [...this.rows];
+        this.pageModel.userList = item;
+        // if (item != null) {
+        // item = [
+        //   {
+        //     userid: 1,
+        //     username: "ifocus",
+        //     companyid: 1,
+        //     loginid: "",
+        //     role: 1,
+        //     upperuserid: 0,
+        //     companyname: "i-focus",
+        //     devicecount: 5,
+        //     userCount: 2,
+        //     projectCount: 2
+        //   },
+        //   {
+        //     userid: 2,
+        //     username: "user2",
+        //     companyid: 1,
+        //     loginid: "ifocus",
+        //     role: 1,
+        //     upperuserid: 1,
+        //     companyname: "user2----",
+        //     devicecount: 5,
+        //     userCount: 2,
+        //     projectCount: 2
+        //   },
+        //   {
+        //     userid: 3,
+        //     username: "user3",
+        //     companyid: 2,
+        //     loginid: "user3",
+        //     role: 0,
+        //     upperuserid: 1,
+        //     companyname: "フェイス株式会社",
+        //     devicecount: 5,
+        //     userCount: 2,
+        //     projectCount: 2
+        //   },
 
-          // this.pageModel.products = item.productList;
-          // this.pageModel.productLength = item.productCount;
-          // this.pageModel.userList = item.userList;
-          // this.pageModel.userLength = item.userCount;
-          // this.pageModel.products = item.productList;
-          // this.pageModel.errlogList = item.errlogList;
-          // this.pageModel.errlogLength = item.errlogCount;
-
-          // this.pageModel.projectLength = item.projectCount;
-          // this.pageModel.deciveLength = item.deviceCount;
-          // this.pageModel.deviceOnlLength = 0;
-
-
-          // this.pageModel.products=[{productid:1,productcode:"code004",productname:"テスト用プロダクト",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0},{productid:2,productcode:"code004",productname:"テスト用プロダクト2",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0}];
-          //  this.pageModel.productLength = 0;  
-          // ユーザー数を検索
-          // this.getUserListLengthApi(this.UserInfo.role, this.UserInfo.uid)
-        }
+        // ]
+        item.forEach((elem) => {
+          this.rows.push(new Contact(
+            index,
+            elem.userid,
+            elem.username,
+            elem.companyid,
+            elem.loginid,
+            elem.role,
+            elem.upperuserid,
+            elem.companyName,
+            elem.devicecount,
+            elem.userCount,
+            elem.projectCount,
+          ));
+          index++;
+        });
+        this.rows = [...this.rows];
+        // }
 
       } catch (e) {
-        console.log('ユーザー数数を検索API エラー　発生しました。');
+        console.log('');
       }
     });
   }
+  /**
+   * プロダクト一覧取得
+   */
+  // protected async getUserInfo() {
+  //   var query = {
+  //     "loginInfo": this.pageModel.userInfoParame.loginInfo,
+  //     "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo
+  //   }
+
+  //   this.pageModel.userInfoParame
+  //   this.httpService.useGet('getProductTypeAll').then(item => {
+  //     try {
+  //       if (item) {
+  //         this.productTypes = item;
+  //         console.log(item);
+  //         console.log("プロダクトタイプの取得は成功しました。");
+  //       } else {
+  //         console.log("プロダクトタイプの取得は失敗しました。");
+  //       }
+  //     } catch (e) {
+  //       console.log("プロダクトタイプの取得は失敗しました。");
+  //     }
+  //   });
+  // }
+
 }
