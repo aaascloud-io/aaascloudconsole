@@ -46,10 +46,16 @@
                     </ngx-datatable-column> -->
                     <ngx-datatable-column name="タイプ" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a *ngIf="row.producttypeid===1">TRACKER</a>
-                        <a *ngIf="row.producttypeid===2">FACE</a>
-                        <a *ngIf="row.producttypeid===3">WATCH</a>
+                        <select class="form-control select-style" id="typeId" name="typeId" [(ngModel)]="row.producttypeid" disabled>
+                          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+                            <a>{{type.producttypename}}</a>
+                          </option>
+                        </select>
                       </ng-template>
+
+                      <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+                        {{type.producttypename}}
+                      </option>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="プロダクトコード" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
@@ -83,7 +89,7 @@
                         <a>{{row.version}}</a>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
+                    <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100" >
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
@@ -118,13 +124,10 @@
         <select class="form-control" id="typeId" name="typeId" [(ngModel)]="selectedContact.producttypeid"
           #editname="ngModel" name="producttypeid" id="producttypeid"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-          <option [value]=2>TRACKER</option>
-          <option [value]=1>FACE</option>
-          <option [value]=3>WATCH</option>
+          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+            {{type.producttypename}}
+          </option>
         </select>
-        <!-- <input type="text" [(ngModel)]="selectedContact.name" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="Name"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required> -->
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">プロダクトタイプを選択してください。</div>
         </div>
@@ -159,8 +162,6 @@
           <option [value]=0>有</option>
           <option [value]=1>無</option>
         </select>
-        <!-- <input type="text" [(ngModel)]="pageModel.addProduct.sim" #editsim="ngModel" name="sim" id="sim"
-          class="name form-control" placeholder="SIMカード"> -->
       </div>
       <div class="form-group col-12">
         <h6>説明</h6>
@@ -192,13 +193,10 @@
         <select class="form-control" id="typeId" name="typeId" [(ngModel)]="pageModel.addProduct.productTypeId"
           #editname="ngModel" name="productTypeId" id="productTypeId"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-          <option [value]=2>TRACKER</option>
-          <option [value]=1>FACE</option>
-          <option [value]=3>WATCH</option>
+          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+            {{type.producttypename}}
+          </option>
         </select>
-        <!-- <input type="text" [(ngModel)]="pageModel.addProduct.productTypeId" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="プロダクトタイプ"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required> -->
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">プロダクトタイプを選んでください</div>
         </div>
@@ -233,8 +231,6 @@
           <option [value]=0>有</option>
           <option [value]=1>無</option>
         </select>
-        <!-- <input type="text" [(ngModel)]="pageModel.addProduct.sim" #editsim="ngModel" name="sim" id="sim"
-          class="name form-control" placeholder="SIMカード"> -->
       </div>
       <div class="form-group col-12">
         <h6>説明</h6>
@@ -251,164 +247,3 @@
     </div>
   </form>
 </ng-template>
-
-<!-- <ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">登録</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group col-12">
-        <input type="text" [(ngModel)]="contactName" name="name" id="contact-name" class="contact-name form-control"
-          placeholder="IMEI" #contactname="ngModel"
-          [ngClass]="{ 'is-invalid': addForm.submitted && contactname.invalid }" required>
-        <div *ngIf="addForm.submitted && contactname.invalid" class="invalid-feedback">
-          <div *ngIf="contactname.errors.required">Name is required</div>
-        </div>
-      </div>
-      <div class="form-group col-12">
-        <input type="text" [(ngModel)]="contactEmail" name="email" id="contact-email" class="contact-email form-control"
-          placeholder="ICCID" #contactemail="ngModel"
-          [ngClass]="{ 'is-invalid':addForm.submitted && contactemail.invalid }" required email>
-        <div *ngIf="addForm.submitted && contactemail.invalid" class="invalid-feedback">
-          <div *ngIf="contactemail.errors.required">Email is required</div>
-          <div *ngIf="contactemail.errors.email">Email must be a valid email address</div>
-        </div>
-      </div>
-      <div class="form-group col-12">
-        <input type="text" [(ngModel)]="contactPhone" name="contactPhone" #contactphone="ngModel" id="contact-phone"
-          class="contact-phone form-control" placeholder="IMSI" (keyup)="onFormat()" maxlength="14">
-      </div>
-      <div class="form-group col-12">
-        <h4 class="card-title">識別コード</h4>
-        <input type="text" class="form-control" id="defaultInputText" placeholder="識別コード">
-      </div>
-
-
-      <div class="form-group col-12">
-
-        <ng-select [items]="singleSelectArray" [searchable]="true" bindLabel="item_text" placeholder="所有者"
-          [(ngModel)]="singlebasicSelected">
-        </ng-select>
-      </div>
-      <div class="form-group col-12">
-
-        <ng-select [searchable]="true" bindLabel="item_text" placeholder="暗号化通信" [(ngModel)]="singlebasicSelected">
-          <option value=0 selected>OFF</option>
-          <option value=1>ON</option>
-        </ng-select>
-      </div>
-
-      <div class="form-group col-12">
-        <h6>暗号化キー</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
-      </div>
-      <div class="form-group col-12">
-        <h6>接続サーバーアドレス</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
-      </div>
-      <div class="form-group col-12">
-        <h6>接続サーバーポート番号</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
-      </div>
-      <div class="form-group col-12">
-        <h6>バンディング済みフラグ</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <div class="form-group position-relative has-icon-left mb-0">
-        <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
-      </div>
-    </div>
-  </form>
-</ng-template> -->
-
-<!-- <ng-template #addTableDatasModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">一括登録</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group col-12">
-        <i class="feather ft-download info" (click)="downloadSampleFiles()">サンプルファイルをダウンロード</i>
-      </div>
-      <div class="custom-file form-group col-12">
-        <input type="file" class="custom-file-input" accept='contactImage/*' (change)="changeTarget($event)"
-          id="customFile">
-        <label class="custom-file-label">ファイルを選択</label>
-      </div>
-    </div>
-    <div class="form-group col-12">
-      <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
-        <thead>
-          <tr>
-            <th scope="col">no.</th>
-            <th scope="col">imei</th>
-            <th scope="col">iccid</th>
-            <th scope="col">imsi</th>
-            <th scope="col">uid</th>
-            <th scope="col">secMode</th>
-            <th scope="col">psk</th>
-            <th scope="col">host</th>
-            <th scope="col">port</th>
-            <th scope="col">bind</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of pageModel.dataAll; let i = index;">
-            <td data-label="no.">{{i + 1}}</td>
-            <td data-label="imei">{{item.imei}}</td>
-            <td data-label="iccid">{{item.iccid}}</td>
-            <td data-label="imsi">{{item.imsi}}</td>
-            <td data-label="uid">{{item.uid}}</td>
-            <td data-label="secMode">{{item.securityMode}}</td>
-            <td data-label="psk">{{item.psk}}</td>
-            <td data-label="host">{{item.serverHost}}</td>
-            <td data-label="port">{{item.serverPort}}</td>
-            <td data-label="bind">{{item.isBind}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="modal-footer">
-      <div class="form-group position-relative has-icon-left mb-0">
-        <button type="button" id="add-contact-item" class="btn btn-info add-contact-item"><i
-            class="la la-paper-plane-o d-lg-none"></i>
-          <span class="d-none d-lg-block">一括登録</span></button>
-      </div>
-    </div>
-  </form>
-</ng-template> -->
-<!-- <ng-template #addGroupModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">グループ選択</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group col-12">
-        <label class="card-title" for="countrySelect">グループを選択してください。</label>
-        <ng-select [items]="singleSelectArray" [searchable]="true" bindLabel="item_text" placeholder="所有者"
-          [(ngModel)]="singlebasicSelected">
-        </ng-select>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <div class="form-group position-relative has-icon-left mb-0">
-        <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
-      </div>
-    </div>
-  </form>
-</ng-template> -->
