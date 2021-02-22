@@ -29,16 +29,12 @@ public class Cloud_deviceEntity {
 	private String sn;
 	private String sim_iccid;
 	private String sim_imsi;
-	@Getter
-	@Setter
-	private String sim_imsi;
 	private String sim_tel;
 	private Integer encryptedcommunications;
 	private String encryptedkey;
 	private String connectserverurl;
 	private String connectserverport;
 	private Integer bindingflag;
-	private String fmlastestversion;
 	private String fmlastestversion;
 	private Timestamp versioncomfirmtime;
 

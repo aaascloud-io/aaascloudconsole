@@ -570,15 +570,6 @@ public class Cloud_deviceService {
 		entity.setSim_imsi(model.getSim_imsi());
 		entity.setSim_tel(model.getSim_tel());
 		entity.setProductid(model.getProductid());
-		entity.setEncryptedcommunications(model.getEncryptedcommunications());
-		entity.setEncryptedkey(model.getEncryptedkey());
-		entity.setConnectserverurl(model.getConnectserverurl());
-		entity.setConnectserverport(model.getConnectserverport());
-		entity.setBindingflag(model.getBindingflag());
-//		entity.setFmlastestversion(model.getFmlastestversion());
-//		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
-		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
-		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
 		entity.setCompanyid(model.getCompanyid());
 		entity.setUserid(model.getUserid());
 		entity.setEncryptedcommunications(model.getEncryptedcommunications());

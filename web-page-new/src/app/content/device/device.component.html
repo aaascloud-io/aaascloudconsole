@@ -105,7 +105,7 @@
                     </div>
                   </div>
                   <!-- [rows]="pageModel.deviceList" -->
-                  <!-- <ngx-datatable #table class="bootstrap row contacts-table" [rows]="pageModel.deviceList"
+                  <ngx-datatable #table class="bootstrap row contacts-table" [rows]="pageModel.deviceList"
                     [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="70" [limit]="5"
                     [selected]="selected" [selectionType]="'checkbox'" (select)='onSelectContact($event)' fxFlex="auto"
                     [perfectScrollbar]="config">
@@ -167,11 +167,11 @@
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <!-- <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
-                        </a> -->
+                        </a>  -->
                         <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
                       </ng-template>
                     </ngx-datatable-column>
-                  </ngx-datatable> -->
+                  </ngx-datatable> 
                 </div>
               </div>
             </div>
