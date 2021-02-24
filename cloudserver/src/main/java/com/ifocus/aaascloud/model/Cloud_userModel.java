@@ -37,5 +37,7 @@ public class Cloud_userModel {
 	private Integer level;
 	// デバイス数
 	private Integer devicecount;
+	// ユーザ数
+	private Integer usercount;
 
 }
