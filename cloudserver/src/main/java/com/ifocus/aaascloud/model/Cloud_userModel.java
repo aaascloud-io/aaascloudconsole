@@ -1,6 +1,7 @@
 package com.ifocus.aaascloud.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ public class Cloud_userModel {
 
 	private LoginInfo loginInfo;
 	private TargetUserInfo targetUserInfo;
+	private List<Cloud_userModel> cloud_userModelList;
 
 	// 管理者情報
 	private Integer userid;

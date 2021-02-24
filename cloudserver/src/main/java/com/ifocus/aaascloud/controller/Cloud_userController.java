@@ -95,7 +95,7 @@ public class Cloud_userController {
 
 			String responseData = new String();
 			List<JSONObject> returnList = new ArrayList();
-			for (Cloud_userModel model:list) {
+			for (Cloud_userModel) {
 				if (returnList.isEmpty()) {
 					responseData = responseData + "[";
 				} else {
@@ -284,19 +284,24 @@ public class Cloud_userController {
 //		}
 
 		try {
-			// 会社ユーザ一覧取得
-			List<Cloud_userEntity> entiyList = cloud_userService.getCompanyUsers(cloud_userModel.getCompanyid());
+			
+			// 選択されるユーザを削除する
+			for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
+				// 会社ユーザ一覧取得
+				List<Cloud_userEntity> entiyList = cloud_userService.getCompanyUsers(cloud_userModelInfo.getCompanyid());
 
-			// 会社の最後のユーザになった場合、会社も削除する。
-			if (entiyList.size() == 1) {
-				Cloud_companyEntity cloud_companyEntity = new Cloud_companyEntity();
-				cloud_companyEntity.setCompanyid(cloud_userModel.getCompanyid());
-				// 会社を削除する
-				cloud_companyService.deleteCompany(cloud_companyEntity);
+				// 会社の最後のユーザになった場合、会社も削除する。
+				if (entiyList.size() == 1) {
+					Cloud_companyEntity cloud_companyEntity = new Cloud_companyEntity();
+					cloud_companyEntity.setCompanyid(cloud_userModelInfo.getCompanyid());
+					// 会社を削除する
+					cloud_companyService.deleteCompany(cloud_companyEntity);
+				}
+
+				// ユーザを削除する
+				cloud_userService.deleteSonUser(cloud_userModelInfo.getLoginInfo(),cloud_userModelInfo);
 			}
 
-			// ユーザを削除する
-			cloud_userService.deleteSonUser(cloud_userModel.getLoginInfo(),cloud_userModel);
 
 		} catch (Exception e) {
 			/* 異常系 */
