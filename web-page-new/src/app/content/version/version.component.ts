@@ -7,6 +7,9 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScro
 import { HttpService } from 'src/app/_services/HttpService';
 import { HttpClient } from '@angular/common/http';
 
+import { DataFatoryService } from 'src/app/_services/DataFatoryService';
+import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
+
 
 
 class Contact {
@@ -83,19 +86,50 @@ export class VersionComponent implements OnInit {
     private modal: NgbModal,
     private _renderer: Renderer2,
     private _httpClient: HttpClient,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private dataFatoryService: DataFatoryService,
     ) { 
       // this.initData();
     }
 
-    pageModel = {
+    protected pageModel = {
+      USERCODE:null,
+      addList: [],
+      dataAll: [],
+      productList: [],
+      addProduct: {
+        productTypeId: null,
+        productcode: '',
+        productName: '',
+        model: '',
+        version: '',
+        sim: 0,
+        summary: ''
+      },
+      updataProduct: {
+        productId: 0,
+        productTypeId: 0,
+        productcode: '',
+        productName: '',
+        model: '',
+        version: '',
+        sim: 0,
+        summary: ''
+      },
+      loginUser: {
+        loginuserid: null,
+        loginusername: '',
+        loginrole: null,
+        logincompanyid: '',
+      },
+      userInfoParame: {
+      },
       data:[],
       selectedData : {},
-    };
-    public tempppppp:any;
-    
+      
+    }
 
-    
+      
 
     /**
      * OnInit
@@ -115,17 +149,40 @@ export class VersionComponent implements OnInit {
     //   '../../../assets/images/portrait/small/avatar-s-9.png', false, 'busy'));
     // this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
     //   '../../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
+
+    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    this.pageModel.loginUser.loginuserid = item.uid;
+    this.pageModel.loginUser.loginusername = item.login_id;
+    this.pageModel.loginUser.loginrole = item.role;
+    this.pageModel.loginUser.logincompanyid = item.company;
+
+    this.pageModel.userInfoParame = {
+      "loginInfo": {
+        "loginuserid": this.pageModel.loginUser.loginuserid,
+        "loginusername": this.pageModel.loginUser.loginusername,
+        "loginrole": this.pageModel.loginUser.loginrole,
+        "logincompanyid": this.pageModel.loginUser.logincompanyid
+      },
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginuserid,
+        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
+      },
+      "username":this.pageModel.loginUser.loginusername,
+    };
+    console.log("这是version页面的 pageModel.userInfoParame");
+    console.log(this.pageModel.userInfoParame);
+
     this.initData();
-    
+
   }
 
   async initData(){
-    var param = {
-      username:"ifocus"
-    };
+    // var param = {
+    //   username:"ifocus"
+    // };
     this.rows = [];
 
-    var res = await this.httpService.post("/getErrlogList",param);
+    var res = await this.httpService.post("/getErrlogList",this.pageModel.userInfoParame);
     console.log("这是res的值");
     console.log(res);
 

@@ -46,7 +46,7 @@ const appRoutes: Routes = [
     path: '',
     component: PrivateLayoutComponent,
     children: [
-      { path: 'project', loadChildren: () => import('../app/content/pages/project/project.module').then(m => m.ProjectModule), canActivate: [AuthGuard] },
+      { path: 'project', loadChildren: () => import('../app/content/project/project.module').then(m => m.ProjectModule), canActivate: [AuthGuard] },
       { path: 'logout', component: LoginComponent, canActivate: [AuthGuard] },
       { path: 'changelog', component: ChangelogComponent, canActivate: [AuthGuard] },
       { path: 'dashboard', loadChildren: () => import('../app/content/dashboard/dashboard.module').then(m => m.DashboardModule)
