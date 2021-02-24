@@ -103,7 +103,7 @@ public class Cloud_userService {
 	public List<Cloud_userModel> getSonUsers(Integer loginid) throws Exception {
 		List<Cloud_userModel> returnList = new ArrayList<Cloud_userModel>();
 		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(loginid);
-		if (list != null && list.size() == 1) {
+		if (list != null) {
 			list.forEach(elm -> {
 				Cloud_userModel model = new Cloud_userModel();
 				model.setUserid(elm.getUserid());
