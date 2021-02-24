@@ -95,7 +95,7 @@ public class Cloud_userController {
 
 			String responseData = new String();
 			List<JSONObject> returnList = new ArrayList();
-			for (Cloud_userModel) {
+			for (Cloud_userModel model : list) {
 				if (returnList.isEmpty()) {
 					responseData = responseData + "[";
 				} else {
