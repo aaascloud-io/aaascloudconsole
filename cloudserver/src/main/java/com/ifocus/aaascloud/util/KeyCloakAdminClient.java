@@ -20,6 +20,7 @@ import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.ScopePermissionResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.ClientRepresentation;
+import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.keycloak.representations.idm.UserSessionRepresentation;
@@ -277,6 +278,14 @@ public class KeyCloakAdminClient {
 
 	public List<UserRepresentation> getUserRepresentations() {
 		return this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().list();
+	}
+	
+	public void changePassword(String uid, String newPassword) {
+		CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+		credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
+		credentialRepresentation.setValue(newPassword);
+		credentialRepresentation.setTemporary(false);
+		this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().get(uid).resetPassword(credentialRepresentation);
 	}
 
 }
