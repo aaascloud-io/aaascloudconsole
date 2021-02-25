@@ -417,6 +417,7 @@ public class Cloud_deviceService {
 		model.setBindingflag(entity.getBindingflag());
 		model.setFmlastestversion(entity.getFmlastestversion());
 		model.setVersioncomfirmtime(entity.getVersioncomfirmtime());
+		model.setProductid(entity.getProductid());
 		model.setCompanyid(entity.getCompanyid());
 		model.setUserid(entity.getUserid());
 		model.setLastprojectId(entity.getLastprojectId());
@@ -599,7 +600,7 @@ public class Cloud_deviceService {
 	 */
 	private Cloud_deviceEntity getEntitByModelForUpdate(Cloud_deviceModel model) throws Exception {
 
-		Optional<Cloud_deviceEntity> value = cloud_deviceRepository.findById(model.getDeviceid());
+		Optional<Cloud_deviceEntity> value = cloud_deviceRepository.findById(model.getDeviceDetail().getDeviceid());
 
 		Cloud_deviceEntity entity = value.get();
 
@@ -607,27 +608,29 @@ public class Cloud_deviceService {
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
 
 		// 情報設定
-		entity.setProjectid(model.getProjectid());
-		entity.setGroupid(model.getGroupid());
-		entity.setDevicename(model.getDevicename());
-		entity.setImei(model.getImei());
-		entity.setIccid(model.getIccid());
-		entity.setSn(model.getSn());
-		entity.setSim_iccid(model.getSim_iccid());
-		entity.setSim_imsi(model.getSim_imsi());
-		entity.setSim_tel(model.getSim_tel());
-		entity.setEncryptedcommunications(model.getEncryptedcommunications());
-		entity.setEncryptedkey(model.getEncryptedkey());
-		entity.setConnectserverurl(model.getConnectserverurl());
-		entity.setConnectserverport(model.getConnectserverport());
-		entity.setBindingflag(model.getBindingflag());
+//		entity.setProjectid(model.getProjectid());
+//		entity.setGroupid(model.getGroupid());
+		entity.setDevicename(model.getDeviceDetail().getDevicename());
+//		entity.setImei(model.getImei());
+//		entity.setIccid(model.getIccid());
+		entity.setProductid(model.getDeviceDetail().getProductid());
+		entity.setProductid(model.getDeviceDetail().getProductid());
+		entity.setSn(model.getDeviceDetail().getSn());
+		entity.setSim_iccid(model.getDeviceDetail().getSim_iccid());
+		entity.setSim_imsi(model.getDeviceDetail().getSim_imsi());
+		entity.setSim_tel(model.getDeviceDetail().getSim_tel());
+//		entity.setEncryptedcommunications(model.getEncryptedcommunications());
+//		entity.setEncryptedkey(model.getEncryptedkey());
+//		entity.setConnectserverurl(model.getConnectserverurl());
+//		entity.setConnectserverport(model.getConnectserverport());
+//		entity.setBindingflag(model.getBindingflag());
 //		entity.setFmlastestversion(model.getFmlastestversion());
 //		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
-		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
-		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
-		entity.setLastprojectId(model.getLastprojectId());
-		entity.setLastgroupid(model.getLastgroupid());
-		entity.setAlive(model.getAlive());
+//		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
+//		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
+//		entity.setLastprojectId(model.getLastprojectId());
+//		entity.setLastgroupid(model.getLastgroupid());
+//		entity.setAlive(model.getAlive());
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
 

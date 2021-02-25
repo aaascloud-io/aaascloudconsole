@@ -12,6 +12,12 @@ public interface  Cloud_versionRepository extends CrudRepository<Cloud_versionEn
 	/*
 	 * 一覧取得
 	 */
+	@Query(value = "SELECT c.* FROM cloud_version c ORDER BY productid, versioncode DESC",nativeQuery = true)
+	public List<Cloud_versionEntity> findAllVersions();
+
+	/*
+	 * プロダクト別一覧取得
+	 */
 	@Query(value = "SELECT c.* FROM cloud_version c WHERE c.productid = :productid ORDER BY versioncode DESC",nativeQuery = true)
 	public List<Cloud_versionEntity> findByProductid(@Param("productid") Integer productid);
 }

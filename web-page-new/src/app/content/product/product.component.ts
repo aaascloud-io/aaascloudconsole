@@ -71,7 +71,7 @@ export class ProductComponent implements OnInit {
   public singleSelectArray = selectData.singleSelectArray;
 
   protected pageModel = {
-    USERCODE:null,
+    USERCODE: null,
     addList: [],
     dataAll: [],
     productList: [],
@@ -244,25 +244,27 @@ export class ProductComponent implements OnInit {
     //   index++;
     // }
     // this.rows = temp;
-    var query = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-      "productid": row.productid,
-    }
-    this.httpService.delete('deleteProduct', query).then(item => {
-      try {
-        if (item.body.resultCode === "0000") {
+    if (confirm("削除してもよろしいでしょうか")) {
+      var query = {
+        "loginInfo": {
+          "loginuserid": this.pageModel.loginUser.loginuserid,
+          "logincompanyid": this.pageModel.loginUser.logincompanyid
+        },
+        "productid": row.productid,
+      }
+      this.httpService.delete('deleteProduct', query).then(item => {
+        try {
+          if (item.body.resultCode === "0000") {
 
-          this.getProductAll();
-        } else {
+            this.getProductAll();
+          } else {
+            console.log('削除失敗です。');
+          }
+        } catch (e) {
           console.log('削除失敗です。');
         }
-      } catch (e) {
-        console.log('削除失敗です。');
-      }
-    });
+      });
+    }
   }
 
   /**

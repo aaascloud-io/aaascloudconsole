@@ -14,7 +14,7 @@ import com.ifocus.aaascloud.model.UserModel;
 
 @Component
 public class KeyCloakUserService {
-	
+
 	@Autowired
 	private KeyCloakAdminClient keyCloakAdminClient;
 
@@ -65,4 +65,15 @@ public class KeyCloakUserService {
 		return flag;
 	}
 
+	/*
+	 * パスワード変更
+	 * @param username String ユーザー名（CloudのログインID）
+	 * @param newPassword String 新パスワード
+	 */
+	public void changePassword(String username, String newPassword) {
+
+		UserModel userModel = getUserModelFromUsername(username);
+
+		keyCloakAdminClient.changePassword(userModel.getUid(), newPassword);
+	}
 }
