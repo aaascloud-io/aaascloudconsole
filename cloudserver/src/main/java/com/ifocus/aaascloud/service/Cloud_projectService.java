@@ -65,9 +65,11 @@ public class Cloud_projectService {
 				model.setProductname(entity.get().getProductname());
 			}
 			/* グループ数取得 */
-			model.setGroupCounts(cloud_groupRepository.getProjectGroupCountsByProjectid(model.getProjectid()));
+			List<Cloud_groupEntity> groupList = cloud_groupRepository.searchGroupsByProjectid(model.getProjectid());
+			model.setGroupCounts(groupList.size());
 			/* デバイス数取得 */
-			model.setDeviceCounts(cloud_deviceRepository.getProjectDeviceCountsByProjectid(model.getProjectid()));
+			List<Cloud_deviceEntity> deviceList = cloud_deviceRepository.searchDevicesByProjectid(model.getProjectid());
+			model.setDeviceCounts(deviceList.size());
 
 			returnList.add(model);
 		});
@@ -115,7 +117,7 @@ public class Cloud_projectService {
 	 */
 	public Cloud_projectDetailModel getMyProject(Integer projectid) throws Exception {
 		Cloud_projectDetailModel model = null;
-		
+
 		Optional<Cloud_projectEntity> myEntity = cloud_projectRepository.findById(projectid);
 		if (!myEntity.equals(Optional.empty())) {
 			model = new Cloud_projectDetailModel();
@@ -140,7 +142,7 @@ public class Cloud_projectService {
 			/* デバイス一覧を設定 */
 			model.setDeviceList(cloud_deviceService.getProjectDevices(model.getProjectid()));
 		}
-		
+
 
 		return model;
 
@@ -193,7 +195,7 @@ public class Cloud_projectService {
 	 */
 	public Integer updateProject(Cloud_projectDetailModel model) throws Exception {
 		Integer updatedProjectId = null;
-		
+
 		////////////////////////////////////////////////////////
 		// プロジェクト更新
 		////////////////////////////////////////////////////////
@@ -229,10 +231,10 @@ public class Cloud_projectService {
 			// グループ削除(Idあり & Alive = 0)
 			////////////////////////////////////////////////////////
 			cloud_groupService.deleteGroups(model.getDeleteGroupList());
-			
+
 			updatedProjectId = updatedEntity.getProjectid();
 		}
-		
+
 		return updatedProjectId;
 
 	}

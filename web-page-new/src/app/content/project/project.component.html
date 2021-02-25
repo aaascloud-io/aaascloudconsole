@@ -1,0 +1,182 @@
+<div class="app-content content">
+    <div class="content-wrapper">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">{{page.title}}</h4>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li>
+                            <a class="btn btn-sm btn-danger box-shadow-2 round btn-min-width pull-right font-color-white"
+                            (click)="addPageSlideIn(addNewDataModalContent,$event)">＋　プロジェクト追加</a>
+                        </li>
+                    </ul> 
+                </div>
+            </div>
+            <section class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-content mt-1">
+                            <div class="card-body">
+                                <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
+                                [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
+                                (select)='onSelectContact($event)' fxFlex="auto" [perfectScrollbar]="config">
+            
+                                <ngx-datatable-column name="プロジェクト名" [flexGrow]="1" [minWidth]="140">
+                                  <ng-template ngx-datatable-cell-template let-row="row">
+                                    {{row.projectname}}
+                                  </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column name="プロダクト" [flexGrow]="1" [minWidth]="140">
+                                  <ng-template ngx-datatable-cell-template let-row="row">
+                                    {{row.productid}}
+                                  </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column name="プロジェクト詳細" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
+                                  <ng-template ngx-datatable-cell-template let-row="row">
+                                    {{row.projectsummary}}
+                                  </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column name="デバイスグループ数" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
+                                    <ng-template ngx-datatable-cell-template let-row="row">
+                                        {{row.groupCounts}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column name="デバイス数" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
+                                    <ng-template ngx-datatable-cell-template let-row="row">
+                                        {{row.deviceCounts}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column name="操作" [flexGrow]="1" [minWidth]="100">
+                                  <ng-template ngx-datatable-cell-template let-row="row">
+                                    <a [routerLink]="" class="primary edit mr-1 mrless"
+                                      (click)="setEditingItem(editTableDataModalContent, row)"><i class="la la-pencil"></i>
+                                    </a>
+                                    <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
+                                  </ng-template>
+                                </ngx-datatable-column>
+                              </ngx-datatable>
+                            </div>
+                            <!-- <div class="table-responsive" fxFlex="auto">
+                                <table class="table border_bottom table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="border-top-0">プロジェクト名</th>
+                                            <th scope="col" class="border-top-0">プロダクト</th>
+                                            <th scope="col" class="border-top-0">プロジェクト詳細</th>
+                                            <th scope="col" class="border-top-0">デバイスグループ数</th>
+                                            <th scope="col" class="border-top-0">デバイス数</th>
+                                            <th scope="col" class="border-top-0">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let row of rows">
+                                            <td class="text-truncate">
+                                                <span *ngIf="editingItem.projectid == null || row.projectid != editingItem.projectid" >{{row.projectname}}</span>
+                                                <input *ngIf="editingItem.projectid != undefined && row.projectid == editingItem.projectid" type="text" [(ngModel)]="editingItem.projectname" [ngModelOptions]="{standalone: true}"
+                                                 [value]="editingItem.projectname"/> 
+                                            </td>
+                                            <td class="text-truncate">
+                                                <span *ngIf="editingItem.projectid == null || row.projectid != editingItem.projectid" >{{row.productid}}</span>
+                                            </td>
+                                            <td class="text-truncate">
+                                                <span *ngIf="editingItem.projectid == null || row.projectid != editingItem.projectid" >{{row.projectsummary}}</span>
+                                                <textarea *ngIf="row.projectid == editingItem.projectid" type="text"
+                                                    [(ngModel)]="editingItem.projectsummary" [ngModelOptions]="{standalone: true}"></textarea>
+                                            </td>
+                                            <td class="text-truncate">
+                                                {{row.groupCounts}}
+                                            </td>
+                                            <td class="text-truncate">
+                                                {{row.deviceCounts}}
+                                            </td>
+                                            <td>
+                                                <a *ngIf="editingItem.projectid == null || row.projectid != editingItem.projectid" 
+                                                [routerLink]="" class="primary edit mr-1 mrless" (click)="setEditingItem(row)"><i
+                                                        class="la la-pencil"></i>
+                                                </a>
+                                                <a *ngIf="editingItem.projectid == row.projectid" class="btn btn-primary" (click)="update()">確定</a>
+                                                <a *ngIf="editingItem.projectid == row.projectid" class="btn btn-primary" (click)="cancelEdit()">取消</a>
+                                                <a *ngIf="editingItem.projectid == null || row.projectid != editingItem.projectid" 
+                                                    class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteItem(row.projectid)"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+        </div>
+    </div>
+
+    <!-- new project sidebar -->
+    <!-- <div class="slide right-slide" id="new-project-sidebar" fxFlex="auto">
+    </div> -->
+</div>
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- プロジェクト情報修正 -->
+<ng-template #editTableDataModalContent let-c="close" let-d="dismiss">
+    <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">エラー詳細</h5>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group col-12">
+          <label >エラーコード</label>
+          <!-- <input type="text" [(ngModel)]="selectedErrorItem.errcode" #editname="ngModel" name="errcode" id="errcode"
+            class="name form-control" placeholder="Name" disabled
+            [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required> -->
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <div class="form-group position-relative has-icon-left mb-0">
+          <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+              class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+        </div>
+      </div>
+    </form>
+</ng-template>
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- プロジェクト新規追加 -->
+<ng-template #addNewDataModalContent let-c="close" let-d="dismiss">
+    <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">プロジェクト新規追加</h5>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group col-12">
+          <label >エラーコード</label>
+          <!-- <input type="text" [(ngModel)]="selectedErrorItem.errcode" #editname="ngModel" name="errcode" id="errcode"
+            class="name form-control" placeholder="Name" disabled
+            [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required> -->
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <div class="form-group position-relative has-icon-left mb-0">
+          <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+              class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+        </div>
+      </div>
+    </form>
+</ng-template>
+

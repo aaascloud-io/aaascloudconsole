@@ -2,6 +2,7 @@ package com.ifocus.aaascloud.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,8 @@ public class Cloud_userService {
 	private Cloud_companyRepository cloud_companyRepository ;
 	@Autowired
 	private Cloud_companyService cloud_companyService ;
+	@Autowired
+	private Cloud_deviceService cloud_deviceService ;
 
 	/*
 	 * ログイン認証
@@ -98,9 +101,9 @@ public class Cloud_userService {
 	 *
 	 */
 	public List<Cloud_userModel> getSonUsers(Integer loginid) throws Exception {
-		List<Cloud_userModel> returnList = new ArrayList();
+		List<Cloud_userModel> returnList = new ArrayList<Cloud_userModel>();
 		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(loginid);
-		if (list != null && list.size() == 1) {
+		if (list != null) {
 			list.forEach(elm -> {
 				Cloud_userModel model = new Cloud_userModel();
 				model.setUserid(elm.getUserid());
@@ -113,8 +116,19 @@ public class Cloud_userService {
 				if (entity != null ) {
 					model.setCompanyname(entity.get().getCompanyname());
 				}
-				/* デバイス数取得 Todo */
-				/* ユーザ数取得 Todo */
+				/* デバイス数取得 */
+				try {
+					List<Integer> userids = new ArrayList<Integer>(Arrays.asList(model.getUserid()));
+					List<Cloud_deviceModel> deviceList  = cloud_deviceService.getUnderCompanyDevicesByUserids(userids);
+					model.setDevicecount(deviceList.size());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				/* ユーザ数取得 */
+				List<Cloud_userEntity> underUserlist = cloud_userRepository.getUsersByUpperuserid(model.getUserid());
+				model.setUsercount(underUserlist.size());
+
 
 				returnList.add(model);
 			});
@@ -304,7 +318,7 @@ public class Cloud_userService {
 		List<Cloud_userEntity> returnList = cloud_userRepository.getUnderUserCompanyIdsByUpperuserid(model.getTargetUserInfo().getTargetuserid());
 		// 配下各社ID一覧を取得する
 		boolean isMyCompanyExist = false;
-		List<Integer> underUserCompanyIdList = new ArrayList();
+		List<Integer> underUserCompanyIdList = new ArrayList<Integer>();
 		for (Cloud_userEntity cloud_userEntity:returnList) {
 			underUserCompanyIdList.add(cloud_userEntity.getCompanyid());
 			if (cloud_userEntity.getCompanyid().equals(model.getTargetUserInfo().getTargetuserCompanyid())) {
@@ -350,7 +364,7 @@ public class Cloud_userService {
 	 */
 	public List<Cloud_userModel> getModelsByEntitys(List<Cloud_userEntity> entityList) throws Exception {
 
-		List<Cloud_userModel> modelList = new ArrayList();
+		List<Cloud_userModel> modelList = new ArrayList<Cloud_userModel>();
 		for (Cloud_userEntity entity:entityList) {
 			modelList.add(getModelByEntity(entity));
 		}

@@ -20,6 +20,7 @@ import com.ifocus.aaascloud.controller.DashboardController;
 import com.ifocus.aaascloud.controller.ProfileController;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
+import com.ifocus.aaascloud.entity.Cloud_groupRepository;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
@@ -80,6 +81,8 @@ class AaascloudApplicationTests extends TestCase{
 	private ProfileController profileController;
 	@Autowired
 	private DashboardController dashboardController;
+	@Autowired
+	private Cloud_groupRepository cloud_groupRepository;
 
 //	/*
 //	 * Cloud_userService:login
@@ -1027,6 +1030,22 @@ class AaascloudApplicationTests extends TestCase{
 		BaseHttpResponse<String> response = dashboardController.getDashboardInfo(model);
 
 		assertEquals(200, response.getStatus());
+
+	}
+
+
+	/*
+	 * cloud_groupRepository
+	 * グループ数テストgetProjectGroupCountsByProjectid
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testGetProjectGroupCountsByProjectid() throws Exception {
+
+		Integer count = cloud_groupRepository.getProjectGroupCountsByProjectid(1);
+
+		assertEquals(new Integer(2), count);
 
 	}
 }
