@@ -9,6 +9,7 @@ import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from '../../_common/_interface/userInfo'
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
+import { ActivatedRoute } from '@angular/router';
 
 class Contact {
   constructor(
@@ -63,6 +64,8 @@ export class UserComponent implements OnInit {
   temp = [];
   temp2 = this.rows;
   singlebasicSelected: any;
+  queryParams_userid: any;
+  queryParams_companyid: any;
 
 
   public config: PerfectScrollbarConfigInterface = {};
@@ -167,15 +170,24 @@ export class UserComponent implements OnInit {
     private alertService: AlertService,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.getUserAll();
   }
 
   ngOnInit(): void {
+
+    // 画面遷移する場合、値を取得する
+    this.queryParams_userid = this.activatedRoute.snapshot.queryParams['userid'];
+    this.queryParams_companyid = this.activatedRoute.snapshot.queryParams['companyid'];
+    console.log("画面遷移の取得した値："+ this.queryParams_userid); 
+    console.log("画面遷移の取得した値："+ this.queryParams_companyid); 
+
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
+    // 画面初期ログイン情報取得
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
 
-    //to do ユーザー名で　ロケーションデータを取る
+    //to do ユーザー名で　ロケーシ
     this.pageModel.loginUser.loginuserid = item.uid;
     this.pageModel.loginUser.loginusername = item.login_id;
     // this.pageModel.loginUser.loginrole = item.role;
@@ -192,6 +204,15 @@ export class UserComponent implements OnInit {
       "logincompanyid": this.pageModel.loginUser.logincompanyid,
       "loginupperuserid": this.pageModel.loginUser.loginupperuserid
     }
+
+    if (this.queryParams_userid && this.queryParams_companyid) {
+      this.pageModel.userInfoParame.targetUserInfo.targetuserid = this.queryParams_userid;
+      this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid = this.queryParams_companyid;
+    } else {
+      this.pageModel.userInfoParame.targetUserInfo.targetuserid = this.pageModel.loginUser.loginuserid;
+      this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid = this.pageModel.loginUser.logincompanyid;
+    }
+
     console.log("param情報：" + JSON.stringify(this.pageModel.loginUser));
     this.getUnderCompanies()
     this.getUserAll();
@@ -704,5 +725,12 @@ export class UserComponent implements OnInit {
       }
     }
   }
+
+  // /**
+  //  * 
+  //  */
+  // rotueUserInfo() {
+  //   this.router.navigate(['/device']);
+  // }
 }
 
