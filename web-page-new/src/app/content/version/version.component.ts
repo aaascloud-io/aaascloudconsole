@@ -126,7 +126,14 @@ export class VersionComponent implements OnInit {
       },
       data:[],
       selectedData : {},
-      
+      addVersion:{
+        rowid:'',
+        productid:'',
+        versioncode:'',
+        versionname:'',
+        description:'',
+        downloadurl:'',
+      },
     }
 
       
@@ -182,7 +189,7 @@ export class VersionComponent implements OnInit {
     // };
     this.rows = [];
 
-    var res = await this.httpService.post("/getErrlogList",this.pageModel.userInfoParame);
+    var res = await this.httpService.post("/getAllVersions",this.pageModel.userInfoParame);
     console.log("这是res的值");
     console.log(res);
 
@@ -202,9 +209,69 @@ export class VersionComponent implements OnInit {
     //   this.pageModel.products.push(product_info)
     // });
     // this.pageModel.productLength = jsonItem.productCount;
-
   }
 
+  /**
+   * Add new contact
+   *
+   * @param addNewVersion      Id of the add contact modal;
+   */
+
+    // 新規バージョン
+    // Modal を開く
+  addNewVersionModal(addNewVersion) {
+    this.addModal = this.modal.open(addNewVersion, {
+      windowClass: 'animated fadeInDown'
+    });
+    this.contactFlag = true;
+  }
+
+  addNewVersionForm(NewVersionForm:NgForm){
+    let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    if (routeif != null) {
+      var param = {
+        "loginInfo": {
+          "loginuserid": routeif.uid,
+          "loginusername": routeif.login_id,
+          "loginrole": routeif.role,
+          "logincompanyid": routeif.company
+        },
+        "targetUserInfo": {
+          "targetuserid": routeif.uid,
+          "targetuserCompanyid": routeif.company
+        },
+        "productid":this.pageModel.addVersion.productid,
+        "versioncode":this.pageModel.addVersion.versioncode,
+        "versionname":this.pageModel.addVersion.versionname,
+        "description":this.pageModel.addVersion.description,
+        "downloadurl":this.pageModel.addVersion.downloadurl,
+      }
+    }
+    console.log("这是 addNewVersionForm 的 param");
+    console.log(param);
+    this.httpService.useRpPost('registerVersion',param).then(item=>{
+      console.log("这是 addNewVersionForm 的 item");
+      console.log(item);
+      try{
+        if(item.resultCode == "0000"){
+          this.pageModel.addVersion.productid = '';
+          this.pageModel.addVersion.versioncode = '';
+          this.pageModel.addVersion.versionname = '';
+          this.pageModel.addVersion.description = '';
+          this.pageModel.addVersion.downloadurl = '';
+          this.ngOnInit();
+          alert("プロジェクトを登録しました。");
+        }
+      }catch(e){
+        alert(e);
+      }
+    });
+
+    if (NewVersionForm.valid === true) {
+      NewVersionForm.reset();
+      this.addModal.close(NewVersionForm.resetForm);
+    }
+  }
 
 
 

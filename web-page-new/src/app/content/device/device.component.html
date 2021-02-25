@@ -27,25 +27,29 @@
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">識別コード</label>
-                        <input type="text" class="form-control" id="" placeholder="IMEI/ICCID/SN" [(ngModel)]="pageModel.query.querycode">
+                        <input type="text" class="form-control" id="" placeholder="IMEI/ICCID/SN"
+                          [(ngModel)]="pageModel.query.querycode">
                       </div>
                     </div>
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">プロダクト</label>
-                        <input type="text" class="form-control" id="" placeholder="" [(ngModel)]="pageModel.query.productname">
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="pageModel.query.productname">
                       </div>
                     </div>
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">プロジェクト</label>
-                        <input type="text" class="form-control" id="" placeholder="" [(ngModel)]="pageModel.query.projectname">
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="pageModel.query.projectname">
                       </div>
                     </div>
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">グループ</label>
-                        <input type="text" class="form-control" id="" placeholder="" [(ngModel)]="pageModel.query.group">
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="pageModel.query.group">
                       </div>
                     </div>
                     <div class="col-xl-4 col-lg-6 col-md-12">
@@ -59,14 +63,14 @@
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">業界</label>
-                        <input type="text" class="form-control" id="" placeholder="" [(ngModel)]="pageModel.query.industry">
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="pageModel.query.industry">
                       </div>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
                         <div class="heading-elements mt-0 pull-right" style="padding-top:20px;">
-                          <button class="btn btn-primary btn-sm gap_contact"
-                            (click)="serachDevices()">
+                          <button class="btn btn-primary btn-sm gap_contact" (click)="serachDevices()">
                             <i class="d-md-none d-block feather ft-plus white"></i>
                             <span class="d-md-block d-none">検　索</span></button>
                         </div>
@@ -94,10 +98,10 @@
                         (click)="addMaxModal(addExcelModalContent)">
                         <i class="d-md-none d-block feather ft-plus white"></i>
                         <span class="d-md-block d-none">一括登録</span></button>
-                      <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
+                      <!-- <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
                         (click)="addTableDataModal(addGroupModalContent)">
                         <i class="d-md-none d-block feather ft-plus white"></i>
-                        <span class="d-md-block d-none">グループ追加</span></button>
+                        <span class="d-md-block d-none">グループ追加</span></button> -->
                       <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
                         (click)="deleteCheckedRow()">
                         <i class="d-md-none d-block feather ft-plus white"></i>
@@ -132,33 +136,33 @@
                         {{rowIndex + 1}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="SN" [flexGrow]="1" [minWidth]="70" [maxWidth]="140">
+                    <ngx-datatable-column name="SN" [flexGrow]="1" [minWidth]="160" [maxWidth]="200">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         {{row.sn}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="IMEI" [flexGrow]="1" [minWidth]="130" [maxWidth]="180">
+                    <ngx-datatable-column name="IMEI" [flexGrow]="1" [minWidth]="160" [maxWidth]="200">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         {{row.imei}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="ICCID" [flexGrow]="1" [minWidth]="110" [maxWidth]="180">
+                    <ngx-datatable-column name="ICCID" [flexGrow]="1" [minWidth]="160" [maxWidth]="200">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         {{row.iccid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="SIMICCID" [flexGrow]="1" [minWidth]="90" [maxWidth]="180"
+                    <ngx-datatable-column name="SIMICCID" [flexGrow]="1" [minWidth]="160" [maxWidth]="200"
                       [cellClass]="'my-custom-cell'">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         {{row.sim_iccid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="状態" [flexGrow]="1" [minWidth]="70" [maxWidth]="100">
+                    <ngx-datatable-column name="状態" [flexGrow]="1" [minWidth]="160" [maxWidth]="200">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.sim_iccid}}
+                        <!-- {{row.sim_iccid}} -->"設計中"
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="所有者" [flexGrow]="1" [minWidth]="70" [maxWidth]="100">
+                    <ngx-datatable-column name="所有者" [flexGrow]="1" [minWidth]="160" [maxWidth]="200">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         {{row.companyname}}
                       </ng-template>
@@ -270,7 +274,9 @@
       </div>
       <div class="form-group col-12">
         <h6>プロダクト</h6>
-        <input type="text" [(ngModel)]="selectedDevice.productid" name="productid" class="form-control" placeholder="">
+          <ng-select [items]="productSelectArray" [searchable]="true" bindLabel="productname" placeholder="プロダクト"
+          name="product" [(ngModel)]="pageModel.deviceDetail.productSelected">
+        </ng-select>
       </div>
       <div class="form-group col-12">
         <h6>SIMカードIMSI</h6>
@@ -307,74 +313,75 @@
     <div class="modal-body">
       <div class="form-group col-12">
         <h6>デバイス名</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceDetail.devicename" name="devicename" class="form-control"
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.devicename" name="devicename" class="form-control" maxlength="50"
           placeholder="">
       </div>
       <div class="form-group col-12">
         <h6>IMEI</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceDetail.imei" name="imei" class="contact-name form-control"
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.imei" name="imei" class="contact-name form-control" maxlength="50"
           placeholder="IMEI">
       </div>
       <div class="form-group col-12">
         <h6>ICCID</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceDetail.iccid" name="iccid" class="contact-email form-control"
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.iccid" name="iccid" class="contact-email form-control" maxlength="50"
           placeholder="ICCID">
       </div>
       <div class="form-group col-12">
         <h6>SN</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceDetail.sn" name="sn" id="contact-phone"
-          class="contact-phone form-control" placeholder="SN" maxlength="14">
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.sn" name="sn" id="contact-phone" maxlength="50"
+          class="contact-phone form-control" placeholder="SN">
       </div>
       <div class="form-group col-12">
         <h6>所有者</h6>
         <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname" placeholder="所有者"
-          name="company" [(ngModel)]="pageModel.deviceDetail.companyInfo">
+          name="company" [(ngModel)]="pageModel.deviceDetail.companySelected">
         </ng-select>
       </div>
       <div class="form-group col-12">
         <h6>暗号化通信</h6>
         <ng-select [items]="sslSelectArray" [searchable]="true" bindLabel="item_text" placeholder="暗号化通信" name="ssl"
-          [(ngModel)]="pageModel.deviceDetail.sslInfo">
+          [(ngModel)]="pageModel.deviceDetail.sslSelected">
         </ng-select>
       </div>
       <div class="form-group col-12">
         <h6>暗号化キー</h6>
-        <input type="text" class="form-control" name="encryptedKey" placeholder="空白の場合、サーバーで自動生成します"
+        <input type="text" class="form-control" name="encryptedKey" placeholder=""
           [(ngModel)]="pageModel.deviceDetail.encryptedKey">
       </div>
       <div class="form-group col-12">
         <h6>接続サーバーアドレス</h6>
-        <input type="text" class="form-control" name="connectserverurl" placeholder="空白の場合、サーバーで自動生成します"
+        <input type="text" class="form-control" name="connectserverurl" placeholder="" maxlength="50"
           [(ngModel)]="pageModel.deviceDetail.connectserverurl">
       </div>
       <div class="form-group col-12">
         <h6>接続サーバーポート番号</h6>
-        <input type="text" class="form-control" name="connectserverport" placeholder="空白の場合、サーバーで自動生成します"
+        <input type="text" class="form-control" name="connectserverport" placeholder="" maxlength="4"
           [(ngModel)]="pageModel.deviceDetail.connectserverport">
       </div>
       <div class="form-group col-12">
         <h6>バンディング済みフラグ</h6>
-        <input type="text" class="form-control" name="bindingflag" placeholder="空白の場合、サーバーで自動生成します"
+        <input type="text" class="form-control" name="bindingflag" placeholder=""
           [(ngModel)]="pageModel.deviceDetail.bindingflag">
       </div>
       <div class="form-group col-12">
         <h6>プロダクト</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceDetail.productid" name="productid" class="form-control"
-          placeholder="">
+          <ng-select [items]="productSelectArray" [searchable]="true" bindLabel="productname" placeholder="プロダクト"
+          name="product" [(ngModel)]="pageModel.deviceDetail.productSelected">
+        </ng-select>
       </div>
       <div class="form-group col-12">
         <h6>SIMカードIMSI</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_imsi" name="simimsi" class="form-control"
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_imsi" name="simimsi" class="form-control" maxlength="50"
           placeholder="">
       </div>
       <div class="form-group col-12">
         <h6>SIMカード電話番号</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="simtel" class="form-control"
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="simtel" class="form-control" maxlength="50"
           placeholder="SIMカード電話番号">
       </div>
       <div class="form-group col-12">
         <h6>SIMカードICCID</h6>
-        <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_iccid" name="simiccid" class="form-control"
+        <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_iccid" name="simiccid" class="form-control" maxlength="50"
           placeholder="">
       </div>
     </div>
@@ -484,7 +491,7 @@
       <div class="form-group col-12">
         <label class="card-title" for="company">グループを選択してください。</label>
         <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname" placeholder="所有者"
-          name="company" [(ngModel)]="pageModel.deviceDetail.companyInfo">
+          name="company" [(ngModel)]="pageModel.deviceDetail.companySelected">
         </ng-select>
       </div>
     </div>

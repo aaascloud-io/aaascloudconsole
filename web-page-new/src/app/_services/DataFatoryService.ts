@@ -7,7 +7,7 @@ import { CookieService } from 'ngx-cookie-service';
 @Injectable()
 export class DataFatoryService {
 
-  private user: UserInfo;
+  private userInfo: UserInfo;
 
   private routeIdIF: RouteIdIF;
 
@@ -37,6 +37,24 @@ export class DataFatoryService {
     return temp;
   }
 
+  public setUserInfo(info: UserInfo): void {
+    this.userInfo = JSON.parse(JSON.stringify(info));
+  }
+
+  public getUserInfo(): UserInfo {
+    let temp = null;
+    if (this.userInfo) {
+      temp = JSON.parse(JSON.stringify(this.userInfo));
+    } else {
+      let userCookie: string = this.cookieService.get(ConstantsHandler.GLOBAL_TOKEN.id);
+      if (userCookie != null && userCookie != '') {
+        let user = JSON.parse(userCookie);
+        temp = user;
+      }
+    }
+    return temp;
+  }
+
   public clearRouteIdIF(): void {
     if (this.routeIdIF) {
       this.routeIdIF.login_id = null;
@@ -45,22 +63,22 @@ export class DataFatoryService {
   }
 
   public setLoginUser(info: any): void {
-    this.user = JSON.parse(JSON.stringify(info));
+    this.userInfo = JSON.parse(JSON.stringify(info));
   }
 
   public getLoginUser(): UserInfo {
     let temp = null;
-    if (this.user) {
-      temp = JSON.parse(JSON.stringify(this.user));
+    if (this.userInfo) {
+      temp = JSON.parse(JSON.stringify(this.userInfo));
     }
 
     return temp;
   }
 
   public clearLoginUser(): void {
-    if (this.user) {
-      this.user.login_id = null;
-      this.user.uid = null;
+    if (this.userInfo) {
+      this.userInfo.login_id = null;
+      this.userInfo.uid = null;
     }
 
   }
