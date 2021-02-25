@@ -2,6 +2,7 @@ package com.ifocus.aaascloud.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,8 +84,14 @@ public class Cloud_deviceService {
 		// 会社IDを設定する
 		this.setCompanyIDToModel(model);
 
-		// 配下各社ID一覧を取得する
-		List<Integer> underUserCompanyIdList = cloud_userService.getUnderCompanyIds(model);
+		List<Integer> underUserCompanyIdList = new ArrayList<Integer>();
+		if (model.getCompanyid() == null) {
+			// 配下各社ID一覧を取得する
+			underUserCompanyIdList = cloud_userService.getUnderCompanyIds(model);
+		} else {
+			// 指定会社IDを設定する
+			underUserCompanyIdList = Arrays.asList(model.getCompanyid());
+		}
 
 		// 全社のデバイス一覧取得
 		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
