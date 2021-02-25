@@ -177,7 +177,6 @@ export class ProjectComponent implements OnInit {
     };
     console.log("这里是project的pageModel数据");
     console.log(this.pageModel.userInfoParame);
-
     this.initData();
 
   }
@@ -228,6 +227,7 @@ export class ProjectComponent implements OnInit {
   //   });
   //   this.contactFlag = true;
   // }
+
 
 
   // 新規プロジェクト
@@ -283,77 +283,7 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  /**
-   * Edit selected contact row.
-   *
-   * @param editTableDataModalContent     Id of the edit contact model.
-   * @param row     The row which needs to be edited.
-   */
-  // editTableDataModal(editTableDataModalContent, row) {
-  //   console.log("模态框导入row");
-  //   console.log(row);
-  //   this.pageModel.selectedData = Object.assign({},row)
-  //   console.log("模态框导入selectedData");
-  //   console.log(this.pageModel.selectedData);
-
-    
-  //   this.editModal = this.modal.open(editTableDataModalContent, {
-  //     windowClass: 'animated fadeInDown'
-  //   });
-  //   this.contactFlag = false;
-  // }
-
-  editTableDataModal(editTableDataModalContent, row) {
-    this.selectedContact = Object.assign({}, row);
-
-    // 把选中的 row 对象内的东西全部给全局变量 selectedErrorItem
-    this.selectedErrorItem = Object.assign({},row);
-    // 打开模态框
-    this.editModal = this.modal.open(editTableDataModalContent, {
-      windowClass: 'animated fadeInDown'
-    });
-    this.contactFlag = false;
-  }
-
-  /**
-   * Selected contact
-   *
-   * @param selected      Selected contact;
-   */
-  onSelectContact({ selected }) {
-    this.selected.splice(0, this.selected.length);
-    this.selected.push(...selected);
-  }
-
-  /**
-   * Search contact from contact table
-   *
-   * @param event     Convert value uppercase to lowercase;
-   */
-  updateFilter(event) {
-    const val = event.target.value.toLowerCase();
-    this.rows = [...this.temp2];
-    this.temp = [...this.rows];
-    const temp = this.rows.filter(function (d) {
-      return d.name.toLowerCase().indexOf(val) !== -1 || !val;
-    });
-    this.rows = temp;
-    this.table.offset = 0;
-  }
-
-  /**
-   * Choose contact image
-   *
-   * @param event     Select contact image;
-   */
-  preview(event) {
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      this.contactImage = e.target.result;
-    };
-    reader.readAsDataURL(event.target.files[0]);
-  }
-
+  // プロジェクト削除
   /**
    * Delete contact row
    * @param row     Selected row for delete contact
@@ -412,6 +342,78 @@ export class ProjectComponent implements OnInit {
     // }
     // this.rows = temp;
   }
+
+  /**
+   * Edit selected contact row.
+   *
+   * @param editTableDataModalContent     Id of the edit contact model.
+   * @param row     The row which needs to be edited.
+   */
+  // editTableDataModal(editTableDataModalContent, row) {
+  //   console.log("模态框导入row");
+  //   console.log(row);
+  //   this.pageModel.selectedData = Object.assign({},row)
+  //   console.log("模态框导入selectedData");
+  //   console.log(this.pageModel.selectedData);
+
+    
+  //   this.editModal = this.modal.open(editTableDataModalContent, {
+  //     windowClass: 'animated fadeInDown'
+  //   });
+  //   this.contactFlag = false;
+  // }
+
+  editTableDataModal(editTableDataModalContent, row) {
+    this.selectedContact = Object.assign({}, row);
+    this.selectedErrorItem = Object.assign({},row);
+    this.editModal = this.modal.open(editTableDataModalContent, {
+      windowClass: 'animated fadeInDown'
+    });
+    this.contactFlag = false;
+  }
+
+  /**
+   * Selected contact
+   *
+   * @param selected      Selected contact;
+   */
+  onSelectContact({ selected }) {
+    this.selected.splice(0, this.selected.length);
+    this.selected.push(...selected);
+  }
+
+  /**
+   * Search contact from contact table
+   *
+   * @param event     Convert value uppercase to lowercase;
+   */
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
+    this.rows = [...this.temp2];
+    this.temp = [...this.rows];
+    const temp = this.rows.filter(function (d) {
+      return d.name.toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    this.rows = temp;
+    this.table.offset = 0;
+  }
+
+  /**
+   * Choose contact image
+   *
+   * @param event     Select contact image;
+   */
+  preview(event) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.contactImage = e.target.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+
+
+  
 
   /**
    * Update contact details

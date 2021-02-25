@@ -47,9 +47,9 @@
                   </div> -->
                   <div class="row">
                     <div class="">
-                      <button type="button" class="btn btn-primary mr-2" (click)="addTableDataModal(addTableDataModalContent)">設定追加</button>
-                      <button type="button" class="btn btn-info mr-2" (click)="deleteCheckedRow()">選択アップグレード</button>
-                      <button type="button" class="btn btn-success mr-2" (click)="deleteCheckedRow()">全部アップグレード</button>
+                      <button type="button" class="btn btn-primary mb-2" (click)="addNewVersionModal(addNewVersion)">バージョン新規追加</button>
+                      <!-- <button type="button" class="btn btn-info mr-2" (click)="deleteCheckedRow()">選択アップグレード</button>
+                      <button type="button" class="btn btn-success mr-2" (click)="deleteCheckedRow()">全部アップグレード</button> -->
                     </div>
                   </div>
 
@@ -80,17 +80,32 @@
                         {{row.rowid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="productID" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="プロダクトID" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.rowid}}
+                        {{row.productid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="Favorite" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
+                    <ngx-datatable-column name="バージョン名前" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.rowid}}
+                        {{row.versionname}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
+                    <ngx-datatable-column name="バージョンコード" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        {{row.versioncode}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="バージョン詳細" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        {{row.description}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="ダウンロード" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        {{row.downloadurl}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="操作" [flexGrow]="1" [minWidth]="100">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
@@ -108,12 +123,13 @@
     </div>
   </div>
 </div>
-<!-- ////////////////////////////////////////////////////////////////////////////-->
 
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- バージョン修正 -->
 <ng-template #editTableDataModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">エラー詳細</h5>
+      <h5 class="modal-title" id="exampleModalLabel">バージョン詳細</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -131,10 +147,8 @@
 
 
       <div class="form-group col-12">
-        <label >デバイスID</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.device" disabled #editemail="ngModel" name="email" id="email"
-          class="email form-control" 
-          [ngClass]="{ 'is-invalid':editForm.submitted && editemail.invalid }" required email>
+        <h6>プロジェクト名</h6>
+        <input type="text"  [(ngModel)]="pageModel.addProject.projectName" name="projectName" class="form-control" placeholder="">
       </div>
 
 
@@ -170,28 +184,42 @@
 
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- 新規追加 -->
-<ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+<!-- バージョン新規追加-->
+<ng-template #addNewVersion let-c="close" let-d="dismiss">
+  <form (ngSubmit)="addNewVersionForm(NewVersionForm)" #NewVersionForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">新規追加</h5>
+      <h5 class="modal-title" id="exampleModalLabel">バージョン新規追加</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
-      <!-- <div class="form-group col-12">
-        <label >エラーコード</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.errcode" #editname="ngModel" name="errcode" id="errcode"
-          class="name form-control" placeholder="Name" disabled
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-      </div> -->
+      <div class="form-group col-12">
+        <label >プロダクトID</label>
+        <input type="text"  [(ngModel)]="pageModel.addVersion.productid" name="productid" class="form-control" placeholder="">
+      </div>
+      <div class="form-group col-12">
+        <label >バージョン名前</label>
+        <input type="text"  [(ngModel)]="pageModel.addVersion.versionname" name="productid" class="form-control" placeholder="">
+      </div>
+      <div class="form-group col-12">
+        <label >バージョンコード</label>
+        <input type="text"  [(ngModel)]="pageModel.addVersion.versioncode" name="productid" class="form-control" placeholder="">
+      </div>
+      <div class="form-group col-12">
+        <label >バージョン詳細</label>
+        <input type="text"  [(ngModel)]="pageModel.addVersion.description" name="productid" class="form-control" placeholder="">
+      </div>
+      <div class="form-group col-12">
+        <label >ダウンロード</label>
+        <input type="text"  [(ngModel)]="pageModel.addVersion.downloadurl" name="productid" class="form-control" placeholder="">
+      </div>
   
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
       </div>
     </div>
   </form>
