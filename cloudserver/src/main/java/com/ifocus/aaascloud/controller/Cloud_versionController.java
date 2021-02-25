@@ -1,6 +1,5 @@
 package com.ifocus.aaascloud.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
-import com.ifocus.aaascloud.entity.Cloud_userRepository;
-import com.ifocus.aaascloud.model.Cloud_productModel;
-import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.Cloud_versionModel;
-import com.ifocus.aaascloud.model.VersionModel;
 import com.ifocus.aaascloud.service.AccessService;
-import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_versionService;
 import com.ifocus.aaascloud.util.Util;
 
@@ -29,57 +23,50 @@ public class Cloud_versionController {
 	@Autowired
 	private AccessService accessService;
 	@Autowired
-	private Cloud_userRepository cloud_userRepository;
-	@Autowired
-	private Cloud_productService cloud_productService;
-	@Autowired
 	private Cloud_versionService cloud_versionService;
 
 	/**
 	 * バージョン一覧を取得する
-	 * @param cloud_userModel Cloud_userModel
-	 *         userid
+	 * @param cloud_versionModel Cloud_versionModel
+	 *         versionid
 	 * @return BaseHttpResponse<String> JSON形式
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getVersionList", method = RequestMethod.POST)
+	@RequestMapping(value = "/getAllVersions", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getVersionList(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
+	public BaseHttpResponse<String> getAllVersions(@RequestBody Cloud_versionModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		// OEM権限チェック
+		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			return response;
+
+		}
+
 		// ユーザID必須判定
-		if (null != cloud_userModel.getUsername()) {
+		if (null != model.getLoginInfo().getLoginusername()) {
 
 			try {
-				List<VersionModel> returnList = new ArrayList<VersionModel>();
-				int count = 0;
-				// プロダクト一覧取得
-				List<Cloud_productModel> list = cloud_productService.getProductList();
-
-				for (Cloud_productModel cloud_productModel:list) {
-					List<Cloud_versionModel> versionList = cloud_versionService.getVersionList(cloud_productModel.getProductid());
-					if (!versionList.isEmpty()) {
-						VersionModel versionModel = new VersionModel(cloud_productModel);
-						versionModel.versionList.addAll(versionList);
-						returnList.add(versionModel);
-						count = count + versionList.size();
-					}
-				}
+				// バージョン一覧取得
+				List<Cloud_versionModel> list = cloud_versionService.getAllVersions(model);
 
 				// 正常終了
 				response.setStatus(200);
-				response.setCount(count);
+				response.setCount(list.size());
 				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-				response.setData(Util.getJsonString(returnList));
+				response.setData(Util.getJsonString(list));
 
 			} catch (Exception e) {
 				/* 異常系 */
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-				response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "getVersionList:" + e.getMessage());
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "getAllVersions:" + e.getMessage());
 				return response;
 			}
 
