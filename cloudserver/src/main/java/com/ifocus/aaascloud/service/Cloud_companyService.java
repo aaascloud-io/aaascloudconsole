@@ -122,7 +122,7 @@ public class Cloud_companyService {
 	 *
 	 */
 	public List<Cloud_companyModel> getModelsByEntitys(List<Cloud_companyEntity> entityList) throws Exception {
-		List<Cloud_companyModel> modelList = new ArrayList();
+		List<Cloud_companyModel> modelList = new ArrayList<Cloud_companyModel>();
 		for (Cloud_companyEntity entity:entityList) {
 			modelList.add(getModelByEntity(entity));
 		}
@@ -140,6 +140,7 @@ public class Cloud_companyService {
 	public Cloud_companyModel getModelByEntity(Cloud_companyEntity entity) throws Exception {
 		Cloud_companyModel model = new Cloud_companyModel();
 		model.setCompanyid(entity.getCompanyid());
+		model.setCorporatenumber(entity.getCorporatenumber());
 		model.setCompanyname(entity.getCompanyname());
 		model.setAddress(entity.getAddress());
 		model.setIndustry(entity.getIndustry());
