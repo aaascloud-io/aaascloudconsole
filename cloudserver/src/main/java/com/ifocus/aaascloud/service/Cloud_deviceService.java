@@ -28,7 +28,6 @@ import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_deviceDetailModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.LoginInfo;
-
 import com.ifocus.aaascloud.util.Util;
 
 @SpringBootApplication
@@ -88,7 +87,7 @@ public class Cloud_deviceService {
 		List<Integer> underUserCompanyIdList = cloud_userService.getUnderCompanyIds(model);
 
 		// 全社のデバイス一覧取得
-		List<Cloud_deviceEntity> list = new ArrayList();
+		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
 		// グループ指定なしの場合
 		if (model.getGroupForSearch() == CommonConstant.DEFAULT_MATCH_ALL ) {
 			list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
@@ -188,7 +187,7 @@ public class Cloud_deviceService {
 		// デバイス登録
 		Cloud_deviceEntity insertedEntity = cloud_deviceRepository.save(this.getEntitByDetailModel(model.getDeviceDetail(),model.getLoginInfo()));
 		return insertedEntity.getDeviceid();
-		
+
 	}
 
 	/*
@@ -288,7 +287,7 @@ public class Cloud_deviceService {
 	 */
 	public List<Cloud_deviceDetailModel> checkProjectExistedInDB(Cloud_deviceModel model) throws Exception {
 
-		List<Cloud_deviceDetailModel> returnList = new ArrayList();
+		List<Cloud_deviceDetailModel> returnList = new ArrayList<Cloud_deviceDetailModel>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
 			if (deviceDetailModel.getProjectid() != null) {
 				Optional<Cloud_projectEntity> entity = cloud_projectRepository.findById(deviceDetailModel.getProjectid());
@@ -311,7 +310,7 @@ public class Cloud_deviceService {
 	 */
 	public List<Cloud_deviceDetailModel> checkProductExistedInDB(Cloud_deviceModel model) throws Exception {
 
-		List<Cloud_deviceDetailModel> returnList = new ArrayList();
+		List<Cloud_deviceDetailModel> returnList = new ArrayList<Cloud_deviceDetailModel>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
 			Optional<Cloud_productEntity> entity = cloud_productRepository.findById(deviceDetailModel.getProductid());
 			// 存在しない場合、
@@ -332,7 +331,7 @@ public class Cloud_deviceService {
 	 */
 	public List<Cloud_deviceDetailModel> checkGroupExistedInDB(Cloud_deviceModel model) throws Exception {
 
-		List<Cloud_deviceDetailModel> returnList = new ArrayList();
+		List<Cloud_deviceDetailModel> returnList = new ArrayList<Cloud_deviceDetailModel>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
 			if (deviceDetailModel.getGroupid() != null) {
 				Optional<Cloud_groupEntity> entity = cloud_groupRepository.findById(deviceDetailModel.getGroupid());
@@ -387,6 +386,7 @@ public class Cloud_deviceService {
 		// 会社情報取得
 		Optional<Cloud_companyEntity> companyEntity  = cloud_companyRepository.findById(entity.getCompanyid());
 		model.setIndustry(companyEntity.get().getIndustry());
+		model.setCompanyname(companyEntity.get().getCompanyname());
 
 		return model;
 
@@ -417,8 +417,12 @@ public class Cloud_deviceService {
 		model.setBindingflag(entity.getBindingflag());
 		model.setFmlastestversion(entity.getFmlastestversion());
 		model.setVersioncomfirmtime(entity.getVersioncomfirmtime());
-		model.setProductid(entity.getProductid());
 		model.setCompanyid(entity.getCompanyid());
+
+		// 会社名
+		Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(entity.getCompanyid());
+		model.setCompanyname(company.get().getCompanyname());
+
 		model.setUserid(entity.getUserid());
 		model.setLastprojectId(entity.getLastprojectId());
 		model.setLastgroupid(entity.getLastgroupid());
@@ -435,7 +439,7 @@ public class Cloud_deviceService {
 	 *
 	 */
 	public List<Cloud_deviceModel> getModelsByEntitys(List<Cloud_deviceEntity> entityList) throws Exception {
-		List<Cloud_deviceModel> modelList = new ArrayList();
+		List<Cloud_deviceModel> modelList = new ArrayList<Cloud_deviceModel>();
 		for (Cloud_deviceEntity entity:entityList) {
 			modelList.add(getModelByEntity(entity));
 		}
@@ -562,7 +566,7 @@ public class Cloud_deviceService {
 		} else {
 			entity.setGroupid(model.getGroupid());
 		}
-		
+
 		entity.setDevicename(model.getDevicename());
 		entity.setImei(model.getImei());
 		entity.setIccid(model.getIccid());
@@ -600,7 +604,7 @@ public class Cloud_deviceService {
 	 */
 	private Cloud_deviceEntity getEntitByModelForUpdate(Cloud_deviceModel model) throws Exception {
 
-		Optional<Cloud_deviceEntity> value = cloud_deviceRepository.findById(model.getDeviceDetail().getDeviceid());
+		Optional<Cloud_deviceEntity> value = cloud_deviceRepository.findById(model.getDeviceid());
 
 		Cloud_deviceEntity entity = value.get();
 
@@ -608,29 +612,27 @@ public class Cloud_deviceService {
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
 
 		// 情報設定
-//		entity.setProjectid(model.getProjectid());
-//		entity.setGroupid(model.getGroupid());
-		entity.setDevicename(model.getDeviceDetail().getDevicename());
-//		entity.setImei(model.getImei());
-//		entity.setIccid(model.getIccid());
-		entity.setProductid(model.getDeviceDetail().getProductid());
-		entity.setProductid(model.getDeviceDetail().getProductid());
-		entity.setSn(model.getDeviceDetail().getSn());
-		entity.setSim_iccid(model.getDeviceDetail().getSim_iccid());
-		entity.setSim_imsi(model.getDeviceDetail().getSim_imsi());
-		entity.setSim_tel(model.getDeviceDetail().getSim_tel());
-//		entity.setEncryptedcommunications(model.getEncryptedcommunications());
-//		entity.setEncryptedkey(model.getEncryptedkey());
-//		entity.setConnectserverurl(model.getConnectserverurl());
-//		entity.setConnectserverport(model.getConnectserverport());
-//		entity.setBindingflag(model.getBindingflag());
+		entity.setProjectid(model.getProjectid());
+		entity.setGroupid(model.getGroupid());
+		entity.setDevicename(model.getDevicename());
+		entity.setImei(model.getImei());
+		entity.setIccid(model.getIccid());
+		entity.setSn(model.getSn());
+		entity.setSim_iccid(model.getSim_iccid());
+		entity.setSim_imsi(model.getSim_imsi());
+		entity.setSim_tel(model.getSim_tel());
+		entity.setEncryptedcommunications(model.getEncryptedcommunications());
+		entity.setEncryptedkey(model.getEncryptedkey());
+		entity.setConnectserverurl(model.getConnectserverurl());
+		entity.setConnectserverport(model.getConnectserverport());
+		entity.setBindingflag(model.getBindingflag());
 //		entity.setFmlastestversion(model.getFmlastestversion());
 //		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
-//		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
-//		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
-//		entity.setLastprojectId(model.getLastprojectId());
-//		entity.setLastgroupid(model.getLastgroupid());
-//		entity.setAlive(model.getAlive());
+		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
+		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
+		entity.setLastprojectId(model.getLastprojectId());
+		entity.setLastgroupid(model.getLastgroupid());
+		entity.setAlive(model.getAlive());
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
 
