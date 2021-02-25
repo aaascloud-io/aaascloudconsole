@@ -57,12 +57,12 @@
                     <!-- <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column> -->
                     <ngx-datatable-column name="アドレス" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.userid}}</a>
+                        <a>{{row.address}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="メール" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.companyid}}</a>
+                        <a>{{row.mail}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="ユーザー数" [flexGrow]="1" [minWidth]="140">
@@ -108,61 +108,66 @@
     </div>
     <div class="modal-body">
       <div class="form-group col-12">
-        <h6>ユーザータイプ</h6>
-        <!-- <select class="form-control" id="typeId" name="typeId" [(ngModel)]="selectedContact.producttypeid"
-          #editname="ngModel" name="producttypeid" id="producttypeid"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
-            {{type.producttypename}}
-          </option>
-        </select> -->
-        <!-- <option [value]=2>TRACKER</option>
-          <option [value]=1>FACE</option>
-          <option [value]=3>WATCH</option> -->
-        <!-- <input type="text" [(ngModel)]="selectedContact.name" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="Name"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required> -->
-        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">ユーザータイプを選択してください。</div>
-        </div>
-      </div>
-      <div class="form-group col-12">
         <h6>ユーザー名</h6>
-        <input type="text" [(ngModel)]="selectedContact.productname" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="ユーザー名"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">ユーザー名を入力してください</div>
-        </div>
+        <input type="text" [(ngModel)]="selectedContact.username" #editusername="ngModel" name="username" id="username"
+          class="name form-control" placeholder="ユーザー名" disabled>
       </div>
       <div class="form-group col-12">
-        <h6>ユーザーコード</h6>
-        <input type="text" [(ngModel)]="selectedContact.productcode" #editmodel="ngModel" name="productcode"
-          id="productcode" class="name form-control" placeholder="ユーザーコード">
-      </div>
-      <div class="form-group col-12">
-        <h6>型番</h6>
-        <input type="text" [(ngModel)]="selectedContact.model" #editmodel="ngModel" name="model" id="model"
-          class="name form-control" placeholder="型番">
-      </div>
-      <div class="form-group col-12">
-        <h6>バージョン</h6>
-        <input type="text" [(ngModel)]="selectedContact.version" #editversion="ngModel" name="version" id="version"
-          class="name form-control" placeholder="バージョン">
-      </div>
-      <div class="form-group col-12">
-        <h6>SIMカード有無</h6>
-        <select class="form-control" id="sim" name="sim" [(ngModel)]="selectedContact.simflag">
-          <option [value]=0>有</option>
-          <option [value]=1>無</option>
+        <h6>権限</h6>
+        <select class="form-control" id="role" name="role" [(ngModel)]="selectedContact.role" #editrole="ngModel"
+          class="name form-control">
+          <option [value]=1>管理者</option>
+          <option [value]=2>使用者</option>
         </select>
-        <!-- <input type="text" [(ngModel)]="pageModel.addProduct.sim" #editsim="ngModel" name="sim" id="sim"
-          class="name form-control" placeholder="SIMカード"> -->
+      </div>
+      <h4 class="form-section">会社情報</h4>
+      <div class="form-group col-12">
+        <h6>会社名</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.companyname" #editcompanyname="ngModel"
+          name="companyname" id="companyname" class="name form-control" placeholder="会社名">
+      </div>
+      <!-- <div class="form-group col-12">
+        <h6 style="width: 410px;">会社名</h6>
+        <select class="form-control" name="company" id="company" [(ngModel)]="pageModel.updataUserInfo.companyid"
+          placeholder="選択してください。" #editcompanyid="ngModel" (change)="show()"
+          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required disabled>
+          <option *ngFor="let companyInfo of pageModel.companyInfoAll; let i = index" [ngValue]="companyInfo.companyid">
+            {{companyInfo.companyname}}
+          </option>
+        </select>
+        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+          <div *ngIf="editname.errors.required">ユーザータイプを選んでください</div>
+        </div>
+      </div> -->
+      <div class="form-group col-12">
+        <h6>法人番号</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.corporatenumber" #editcorporatenumber="ngModel"
+          name="corporatenumber" id="corporatenumber" class="name form-control" placeholder="法人番号">
       </div>
       <div class="form-group col-12">
-        <h6>説明</h6>
-        <textarea id="summary" rows="5" class="form-control square" name="message" [(ngModel)]="selectedContact.summary"
-          placeholder="message"></textarea>
+        <h6>アドレス</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.address" #editaddress="ngModel" name="address"
+          id="address" class="name form-control" placeholder="アドレス">
+      </div>
+      <div class="form-group col-12">
+        <h6>業種</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.industry" #editindustry="ngModel" name="industry"
+          id="industry" class="name form-control" placeholder="業種">
+      </div>
+      <div class="form-group col-12">
+        <h6>メール</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.mail" #editmail="ngModel" name="mail" id="mail"
+          class="name form-control" placeholder="メール">
+      </div>
+      <div class="form-group col-12">
+        <h6>電話</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.tel" #edittel="ngModel" name="tel" id="tel"
+          class="name form-control" placeholder="電話">
+      </div>
+      <div class="form-group col-12">
+        <h6>Fax</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.fax" #editfax="ngModel" name="fax" id="fax"
+          class="name form-control" placeholder="Fax">
       </div>
 
     </div>

@@ -24,6 +24,10 @@ class Contact {
     public devicecount: number,
     public userCount: number,
     public projectCount: number,
+    public address: string,
+    public mail: string,
+    public tel: string,
+    public fax: string,
   ) { }
 }
 const formInputData = require('../../../assets/data/forms/form-elements/form-inputs.json');
@@ -103,15 +107,15 @@ export class UserComponent implements OnInit {
         fax: ''
       }
     },
-    updataProduct: {
-      productId: 0,
-      productTypeId: 0,
-      productcode: '',
-      productName: '',
-      model: '',
-      version: '',
-      sim: 0,
-      summary: ''
+    updataUserInfo: {
+      corporatenumber: '',
+      companyid: null,
+      companyname: '',
+      address: '',
+      industry: '',
+      tel: '',
+      mail: '',
+      fax: ''
     },
     loginUser: {
       loginuserid: null,
@@ -128,28 +132,7 @@ export class UserComponent implements OnInit {
       }
     },
 
-    companyInfoAll: [
-      // {
-      //   companyid: 1,
-      //   corporatenumber: '2011501020673',
-      //   companyName: 'アイフォーカス',
-      //   address: '東京都中央区八丁堀',
-      //   industry: 'サービス',
-      //   mail: 'info@i-focus.co.jp',
-      //   tel: '03-1234-5678',
-      //   fax: '03-1234-5679',
-      // },
-      // {
-      //   companyid: 2,
-      //   corporatenumber: '2011501020674',
-      //   companyName: 'フェイス株式会社',
-      //   address: '東京都中央区',
-      //   industry: 'サービス',
-      //   mail: 'FACE@i-focus.co.jp',
-      //   tel: '03-1234-1111',
-      //   fax: '03-1234-1111',
-      // },
-    ]
+    companyInfoAll: []
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -180,8 +163,8 @@ export class UserComponent implements OnInit {
     // 画面遷移する場合、値を取得する
     this.queryParams_userid = this.activatedRoute.snapshot.queryParams['userid'];
     this.queryParams_companyid = this.activatedRoute.snapshot.queryParams['companyid'];
-    console.log("画面遷移の取得した値："+ this.queryParams_userid); 
-    console.log("画面遷移の取得した値："+ this.queryParams_companyid); 
+    console.log("画面遷移の取得した値：" + this.queryParams_userid);
+    console.log("画面遷移の取得した値：" + this.queryParams_companyid);
 
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
     // 画面初期ログイン情報取得
@@ -241,6 +224,19 @@ export class UserComponent implements OnInit {
       windowClass: 'animated fadeInDown'
     });
     this.contactFlag = false;
+    this.pageModel.updataUserInfo.companyid = this.selectedContact.companyid;
+    // 会社情報変更
+    for (var company in this.pageModel.companyInfoAll) {
+      if (this.pageModel.updataUserInfo.companyid === this.pageModel.companyInfoAll[company]["companyid"]) {
+        this.pageModel.updataUserInfo.companyname = this.pageModel.companyInfoAll[company]["companyname"];
+        this.pageModel.updataUserInfo.corporatenumber = this.pageModel.companyInfoAll[company]["corporatenumber"];
+        this.pageModel.updataUserInfo.address = this.pageModel.companyInfoAll[company]["address"];
+        this.pageModel.updataUserInfo.industry = this.pageModel.companyInfoAll[company]["industry"];
+        this.pageModel.updataUserInfo.mail = this.pageModel.companyInfoAll[company]["mail"];
+        this.pageModel.updataUserInfo.tel = this.pageModel.companyInfoAll[company]["tel"];
+        this.pageModel.updataUserInfo.fax = this.pageModel.companyInfoAll[company]["fax"];
+      }
+    }
   }
 
   /**
@@ -303,7 +299,10 @@ export class UserComponent implements OnInit {
       this.selectedUserid.push({ "userid": row.userid });
       var query = {
         "loginInfo": this.pageModel.userInfoParame.loginInfo,
-        "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        },
         "cloud_userModelList": this.selectedUserid,
       }
       this.httpService.delete('deleteUser', query).then(item => {
@@ -353,7 +352,10 @@ export class UserComponent implements OnInit {
       }
       var query = {
         "loginInfo": this.pageModel.userInfoParame.loginInfo,
-        "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        },
         "cloud_userModelList": this.selectedUserid,
       }
 
@@ -378,43 +380,34 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * Update contact details
+   * ユーザー情報を更新する
    *
-   * @param editForm      Edit form for values check
-   * @param id      Id match to the selected row Id
+   * @param
    */
   onUpdate() {
-    // for (const row of this.rows) {
-    //   if (row.id === id && editForm.valid === true) {
-    //     row.name = this.selectedContact['name'];
-    //     row.email = this.selectedContact['email'];
-    //     row.phone = this.selectedContact['phone'];
-    //     row.phone = this.selectedContact['phone'];
-    //     this.editModal.close(editForm.resetForm);
-    //     break;
-    //   }
-    // }
-
     var query = {
       "loginInfo": {
         "loginuserid": this.pageModel.loginUser.loginuserid,
         "logincompanyid": this.pageModel.loginUser.logincompanyid
       },
       "targetUserInfo": {
-        "targetuserid": 3
+        "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
       },
-
-      "productid": this.selectedContact.productid,
-      "producttypeid": this.selectedContact.producttypeid,
-      "productcode": this.selectedContact.productcode,
-      "productname": this.selectedContact.productname,
-      "model": this.selectedContact.model,
-      "version": this.selectedContact.version,
-      "simflag": this.selectedContact.simflag,
-      "summary": this.selectedContact.summary
+      "userid": this.selectedContact.userid,
+      "role": this.selectedContact.role,
+      "username": this.selectedContact.username,
+      "companyid": this.pageModel.updataUserInfo.companyid,
+      "corporatenumber": this.pageModel.updataUserInfo.corporatenumber,
+      "companyname":  this.pageModel.updataUserInfo.companyname,
+      "address":  this.pageModel.updataUserInfo.address,
+      "industry":  this.pageModel.updataUserInfo.industry,
+      "mail":  this.pageModel.updataUserInfo.mail,
+      "tel":  this.pageModel.updataUserInfo.tel,
+      "fax":  this.pageModel.updataUserInfo.fax
     }
 
-    this.httpService.put('updateProduct', query).then(item => {
+    this.httpService.put('updateUser', query).then(item => {
       try {
         console.log('更新成功です。');
         console.log(item);
@@ -423,33 +416,6 @@ export class UserComponent implements OnInit {
         console.log('更新失敗です。');
       }
     });
-  }
-
-
-  /**
-   * Contact changed to favorite or non-favorite
-   *
-   * @param row     Row of the favorite contact
-   */
-  favoriteChange(row) {
-    if (row.isFavorite) {
-      row.isFavorite = row.isFavorite ? false : true;
-    } else {
-      row.isFavorite = true;
-    }
-  }
-
-  /**
-   * favorite set when add contact
-   *
-   * @param event     favorite set on click event
-   */
-  addFavoriteImage(event) {
-    if (event.target.checked === true) {
-      this.contactFavorite = true;
-    } else {
-      this.contactFavorite = false;
-    }
   }
 
   /**
@@ -653,8 +619,8 @@ export class UserComponent implements OnInit {
     var query = {
       "loginInfo": this.pageModel.userInfoParame.loginInfo,
       "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
+        "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
       },
     }
     this.httpService.usePost('getSonUsers', query).then(item => {
@@ -676,6 +642,10 @@ export class UserComponent implements OnInit {
             elem.devicecount,
             elem.userCount,
             elem.projectCount,
+            elem.address,
+            elem.mail,
+            elem.tel,
+            elem.fax,
           ));
           index++;
         });
@@ -692,7 +662,9 @@ export class UserComponent implements OnInit {
    * 会社情報を取得
    */
   protected async getUnderCompanies() {
-    var query = this.pageModel.userInfoParame.loginInfo;
+    var query = {
+      "loginuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid
+    }
     this.httpService.usePost('getUnderCompanies', query).then(item => {
       try {
         if (item) {
