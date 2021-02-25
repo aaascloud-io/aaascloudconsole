@@ -174,7 +174,7 @@ public class Cloud_errresumeController {
 		}
 		try {
 			/* 削除する */
-			cloud_errresumeService.deleteErrresume(model.getRowid());
+			cloud_errresumeService.deleteErrresume(model);
 
 			/* 正常系 */
 			response.setStatus(200);
