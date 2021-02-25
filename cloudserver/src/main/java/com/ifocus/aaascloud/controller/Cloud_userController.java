@@ -111,6 +111,10 @@ public class Cloud_userController {
 				resJasonObj.put("upperuserid", model.getUpperuserid());
 				resJasonObj.put("companyName", model.getCompanyname());
 				resJasonObj.put("devicecount", model.getDevicecount());
+				resJasonObj.put("address", model.getAddress());
+				resJasonObj.put("mail", model.getMail());
+				resJasonObj.put("tel", model.getTel());
+				resJasonObj.put("fax", model.getFax());
 
 
 				// アクセス権限ユーザ一覧を取得する
