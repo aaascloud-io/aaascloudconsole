@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
@@ -200,6 +201,7 @@ public class Cloud_userService {
 		entity.setUsername(model.getUsername());
 		entity.setRole(model.getRole());
 		entity.setUpperuserid(loginInfo.getLoginuserid());
+		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(loginInfo.getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(loginInfo.getLoginuserid());

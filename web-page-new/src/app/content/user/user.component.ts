@@ -29,7 +29,7 @@ const formInputData = require('../../../assets/data/forms/form-elements/form-inp
 const selectData = require('../../../assets/data/forms/form-elements/select.json');
 
 @Component({
-  selector: 'app-product',
+  selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
@@ -37,6 +37,7 @@ export class UserComponent implements OnInit {
 
   userInfo: UserInfo;
 
+  companyId: any = null;
   columns: any = [];
   contactName: any;
   contactEmail: any;
@@ -62,7 +63,7 @@ export class UserComponent implements OnInit {
   temp = [];
   temp2 = this.rows;
   singlebasicSelected: any;
-  productTypes = [];
+
 
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
@@ -76,13 +77,27 @@ export class UserComponent implements OnInit {
     userList: [],
     adduserInfo: {
       username: '',
+      role: null,
       passwrod: '',
       passwrod2: '',
-      companyid: '',
       companyInfo: {
+        corporatenumber: '',
+        companyid: null,
+        companyname: '',
         address: '',
-        phone: '',
+        industry: '',
+        tel: '',
         mail: '',
+        fax: ''
+      },
+      newCompanyInfo: {
+        corporatenumber: '',
+        companyname: '',
+        address: '',
+        industry: '',
+        tel: '',
+        mail: '',
+        fax: ''
       }
     },
     updataProduct: {
@@ -96,16 +111,42 @@ export class UserComponent implements OnInit {
       summary: ''
     },
     loginUser: {
-      loginuserid: '',
+      loginuserid: null,
       loginusername: '',
       loginrole: null,
-      logincompanyid: '',
+      logincompanyid: null,
+      loginupperuserid: null
     },
     userInfoParame: {
       loginInfo: {},
-      targetUserInfo: {}
+      targetUserInfo: {
+        targetuserid: '',
+        targetuserCompanyid: ''
+      }
+    },
 
-    }
+    companyInfoAll: [
+      // {
+      //   companyid: 1,
+      //   corporatenumber: '2011501020673',
+      //   companyName: 'アイフォーカス',
+      //   address: '東京都中央区八丁堀',
+      //   industry: 'サービス',
+      //   mail: 'info@i-focus.co.jp',
+      //   tel: '03-1234-5678',
+      //   fax: '03-1234-5679',
+      // },
+      // {
+      //   companyid: 2,
+      //   corporatenumber: '2011501020674',
+      //   companyName: 'フェイス株式会社',
+      //   address: '東京都中央区',
+      //   industry: 'サービス',
+      //   mail: 'FACE@i-focus.co.jp',
+      //   tel: '03-1234-1111',
+      //   fax: '03-1234-1111',
+      // },
+    ]
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -131,40 +172,28 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    // this.rows.push(new Contact(1, 'Scott Marsh', 'scott@gmail.com', '(954)-654-5641',
-    //   '../../assets/images/portrait/small/avatar-s-5.png', false, 'online'));
-    // this.rows.push(new Contact(2, 'Russell Bry', 'russell@gmail.com', '(235)-654-5642',
-    //   '../../assets/images/portrait/small/avatar-s-3.png', false, 'busy'));
-    // this.rows.push(new Contact(3, 'james john', 'john@gmail.com', '(125)-654-5643',
-    //   '../../assets/images/portrait/small/avatar-s-1.png', true, 'away'));
-    // this.rows.push(new Contact(4, 'Cynth Tuck', 'tuck@gmail.com', '(974)-654-5644',
-    //   '../../assets/images/portrait/small/avatar-s-4.png', false, 'busy'));
-    // this.rows.push(new Contact(5, 'Margi Govan', 'govan@gmail.com', '(954)-654-5645',
-    //   '../../assets/images/portrait/small/avatar-s-6.png', true, 'online'));
-    // this.rows.push(new Contact(6, 'Eugene Wood', 'wood@gmail.com', '(987)-654-5646',
-    //   '../../assets/images/portrait/small/avatar-s-9.png', false, 'busy'));
-    // this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
-    //   '../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
 
     //to do ユーザー名で　ロケーションデータを取る
     this.pageModel.loginUser.loginuserid = item.uid;
     this.pageModel.loginUser.loginusername = item.login_id;
-    this.pageModel.loginUser.loginrole = item.role;
+    // this.pageModel.loginUser.loginrole = item.role;
+    this.pageModel.loginUser.loginrole = 1;
     this.pageModel.loginUser.logincompanyid = item.company;
+    this.pageModel.loginUser.loginupperuserid = item.upperuserid;
+    this.companyId = item.company;
+    console.log("ログイン情報：" + JSON.stringify(item));
 
     this.pageModel.userInfoParame.loginInfo = {
       "loginuserid": this.pageModel.loginUser.loginuserid,
       "loginusername": this.pageModel.loginUser.loginusername,
       "loginrole": this.pageModel.loginUser.loginrole,
-      "logincompanyid": this.pageModel.loginUser.logincompanyid
+      "logincompanyid": this.pageModel.loginUser.logincompanyid,
+      "loginupperuserid": this.pageModel.loginUser.loginupperuserid
     }
-    this.pageModel.userInfoParame.targetUserInfo = {
-      "targetuserid": this.pageModel.loginUser.loginuserid,
-      "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
-    }
+    console.log("param情報：" + JSON.stringify(this.pageModel.loginUser));
+    this.getUnderCompanies()
     this.getUserAll();
   }
 
@@ -247,29 +276,33 @@ export class UserComponent implements OnInit {
     //   index++;
     // }
     // this.rows = temp;
-    this.selectedUserid.push({ "userid": row.userid });
-    var query = {
-      "loginInfo": this.pageModel.userInfoParame.loginInfo,
-      "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
-      "cloud_userModelList": this.selectedUserid,
-    }
-    this.httpService.delete('deleteUser', query).then(item => {
-      try {
-        if (item.body.resultCode === "0000") {
-          this.selectedUserid = [];
-          this.selected = [];
-          this.getUserAll();
-        } else {
+    if (confirm("削除してもよろしいでしょうか")) {
+
+
+      this.selectedUserid.push({ "userid": row.userid });
+      var query = {
+        "loginInfo": this.pageModel.userInfoParame.loginInfo,
+        "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
+        "cloud_userModelList": this.selectedUserid,
+      }
+      this.httpService.delete('deleteUser', query).then(item => {
+        try {
+          if (item.body.resultCode === "0000") {
+            this.selectedUserid = [];
+            this.selected = [];
+            this.getUserAll();
+          } else {
+            console.log('削除失敗です。');
+            this.selectedUserid = [];
+            this.selected = [];
+          }
+        } catch (e) {
           console.log('削除失敗です。');
           this.selectedUserid = [];
           this.selected = [];
         }
-      } catch (e) {
-        console.log('削除失敗です。');
-        this.selectedUserid = [];
-        this.selected = [];
-      }
-    });
+      });
+    }
   }
 
   /**
@@ -291,32 +324,36 @@ export class UserComponent implements OnInit {
     //   temp.splice(removedIndex[i], 1);
     // }
     // this.rows = temp;
-    for (var selecteUser of this.selected) {
-      this.selectedUserid.push({ "userid": selecteUser.userid });
-    }
-    var query = {
-      "loginInfo": this.pageModel.userInfoParame.loginInfo,
-      "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
-      "cloud_userModelList": this.selectedUserid,
-    }
+    if (confirm("削除してもよろしいでしょうか")) {
 
-    this.httpService.delete('deleteUser', query).then(item => {
-      try {
-        if (item.body.resultCode === "0000") {
-          this.selectedUserid = [];
-          this.selected = [];
-          this.getUserAll();
-        } else {
+
+      for (var selecteUser of this.selected) {
+        this.selectedUserid.push({ "userid": selecteUser.userid });
+      }
+      var query = {
+        "loginInfo": this.pageModel.userInfoParame.loginInfo,
+        "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
+        "cloud_userModelList": this.selectedUserid,
+      }
+
+      this.httpService.delete('deleteUser', query).then(item => {
+        try {
+          if (item.body.resultCode === "0000") {
+            this.selectedUserid = [];
+            this.selected = [];
+            this.getUserAll();
+          } else {
+            console.log('削除失敗です。');
+            this.selectedUserid = [];
+            this.selected = [];
+          }
+        } catch (e) {
           console.log('削除失敗です。');
           this.selectedUserid = [];
           this.selected = [];
         }
-      } catch (e) {
-        console.log('削除失敗です。');
-        this.selectedUserid = [];
-        this.selected = [];
-      }
-    });
+      });
+    }
   }
 
   /**
@@ -395,25 +432,110 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * New contact add to the table
+   * ユーザー新規
    *
-   * @param addForm     Add contact form
+   * @param 
    */
-  addUser() {
-    var query = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
+  addCompUser() {
+    var companyid = this.pageModel.adduserInfo.companyInfo.companyid;
+    var username = this.pageModel.adduserInfo.username;
+    var role = this.pageModel.adduserInfo.role;
+    var flg = true;
 
-      "companyid": this.pageModel.adduserInfo.companyid,
-      "username": this.pageModel.adduserInfo.username,
-      "passwrod": this.pageModel.adduserInfo.passwrod,
-      "passwrod2": this.pageModel.adduserInfo.passwrod2,
-      // "address": this.pageModel.adduserInfo.companyInfo.address,
-      // "mail": this.pageModel.adduserInfo.companyInfo.mail,
-      // "phone": this.pageModel.adduserInfo.companyInfo.phone,
+    if (flg && !username) {
+      confirm(`ユーザー名を入力してください。`);
+      flg = false;
     }
+
+    if (flg && !role) {
+      confirm(`権限を選択してください。`);
+      flg = false;
+    }
+
+    if (flg && !companyid) {
+      confirm(`会社名を選択してください。`);
+      flg = false;
+    }
+
+    if (flg) {
+      var query = {
+        "loginInfo": this.pageModel.userInfoParame.loginInfo,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid
+        },
+
+        "companyid": this.pageModel.adduserInfo.companyInfo.companyid,
+        "username": this.pageModel.adduserInfo.username,
+        "role": this.pageModel.adduserInfo.role,
+      }
+      this.registerUser(query);
+    }
+    // addForm.reset();
+    // this.addModal.close(addForm.resetForm);
+
+  }
+
+  /**
+   * 
+   * 
+   */
+  addNewCompUser() {
+    var companyname = this.pageModel.adduserInfo.newCompanyInfo.companyname;
+    var corporatenumber = this.pageModel.adduserInfo.newCompanyInfo.corporatenumber;
+    var username = this.pageModel.adduserInfo.username;
+    var role = this.pageModel.adduserInfo.role;
+    var flg = true;
+
+    if (flg && !username) {
+      confirm(`ユーザー名を入力してください。`);
+      flg = false;
+    }
+
+    if (flg && !role) {
+      confirm(`権限を選択してください。`);
+      flg = false;
+    }
+
+    if (flg && !companyname) {
+      confirm(`会社名を入力してください。`);
+      flg = false;
+    }
+
+    if (flg && !corporatenumber) {
+      confirm(`法人番号を入力してください。`);
+      flg = false;
+    }
+
+    if (flg) {
+      var query = {
+        "loginInfo": this.pageModel.userInfoParame.loginInfo,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid
+        },
+
+        "username": this.pageModel.adduserInfo.username,
+        "upperuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        "corporatenumber": this.pageModel.adduserInfo.newCompanyInfo.corporatenumber,
+        "role": this.pageModel.adduserInfo.role,
+        "companyname": this.pageModel.adduserInfo.newCompanyInfo.companyname,
+        "address": this.pageModel.adduserInfo.newCompanyInfo.address,
+        "industry": this.pageModel.adduserInfo.newCompanyInfo.industry,
+        "mail": this.pageModel.adduserInfo.newCompanyInfo.mail,
+        "tel": this.pageModel.adduserInfo.newCompanyInfo.tel,
+        "fax": this.pageModel.adduserInfo.newCompanyInfo.fax,
+      };
+
+      this.registerUser(query);
+    }
+  }
+
+  /**
+   * ユーザー登録
+   * @param query
+   */
+  registerUser(query) {
 
     this.httpService.usePost('registerUser', query).then(item => {
       try {
@@ -424,11 +546,8 @@ export class UserComponent implements OnInit {
         console.log('登録失敗です。');
       }
     });
-
-    // addForm.reset();
-    // this.addModal.close(addForm.resetForm);
-
   }
+
 
   /**
    * Set the phone number format
@@ -507,55 +626,15 @@ export class UserComponent implements OnInit {
   }
 
   /**
- * 一括登録用サンプルのダウンロード(画面より)
- * 
- */
-  protected downloadSampleFiles() {
-    let link = document.createElement("a");
-    link.download = "productInsert.xlsx";
-    link.href = "assets/excel/productInsert.xlsx";
-    link.click();
-  }
-
-  /**
-   * 一括登録用ファイルのロード(画面より)
-   * 
-   * @param event 
-   */
-  protected async changeTarget(event) {
-    var obj = this;
-    var file = event.target.files[0];
-    // Logger.info(this, `got target file. name:[${file.name}]`);
-    if (file) {
-      var reader = new FileReader();
-      reader.onload = (event) => {
-        const data = reader.result;
-        var workBook = XLSX.read(data, { type: 'binary' });
-        var jsonData = workBook.SheetNames.reduce((initial, name) => {
-          const sheet = workBook.Sheets[name];
-          initial[name] = XLSX.utils.sheet_to_json(sheet);
-          return initial;
-        }, {});
-        this.pageModel.dataAll = jsonData['rawData'];
-        // Logger.info(this, `loaded. size:[${this.pageModel.dataAll.length}]`);
-      }
-      reader.onerror = (event) => {
-        // obj.alert.danger("ファイル読み込み失敗しました");
-        this.alertService.error("ファイル読み込み失敗しました");
-
-      }
-      ///読み込み実施
-      reader.readAsBinaryString(file);
-    }
-  }
-
-  /**
    * ユーザー一覧取得
    */
   protected async getUserAll() {
     var query = {
       "loginInfo": this.pageModel.userInfoParame.loginInfo,
-      "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginuserid,
+        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
+      },
     }
     this.httpService.usePost('getSonUsers', query).then(item => {
       try {
@@ -563,46 +642,6 @@ export class UserComponent implements OnInit {
         console.log(item);
         var index = 1;
         this.pageModel.userList = item;
-        // if (item != null) {
-        // item = [
-        //   {
-        //     userid: 1,
-        //     username: "ifocus",
-        //     companyid: 1,
-        //     loginid: "",
-        //     role: 1,
-        //     upperuserid: 0,
-        //     companyname: "i-focus",
-        //     devicecount: 5,
-        //     userCount: 2,
-        //     projectCount: 2
-        //   },
-        //   {
-        //     userid: 2,
-        //     username: "user2",
-        //     companyid: 1,
-        //     loginid: "ifocus",
-        //     role: 1,
-        //     upperuserid: 1,
-        //     companyname: "user2----",
-        //     devicecount: 5,
-        //     userCount: 2,
-        //     projectCount: 2
-        //   },
-        //   {
-        //     userid: 3,
-        //     username: "user3",
-        //     companyid: 2,
-        //     loginid: "user3",
-        //     role: 0,
-        //     upperuserid: 1,
-        //     companyname: "フェイス株式会社",
-        //     devicecount: 5,
-        //     userCount: 2,
-        //     projectCount: 2
-        //   },
-
-        // ]
         item.forEach((elem) => {
           this.rows.push(new Contact(
             index,
@@ -627,29 +666,43 @@ export class UserComponent implements OnInit {
       }
     });
   }
+
   /**
-   * プロダクト一覧取得
+   * 会社情報を取得
    */
-  // protected async getUserInfo() {
-  //   var query = {
-  //     "loginInfo": this.pageModel.userInfoParame.loginInfo,
-  //     "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo
-  //   }
+  protected async getUnderCompanies() {
+    var query = this.pageModel.userInfoParame.loginInfo;
+    this.httpService.usePost('getUnderCompanies', query).then(item => {
+      try {
+        if (item) {
+          this.pageModel.companyInfoAll = item;
+          console.log(item);
+          console.log("会社情報の取得は成功しました。");
+        } else {
+          console.log("会社情報の取得は失敗しました。");
+        }
+      } catch (e) {
+        console.log("会社情報の取得は失敗しました。");
+      }
+    });
+  }
 
-  //   this.pageModel.userInfoParame
-  //   this.httpService.useGet('getProductTypeAll').then(item => {
-  //     try {
-  //       if (item) {
-  //         this.productTypes = item;
-  //         console.log(item);
-  //         console.log("プロダクトタイプの取得は成功しました。");
-  //       } else {
-  //         console.log("プロダクトタイプの取得は失敗しました。");
-  //       }
-  //     } catch (e) {
-  //       console.log("プロダクトタイプの取得は失敗しました。");
-  //     }
-  //   });
-  // }
-
+  /**
+   * 会社情報自動的に入れること
+   */
+  show() {
+    // 会社情報変更
+    for (var company in this.pageModel.companyInfoAll) {
+      console.log(company);
+      if (this.pageModel.adduserInfo.companyInfo.companyid === this.pageModel.companyInfoAll[company]["companyid"]) {
+        this.pageModel.adduserInfo.companyInfo.corporatenumber = this.pageModel.companyInfoAll[company]["corporatenumber"];
+        this.pageModel.adduserInfo.companyInfo.address = this.pageModel.companyInfoAll[company]["address"];
+        this.pageModel.adduserInfo.companyInfo.industry = this.pageModel.companyInfoAll[company]["industry"];
+        this.pageModel.adduserInfo.companyInfo.mail = this.pageModel.companyInfoAll[company]["mail"];
+        this.pageModel.adduserInfo.companyInfo.tel = this.pageModel.companyInfoAll[company]["tel"];
+        this.pageModel.adduserInfo.companyInfo.fax = this.pageModel.companyInfoAll[company]["fax"];
+      }
+    }
+  }
 }
+
