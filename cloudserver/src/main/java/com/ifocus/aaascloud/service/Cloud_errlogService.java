@@ -2,6 +2,7 @@ package com.ifocus.aaascloud.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.entity.Cloud_errlogEntity;
 import com.ifocus.aaascloud.entity.Cloud_errlogRepository;
+import com.ifocus.aaascloud.entity.Cloud_userEntity;
+import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_errlogModel;
 
 @SpringBootApplication
@@ -21,6 +24,8 @@ public class Cloud_errlogService {
 
 	@Autowired
 	private Cloud_errlogRepository cloud_errlogRepository ;
+	@Autowired
+	private Cloud_userRepository cloud_userRepository ;
 
 	/*
 	 * エラーログ一覧情報取得
@@ -41,7 +46,7 @@ public class Cloud_errlogService {
 	 *
 	 */
 	public List<Cloud_errlogModel> getModelsByEntitys(List<Cloud_errlogEntity> entityList) throws Exception {
-		List<Cloud_errlogModel> modelList = new ArrayList();
+		List<Cloud_errlogModel> modelList = new ArrayList<Cloud_errlogModel>();
 		for (Cloud_errlogEntity entity:entityList) {
 			modelList.add(getModelByEntity(entity));
 		}
@@ -60,6 +65,13 @@ public class Cloud_errlogService {
 		Cloud_errlogModel model = new Cloud_errlogModel();
 		model.setRowid(entity.getRowid());
 		model.setUserid(entity.getUserid());
+
+		// ユーザー名
+		Optional<Cloud_userEntity> user = cloud_userRepository.findById(entity.getUserid());
+		if (user != null) {
+			model.setUsername(user.get().getUsername());
+		}
+
 		model.setDevice(entity.getDevice());
 		model.setStatusflag(entity.getStatusflag());
 		model.setDatatime(entity.getDatatime());

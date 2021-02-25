@@ -44,8 +44,8 @@ public class Cloud_errresumeService {
 	 * エラー履歴情報取得
 	 *
 	 */
-	public Cloud_errresumeModel getErrresumeInfo(Integer errlogid) throws Exception {
-		Optional<Cloud_errresumeEntity> entity = cloud_errresumeRepository.findById(errlogid);
+	public Cloud_errresumeModel getErrresumeInfo(Integer rowid) throws Exception {
+		Optional<Cloud_errresumeEntity> entity = cloud_errresumeRepository.findById(rowid);
 		return getCloud_errresumeModel(entity.get());
 
 	}
@@ -93,6 +93,18 @@ public class Cloud_errresumeService {
 		cloud_errlogRepository.save(cloud_errlogEntity);
 
 		return getCloud_errresumeModel(insertedEntity);
+
+	}
+
+	/*
+	 * エラー履歴削除
+	 * @param model Cloud_errresumeModel
+	 */
+	public void deleteErrresume(Cloud_errresumeModel model) throws Exception {
+
+		if (cloud_errlogRepository.existsById(model.getRowid())) {
+			cloud_errlogRepository.deleteById(model.getRowid());
+		}
 
 	}
 

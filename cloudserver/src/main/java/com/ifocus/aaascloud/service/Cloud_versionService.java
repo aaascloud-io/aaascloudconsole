@@ -30,6 +30,17 @@ public class Cloud_versionService {
 	 * @return List<Cloud_versionModel> バージョン一覧
 	 *
 	 */
+	public List<Cloud_versionModel> getAllVersions(Cloud_versionModel model) throws Exception {
+		List<Cloud_versionEntity> list = cloud_versionRepository.findAllVersions();
+		return getModelsByEntitys(list);
+	}
+
+	/*
+	 * プロダクト別バージョン一覧を取得する
+	 * @param productid Integer バージョンモデル
+	 * @return List<Cloud_versionModel> バージョン一覧
+	 *
+	 */
 	public List<Cloud_versionModel> getVersionList(Integer productid) throws Exception {
 		List<Cloud_versionEntity> list = cloud_versionRepository.findByProductid(productid);
 		return getModelsByEntitys(list);
@@ -63,7 +74,7 @@ public class Cloud_versionService {
 	 *
 	 */
 	private List<Cloud_versionModel> getModelsByEntitys(List<Cloud_versionEntity> entityList) throws Exception {
-		List<Cloud_versionModel> modelList = new ArrayList();
+		List<Cloud_versionModel> modelList = new ArrayList<Cloud_versionModel>();
 		for (Cloud_versionEntity entity:entityList) {
 			modelList.add(getCloud_versionModel(entity));
 		}

@@ -44,7 +44,7 @@
                         </div>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="ユーザー名" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="ログインID" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a>{{row.username}}</a>
                       </ng-template>
@@ -57,22 +57,24 @@
                     <!-- <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column> -->
                     <ngx-datatable-column name="アドレス" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.userid}}</a>
+                        <a>{{row.address}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="メール" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.companyid}}</a>
+                        <a>{{row.mail}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="ユーザー数" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="">{{row.userCount}}</a>
+                        <a [routerLink]="['/user']"
+                          [queryParams]="{userid:row.userid, companyid:row.companyid}">{{row.userCount}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="デバイス数" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="">{{row.devicecount}}</a>
+                        <a [routerLink]="['/device']"
+                          [queryParams]="{userid:row.userid, companyid:row.companyid}">{{row.devicecount}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
@@ -106,61 +108,66 @@
     </div>
     <div class="modal-body">
       <div class="form-group col-12">
-        <h6>プロダクトタイプ</h6>
-        <select class="form-control" id="typeId" name="typeId" [(ngModel)]="selectedContact.producttypeid"
-          #editname="ngModel" name="producttypeid" id="producttypeid"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
-            {{type.producttypename}}
+        <h6>ユーザー名</h6>
+        <input type="text" [(ngModel)]="selectedContact.username" #editusername="ngModel" name="username" id="username"
+          class="name form-control" placeholder="ユーザー名" disabled>
+      </div>
+      <div class="form-group col-12">
+        <h6>権限</h6>
+        <select class="form-control" id="role" name="role" [(ngModel)]="selectedContact.role" #editrole="ngModel"
+          class="name form-control">
+          <option [value]=1>管理者</option>
+          <option [value]=2>使用者</option>
+        </select>
+      </div>
+      <h4 class="form-section">会社情報</h4>
+      <div class="form-group col-12">
+        <h6>会社名</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.companyname" #editcompanyname="ngModel"
+          name="companyname" id="companyname" class="name form-control" placeholder="会社名">
+      </div>
+      <!-- <div class="form-group col-12">
+        <h6 style="width: 410px;">会社名</h6>
+        <select class="form-control" name="company" id="company" [(ngModel)]="pageModel.updataUserInfo.companyid"
+          placeholder="選択してください。" #editcompanyid="ngModel" (change)="show()"
+          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required disabled>
+          <option *ngFor="let companyInfo of pageModel.companyInfoAll; let i = index" [ngValue]="companyInfo.companyid">
+            {{companyInfo.companyname}}
           </option>
-          <!-- <option [value]=2>TRACKER</option>
-          <option [value]=1>FACE</option>
-          <option [value]=3>WATCH</option> -->
         </select>
-        <!-- <input type="text" [(ngModel)]="selectedContact.name" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="Name"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required> -->
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">プロダクトタイプを選択してください。</div>
+          <div *ngIf="editname.errors.required">ユーザータイプを選んでください</div>
         </div>
+      </div> -->
+      <div class="form-group col-12">
+        <h6>法人番号</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.corporatenumber" #editcorporatenumber="ngModel"
+          name="corporatenumber" id="corporatenumber" class="name form-control" placeholder="法人番号">
       </div>
       <div class="form-group col-12">
-        <h6>プロダクト名</h6>
-        <input type="text" [(ngModel)]="selectedContact.productname" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="プロダクト名"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">プロダクト名を入力してください</div>
-        </div>
+        <h6>アドレス</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.address" #editaddress="ngModel" name="address"
+          id="address" class="name form-control" placeholder="アドレス">
       </div>
       <div class="form-group col-12">
-        <h6>プロダクトコード</h6>
-        <input type="text" [(ngModel)]="selectedContact.productcode" #editmodel="ngModel" name="productcode"
-          id="productcode" class="name form-control" placeholder="プロダクトコード">
+        <h6>業種</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.industry" #editindustry="ngModel" name="industry"
+          id="industry" class="name form-control" placeholder="業種">
       </div>
       <div class="form-group col-12">
-        <h6>型番</h6>
-        <input type="text" [(ngModel)]="selectedContact.model" #editmodel="ngModel" name="model" id="model"
-          class="name form-control" placeholder="型番">
+        <h6>メール</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.mail" #editmail="ngModel" name="mail" id="mail"
+          class="name form-control" placeholder="メール">
       </div>
       <div class="form-group col-12">
-        <h6>バージョン</h6>
-        <input type="text" [(ngModel)]="selectedContact.version" #editversion="ngModel" name="version" id="version"
-          class="name form-control" placeholder="バージョン">
+        <h6>電話</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.tel" #edittel="ngModel" name="tel" id="tel"
+          class="name form-control" placeholder="電話">
       </div>
       <div class="form-group col-12">
-        <h6>SIMカード有無</h6>
-        <select class="form-control" id="sim" name="sim" [(ngModel)]="selectedContact.simflag">
-          <option [value]=0>有</option>
-          <option [value]=1>無</option>
-        </select>
-        <!-- <input type="text" [(ngModel)]="pageModel.addProduct.sim" #editsim="ngModel" name="sim" id="sim"
-          class="name form-control" placeholder="SIMカード"> -->
-      </div>
-      <div class="form-group col-12">
-        <h6>説明</h6>
-        <textarea id="summary" rows="5" class="form-control square" name="message" [(ngModel)]="selectedContact.summary"
-          placeholder="message"></textarea>
+        <h6>Fax</h6>
+        <input type="text" [(ngModel)]="pageModel.updataUserInfo.fax" #editfax="ngModel" name="fax" id="fax"
+          class="name form-control" placeholder="Fax">
       </div>
 
     </div>
@@ -174,7 +181,8 @@
   </form>
 </ng-template>
 <ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addUser()" #editForm="ngForm">
+  <form #editForm="ngForm">
+    <!-- <form (ngSubmit)="addUser()" #editForm="ngForm"> -->
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">新規</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -183,28 +191,24 @@
     </div>
     <div class="modal-body">
       <div class="form-group col-12">
-        <h6>会社名</h6>
-        <!-- <select class="form-control" id="typeId" name="typeId" [(ngModel)]="pageModel.addProduct.productTypeId"
-          #editname="ngModel" name="productTypeId" id="productTypeId"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
-            {{type.producttypename}}
-          </option>
-        </select> -->
-        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyid" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="会社名"
+        <h6>ユーザー名</h6>
+        <input type="text" [(ngModel)]="pageModel.adduserInfo.username" #editname="ngModel" name="username"
+          id="username" class="name form-control" placeholder="半角英数で入力してください"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">プロダクトタイプを選んでください</div>
+          <div *ngIf="editname.errors.required">ユーザー名を入力してください</div>
         </div>
       </div>
       <div class="form-group col-12">
-        <h6>ユーザー名</h6>
-        <input type="text" [(ngModel)]="pageModel.adduserInfo.username" #editname="ngModel" name="username"
-          id="username" class="name form-control" placeholder="ユーザー名"
+        <h6>権限</h6>
+        <select class="form-control" id="role" name="role" [(ngModel)]="pageModel.adduserInfo.role" #editname="ngModel"
+          name="username" id="username" class="name form-control"
           [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+          <option [value]=1>管理者</option>
+          <option [value]=2>使用者</option>
+        </select>
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">プロダクト名を入力してください</div>
+          <div *ngIf="editname.errors.required">権限を選択してください</div>
         </div>
       </div>
       <div class="form-group col-12">
@@ -218,26 +222,123 @@
           id="passwrod2" class="name form-control" placeholder="パスワード確認">
       </div>
       <div class="form-group col-12">
-        <h6>アドレス</h6>
-        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.address" #editversion="ngModel" name="address"
-          id="address" class="name form-control" placeholder="アドレス">
-      </div>
-      <div class="form-group col-12">
-        <h6>メール</h6>
-        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.address" #editversion="ngModel" name="address"
-          id="address" class="name form-control" placeholder="メール">
-      </div>
-      <div class="form-group col-12">
-        <h6>電話</h6>
-        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.phone" #editversion="ngModel" name="phone"
-          id="phone" class="name form-control" placeholder="電話">
-      </div>
-
-    </div>
-    <div class="modal-footer">
-      <div class="form-group position-relative has-icon-left mb-0">
-        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
+        <ul class="nav nav-tabs _bottom nav-underline no-hover-bg tabsborder">
+          <ngb-tabset>
+            <ngb-tab title="会社情報">
+              <ng-template ngbTabContent>
+                <h4 class="form-section">会社情報</h4>
+                <div class="form-group col-12">
+                  <h6 style="width: 410px;">会社名</h6>
+                  <select class="form-control" name="company" id="company"
+                    [(ngModel)]="pageModel.adduserInfo.companyInfo.companyid" placeholder="選択してください。"
+                    #editname="ngModel" (change)="show()"
+                    [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+                    <option *ngFor="let companyInfo of pageModel.companyInfoAll; let i = index"
+                      [ngValue]="companyInfo.companyid">
+                      {{companyInfo.companyname}}
+                    </option>
+                  </select>
+                  <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+                    <div *ngIf="editname.errors.required">ユーザータイプを選んでください</div>
+                  </div>
+                </div>
+                <div class="form-group col-12">
+                  <h6>法人番号</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.corporatenumber"
+                    #editversion="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
+                    placeholder="法人番号" disabled>
+                </div>
+                <div class="form-group col-12">
+                  <h6>アドレス</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.address" #editversion="ngModel"
+                    name="address" id="address" class="name form-control" placeholder="アドレス" disabled>
+                </div>
+                <div class="form-group col-12">
+                  <h6>業種</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.industry" #editversion="ngModel"
+                    name="industry" id="industry" class="name form-control" placeholder="業種" disabled>
+                </div>
+                <div class="form-group col-12">
+                  <h6>メール</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.mail" #editversion="ngModel"
+                    name="mail" id="mail" class="name form-control" placeholder="メール" disabled>
+                </div>
+                <div class="form-group col-12">
+                  <h6>電話</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.tel" #editversion="ngModel"
+                    name="tel" id="tel" class="name form-control" placeholder="電話" disabled>
+                </div>
+                <div class="form-group col-12">
+                  <h6>Fax</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.fax" #editversion="ngModel"
+                    name="fax" id="fax" class="name form-control" placeholder="Fax" disabled>
+                </div>
+                <div class="modal-footer">
+                  <div class="form-group position-relative has-icon-left mb-0">
+                    <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
+                      data-dismiss="modal"><i class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block"
+                        (click)="addCompUser()">登録</span></button>
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab title="新規会社">
+              <ng-template ngbTabContent>
+                <h4 class="form-section">新規会社情報</h4>
+                <div class="form-group col-12">
+                  <h6 style="width: 410px;">会社名</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.companyname" #editname="ngModel"
+                    name="companyname" id="companyname" class="name form-control" placeholder="会社名"
+                    [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+                  <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+                    <div *ngIf="editname.errors.required">会社名を入力してください</div>
+                  </div>
+                </div>
+                <div class="form-group col-12">
+                  <h6>法人番号</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.corporatenumber"
+                    #editversion="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
+                    placeholder="法人番号" [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+                  <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+                    <div *ngIf="editname.errors.required">法人番号を入力してください</div>
+                  </div>
+                </div>
+                <div class="form-group col-12">
+                  <h6>アドレス</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.address" #editversion="ngModel"
+                    name="address" id="address" class="name form-control" placeholder="アドレス">
+                </div>
+                <div class="form-group col-12">
+                  <h6>業種</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.industry" #editversion="ngModel"
+                    name="industry" id="industry" class="name form-control" placeholder="業種">
+                </div>
+                <div class="form-group col-12">
+                  <h6>メール</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.mail" #editversion="ngModel"
+                    name="mail" id="mail" class="name form-control" placeholder="メール">
+                </div>
+                <div class="form-group col-12">
+                  <h6>電話</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.tel" #editversion="ngModel"
+                    name="tel" id="tel" class="name form-control" placeholder="電話">
+                </div>
+                <div class="form-group col-12">
+                  <h6>Fax</h6>
+                  <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.fax" #editversion="ngModel"
+                    name="fax" id="fax" class="name form-control" placeholder="Fax">
+                </div>
+                <div class="modal-footer">
+                  <div class="form-group position-relative has-icon-left mb-0">
+                    <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
+                      data-dismiss="modal"><i class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block"
+                        (click)="addNewCompUser()">登録</span></button>
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-tab>
+          </ngb-tabset>
+        </ul>
       </div>
     </div>
   </form>

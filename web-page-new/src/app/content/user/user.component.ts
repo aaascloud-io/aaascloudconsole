@@ -9,6 +9,7 @@ import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from '../../_common/_interface/userInfo'
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
+import { ActivatedRoute } from '@angular/router';
 
 class Contact {
   constructor(
@@ -23,13 +24,17 @@ class Contact {
     public devicecount: number,
     public userCount: number,
     public projectCount: number,
+    public address: string,
+    public mail: string,
+    public tel: string,
+    public fax: string,
   ) { }
 }
 const formInputData = require('../../../assets/data/forms/form-elements/form-inputs.json');
 const selectData = require('../../../assets/data/forms/form-elements/select.json');
 
 @Component({
-  selector: 'app-product',
+  selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
@@ -37,6 +42,7 @@ export class UserComponent implements OnInit {
 
   userInfo: UserInfo;
 
+  companyId: any = null;
   columns: any = [];
   contactName: any;
   contactEmail: any;
@@ -62,7 +68,9 @@ export class UserComponent implements OnInit {
   temp = [];
   temp2 = this.rows;
   singlebasicSelected: any;
-  productTypes = [];
+  queryParams_userid: any;
+  queryParams_companyid: any;
+
 
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
@@ -76,36 +84,55 @@ export class UserComponent implements OnInit {
     userList: [],
     adduserInfo: {
       username: '',
+      role: null,
       passwrod: '',
       passwrod2: '',
-      companyid: '',
       companyInfo: {
+        corporatenumber: '',
+        companyid: null,
+        companyname: '',
         address: '',
-        phone: '',
+        industry: '',
+        tel: '',
         mail: '',
+        fax: ''
+      },
+      newCompanyInfo: {
+        corporatenumber: '',
+        companyname: '',
+        address: '',
+        industry: '',
+        tel: '',
+        mail: '',
+        fax: ''
       }
     },
-    updataProduct: {
-      productId: 0,
-      productTypeId: 0,
-      productcode: '',
-      productName: '',
-      model: '',
-      version: '',
-      sim: 0,
-      summary: ''
+    updataUserInfo: {
+      corporatenumber: '',
+      companyid: null,
+      companyname: '',
+      address: '',
+      industry: '',
+      tel: '',
+      mail: '',
+      fax: ''
     },
     loginUser: {
-      loginuserid: '',
+      loginuserid: null,
       loginusername: '',
       loginrole: null,
-      logincompanyid: '',
+      logincompanyid: null,
+      loginupperuserid: null
     },
     userInfoParame: {
       loginInfo: {},
-      targetUserInfo: {}
+      targetUserInfo: {
+        targetuserid: '',
+        targetuserCompanyid: ''
+      }
+    },
 
-    }
+    companyInfoAll: []
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -126,45 +153,51 @@ export class UserComponent implements OnInit {
     private alertService: AlertService,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.getUserAll();
   }
 
   ngOnInit(): void {
 
-    // this.rows.push(new Contact(1, 'Scott Marsh', 'scott@gmail.com', '(954)-654-5641',
-    //   '../../assets/images/portrait/small/avatar-s-5.png', false, 'online'));
-    // this.rows.push(new Contact(2, 'Russell Bry', 'russell@gmail.com', '(235)-654-5642',
-    //   '../../assets/images/portrait/small/avatar-s-3.png', false, 'busy'));
-    // this.rows.push(new Contact(3, 'james john', 'john@gmail.com', '(125)-654-5643',
-    //   '../../assets/images/portrait/small/avatar-s-1.png', true, 'away'));
-    // this.rows.push(new Contact(4, 'Cynth Tuck', 'tuck@gmail.com', '(974)-654-5644',
-    //   '../../assets/images/portrait/small/avatar-s-4.png', false, 'busy'));
-    // this.rows.push(new Contact(5, 'Margi Govan', 'govan@gmail.com', '(954)-654-5645',
-    //   '../../assets/images/portrait/small/avatar-s-6.png', true, 'online'));
-    // this.rows.push(new Contact(6, 'Eugene Wood', 'wood@gmail.com', '(987)-654-5646',
-    //   '../../assets/images/portrait/small/avatar-s-9.png', false, 'busy'));
-    // this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
-    //   '../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
+    // 画面遷移する場合、値を取得する
+    this.queryParams_userid = this.activatedRoute.snapshot.queryParams['userid'];
+    this.queryParams_companyid = this.activatedRoute.snapshot.queryParams['companyid'];
+    console.log("画面遷移の取得した値：" + this.queryParams_userid);
+    console.log("画面遷移の取得した値：" + this.queryParams_companyid);
+
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
+    // 画面初期ログイン情報取得
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
 
-    //to do ユーザー名で　ロケーションデータを取る
+    //to do ユーザー名で　ロケーシ
     this.pageModel.loginUser.loginuserid = item.uid;
     this.pageModel.loginUser.loginusername = item.login_id;
-    this.pageModel.loginUser.loginrole = item.role;
+    // this.pageModel.loginUser.loginrole = item.role;
+    this.pageModel.loginUser.loginrole = 1;
     this.pageModel.loginUser.logincompanyid = item.company;
+    this.pageModel.loginUser.loginupperuserid = item.upperuserid;
+    this.companyId = item.company;
+    console.log("ログイン情報：" + JSON.stringify(item));
 
     this.pageModel.userInfoParame.loginInfo = {
       "loginuserid": this.pageModel.loginUser.loginuserid,
       "loginusername": this.pageModel.loginUser.loginusername,
       "loginrole": this.pageModel.loginUser.loginrole,
-      "logincompanyid": this.pageModel.loginUser.logincompanyid
+      "logincompanyid": this.pageModel.loginUser.logincompanyid,
+      "loginupperuserid": this.pageModel.loginUser.loginupperuserid
     }
-    this.pageModel.userInfoParame.targetUserInfo = {
-      "targetuserid": this.pageModel.loginUser.loginuserid,
-      "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
+
+    if (this.queryParams_userid && this.queryParams_companyid) {
+      this.pageModel.userInfoParame.targetUserInfo.targetuserid = this.queryParams_userid;
+      this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid = this.queryParams_companyid;
+    } else {
+      this.pageModel.userInfoParame.targetUserInfo.targetuserid = this.pageModel.loginUser.loginuserid;
+      this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid = this.pageModel.loginUser.logincompanyid;
     }
+
+    console.log("param情報：" + JSON.stringify(this.pageModel.loginUser));
+    this.getUnderCompanies()
     this.getUserAll();
   }
 
@@ -191,6 +224,19 @@ export class UserComponent implements OnInit {
       windowClass: 'animated fadeInDown'
     });
     this.contactFlag = false;
+    this.pageModel.updataUserInfo.companyid = this.selectedContact.companyid;
+    // 会社情報変更
+    for (var company in this.pageModel.companyInfoAll) {
+      if (this.pageModel.updataUserInfo.companyid === this.pageModel.companyInfoAll[company]["companyid"]) {
+        this.pageModel.updataUserInfo.companyname = this.pageModel.companyInfoAll[company]["companyname"];
+        this.pageModel.updataUserInfo.corporatenumber = this.pageModel.companyInfoAll[company]["corporatenumber"];
+        this.pageModel.updataUserInfo.address = this.pageModel.companyInfoAll[company]["address"];
+        this.pageModel.updataUserInfo.industry = this.pageModel.companyInfoAll[company]["industry"];
+        this.pageModel.updataUserInfo.mail = this.pageModel.companyInfoAll[company]["mail"];
+        this.pageModel.updataUserInfo.tel = this.pageModel.companyInfoAll[company]["tel"];
+        this.pageModel.updataUserInfo.fax = this.pageModel.companyInfoAll[company]["fax"];
+      }
+    }
   }
 
   /**
@@ -247,29 +293,36 @@ export class UserComponent implements OnInit {
     //   index++;
     // }
     // this.rows = temp;
-    this.selectedUserid.push({ "userid": row.userid });
-    var query = {
-      "loginInfo": this.pageModel.userInfoParame.loginInfo,
-      "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
-      "cloud_userModelList": this.selectedUserid,
-    }
-    this.httpService.delete('deleteUser', query).then(item => {
-      try {
-        if (item.body.resultCode === "0000") {
-          this.selectedUserid = [];
-          this.selected = [];
-          this.getUserAll();
-        } else {
+    if (confirm("削除してもよろしいでしょうか")) {
+
+
+      this.selectedUserid.push({ "userid": row.userid });
+      var query = {
+        "loginInfo": this.pageModel.userInfoParame.loginInfo,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        },
+        "cloud_userModelList": this.selectedUserid,
+      }
+      this.httpService.delete('deleteUser', query).then(item => {
+        try {
+          if (item.body.resultCode === "0000") {
+            this.selectedUserid = [];
+            this.selected = [];
+            this.getUserAll();
+          } else {
+            console.log('削除失敗です。');
+            this.selectedUserid = [];
+            this.selected = [];
+          }
+        } catch (e) {
           console.log('削除失敗です。');
           this.selectedUserid = [];
           this.selected = [];
         }
-      } catch (e) {
-        console.log('削除失敗です。');
-        this.selectedUserid = [];
-        this.selected = [];
-      }
-    });
+      });
+    }
   }
 
   /**
@@ -291,72 +344,70 @@ export class UserComponent implements OnInit {
     //   temp.splice(removedIndex[i], 1);
     // }
     // this.rows = temp;
-    for (var selecteUser of this.selected) {
-      this.selectedUserid.push({ "userid": selecteUser.userid });
-    }
-    var query = {
-      "loginInfo": this.pageModel.userInfoParame.loginInfo,
-      "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
-      "cloud_userModelList": this.selectedUserid,
-    }
+    if (confirm("削除してもよろしいでしょうか")) {
 
-    this.httpService.delete('deleteUser', query).then(item => {
-      try {
-        if (item.body.resultCode === "0000") {
-          this.selectedUserid = [];
-          this.selected = [];
-          this.getUserAll();
-        } else {
+
+      for (var selecteUser of this.selected) {
+        this.selectedUserid.push({ "userid": selecteUser.userid });
+      }
+      var query = {
+        "loginInfo": this.pageModel.userInfoParame.loginInfo,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        },
+        "cloud_userModelList": this.selectedUserid,
+      }
+
+      this.httpService.delete('deleteUser', query).then(item => {
+        try {
+          if (item.body.resultCode === "0000") {
+            this.selectedUserid = [];
+            this.selected = [];
+            this.getUserAll();
+          } else {
+            console.log('削除失敗です。');
+            this.selectedUserid = [];
+            this.selected = [];
+          }
+        } catch (e) {
           console.log('削除失敗です。');
           this.selectedUserid = [];
           this.selected = [];
         }
-      } catch (e) {
-        console.log('削除失敗です。');
-        this.selectedUserid = [];
-        this.selected = [];
-      }
-    });
+      });
+    }
   }
 
   /**
-   * Update contact details
+   * ユーザー情報を更新する
    *
-   * @param editForm      Edit form for values check
-   * @param id      Id match to the selected row Id
+   * @param
    */
   onUpdate() {
-    // for (const row of this.rows) {
-    //   if (row.id === id && editForm.valid === true) {
-    //     row.name = this.selectedContact['name'];
-    //     row.email = this.selectedContact['email'];
-    //     row.phone = this.selectedContact['phone'];
-    //     row.phone = this.selectedContact['phone'];
-    //     this.editModal.close(editForm.resetForm);
-    //     break;
-    //   }
-    // }
-
     var query = {
       "loginInfo": {
         "loginuserid": this.pageModel.loginUser.loginuserid,
         "logincompanyid": this.pageModel.loginUser.logincompanyid
       },
       "targetUserInfo": {
-        "targetuserid": 3
+        "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
       },
-
-      "productid": this.selectedContact.productid,
-      "producttypeid": this.selectedContact.producttypeid,
-      "productcode": this.selectedContact.productcode,
-      "productname": this.selectedContact.productname,
-      "model": this.selectedContact.model,
-      "version": this.selectedContact.version,
-      "simflag": this.selectedContact.simflag,
-      "summary": this.selectedContact.summary
+      "userid": this.selectedContact.userid,
+      "role": this.selectedContact.role,
+      "username": this.selectedContact.username,
+      "companyid": this.pageModel.updataUserInfo.companyid,
+      "corporatenumber": this.pageModel.updataUserInfo.corporatenumber,
+      "companyname":  this.pageModel.updataUserInfo.companyname,
+      "address":  this.pageModel.updataUserInfo.address,
+      "industry":  this.pageModel.updataUserInfo.industry,
+      "mail":  this.pageModel.updataUserInfo.mail,
+      "tel":  this.pageModel.updataUserInfo.tel,
+      "fax":  this.pageModel.updataUserInfo.fax
     }
 
-    this.httpService.put('updateProduct', query).then(item => {
+    this.httpService.put('updateUser', query).then(item => {
       try {
         console.log('更新成功です。');
         console.log(item);
@@ -367,53 +418,111 @@ export class UserComponent implements OnInit {
     });
   }
 
+  /**
+   * ユーザー新規
+   *
+   * @param 
+   */
+  addCompUser() {
+    var companyid = this.pageModel.adduserInfo.companyInfo.companyid;
+    var username = this.pageModel.adduserInfo.username;
+    var role = this.pageModel.adduserInfo.role;
+    var flg = true;
+
+    if (flg && !username) {
+      confirm(`ユーザー名を入力してください。`);
+      flg = false;
+    }
+
+    if (flg && !role) {
+      confirm(`権限を選択してください。`);
+      flg = false;
+    }
+
+    if (flg && !companyid) {
+      confirm(`会社名を選択してください。`);
+      flg = false;
+    }
+
+    if (flg) {
+      var query = {
+        "loginInfo": this.pageModel.userInfoParame.loginInfo,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid
+        },
+
+        "companyid": this.pageModel.adduserInfo.companyInfo.companyid,
+        "username": this.pageModel.adduserInfo.username,
+        "role": this.pageModel.adduserInfo.role,
+      }
+      this.registerUser(query);
+    }
+    // addForm.reset();
+    // this.addModal.close(addForm.resetForm);
+
+  }
 
   /**
-   * Contact changed to favorite or non-favorite
-   *
-   * @param row     Row of the favorite contact
+   * 
+   * 
    */
-  favoriteChange(row) {
-    if (row.isFavorite) {
-      row.isFavorite = row.isFavorite ? false : true;
-    } else {
-      row.isFavorite = true;
+  addNewCompUser() {
+    var companyname = this.pageModel.adduserInfo.newCompanyInfo.companyname;
+    var corporatenumber = this.pageModel.adduserInfo.newCompanyInfo.corporatenumber;
+    var username = this.pageModel.adduserInfo.username;
+    var role = this.pageModel.adduserInfo.role;
+    var flg = true;
+
+    if (flg && !username) {
+      confirm(`ユーザー名を入力してください。`);
+      flg = false;
+    }
+
+    if (flg && !role) {
+      confirm(`権限を選択してください。`);
+      flg = false;
+    }
+
+    if (flg && !companyname) {
+      confirm(`会社名を入力してください。`);
+      flg = false;
+    }
+
+    if (flg && !corporatenumber) {
+      confirm(`法人番号を入力してください。`);
+      flg = false;
+    }
+
+    if (flg) {
+      var query = {
+        "loginInfo": this.pageModel.userInfoParame.loginInfo,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid
+        },
+
+        "username": this.pageModel.adduserInfo.username,
+        "upperuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        "corporatenumber": this.pageModel.adduserInfo.newCompanyInfo.corporatenumber,
+        "role": this.pageModel.adduserInfo.role,
+        "companyname": this.pageModel.adduserInfo.newCompanyInfo.companyname,
+        "address": this.pageModel.adduserInfo.newCompanyInfo.address,
+        "industry": this.pageModel.adduserInfo.newCompanyInfo.industry,
+        "mail": this.pageModel.adduserInfo.newCompanyInfo.mail,
+        "tel": this.pageModel.adduserInfo.newCompanyInfo.tel,
+        "fax": this.pageModel.adduserInfo.newCompanyInfo.fax,
+      };
+
+      this.registerUser(query);
     }
   }
 
   /**
-   * favorite set when add contact
-   *
-   * @param event     favorite set on click event
+   * ユーザー登録
+   * @param query
    */
-  addFavoriteImage(event) {
-    if (event.target.checked === true) {
-      this.contactFavorite = true;
-    } else {
-      this.contactFavorite = false;
-    }
-  }
-
-  /**
-   * New contact add to the table
-   *
-   * @param addForm     Add contact form
-   */
-  addUser() {
-    var query = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-
-      "companyid": this.pageModel.adduserInfo.companyid,
-      "username": this.pageModel.adduserInfo.username,
-      "passwrod": this.pageModel.adduserInfo.passwrod,
-      "passwrod2": this.pageModel.adduserInfo.passwrod2,
-      // "address": this.pageModel.adduserInfo.companyInfo.address,
-      // "mail": this.pageModel.adduserInfo.companyInfo.mail,
-      // "phone": this.pageModel.adduserInfo.companyInfo.phone,
-    }
+  registerUser(query) {
 
     this.httpService.usePost('registerUser', query).then(item => {
       try {
@@ -424,11 +533,8 @@ export class UserComponent implements OnInit {
         console.log('登録失敗です。');
       }
     });
-
-    // addForm.reset();
-    // this.addModal.close(addForm.resetForm);
-
   }
+
 
   /**
    * Set the phone number format
@@ -507,55 +613,15 @@ export class UserComponent implements OnInit {
   }
 
   /**
- * 一括登録用サンプルのダウンロード(画面より)
- * 
- */
-  protected downloadSampleFiles() {
-    let link = document.createElement("a");
-    link.download = "productInsert.xlsx";
-    link.href = "assets/excel/productInsert.xlsx";
-    link.click();
-  }
-
-  /**
-   * 一括登録用ファイルのロード(画面より)
-   * 
-   * @param event 
-   */
-  protected async changeTarget(event) {
-    var obj = this;
-    var file = event.target.files[0];
-    // Logger.info(this, `got target file. name:[${file.name}]`);
-    if (file) {
-      var reader = new FileReader();
-      reader.onload = (event) => {
-        const data = reader.result;
-        var workBook = XLSX.read(data, { type: 'binary' });
-        var jsonData = workBook.SheetNames.reduce((initial, name) => {
-          const sheet = workBook.Sheets[name];
-          initial[name] = XLSX.utils.sheet_to_json(sheet);
-          return initial;
-        }, {});
-        this.pageModel.dataAll = jsonData['rawData'];
-        // Logger.info(this, `loaded. size:[${this.pageModel.dataAll.length}]`);
-      }
-      reader.onerror = (event) => {
-        // obj.alert.danger("ファイル読み込み失敗しました");
-        this.alertService.error("ファイル読み込み失敗しました");
-
-      }
-      ///読み込み実施
-      reader.readAsBinaryString(file);
-    }
-  }
-
-  /**
    * ユーザー一覧取得
    */
   protected async getUserAll() {
     var query = {
       "loginInfo": this.pageModel.userInfoParame.loginInfo,
-      "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo,
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+      },
     }
     this.httpService.usePost('getSonUsers', query).then(item => {
       try {
@@ -563,46 +629,6 @@ export class UserComponent implements OnInit {
         console.log(item);
         var index = 1;
         this.pageModel.userList = item;
-        // if (item != null) {
-        // item = [
-        //   {
-        //     userid: 1,
-        //     username: "ifocus",
-        //     companyid: 1,
-        //     loginid: "",
-        //     role: 1,
-        //     upperuserid: 0,
-        //     companyname: "i-focus",
-        //     devicecount: 5,
-        //     userCount: 2,
-        //     projectCount: 2
-        //   },
-        //   {
-        //     userid: 2,
-        //     username: "user2",
-        //     companyid: 1,
-        //     loginid: "ifocus",
-        //     role: 1,
-        //     upperuserid: 1,
-        //     companyname: "user2----",
-        //     devicecount: 5,
-        //     userCount: 2,
-        //     projectCount: 2
-        //   },
-        //   {
-        //     userid: 3,
-        //     username: "user3",
-        //     companyid: 2,
-        //     loginid: "user3",
-        //     role: 0,
-        //     upperuserid: 1,
-        //     companyname: "フェイス株式会社",
-        //     devicecount: 5,
-        //     userCount: 2,
-        //     projectCount: 2
-        //   },
-
-        // ]
         item.forEach((elem) => {
           this.rows.push(new Contact(
             index,
@@ -616,6 +642,10 @@ export class UserComponent implements OnInit {
             elem.devicecount,
             elem.userCount,
             elem.projectCount,
+            elem.address,
+            elem.mail,
+            elem.tel,
+            elem.fax,
           ));
           index++;
         });
@@ -627,29 +657,52 @@ export class UserComponent implements OnInit {
       }
     });
   }
+
   /**
-   * プロダクト一覧取得
+   * 会社情報を取得
    */
-  // protected async getUserInfo() {
-  //   var query = {
-  //     "loginInfo": this.pageModel.userInfoParame.loginInfo,
-  //     "targetUserInfo": this.pageModel.userInfoParame.targetUserInfo
-  //   }
+  protected async getUnderCompanies() {
+    var query = {
+      "loginuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid
+    }
+    this.httpService.usePost('getUnderCompanies', query).then(item => {
+      try {
+        if (item) {
+          this.pageModel.companyInfoAll = item;
+          console.log(item);
+          console.log("会社情報の取得は成功しました。");
+        } else {
+          console.log("会社情報の取得は失敗しました。");
+        }
+      } catch (e) {
+        console.log("会社情報の取得は失敗しました。");
+      }
+    });
+  }
 
-  //   this.pageModel.userInfoParame
-  //   this.httpService.useGet('getProductTypeAll').then(item => {
-  //     try {
-  //       if (item) {
-  //         this.productTypes = item;
-  //         console.log(item);
-  //         console.log("プロダクトタイプの取得は成功しました。");
-  //       } else {
-  //         console.log("プロダクトタイプの取得は失敗しました。");
-  //       }
-  //     } catch (e) {
-  //       console.log("プロダクトタイプの取得は失敗しました。");
-  //     }
-  //   });
+  /**
+   * 会社情報自動的に入れること
+   */
+  show() {
+    // 会社情報変更
+    for (var company in this.pageModel.companyInfoAll) {
+      console.log(company);
+      if (this.pageModel.adduserInfo.companyInfo.companyid === this.pageModel.companyInfoAll[company]["companyid"]) {
+        this.pageModel.adduserInfo.companyInfo.corporatenumber = this.pageModel.companyInfoAll[company]["corporatenumber"];
+        this.pageModel.adduserInfo.companyInfo.address = this.pageModel.companyInfoAll[company]["address"];
+        this.pageModel.adduserInfo.companyInfo.industry = this.pageModel.companyInfoAll[company]["industry"];
+        this.pageModel.adduserInfo.companyInfo.mail = this.pageModel.companyInfoAll[company]["mail"];
+        this.pageModel.adduserInfo.companyInfo.tel = this.pageModel.companyInfoAll[company]["tel"];
+        this.pageModel.adduserInfo.companyInfo.fax = this.pageModel.companyInfoAll[company]["fax"];
+      }
+    }
+  }
+
+  // /**
+  //  * 
+  //  */
+  // rotueUserInfo() {
+  //   this.router.navigate(['/device']);
   // }
-
 }
+

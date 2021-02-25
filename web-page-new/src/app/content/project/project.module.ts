@@ -1,22 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectComponent } from './project.component';
-import { RouterModule } from '@angular/router';
-import { ShareModuleModule } from 'src/app/share-module/share-module.module';
 import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { BreadcrumbModule } from 'src/app/_layout/breadcrumb/breadcrumb.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 
-
 @NgModule({
-  declarations: [ProjectComponent],
   imports: [
     CommonModule,
-    NgbModule,
-    FormsModule,
     NgxDatatableModule,
+    BreadcrumbModule,
+    FormsModule,
+    NgbModule,
     PerfectScrollbarModule,
     RouterModule.forChild([
       {
@@ -24,7 +23,9 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
         component: ProjectComponent
       }
     ]),
-    ShareModuleModule.forRoot(),
-  ]
+
+  ],
+  declarations: [ProjectComponent],
+  exports: [RouterModule]
 })
 export class ProjectModule { }
