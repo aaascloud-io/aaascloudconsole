@@ -35,11 +35,12 @@ public class Cloud_deviceModel {
 	private String fmlastestversion;
 	private Timestamp versioncomfirmtime;
 	private Integer companyid;
+	private String companyname;
 	private Integer userid;
 	private Integer lastprojectId;
 	private Integer lastgroupid;
 	private Integer alive;
-	private Integer productid;
+	private String productid;
 	private String productname;
 	private String industry;
 
