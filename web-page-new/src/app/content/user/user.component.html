@@ -67,12 +67,14 @@
                     </ngx-datatable-column>
                     <ngx-datatable-column name="ユーザー数" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="">{{row.userCount}}</a>
+                        <a [routerLink]="['/user']"
+                          [queryParams]="{userid:row.userid, companyid:row.companyid}">{{row.userCount}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="デバイス数" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="">{{row.devicecount}}</a>
+                        <a [routerLink]="['/device']"
+                          [queryParams]="{userid:row.userid, companyid:row.companyid}">{{row.devicecount}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
@@ -228,7 +230,7 @@
                     [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
                     <option *ngFor="let companyInfo of pageModel.companyInfoAll; let i = index"
                       [ngValue]="companyInfo.companyid">
-                      {{companyInfo.companyName}}
+                      {{companyInfo.companyname}}
                     </option>
                   </select>
                   <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
