@@ -42,7 +42,6 @@ export class DeviceComponent implements OnInit {
   name = 'Angular';
   public imagePath;
   imgURL: any;
-  selectedContact: any;
   contactFlag: boolean;
   addContact: any;
   placement = 'bottom-right';
@@ -64,15 +63,17 @@ export class DeviceComponent implements OnInit {
   public companySelectArray = [];
   conpanySelected: any;
   //暗号化
-  public sslSelectArray: [
+  public sslSelectArray = [
     {
-      "item_id": 1, "item_text": "OFF"
+      "item_id": 0, "item_text": "OFF"
     },
     {
-      "item_id": 2, "item_text": "ON"
+      "item_id": 1, "item_text": "ON"
     }
   ]
   sslSelected: any;
+  //
+  selectedDevice: any;
 
 
   public pageModel = {
@@ -84,23 +85,35 @@ export class DeviceComponent implements OnInit {
       loginusername: '',
       loginupperuserid: '',
     },
+    query:{
+      querycode:'',
+      productname:'',
+      projectname:'',
+      group:'',
+      conpanySelected:'',
+      companyid:'',
+      industry:'',
+    },
     //一覧用
     deviceList: [],
     // 一括登録のデバイス定義リスト
     addDeviceDetailList: [],
     deviceDetail: {
+      deviceid: '',
       devicename: '',
       imei: '',
       iccid: '',
       sn: '',
+      companyInfo: {},
       companyid: '',
-      encryptedCommunications:'',
-      encryptedKey:'',
-      connectserverurl:'',
-      connectserverport:'',
-      bindingflag:'',
-      fmlastestversion:'',
-      versioncomfirmtime:'',
+      sslInfo: {},
+      encryptedCommunications: '',
+      encryptedKey: '',
+      connectserverurl: '',
+      connectserverport: '',
+      bindingflag: '',
+      fmlastestversion: '',
+      versioncomfirmtime: '',
       productid: '',
       sim_imsi: '',
       sim_tel: '',
@@ -136,39 +149,39 @@ export class DeviceComponent implements OnInit {
     this.Init(null);
   }
   // 新規
-  insert(): void {
-    let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    if (routeif != null) {
-      //to do ユーザー名で　ロケーションデータを取る
-      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
-      var param = {
-        "loginInfo": {
-          "loginuserid": routeif.uid,
-          "loginusername": routeif.login_id,
-          "loginrole": routeif.role,
-          "logincompanyid": routeif.company
-        },
-        "targetUserInfo": {
-          "targetuserid": routeif.uid,
-          "targetuserCompanyid": routeif.company
-        },
-        "deviceDetail": this.pageModel.deviceDetail
-      }
-    }
-    this.httpService.useRpPost('registerDevice', param).then(item => {
-      try {
-        if (item.resultCode == "0000") {
+  // insert(): void {
+  //   let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+  //   if (routeif != null) {
+  //     //to do ユーザー名で　ロケーションデータを取る
+  //     // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
+  //     var param = {
+  //       "loginInfo": {
+  //         "loginuserid": routeif.uid,
+  //         "loginusername": routeif.login_id,
+  //         "loginrole": routeif.role,
+  //         "logincompanyid": routeif.company
+  //       },
+  //       "targetUserInfo": {
+  //         "targetuserid": routeif.uid,
+  //         "targetuserCompanyid": routeif.company
+  //       },
+  //       "deviceDetail": this.pageModel.deviceDetail
+  //     }
+  //   }
+  //   this.httpService.useRpPost('registerDevice', param).then(item => {
+  //     try {
+  //       if (item.resultCode == "0000") {
 
-          this.Init(null);
-          // $("#addinfo").hide();
-          // $('.modal-backdrop').remove();
-          // alert('デバイス情報を登録しました');
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    });
-  }
+  //         this.Init(null);
+  //         // $("#addinfo").hide();
+  //         // $('.modal-backdrop').remove();
+  //         // alert('デバイス情報を登録しました');
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   });
+  // }
 
 
 
@@ -203,6 +216,42 @@ export class DeviceComponent implements OnInit {
     }
   }
 
+  serachDevices(){
+    this.pageModel.query.companyid = this.pageModel.query.conpanySelected["companyid"];
+    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    if (item != null) {
+      var param = {
+        "loginInfo": {
+          "loginuserid": item.uid,
+          "loginusername": item.login_id,
+          "loginrole": item.role,
+          "logincompanyid": item.company
+        },
+        "targetUserInfo": {
+          "targetuserid": item.uid,
+          "targetuserCompanyid": item.company
+        },
+        "imei":this.pageModel.query.querycode,
+        "productname":this.pageModel.query.productname,
+        "projectname":this.pageModel.query.projectname,
+        "group":this.pageModel.query.group,
+        "companyid":this.pageModel.query.companyid,
+        "industry":this.pageModel.query.industry,
+      }
+      this.httpService.usePost('/searchCompanyDevices', param).then(item => {
+        try {
+
+          if (item != null) {
+            this.pageModel.deviceList = item;
+          }
+
+        } catch (e) {
+          console.log('ユーザー数数を検索API エラー　発生しました。');
+        }
+      })
+    }
+  }
+
   getCompanyList() {
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     var param = {
@@ -224,15 +273,16 @@ export class DeviceComponent implements OnInit {
  *
  * @param addModalContent      Id of the add contact modal;
  */
-  addLargeModal(addModalContent) {
+  addRegisterModal(addModalContent) {
     this.addModal = this.modal.open(addModalContent, {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
     this.contactFlag = true;
+    this.pageModel.deviceDetail;
   }
 
-  /**
+/**
 * Add new contact
 *
 * @param addTableDataModalContent      Id of the add contact modal;
@@ -258,15 +308,33 @@ export class DeviceComponent implements OnInit {
   }
 
   /**
+   * Edit selected contact row.
+   *
+   * @param editDeviceModel     Id of the edit contact model.
+   * @param row     The row which needs to be edited.
+   */
+  editTableDataModal(editDeviceModel, row) {
+    this.selectedDevice = Object.assign({}, row);
+    this.editModal = this.modal.open(editDeviceModel, {
+      windowClass: 'animated fadeInDown'
+    });
+    // this.contactFlag = false;
+    this.contactFlag = true;
+  }
+
+  /**
    * New contact add to the table
    *
    * @param addDeviceForm     Add contact form
    */
-  addNewDecice(addDeviceForm: NgForm) {
+  registerDevice(addDeviceForm: NgForm) {
     let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     if (routeif != null) {
       //to do ユーザー名で　ロケーションデータを取る
       // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
+      this.pageModel.deviceDetail.companyid = this.pageModel.deviceDetail.companyInfo["companyid"];
+      this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslInfo["item_id"];
+
       var param = {
         "loginInfo": {
           "loginuserid": routeif.uid,
@@ -308,6 +376,120 @@ export class DeviceComponent implements OnInit {
   /**
  * New contact add to the table
  *
+ * @param editDeviceForm     Add contact form
+ * @param deviceid      Id match to the selected row Id
+ * 
+ */
+  editDeviceDetail(editDeviceForm: NgForm, deviceid) {
+    let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    if (routeif != null) {
+      //to do ユーザー名で　ロケーションデータを取る
+      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
+
+      this.pageModel.deviceDetail.deviceid = deviceid
+      this.pageModel.deviceDetail.devicename = this.selectedDevice['devicename'];
+      this.pageModel.deviceDetail.sn = this.selectedDevice['sn'];
+      this.pageModel.deviceDetail.productid = this.selectedDevice['productid'];
+      this.pageModel.deviceDetail.sim_imsi = this.selectedDevice['sim_imsi'];
+      this.pageModel.deviceDetail.sim_tel = this.selectedDevice['sim_tel'];
+      this.pageModel.deviceDetail.sim_iccid = this.selectedDevice['sim_iccid'];
+
+      var param = {
+        "loginInfo": {
+          "loginuserid": routeif.uid,
+          "loginusername": routeif.login_id,
+          "loginrole": routeif.role,
+          "logincompanyid": routeif.company
+        },
+        "targetUserInfo": {
+          "targetuserid": routeif.uid,
+          "targetuserCompanyid": routeif.company
+        },
+        "deviceDetail": this.pageModel.deviceDetail
+        // "deviceid": deviceid,
+        // "devicename":  this.selectedDevice['devicename'],
+        // "sn": this.selectedDevice['sn'],
+        // "productid": this.selectedDevice['productid'],
+        // "sim_imsi":this.selectedDevice['sim_imsi'],
+        // "sim_tel": this.selectedDevice['sim_tel'],
+        // "sim_iccid":this.selectedDevice['sim_iccid'],
+      }
+    }
+    this.httpService.useRpPut('updateDevice', param).then(item => {
+      try {
+        if (item.resultCode == "0000") {
+
+          this.Init(null);
+          // $("#addinfo").hide();
+          // $('.modal-backdrop').remove();
+          alert('デバイス情報を改修しました');
+          
+        /**
+         * Add contact if valid addform value
+         */
+        if (editDeviceForm.valid === true) {
+
+          editDeviceForm.reset();
+          this.editModal.close(editDeviceForm.resetForm);
+        }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  }
+
+  /**
+ * New contact add to the table
+ *
+ * @param addExeclForm     Add contact form
+ */
+  registerDevices(addExeclForm: NgForm) {
+    let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    if (routeif != null) {
+      //to do ユーザー名で　ロケーションデータを取る
+      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
+
+      var param = {
+        "loginInfo": {
+          "loginuserid": routeif.uid,
+          "loginusername": routeif.login_id,
+          "loginrole": routeif.role,
+          "logincompanyid": routeif.company
+        },
+        "targetUserInfo": {
+          "targetuserid": routeif.uid,
+          "targetuserCompanyid": routeif.company
+        },
+        "deviceDetailList": this.pageModel.addDeviceDetailList
+      }
+    }
+    this.httpService.useRpPost('registerDevices', param).then(item => {
+      try {
+        if (item.resultCode == "0000") {
+
+          this.Init(null);
+          // $("#addinfo").hide();
+          // $('.modal-backdrop').remove();
+          alert('一括登録を成功しました');
+          /**
+ * Add contact if valid addform value
+ */
+          if (addExeclForm.valid === true) {
+
+            addExeclForm.reset();
+            this.addModal.close(addExeclForm.resetForm);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  }
+
+  /**
+ * New contact add to the table
+ *
  * @param addForm     Add contact form
  */
   addNewContact(addForm: NgForm) {
@@ -338,34 +520,19 @@ export class DeviceComponent implements OnInit {
           // $("#addinfo").hide();
           // $('.modal-backdrop').remove();
           alert('デバイス情報を登録しました');
+          /**
+ * Add contact if valid addform value
+ */
+          if (addForm.valid === true) {
+
+            addForm.reset();
+            this.addModal.close(addForm.resetForm);
+          }
         }
       } catch (e) {
         console.log(e);
       }
     });
-    /**
-     * Add contact if valid addform value
-     */
-    if (addForm.valid === true) {
-
-      addForm.reset();
-      this.addModal.close(addForm.resetForm);
-    }
-  }
-
-
-  /**
-     * Edit selected contact row.
-     *
-     * @param editTableDataModalContent     Id of the edit contact model.
-     * @param row     The row which needs to be edited.
-     */
-  editTableDataModal(editTableDataModalContent, row) {
-    this.selectedContact = Object.assign({}, row);
-    this.editModal = this.modal.open(editTableDataModalContent, {
-      windowClass: 'animated fadeInDown'
-    });
-    this.contactFlag = false;
   }
 
   /**
@@ -412,16 +579,94 @@ export class DeviceComponent implements OnInit {
    * @param row     Selected row for delete contact
    */
   deleteRow(row) {
-    let index = 0;
-    const temp = [...this.rows];
-    for (const tempRow of temp) {
-      if (tempRow.id === row.id) {
-        temp.splice(index, 1);
-        break;
+    if (confirm(row.devicename + "を削除します。よろしいですか？")) {
+      let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+      if (item != null) {
+        //to do ユーザー名で　ロケーションデータを取る
+        // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
+        var param = {
+          "loginInfo": {
+            "loginuserid": item.uid,
+            "loginusername": item.login_id,
+            "loginrole": item.role,
+            "logincompanyid": item.company
+          },
+          "targetUserInfo": {
+            "targetuserid": item.uid,
+            "targetuserCompanyid": item.company
+          },
+          "deviceid": row.deviceid
+        }
       }
-      index++;
+      this.httpService.useRpDelete('deleteDevice', param).then(item => {
+        try {
+          if (item.resultCode == "0000") {
+
+            this.Init(null);
+            // $("#addinfo").hide();
+            // $('.modal-backdrop').remove();
+            alert('デバイスを削除しました');
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      );
     }
-    this.rows = temp;
+  }
+
+  /**
+ * Delete selected contact
+ */
+  deleteCheckedRow() {
+    if (confirm("選択したデバイスを全削除します。よろしいですか？")) {
+      let index = 0;
+      const removedIndex = [];
+      const temp = [...this.pageModel.deviceList];
+      for (const row of temp) {
+        for (const selectedRow of this.selected) {
+          if (row.deviceid === selectedRow.deviceid) {
+            removedIndex.push(row.deviceid);
+          }
+        }
+        index++;
+      }
+
+      this.selected = [];
+
+      let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+      if (item != null) {
+        //to do ユーザー名で　ロケーションデータを取る
+        // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
+        var param = {
+          "loginInfo": {
+            "loginuserid": item.uid,
+            "loginusername": item.login_id,
+            "loginrole": item.role,
+            "logincompanyid": item.company
+          },
+          "targetUserInfo": {
+            "targetuserid": item.uid,
+            "targetuserCompanyid": item.company
+          },
+          "deviceidlist": removedIndex
+        }
+      }
+      this.httpService.useRpDelete('deleteDevices', param).then(item => {
+        try {
+          if (item.resultCode == "0000") {
+
+            this.Init(null);
+            // $("#addinfo").hide();
+            // $('.modal-backdrop').remove();
+            alert('選択したデバイスを削除しました');
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      );
+    }
   }
 
   /**
@@ -433,9 +678,9 @@ export class DeviceComponent implements OnInit {
   onUpdate(editForm: NgForm, id) {
     for (const row of this.rows) {
       if (row.id === id && editForm.valid === true) {
-        row.name = this.selectedContact['name'];
-        row.email = this.selectedContact['email'];
-        row.phone = this.selectedContact['phone'];
+        row.name = this.selectedDevice['name'];
+        row.email = this.selectedDevice['email'];
+        row.phone = this.selectedDevice['phone'];
         this.editModal.close(editForm.resetForm);
         break;
       }
@@ -456,28 +701,6 @@ export class DeviceComponent implements OnInit {
   }
 
   /**
-   * Delete selected contact
-   */
-  deleteCheckedRow() {
-    let index = 0;
-    const removedIndex = [];
-    const temp = [...this.rows];
-    for (const row of temp) {
-      for (const selectedRow of this.selected) {
-        if (row.id === selectedRow.id) {
-          removedIndex.push(index);
-        }
-      }
-      index++;
-    }
-    for (let i = removedIndex.length - 1; i >= 0; i--) {
-      temp.splice(removedIndex[i], 1);
-    }
-    this.rows = temp;
-    this.selected = [];
-  }
-
-  /**
    * favorite set when add contact
    *
    * @param event     favorite set on click event
@@ -490,8 +713,6 @@ export class DeviceComponent implements OnInit {
     }
   }
 
-
-
   /**
    * Set the phone number format
    */
@@ -499,7 +720,7 @@ export class DeviceComponent implements OnInit {
     if (this.contactFlag === true) {
       this.value = this.contactPhone;
     } else if (this.contactFlag === false) {
-      this.value = this.selectedContact['phone'];
+      this.value = this.selectedDevice['phone'];
     }
 
     let country, city, number;
@@ -536,7 +757,7 @@ export class DeviceComponent implements OnInit {
     if (this.contactFlag === true) {
       this.contactPhone = no;
     } else if (this.contactFlag === false) {
-      this.selectedContact['phone'] = no;
+      this.selectedDevice['phone'] = no;
     }
   }
 
