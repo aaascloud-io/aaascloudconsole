@@ -4,4 +4,7 @@ export class RouteIdIF{
 	company:string;
 	role:number;
 	upperuserid:string;
+
+	targetuserid:string;
+	targetuserCompanyid:string;
 }

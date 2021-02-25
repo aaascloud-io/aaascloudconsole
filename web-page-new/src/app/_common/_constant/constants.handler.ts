@@ -81,6 +81,12 @@ export class ConstantsHandler {
         return this.environmentCfg[this.environment];
     }
 
+    static targetuserid = 'targetuserid'; //
+    static targetuserCompanyid = 'targetuserCompanyid'; //
+
+
+
+
 }
 
 export class ServerType {

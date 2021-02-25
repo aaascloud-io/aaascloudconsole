@@ -4,15 +4,22 @@ import { MenuHandler } from 'src/app/_common/_constant/menu.handler';
 import { UrlHandler } from 'src/app/_common/_constant/url.handler';
 import { DataFatoryService } from './DataFatoryService';
 import { AlertService } from 'ngx-alerts';
+import { HttpService } from 'src/app/_services/HttpService';
+
 @Injectable()
 export class AuthSignListener implements CanActivate {
     
     constructor(
         private router: Router, 
         private userSevice: DataFatoryService,
-        private alertService: AlertService) { }
+        private alertService: AlertService,
+        private httpService: HttpService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        var obj = this;
+        if (!obj.httpService.verify()) {
+            obj.router.navigate(["login"]);
+        }
         this.routeToPage(this);
         return true;
     }

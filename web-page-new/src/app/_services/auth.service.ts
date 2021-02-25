@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
-
+import { CookieService } from 'ngx-cookie-service';
+import { ConstantsHandler } from '../_common/_constant/constants.handler';
 
 @Injectable()
 export class AuthService {
-  constructor(public afAuth: AngularFireAuth) {}
+  constructor(public afAuth: AngularFireAuth,private cookieService: CookieService) {}
 
   // Facebook login
   doFacebookLogin() {
@@ -106,6 +107,8 @@ export class AuthService {
   // Logout
   doLogout() {
     return new Promise((resolve, reject) => {
+      this.cookieService.delete(ConstantsHandler.GLOBAL_TOKEN.id)
+      this.cookieService.delete(ConstantsHandler.TOKEN.cookieName)
       if (firebase.auth().currentUser) {
         localStorage.removeItem('currentUser');
         // localStorage.removeItem('remember');
