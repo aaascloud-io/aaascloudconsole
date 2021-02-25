@@ -45,7 +45,7 @@ public class Cloud_deviceController {
 		// 必須チェック
 		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
 
-			List<Cloud_deviceModel> list = new ArrayList();
+			List<Cloud_deviceModel> list = new ArrayList<Cloud_deviceModel>();
 			if (cloud_deviceModel.getLoginInfo().getLoginuserid().equals(cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
 				try {
 					list = cloud_deviceService.getCompanyDevices(cloud_deviceModel);
@@ -109,7 +109,7 @@ public class Cloud_deviceController {
 		// 必須チェック
 		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
 
-			List<Cloud_deviceModel> list = new ArrayList();
+			List<Cloud_deviceModel> list = new ArrayList<Cloud_deviceModel>();
 			if (cloud_deviceModel.getLoginInfo().getLoginuserid().equals(cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
 				try {
 					list = cloud_deviceService.getUnderCompanyDevicesByConditions(cloud_deviceModel);

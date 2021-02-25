@@ -2,68 +2,49 @@ package com.ifocus.aaascloud.model;
 
 import java.sql.Timestamp;
 
+import com.ifocus.aaascloud.constant.StatusFlagConstant;
+
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public class Cloud_errlogModel {
 
-	@Getter
-	@Setter
 	private LoginInfo loginInfo;
-	@Getter
-	@Setter
 	private TargetUserInfo targetUserInfo;
 
-	@Getter
-	@Setter
 	private Integer rowid;
-	@Getter
-	@Setter
 	private Integer userid;
-	@Getter
-	@Setter
+	private String username;
 	private String device;
-	@Getter
-	@Setter
 	private Integer statusflag;
-	@Getter
-	@Setter
 	private Timestamp datatime;
-	@Getter
-	@Setter
 	private String systemsort;
-	@Getter
-	@Setter
 	private String systemid;
-	@Getter
-	@Setter
 	private String componentid;
-	@Getter
-	@Setter
 	private String messageid;
-	@Getter
-	@Setter
 	private String messagesort;
-	@Getter
-	@Setter
 	private String errcode;
-	@Getter
-	@Setter
 	private String errMessage;
-	@Getter
-	@Setter
 	private Integer alive;
-	@Getter
-	@Setter
 	private Integer i_uid;
-	@Getter
-	@Setter
 	private Timestamp i_time;
-	@Getter
-	@Setter
 	private Integer u_uid;
-	@Getter
-	@Setter
 	private Timestamp u_time;
+
+	// 画面表示用項目
+	public String getStatusInStr() {
+		String statusInStr = "";
+		if (this.statusflag == StatusFlagConstant.FLAG_NEW) {
+			statusInStr = StatusFlagConstant.FLAG_NEW_IN_STRING;
+		} else if (this.statusflag == StatusFlagConstant.FLAG_WIP) {
+			statusInStr = StatusFlagConstant.FLAG_WIP_IN_STRING;
+		} else if (this.statusflag == StatusFlagConstant.FLAG_DONE) {
+			statusInStr = StatusFlagConstant.FLAG_DONE_IN_STRING;
+		}
+		return statusInStr;
+
+	}
 
 }

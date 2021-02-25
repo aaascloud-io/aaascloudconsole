@@ -423,17 +423,15 @@ export class DashboardComponent implements OnInit {
             //   this.pageModel.productLength = jsonItem.productCount;
   
             this.pageModel.products = item.productList;
-            this.pageModel.productLength = item.productCount;
+            this.pageModel.productLength = this.pageModel.products.length;
             this.pageModel.userList = item.userList;
-            this.pageModel.userLength = item.userCount;
-            this.pageModel.products = item.productList;
+            this.pageModel.userLength = this.pageModel.userList.length;
             this.pageModel.errlogList = item.errlogList;
-            this.pageModel.errlogLength = item.errlogCount;
+            this.pageModel.errlogLength = this.pageModel.errlogList.length;
 
             this.pageModel.projectLength = item.projectCount;
             this.pageModel.deciveLength = item.deviceCount;
             this.pageModel.deviceOnlLength = 0;
-
 
             // this.pageModel.products=[{productid:1,productcode:"code004",productname:"テスト用プロダクト",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0},{productid:2,productcode:"code004",productname:"テスト用プロダクト2",model:"モデム",version:"Ver0001",simflag:1,summary:"テスト",alive:0}];
             //  this.pageModel.productLength = 0;  

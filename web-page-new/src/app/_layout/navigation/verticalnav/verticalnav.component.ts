@@ -10,6 +10,8 @@ import { isArray } from 'util';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { AppConstants } from 'src/app/_helpers/app.constants';
 import { Router, NavigationEnd, Event } from '@angular/router';
+import { AlertService } from 'src/app/_services/alert.service';
+import { ConstantsHandler } from 'src/app/_common/_constant/constants.handler';
 
 @Component({
 
@@ -334,6 +336,9 @@ export class VerticalnavComponent implements OnInit {
     }
   }
   toggleMenu(event, child, isSubmenuOfSubmenu) {
+    //代理店操作キャンセル
+    localStorage.removeItem(ConstantsHandler.targetuserid);
+    localStorage.removeItem(ConstantsHandler.targetuserCompanyid);
     const toggle = document.getElementById('sidenav-overlay');
     this.resetOtherActiveMenu(child, isSubmenuOfSubmenu);
     this.loggedInUser = JSON.parse(localStorage.getItem('currentUser'));

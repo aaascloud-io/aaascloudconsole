@@ -35,6 +35,7 @@ public class Cloud_deviceDetailModel {
 	private String fmlastestversion;
 	private Timestamp versioncomfirmtime;
 	private Integer companyid;
+	private String companyname;
 	private String industry;
 	private Integer userid;
 	private Integer lastprojectId;

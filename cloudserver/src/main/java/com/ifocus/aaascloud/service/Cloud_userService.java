@@ -116,6 +116,11 @@ public class Cloud_userService {
 				Optional<Cloud_companyEntity> entity = cloud_companyRepository.findById(model.getCompanyid());
 				if (entity != null ) {
 					model.setCompanyname(entity.get().getCompanyname());
+					model.setCorporatenumber(entity.get().getCorporatenumber());
+					model.setAddress(entity.get().getAddress());
+					model.setMail(entity.get().getMail());
+					model.setTel(entity.get().getTel());
+					model.setFax(entity.get().getFax());
 				}
 				/* デバイス数取得 */
 				try {
@@ -268,6 +273,7 @@ public class Cloud_userService {
 			entity.setTel(model.getTel());
 			entity.setFax(model.getFax());
 			entity.setLevel(myEntity.get().getLevel() + 1);   // レベルアップ
+			entity.setAlive(AliveConstant.ALIVE);
 			entity.setI_uid(loginInfo.getLoginuserid());
 			entity.setI_time(systemTime);
 			entity.setU_uid(loginInfo.getLoginuserid());
