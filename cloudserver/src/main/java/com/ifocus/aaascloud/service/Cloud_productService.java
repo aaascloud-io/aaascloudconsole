@@ -24,6 +24,17 @@ public class Cloud_productService {
 	private Cloud_productRepository cloud_productRepository ;
 
 	/*
+	 *マイプロダクト一覧取得
+	 *
+	 *
+	 */
+	public List<Cloud_productModel> getMyProductList(Cloud_productModel model) throws Exception {
+		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByUserid(model.getLoginInfo().getLoginuserid());
+		return getModelsByEntitys(list);
+
+	}
+
+	/*
 	 * プロダクト一覧取得
 	 *
 	 *
@@ -40,7 +51,7 @@ public class Cloud_productService {
 	 *
 	 */
 	public List<Cloud_productEntity> getProductAll() throws Exception {
-		List<Cloud_productEntity> returnList = new ArrayList();
+		List<Cloud_productEntity> returnList = new ArrayList<Cloud_productEntity>();
 		Iterable<Cloud_productEntity> list = cloud_productRepository.findAll();
 		list.forEach(s -> returnList.add(s));
 		return returnList;
@@ -89,6 +100,18 @@ public class Cloud_productService {
 		if (cloud_productRepository.existsById(productid)) {
 			cloud_productRepository.deleteById(productid);
 		}
+		return ;
+
+	}
+
+	/*
+	 * プロダクト一括削除
+	 *
+	 *
+	 */
+	public void deleteProducts(List<Integer> productids) throws Exception {
+		Iterable<Cloud_productEntity> products = cloud_productRepository.findAllById(productids);
+		cloud_productRepository.deleteAll(products);
 		return ;
 
 	}

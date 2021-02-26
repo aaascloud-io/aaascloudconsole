@@ -84,6 +84,9 @@ public class Cloud_errlogService {
 		model.setErrMessage(entity.getErrMessage());
 		model.setAlive(entity.getAlive());
 
+		// 画面表示用項目設定
+		model.setStatusInStr();
+
 		return model;
 
 	}
