@@ -7,54 +7,34 @@
         <section class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-head">
-                <div class="card-header">
-                  <h4 class="card-title">プロジェクト情報一覧</h4>
-                </div>
-              </div>
+
               <div class="card-content">
+                <div class="card-head">
+                  <div class="card-header">
+
+                  </div>
+                </div>
                 <div class="card-body">
                   <!-- Task List table -->
-
-                  <!-- <div class="table-responsive">
-                    <table class="table table-hover table-xl mb-0 order-tbl_change">
-                      <thead>
-                        <tr>
-                          <th class="border-top-0">No</th>
-                          <th class="border-top-0">エラーコード</th>
-                          <th class="border-top-0">デバイスID</th>
-                          <th class="border-top-0">管理者</th>
-                          <th class="border-top-0">発生日時</th>
-                          <th class="border-top-0">対応ステータス</th>
-                          <th class="border-top-0">操作</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let item of pageModel.data;let i = index;">
-                          <td>{{i+1}}</td>
-                          <td>{{item.errcode}}</td>
-                          <td>{{item.device}}</td>
-                          <td>{{item.userid}}</td>
-                          <td>{{item.datatime | date:'yyyy/MM/dd hh:mm:ss'}}</td>
-                          <td>{{item.statusflag}}</td>
-                          <td>
-                            <a [routerLink]="" class="primary edit mr-1 mrless" (click)="editTableDataModal(editTableDataModalContent, item)"><i class="la la-pencil"></i></a>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div> -->
                   <div class="row">
-                    <div class="">
-                      <button type="button" class="btn btn-primary mb-2" (click)="addNewProjectModal(addNewProject)">プロジェクト新規追加</button>
+                    <div class="col-sm-12">
+                      <button type="button" class="btn btn-primary mb-2 mr-1" (click)="addNewProjectModal(addNewProject)">新  規</button>
+                      <button type="button" class="btn btn-danger mb-2 mr-1" (click)="deleteCheckedRow()">削  除</button>
+                      
+                      <span class="pull-right">
+                        プロジェクト名検索 :　
+                        <input type='search'
+                          style='padding:8px;margin:15px auto;width:200px;height: calc(1.875rem + 2px);border-radius: 0.21rem;border: 1px solid #babfc7;'
+                          (keyup)='updateFilter($event)' /></span>
                     </div>
+                    
                   </div>
 
                   <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
                     [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
                     (select)='onSelectContact($event)' fxFlex="auto" [perfectScrollbar]="config">
 
-                    <!-- <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
+                    <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
                       <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
                         let-selectFn="selectFn">
                         <span class="custom-control custom-checkbox">
@@ -71,7 +51,12 @@
                           <label class="custom-control-label" for="select{{rowIndex}}"></label>
                         </div>
                       </ng-template>
-                    </ngx-datatable-column> -->
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="No" [flexGrow]="1" [minWidth]="20">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        {{i+1}}
+                      </ng-template>
+                    </ngx-datatable-column>
                     <ngx-datatable-column name="プロジェクトID" [flexGrow]="1" [minWidth]="60">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         {{row.projectid}}
