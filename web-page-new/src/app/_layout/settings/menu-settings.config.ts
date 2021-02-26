@@ -896,9 +896,39 @@ export const MenuSettingsConfig: MenuConfig = {
         page: '/dashboard'
       },
       {
+        title: 'プロダクト管理',
+        icon: 'la-edit',
+        page: '/product'
+      },
+      {
+        title: 'プロジェクト管理',
+        icon: 'la-paste',
+        page: '/project'
+      },
+      {
+        title: 'グループ管理',
+        icon: 'la-group',
+        page: '/group'
+      },
+      {
+        title: 'ユーザー管理',
+        icon: 'la-user',
+        page: '/user'
+      },
+      {
         title: 'デバイス管理',
         icon: 'la-tablet',
         page: '/device'
+      },
+      {
+        title: 'エラー管理',
+        icon: 'la-bell',
+        page: '/errorlist'
+      },
+      {
+        title: 'バージョン管理',
+        page: '/version',
+        icon: 'la-cog'
       },
       // {
       //   title: 'Templates',
@@ -917,23 +947,10 @@ export const MenuSettingsConfig: MenuConfig = {
       //     ]
       //   }
       // },
-      { section: 'システムアドミンユーザー', icon: 'la-ellipsis-h' },
+      // { section: 'システムアドミンユーザー', icon: 'la-ellipsis-h' },
 
-      {
-        title: 'プロダクト管理',
-        icon: 'la-edit',
-        page: '/product'
-      },
-      {
-        title: 'エラー管理',
-        icon: 'la-bell',
-        page: '/errorlist'
-      },
-      {
-        title: 'ユーザー管理',
-        icon: 'la-users',
-        page: '/user'
-      },
+
+
      
       // {
       //   title: 'Email Application',
@@ -967,12 +984,8 @@ export const MenuSettingsConfig: MenuConfig = {
       //     ]
       //   }
       // },
-      { section: '普通アドミンユーザー', icon: 'la-ellipsis-h' },
-      {
-        title: 'プロジェクト管理',
-        icon: 'la-paste',
-        page: '/project'
-      },
+      // { section: '普通アドミンユーザー', icon: 'la-ellipsis-h' },
+
       // {
       //   title: 'Social Feed',
       //   icon: 'la-share-alt',
@@ -1243,38 +1256,34 @@ export const MenuSettingsConfig: MenuConfig = {
       //     ]
       //   }
       // },
-      { section: '普通ユーザー', icon: 'la-ellipsis-h' },
-      {
-        title: 'デバイス管理',
-        page: '/cards/bootstrap',
-        icon: 'la-tablet'
-      },
-      {
-        title: 'バージョン管理',
-        page: '/version',
-        icon: 'la-fire'
-      },
-      {
-        title: 'TEST',
-        icon: 'la-fire',
-        page: 'null',
-        submenu: {
-          items: [
-            {
-              title: 'Statistics',
-              page: '/advanceCards/statistics'
-            },
-            {
-              title: 'Social',
-              page: '/advanceCards/social'
-            },
-            {
-              title: 'Charts',
-              page: '/advanceCards/charts'
-            },
-          ]
-        }
-      },
+      // { section: '普通ユーザー', icon: 'la-ellipsis-h' },
+      // {
+      //   title: 'デバイス管理',
+      //   page: '/cards/bootstrap',
+      //   icon: 'la-tablet'
+      // },
+
+      // {
+      //   title: 'TEST',
+      //   icon: 'la-fire',
+      //   page: 'null',
+      //   submenu: {
+      //     items: [
+      //       {
+      //         title: 'Statistics',
+      //         page: '/advanceCards/statistics'
+      //       },
+      //       {
+      //         title: 'Social',
+      //         page: '/advanceCards/social'
+      //       },
+      //       {
+      //         title: 'Charts',
+      //         page: '/advanceCards/charts'
+      //       },
+      //     ]
+      //   }
+      // },
       // {
       //   title: 'Components',
       //   icon: 'la-server',
