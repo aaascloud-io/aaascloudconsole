@@ -17,4 +17,12 @@ public interface  Cloud_productRepository extends CrudRepository<Cloud_productEn
 	@Query(value = "SELECT DISTINCTROW c.* FROM cloud_product c INNER JOIN cloud_project d ON d.productId = c.productId WHERE d.userid IN :userids",nativeQuery = true)
 	public List<Cloud_productEntity> searchProductIdsByProjectsUseridIn(@Param("userids") List<Integer> userids);
 
+	/*
+	 * マイプロダクトID一覧（プロダクト管理用）
+	 *
+	 *
+	 */
+	@Query(value = "SELECT c.* FROM cloud_product c WHERE c.i_uid = :userid",nativeQuery = true)
+	public List<Cloud_productEntity> searchMyProductsByUserid(@Param("userid") Integer userid);
+
 }
