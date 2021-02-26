@@ -18,6 +18,7 @@ import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_productService;
+import com.ifocus.aaascloud.util.Util;
 
 import net.sf.json.JSONObject;
 
@@ -41,25 +42,22 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		// 本人限定チェック
+		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
+			return response;
+		}
 		try {
-			// プロダクト一覧を取得する
-			List<Cloud_productEntity> list = cloud_productService.getProductAll();
-
-			String responseData = new String();
-			responseData = responseData + "[";
-			for (Cloud_productEntity entity:list) {
-				if (responseData.length() > 1) {
-					responseData = responseData + ",";
-				}
-				responseData = responseData + this.getJsonFromCloud_productEntity(entity);
-			}
-			responseData = responseData + "]";
+			// マイプロダクト一覧を取得する
+			List<Cloud_productModel> list = cloud_productService.getMyProductList(model);
 
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 			response.setCount(list.size());
-			response.setData(responseData);
+			response.setData(Util.getJsonString(list));
 
 		} catch( Exception e) {
 			response.setStatus(200);
@@ -82,6 +80,13 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		// 本人限定チェック
+		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
+			return response;
+		}
 		try {
 			// プロダクト詳細を取得する
 			Cloud_productEntity entity = cloud_productService.getProductDetail(model.getProductid());
@@ -119,13 +124,12 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// OEM権限チェック
-		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
+		// 本人限定チェック
+		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
 			return response;
-
 		}
 		try {
 			Cloud_productEntity inserEntity = getCloud_productEntity(model);
@@ -166,13 +170,12 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// OEM権限チェック
-		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
+		// 本人限定チェック
+		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
 			return response;
-
 		}
 		try {
 
@@ -226,13 +229,12 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// OEM権限チェック
-		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
+		// 本人限定チェック
+		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
 			return response;
-
 		}
 		try {
 			/* 削除するため、productidを設定する */
@@ -246,6 +248,42 @@ public class Cloud_productController {
 			/* 削除する */
 			cloud_productService.deleteProduct(model.getProductid());
 
+			/* 正常系 */
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0102);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0102 + e.getMessage());
+		}
+		return response;
+	}
+
+	/**
+	 * 一括プロダクトを削除する
+	 * @param model Cloud_productModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/deleteProducts", method = RequestMethod.DELETE)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> deleteProducts(@RequestBody Cloud_productModel model) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		// 本人限定チェック
+		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
+			return response;
+		}
+		try {
+			/* 一括削除する */
+			cloud_productService.deleteProducts(model.getProductidlist());
 
 			/* 正常系 */
 			response.setStatus(200);

@@ -111,10 +111,6 @@ public class Cloud_userController {
 				resJasonObj.put("upperuserid", model.getUpperuserid());
 				resJasonObj.put("companyName", model.getCompanyname());
 				resJasonObj.put("devicecount", model.getDevicecount());
-				resJasonObj.put("address", model.getAddress());
-				resJasonObj.put("mail", model.getMail());
-				resJasonObj.put("tel", model.getTel());
-				resJasonObj.put("fax", model.getFax());
 
 
 				// アクセス権限ユーザ一覧を取得する
@@ -181,7 +177,7 @@ public class Cloud_userController {
 		}
 
 		try {
-			Integer registeredUserid = cloud_userService.registerSonUser(cloud_userModel.getLoginInfo(),cloud_userModel);
+			Integer registeredUserid = cloud_userService.registerSonUser(cloud_userModel);
 
 			if (null != registeredUserid ) {
 				/* 正常系 */
@@ -288,7 +284,7 @@ public class Cloud_userController {
 //		}
 
 		try {
-			
+
 			// 選択されるユーザを削除する
 			for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
 				// 会社ユーザ一覧取得

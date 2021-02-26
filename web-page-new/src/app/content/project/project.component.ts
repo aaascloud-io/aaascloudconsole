@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
+import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
 
 
@@ -200,7 +201,11 @@ export class ProjectComponent implements OnInit {
     });
     console.log("这是rows的data值");
     console.log(this.rows);
+
     this.rows = [...this.rows];
+    this.temp2 = [...this.rows];
+    console.log("这是...运算符后的data值");
+    console.log(this.rows);
 
     // jsonItem.productList.forEach((elem) => {
     //   let product_info = JSON.parse(elem);
@@ -377,10 +382,12 @@ export class ProjectComponent implements OnInit {
    *
    * @param selected      Selected contact;
    */
+  // onSelectContact({ selected }) {
   onSelectContact({ selected }) {
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
   }
+
 
   /**
    * Search contact from contact table
@@ -388,11 +395,11 @@ export class ProjectComponent implements OnInit {
    * @param event     Convert value uppercase to lowercase;
    */
   updateFilter(event) {
-    const val = event.target.value.toLowerCase();
+    const val = event.target.value;
     this.rows = [...this.temp2];
     this.temp = [...this.rows];
     const temp = this.rows.filter(function (d) {
-      return d.name.toLowerCase().indexOf(val) !== -1 || !val;
+      return d.projectname.toLowerCase().indexOf(val) !== -1 || !val;
     });
     this.rows = temp;
     this.table.offset = 0;
@@ -450,22 +457,59 @@ export class ProjectComponent implements OnInit {
    * Delete selected contact
    */
   deleteCheckedRow() {
-    let index = 0;
-    const removedIndex = [];
-    const temp = [...this.rows];
-    for (const row of temp) {
-      for (const selectedRow of this.selected) {
-        if (row.id === selectedRow.id) {
-          removedIndex.push(index);
+    if(confirm("選択したデバイスを全削除します。よろしいですか？")){
+      let index = 0;
+      const removedIndex = [];
+      const temp = [...this.rows];
+      console.log("这是this.rows的值");
+      console.log(this.rows);
+      console.log(temp);
+      console.log(this.selected);
+      for (const row of temp) {
+        for (const selectedRow of this.selected) {
+          if (row.projectid === selectedRow.projectid) {
+            removedIndex.push(index);
+          }
+        }
+        index++;
+      }
+      for (let i = removedIndex.length - 1; i >= 0; i--) {
+        temp.splice(removedIndex[i], 1);
+      }
+      this.rows = temp;
+      this.selected = [];
+
+      let item: UserInfo = this.dataFatoryService.getUserInfo();
+      if (item != null) {
+        var param = {
+          "loginInfo": {
+            "loginuserid": item.uid,
+            "loginusername": item.login_id,
+            "loginrole": item.role,
+            "logincompanyid": item.company
+          },
+          "targetUserInfo": {
+            "targetuserid": item.uid,
+            "targetuserCompanyid": item.company
+          },
+          "deviceidlist": removedIndex,
         }
       }
-      index++;
+      this.httpService.useRpDelete('deleteProject', param).then(item => {
+        try {
+          if (item.resultCode == "0000") {
+
+            this.ngOnInit();
+            // $("#addinfo").hide();
+            // $('.modal-backdrop').remove();
+            alert('選択したプロジェクトを削除しました');
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      );
     }
-    for (let i = removedIndex.length - 1; i >= 0; i--) {
-      temp.splice(removedIndex[i], 1);
-    }
-    this.rows = temp;
-    this.selected = [];
   }
 
   /**

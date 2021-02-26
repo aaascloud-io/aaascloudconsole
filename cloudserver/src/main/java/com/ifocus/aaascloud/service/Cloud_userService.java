@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
@@ -116,11 +115,6 @@ public class Cloud_userService {
 				Optional<Cloud_companyEntity> entity = cloud_companyRepository.findById(model.getCompanyid());
 				if (entity != null ) {
 					model.setCompanyname(entity.get().getCompanyname());
-					model.setCorporatenumber(entity.get().getCorporatenumber());
-					model.setAddress(entity.get().getAddress());
-					model.setMail(entity.get().getMail());
-					model.setTel(entity.get().getTel());
-					model.setFax(entity.get().getFax());
 				}
 				/* デバイス数取得 */
 				try {
@@ -160,7 +154,7 @@ public class Cloud_userService {
 	 * @param cloud_userModel Cloud_userModel
 	 * @return userid Integer
 	 */
-	public Integer registerSonUser(LoginInfo loginInfo, Cloud_userModel model) throws Exception {
+	public Integer registerSonUser(Cloud_userModel model) throws Exception {
 
 		// 会社IDが設定していない場合、
 		if (model.getCompanyid() == null) {
@@ -169,7 +163,7 @@ public class Cloud_userService {
 			////////////////////////////////////////////////////////
 
 			// 自社情報取得
-			Optional<Cloud_companyEntity> myEntity = cloud_companyRepository.findById(loginInfo.getLogincompanyid());
+			Optional<Cloud_companyEntity> myEntity = cloud_companyRepository.findById(model.getLoginInfo().getLogincompanyid());
 
 			/* システム日時 */
 			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
@@ -184,9 +178,9 @@ public class Cloud_userService {
 			entity.setFax(model.getFax());
 			entity.setLevel(myEntity.get().getLevel() + 1);   	// レベルアップ
 			entity.setAlive(0);									// セロ固定
-			entity.setI_uid(loginInfo.getLoginuserid());
+			entity.setI_uid(model.getLoginInfo().getLoginuserid());
 			entity.setI_time(systemTime);
-			entity.setU_uid(loginInfo.getLoginuserid());
+			entity.setU_uid(model.getLoginInfo().getLoginuserid());
 			entity.setU_time(systemTime);
 
 			Cloud_companyModel insertedModel = cloud_companyService.registerCompany(entity);
@@ -205,11 +199,10 @@ public class Cloud_userService {
 		entity.setCompanyid(model.getCompanyid());
 		entity.setUsername(model.getUsername());
 		entity.setRole(model.getRole());
-		entity.setUpperuserid(loginInfo.getLoginuserid());
-		entity.setAlive(AliveConstant.ALIVE);
-		entity.setI_uid(loginInfo.getLoginuserid());
+		entity.setUpperuserid(model.getTargetUserInfo().getTargetuserid());
+		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
-		entity.setU_uid(loginInfo.getLoginuserid());
+		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
 
 		Cloud_userEntity cloud_userEntity = cloud_userRepository.save(entity);
@@ -273,7 +266,6 @@ public class Cloud_userService {
 			entity.setTel(model.getTel());
 			entity.setFax(model.getFax());
 			entity.setLevel(myEntity.get().getLevel() + 1);   // レベルアップ
-			entity.setAlive(AliveConstant.ALIVE);
 			entity.setI_uid(loginInfo.getLoginuserid());
 			entity.setI_time(systemTime);
 			entity.setU_uid(loginInfo.getLoginuserid());

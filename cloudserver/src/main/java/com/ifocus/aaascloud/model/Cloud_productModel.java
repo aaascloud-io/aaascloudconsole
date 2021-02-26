@@ -1,5 +1,7 @@
 package com.ifocus.aaascloud.model;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,5 +21,6 @@ public class Cloud_productModel {
 	private Integer simflag;
 	private String summary;
 	private Integer alive;
-
+	// 一括削除用リスト
+	private List<Integer> productidlist;
 }
