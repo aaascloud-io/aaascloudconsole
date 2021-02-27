@@ -128,7 +128,7 @@ public class DashboardController {
 				dashboardModel.setUserList(userModelList);
 
 				// エラーログ一覧を取得する
-				List<Cloud_errlogModel> errlogList = cloud_errlogService.getErrlogList(list,Util.getImeiList(deviceList),Util.getIccidList(deviceList),Util.getSnList(deviceList));
+				List<Cloud_errlogModel> errlogList = cloud_errlogService.getErrlogList(list,Util.getImeiList(deviceList),Util.getSnList(deviceList));
 				// エラーログ一覧を設定する
 				dashboardModel.setErrlogList(errlogList);
 				// エラーログ数を設定する

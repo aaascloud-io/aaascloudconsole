@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
-import com.ifocus.aaascloud.model.Cloud_groupModel;
 import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.ProjectDetailModel;
@@ -301,62 +300,55 @@ public class Cloud_projectController {
 	}
 
 	/**
-	 * プロジェクトリストのJsonを取得する
-	 * @param list List<Cloud_projectModel>
-	 * @return String Json形式
+	 * 一括プロジェクトを削除する
+	 * @param loginInfo LoginInfo
+	 * @param cloud_projectModel Cloud_projectModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
 	 */
-	private String getProjectJsonString(List<Cloud_projectModel> list) {
+	@RequestMapping(value = "/deleteProjects", method = RequestMethod.DELETE)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> deleteProjects(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
 
-		String responseData = new String();
-		responseData = responseData + "[";
-		for (Cloud_projectModel model:list) {
-			if (responseData.length() > 1) {
-				responseData = responseData + ",";
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
+
+				// 一括プロジェクトを削除する
+				cloud_projectService.deleteProjects(cloud_projectModel.getProjectlist());
+
+				String responseData = new String();
+				responseData = responseData + "{";
+
+				JSONObject resJasonObj = new JSONObject();
+				// 情報設定
+				resJasonObj.put("deleteCount", cloud_projectModel.getProjectlist().size());
+
+				responseData = responseData + "}";
+
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+				response.setData(responseData);
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessOK");
 			}
-			JSONObject resJasonObj = new JSONObject();
-			// 情報設定
-			resJasonObj.put("projectid", model.getProjectid());
-			resJasonObj.put("userid", model.getUserid());
-			resJasonObj.put("projectname", model.getProjectname());
-			resJasonObj.put("productid", model.getProductid());
-			resJasonObj.put("projectsummary", model.getProjectsummary());
-			resJasonObj.put("productname", model.getProductname());
-			resJasonObj.put("groupCounts", model.getGroupCounts());
-			resJasonObj.put("deviceCounts", model.getDeviceCounts());
 
-			responseData = responseData + resJasonObj.toString();
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0102);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0102 + e.getMessage());
 		}
-		responseData = responseData + "]";
 
-		return responseData;
-
+		return response;
 	}
 
-	/**
-	 * グループリストのJsonを取得する
-	 * @param list List<Cloud_groupModel>
-	 * @return String Json形式
-	 */
-	private String getGroupJsonString(List<Cloud_groupModel> list) {
-
-		String responseData = new String();
-		responseData = responseData + "[";
-		for (Cloud_groupModel model:list) {
-			if (responseData.length() > 1) {
-				responseData = responseData + ",";
-			}
-			JSONObject resJasonObj = new JSONObject();
-			// 情報設定
-			resJasonObj.put("groupid",model.getGroupid());
-			resJasonObj.put("projectid",model.getProjectid());
-			resJasonObj.put("groupname",model.getGroupname());
-			resJasonObj.put("alive",model.getAlive());
-
-			responseData = responseData + resJasonObj.toString();
-		}
-		responseData = responseData + "]";
-
-		return responseData;
-
-	}
 }

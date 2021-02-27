@@ -161,5 +161,41 @@ public class Cloud_versionController {
 		}
 		return response;
 	}
+	/**
+	 * 一括バージョンを削除する
+	 * @param model Cloud_versionModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/deleteVersions", method = RequestMethod.DELETE)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> deleteVersions(@RequestBody Cloud_versionModel model) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		// OEM権限チェック
+		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			return response;
+
+		}
+		try {
+			 cloud_versionService.deleteVersions(model.getRowidlist());
+
+			/* 正常系 */
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_MSG_0102);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0102 + e.getMessage());
+		}
+		return response;
+	}
 
 }
