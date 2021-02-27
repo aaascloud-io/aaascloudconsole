@@ -2,6 +2,8 @@ package com.ifocus.aaascloud.model;
 
 import java.util.List;
 
+import com.ifocus.aaascloud.constant.CommonConstant;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +16,7 @@ public class Cloud_productModel {
 
 	private Integer productid;
 	private Integer producttypeid;
+	private String producttypename;
 	private String productcode;
 	private String productname;
 	private String model;
@@ -23,4 +26,32 @@ public class Cloud_productModel {
 	private Integer alive;
 	// 一括削除用リスト
 	private List<Integer> productidlist;
+
+	// 検索条件
+
+	/*
+	 * producttypename情報検索条件取得
+	 *
+	 */
+	public String getProducttypenameForSearch() {
+
+		if (this.producttypename == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.producttypename.trim() + "%";
+		}
+	}
+
+	/*
+	 * productname情報検索条件取得
+	 *
+	 */
+	public String getProductnameForSearch() {
+
+		if (this.productname == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.productname.trim() + "%";
+		}
+	}
 }
