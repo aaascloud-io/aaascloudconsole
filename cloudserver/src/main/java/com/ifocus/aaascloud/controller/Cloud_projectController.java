@@ -71,6 +71,48 @@ public class Cloud_projectController {
 		return response;
 	}
 
+//	/**
+//	 * プロジェクトを検索する
+//	 * @param cloud_projectModel Cloud_projectModel
+//	 * @return BaseHttpResponse<String>
+//	 * @throws Exception
+//	 */
+//	@RequestMapping(value = "/searchProjects", method = RequestMethod.POST)
+//	@ResponseBody
+//	@CrossOrigin(origins = "*", maxAge = 3600)
+//	public BaseHttpResponse<String> searchProjects(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
+//
+//		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+//
+//		try {
+//			// 権限チェック
+//			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
+//
+//					// プロジェクトを検索する
+//					List<Cloud_projectModel> list = cloud_projectService.searchMyProjects(cloud_projectModel);
+//
+//					response.setStatus(200);
+//					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+//					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+//					response.setCount(list.size());
+//					response.setData(Util.getJsonString(list));
+//
+//			} else {
+//				/* 異常系 */
+//				response.setStatus(200);
+//				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+//				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "loginuserid&targetuseridが必須です。");
+//
+//			}
+//		} catch( Exception e) {
+//			response.setStatus(200);
+//			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+//			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
+//		}
+//
+//		return response;
+//	}
+
 	/**
 	 * プロジェクト詳細を取得する
 	 * @param cloud_projectModel Cloud_projectModel

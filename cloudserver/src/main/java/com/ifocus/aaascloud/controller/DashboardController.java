@@ -108,7 +108,7 @@ public class DashboardController {
 				List<Cloud_userEntity> userList = (List<Cloud_userEntity>) cloud_userRepository.findAllById(list);
 
 				List<Cloud_userModel> cloud_userModelList =cloud_userService.getModelsByEntitys(userList);
-				List<UserModel> userModelList = new ArrayList();
+				List<UserModel> userModelList = new ArrayList<UserModel>();
 
 				for (Cloud_userModel model:cloud_userModelList) {
 

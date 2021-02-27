@@ -69,6 +69,44 @@ public class Cloud_productController {
 	}
 
 	/**
+	 * プロダクトを検索する
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/searchMyProduct", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> searchMyProduct(@RequestBody Cloud_productModel model) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		// 本人限定チェック
+		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
+			return response;
+		}
+		try {
+			// マイプロダクトを検索する
+			List<Cloud_productModel> list = cloud_productService.searchMyProductList(model);
+
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			response.setCount(list.size());
+			response.setData(Util.getJsonString(list));
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
 	 * プロダクト詳細を取得する
 	 * @return
 	 * @throws Exception
