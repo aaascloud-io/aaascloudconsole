@@ -1,5 +1,7 @@
 package com.ifocus.aaascloud.model;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,5 +18,8 @@ public class Cloud_versionModel {
 	private String downloadurl;
 	private String description;
 	private Integer alive;
+
+	// 一括削除用
+	private List<Integer> rowidlist;
 
 }
