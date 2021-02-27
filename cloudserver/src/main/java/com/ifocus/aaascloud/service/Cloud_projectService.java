@@ -273,6 +273,20 @@ public class Cloud_projectService {
 	}
 
 	/*
+	 * 一括プロジェクト削除
+	 * @param modelList List<Cloud_projectModel> プロジェクトリスト
+	 *
+	 */
+	public void deleteProjects(List<Cloud_projectModel> modelList) throws Exception {
+
+		for (Cloud_projectModel mode:modelList) {
+			deleteProject(mode);
+		}
+		return ;
+
+	}
+
+	/*
 	 * プロジェクトEntityを取得する
 	 *
 	 * @param Cloud_projectDetailModel プロジェクト詳細

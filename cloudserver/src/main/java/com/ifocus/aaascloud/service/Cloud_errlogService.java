@@ -31,10 +31,10 @@ public class Cloud_errlogService {
 	 * エラーログ一覧情報取得
 	 *
 	 */
-	public List<Cloud_errlogModel> getErrlogList(List<Integer> useridList,	List<String> imeiList, List<String> iccidList, List<String> snList)
+	public List<Cloud_errlogModel> getErrlogList(List<Integer> useridList,	List<String> imeiList, List<String> snList)
 	throws Exception {
 		Cloud_errlogModel model = new Cloud_errlogModel();
-		List<Cloud_errlogEntity> list = cloud_errlogRepository.searchErrlogsByUseridInOrDeviceIn(useridList,imeiList,iccidList,snList);
+		List<Cloud_errlogEntity> list = cloud_errlogRepository.searchErrlogsByUseridInOrDeviceIn(useridList,imeiList,snList);
 		return getModelsByEntitys(list);
 
 	}

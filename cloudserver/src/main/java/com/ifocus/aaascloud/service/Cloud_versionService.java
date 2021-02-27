@@ -68,6 +68,17 @@ public class Cloud_versionService {
 	}
 
 	/*
+	 * 一括バージョン削除
+	 * @param versionId List<Integer> バージョンIDリスト
+	 *
+	 */
+	public void deleteVersions(List<Integer> versionIdList) throws Exception {
+		for (Integer versionId:versionIdList) {
+			cloud_versionRepository.deleteById(versionId);
+		}
+	}
+
+	/*
 	 * バージョンEntityリストからバージョンModeリストl取得
 	 * @param entityList List<Cloud_versionEntity> バージョンEntityリスト
 	 * @return List<Cloud_versionModel> バージョンModeリスト
