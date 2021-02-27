@@ -77,6 +77,39 @@ public class Cloud_projectService {
 
 	}
 
+//	/*
+//	 * プロジェクト検索
+//	 * @param cloud_projectModel Cloud_projectModel プロジェクト検索条件
+//	 * @List<Cloud_projectModel> プロジェクト一覧
+//	 */
+//	public List<Cloud_projectModel> searchMyProjects(Cloud_projectModel cloud_projectModel) throws Exception {
+//		List<Cloud_projectModel> returnList = new ArrayList<Cloud_projectModel>();
+//		Iterable<Cloud_projectEntity> list = cloud_projectRepository.searchByUseridProjectnameLike(cloud_projectModel.getTargetUserInfo().getTargetuserid(),cloud_projectModel.getProjectnameForSearch());
+//		list.forEach(s -> {
+//			Cloud_projectModel model = new Cloud_projectModel();
+//			model.setProjectid(s.getProjectid());
+//			model.setProjectname(s.getProjectname());
+//			model.setUserid(s.getUserid());
+//			model.setProductid(s.getProductid());
+//			model.setProjectsummary(s.getProjectsummary());
+//			/* プロダクト情報取得 */
+//			Optional<Cloud_productEntity> entity = cloud_productRepository.findById(model.getProductid());
+//			if (!entity.equals(Optional.empty())) {
+//				model.setProductname(entity.get().getProductname());
+//			}
+//			/* グループ数取得 */
+//			List<Cloud_groupEntity> groupList = cloud_groupRepository.searchGroupsByProjectid(model.getProjectid());
+//			model.setGroupCounts(groupList.size());
+//			/* デバイス数取得 */
+//			List<Cloud_deviceEntity> deviceList = cloud_deviceRepository.searchDevicesByProjectid(model.getProjectid());
+//			model.setDeviceCounts(deviceList.size());
+//
+//			returnList.add(model);
+//		});
+//		return returnList;
+//
+//	}
+
 	/*
 	 * プロジェクト一覧取得（プロジェクト数取得用）
 	 * @param userids List<Integer> ターゲットユーザーIDリスト

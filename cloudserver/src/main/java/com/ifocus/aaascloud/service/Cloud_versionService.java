@@ -3,6 +3,7 @@ package com.ifocus.aaascloud.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
+import com.ifocus.aaascloud.entity.Cloud_productEntity;
+import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_versionEntity;
 import com.ifocus.aaascloud.entity.Cloud_versionRepository;
 import com.ifocus.aaascloud.model.Cloud_versionModel;
@@ -23,6 +26,8 @@ public class Cloud_versionService {
 
 	@Autowired
 	private Cloud_versionRepository cloud_versionRepository;
+	@Autowired
+	private Cloud_productRepository cloud_productRepository;
 
 	/*
 	 * バージョン一覧を取得する
@@ -32,6 +37,17 @@ public class Cloud_versionService {
 	 */
 	public List<Cloud_versionModel> getAllVersions(Cloud_versionModel model) throws Exception {
 		List<Cloud_versionEntity> list = cloud_versionRepository.findAllVersions();
+		return getModelsByEntitys(list);
+	}
+
+	/*
+	 * バージョンを検索する
+	 * @param productid Integer バージョンモデル
+	 * @return List<Cloud_versionModel> バージョン一覧
+	 *
+	 */
+	public List<Cloud_versionModel> searchVersions(Cloud_versionModel model) throws Exception {
+		List<Cloud_versionEntity> list = cloud_versionRepository.searchVersionsByProductnameAndVersionname(model.getProductnameForSearch(), model.getVersionnameForSearch());
 		return getModelsByEntitys(list);
 	}
 
@@ -104,6 +120,11 @@ public class Cloud_versionService {
 		Cloud_versionModel model = new Cloud_versionModel();
 		model.setRowid(entity.getRowid());
 		model.setProductid(entity.getProductid());
+
+		// プロダクト取得＆設定
+		Optional<Cloud_productEntity> product = cloud_productRepository.findById(entity.getProductid());
+		model.setProductname(product.get().getProductname());
+
 		model.setVersioncode(entity.getVersioncode());
 		model.setVersionname(entity.getVersionname());
 		model.setDownloadurl(entity.getDownloadurl());
