@@ -23,6 +23,8 @@ public class Cloud_productModel {
 	private String version;
 	private Integer simflag;
 	private String summary;
+	private Integer createuserid;
+	private String createusername;
 	private Integer alive;
 	// 一括削除用リスト
 	private List<Integer> productidlist;
@@ -52,6 +54,19 @@ public class Cloud_productModel {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.productname.trim() + "%";
+		}
+	}
+
+	/*
+	 * createusername情報検索条件取得
+	 *
+	 */
+	public String getCreateusernameForSearch() {
+
+		if (this.createusername == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.createusername.trim() + "%";
 		}
 	}
 }
