@@ -165,7 +165,8 @@ public class Cloud_userService {
 	 *
 	 */
 	public List<Cloud_userModel> searchUnderUsers(List<Integer> userids, Cloud_userModel model) throws Exception {
-		List<Cloud_userEntity> returnList = (List<Cloud_userEntity>) cloud_userRepository.searchUnderUsersByCompanyname(userids, model.getCompanynameForSearch());
+		List<Cloud_userEntity> returnList = (List<Cloud_userEntity>) cloud_userRepository.searchUnderUsersByCompanyname(
+				userids, model.getCompanynameForSearch(), model.getFirstNameForSearch(), model.getLastNameForSearch(), model.getEmailForSearch());
 		return getModelsByEntitys(returnList);
 
 	}
