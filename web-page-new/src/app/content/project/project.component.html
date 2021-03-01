@@ -15,15 +15,19 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <button type="button" class="btn btn-primary mb-2 mr-1" (click)="addNewProjectModal(addNewProject)">新  規</button>
-                      <button type="button" class="btn btn-danger mb-2 mr-1" (click)="deleteCheckedRow()">削  除</button>
-                      
-                      <span class="pull-right">
-                        プロジェクト名検索 :　
-                        <input type='search'
-                          style='padding:8px;margin:15px auto;width:200px;height: calc(1.875rem + 2px);border-radius: 0.21rem;border: 1px solid #babfc7;'
-                          (keyup)='updateFilter($event)' /></span>
+                      <button type="button" class="btn btn-danger mb-2 mr-1" >一括削除</button>
                     </div>
-                    
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <span class="mr-1">
+                        <input type='text'
+                        style='padding:8px;margin:15px auto;width:200px;height: calc(1.875rem + 2px);border-radius: 0.21rem;border: 1px solid #babfc7;' [(ngModel)]="searchValue"/>
+                      </span>
+                        <button type="button" class="btn btn-primary btn-sm mr-1" (click)="searchProject()">検　索</button>
+                        <button type="button" class="btn btn-warning btn-sm mr-1" (click)="clearSearchProject()">クリア</button>
+
+                    </div>
                   </div>
 
                   <ngx-datatable #table 
@@ -40,11 +44,20 @@
                     fxFlex="auto" 
                     [perfectScrollbar]="config">
 
-                    <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
-                      <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
+                    <ngx-datatable-column 
+                      [flexGrow]="1" 
+                      [minWidth]="30" 
+                      [maxWidth]="50">
+                      <ng-template 
+                        ngx-datatable-header-template 
+                        let-value="value" 
+                        let-allRowsSelected="allRowsSelected"
                         let-selectFn="selectFn">
                         <span class="custom-control custom-checkbox">
-                          <input type="checkbox" class="custom-control-input" id="selectAll" [checked]="allRowsSelected"
+                          <input type="checkbox" 
+                            class="custom-control-input" 
+                            id="selectAll" 
+                            [checked]="allRowsSelected"
                             (change)="selectFn(!allRowsSelected)" />
                           <label class="custom-control-label" for="selectAll"></label>
                         </span>
@@ -158,6 +171,8 @@
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
+        <button type="button" class="btn grey btn-light mr-1"
+                            (click)="d('Close modal')" ngbAutofocus>キャンセル</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
       </div>
@@ -194,6 +209,8 @@
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
+        <button type="button" class="btn grey btn-light mr-1"
+                            (click)="d('Close modal')" ngbAutofocus>キャンセル</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
       </div>
