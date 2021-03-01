@@ -56,7 +56,7 @@
   .ngx-datatable.bootstrap .datatable-footer .datatable-pager .datatable-icon-prev {
     font-size: 16px;
     line-height: 22px;
-    padding: 0px 09px;
+    /* padding: 0px 09px; */
     background-color: #d4d2e7;
   }
   
@@ -64,21 +64,21 @@
   .ngx-datatable.bootstrap .datatable-footer .datatable-pager .datatable-icon-right {
     font-size: 16px;
     line-height: 22px;
-    padding: 0px 09px;
+    /* padding: 0px 09px; */
     background-color: #d4d2e7;
   }
   
   :host ::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager .datatable-icon-skip {
     font-size: 16px;
     line-height: 22px;
-    padding: 0px 09px;
+    /* padding: 0px 09px; */
     background-color: #d4d2e7;
   }
   
   :host ::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager .datatable-icon-prev {
     font-size: 16px;
     line-height: 22px;
-    padding: 0px 09px;
+    /* padding: 0px 09px; */
     background-color: #d4d2e7;
   }
   
@@ -95,12 +95,12 @@
     line-height: 22px;
     padding: 0;
     border-radius: 3px;
-    margin: 0 3px;
+    /* margin: 0 3px; */
     text-align: center;
-    vertical-align: top;
-    padding-top: 3px;
+    /* vertical-align: top; */
+    /* padding-top: 3px; */
     text-decoration: none;
-    vertical-align: bottom;
+    /* vertical-align: bottom; */
     color: #7c8091;
   }
   
@@ -109,7 +109,7 @@
   .ngx-datatable.bootstrap[_ngcontent-c11] .datatable-footer[_ngcontent-c11] .datatable-pager[_ngcontent-c11] .datatable-icon-prev[_ngcontent-c11] {
     font-size: 14px;
     line-height: 9px;
-    padding: 0px 08px;
+    /* padding: 0px 08px; */
     background-color: #ffffff;
   }
   
@@ -118,7 +118,7 @@
   .ngx-datatable.bootstrap[_ngcontent-c11] .datatable-footer[_ngcontent-c11] .datatable-pager[_ngcontent-c11] .datatable-icon-prev[_ngcontent-c11] {
     font-size: 0px;
     line-height: 22px;
-    padding: 0px 09px;
+    /* padding: 0px 09px; */
     background-color: #ffffff;
   }
   
@@ -127,7 +127,7 @@
   .ngx-datatable.bootstrap[_ngcontent-c11] .datatable-footer[_ngcontent-c11] .datatable-pager[_ngcontent-c11] .datatable-icon-prev[_ngcontent-c11] {
     font-size: 0px;
     line-height: 22px;
-    padding: 0px 09px;
+    /* padding: 0px 09px; */
     background-color: #ffffff;
   }
   
@@ -136,7 +136,7 @@
   .ngx-datatable.bootstrap[_ngcontent-c11] .datatable-footer[_ngcontent-c11] .datatable-pager[_ngcontent-c11] .datatable-icon-prev[_ngcontent-c11] {
     font-size: 0px;
     line-height: 22px;
-    padding: 0px 09px;
+    /* padding: 0px 09px; */
     background-color: #ffffff;
   }
   
@@ -145,7 +145,7 @@
   .ngx-datatable.bootstrap[_ngcontent-c11] .datatable-footer[_ngcontent-c11] .datatable-pager[_ngcontent-c11] .datatable-icon-prev[_ngcontent-c11] {
     font-size: 0px;
     line-height: 22px;
-    padding: 0px 09px;
+    /* padding: 0px 09px; */
     background-color: #ffffff;
   }
   
@@ -174,7 +174,7 @@
     font-weight: bold;
     line-height: 24px;
     font-size: medium;
-    color: #6b6f82;
+    color: #666ee8 !important;
   }
   
   :host ::ng-deep .cotnblck img {
@@ -209,6 +209,9 @@
   :host ::ng-deep .datatable-body-cell-label,
   :host ::ng-deep .datatable-header-cell {
     padding: 0.6rem;
+    text-align: center;
+    margin-top: 0;
+    height: 20px;
   }
   
   :host ::ng-deep .datatable-body-row {
@@ -222,7 +225,7 @@
   :host ::ng-deep .ngx-datatable.bootstrap .datatable-header {
     font-weight: bold;
     height: unset !important;
-    overflow: inherit;
+    /* overflow: inherit; */
   }
   
   :host ::ng-deep .ngx-datatable.bootstrap {
@@ -345,8 +348,8 @@
   
   :host ::ng-deep .ngx-datatable.bootstrap .datatable-body .datatable-body-row .datatable-body-cell {
     padding: 0rem;
-    overflow-y: visible !important;
-    overflow-x: visible !important;
+    /* overflow-y: visible !important;
+    overflow-x: visible !important; */
   }
   
   :host ::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager {
@@ -372,4 +375,9 @@
   ::ng-deep .modal-xl .modal-lg {
     max-width: 90%;
     width: 90%;
+  }
+
+  .thcolor{
+    background-color: #6b6f82 !important;
+    color:aliceblue; 
   }

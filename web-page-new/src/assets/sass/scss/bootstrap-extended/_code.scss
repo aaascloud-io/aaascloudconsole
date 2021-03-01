@@ -4,7 +4,7 @@ code {
   padding: .2rem .4rem;
   font-size: 90%;
   color: $code-color;
-  background-color: $kbd-bg;
+  // background-color: $kbd-bg;
   @include border-radius($border-radius);
 }
 pre{

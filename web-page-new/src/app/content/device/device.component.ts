@@ -10,8 +10,9 @@ import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 import { number } from 'ngx-custom-validators/src/app/number/validator';
-import * as _ from 'lodash';
-
+// import * as _ from 'lodash';
+import { map, startWith } from 'rxjs/operators';
+import { NgBlockUI, BlockUI } from 'ng-block-ui';
 
 class Contact {
   constructor(
@@ -56,7 +57,8 @@ export class DeviceComponent implements OnInit {
   temp = [];
   temp2 = this.rows;
   singlebasicSelected: any;
-
+  deviceSelected = false;
+  show = false;
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
   public multipleSelectArray = formInputData.multipleSelectArray;
@@ -66,17 +68,26 @@ export class DeviceComponent implements OnInit {
   //所有者
   public productSelectArray = [];
   //暗号化
-  public sslSelectArray = [
-    {
-      "item_id": 0, "item_text": "OFF"
-    },
-    {
-      "item_id": 1, "item_text": "ON"
-    }
-  ]
-  sslSelected: any;
+  // public sslSelectArray = [
+  //   {
+  //     "item_id": 0, "item_text": "OFF"
+  //   },
+  //   {
+  //     "item_id": 1, "item_text": "ON"
+  //   }
+  // ]
+  // sslSelected: any;
+  // sslChecked:any;
   //
   selectedDevice: any;
+
+  pageSize: any;
+  collectionSize: any;
+  PERSON: any;
+  page = 1;
+  TableData: any;
+  sortOn: any;
+  checkOn: 1;
 
 
   public pageModel = {
@@ -88,14 +99,14 @@ export class DeviceComponent implements OnInit {
       loginusername: '',
       loginupperuserid: '',
     },
-    query:{
-      querycode:'',
-      productname:'',
-      projectname:'',
-      group:'',
-      conpanySelected:{},
-      companyid:'',
-      industry:'',
+    query: {
+      querycode: '',
+      productname: '',
+      projectname: '',
+      group: '',
+      conpanySelected: {},
+      companyid: '',
+      industry: '',
     },
     //一覧用
     deviceList: [],
@@ -109,7 +120,8 @@ export class DeviceComponent implements OnInit {
       sn: '',
       companySelected: {},
       companyid: '',
-      sslSelected: {},
+      // sslSelected: {},
+      sslChecked: false,
       encryptedCommunications: '',
       encryptedKey: '',
       connectserverurl: '',
@@ -117,7 +129,7 @@ export class DeviceComponent implements OnInit {
       bindingflag: '',
       fmlastestversion: '',
       versioncomfirmtime: '',
-      productSelected:{},
+      productSelected: {},
       productid: '',
       sim_imsi: '',
       sim_tel: '',
@@ -147,47 +159,9 @@ export class DeviceComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-    // this.singlebasicSelected = this.singleSelectArray[0].item_text;
-    // this.conpanySelected = this.companySelectArray[0].item_text;
+    this.pageSize = 10
     this.Init(null);
   }
-  // 新規
-  // insert(): void {
-  //   let routeif: RouteIdIF = this.dataFatoryService.getUserInfo();
-  //   if (routeif != null) {
-  //     //to do ユーザー名で　ロケーションデータを取る
-  //     // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
-  //     var param = {
-  //       "loginInfo": {
-  //         "loginuserid": routeif.uid,
-  //         "loginusername": routeif.login_id,
-  //         "loginrole": routeif.role,
-  //         "logincompanyid": routeif.company
-  //       },
-  //       "targetUserInfo": {
-  //         "targetuserid": routeif.uid,
-  //         "targetuserCompanyid": routeif.company
-  //       },
-  //       "deviceDetail": this.pageModel.deviceDetail
-  //     }
-  //   }
-  //   this.httpService.useRpPost('registerDevice', param).then(item => {
-  //     try {
-  //       if (item.resultCode == "0000") {
-
-  //         this.Init(null);
-  //         // $("#addinfo").hide();
-  //         // $('.modal-backdrop').remove();
-  //         // alert('デバイス情報を登録しました');
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   });
-  // }
-
-
 
   Init(pre: any) {
     this.getDropdownList();
@@ -209,7 +183,9 @@ export class DeviceComponent implements OnInit {
       this.httpService.usePost('/getCompanyDevices', param).then(item => {
         try {
           if (item != null) {
-            this.pageModel.deviceList = _.orderBy(item, [device => device.sn.toLowerCase()], ['asc']);
+            this.pageModel.deviceList = item;
+
+            this.getTabledata();
           }
         } catch (e) {
           console.log('ユーザー数数を検索API エラー　発生しました。');
@@ -218,8 +194,8 @@ export class DeviceComponent implements OnInit {
     }
   }
 
-  serachDevices(){
-    this.pageModel.query.companyid = this.pageModel.query.conpanySelected!==null?this.pageModel.query.conpanySelected["companyid"]:'';
+  serachDevices() {
+    this.pageModel.query.companyid = this.pageModel.query.conpanySelected !== null ? this.pageModel.query.conpanySelected["companyid"] : '';
     let item: UserInfo = this.dataFatoryService.getUserInfo();
     if (item != null) {
       var param = {
@@ -233,18 +209,19 @@ export class DeviceComponent implements OnInit {
           "targetuserid": item.uid,
           "targetuserCompanyid": item.company
         },
-        "imei":this.pageModel.query.querycode,
-        "productname":this.pageModel.query.productname,
-        "projectname":this.pageModel.query.projectname,
-        "group":this.pageModel.query.group,
-        "companyid":this.pageModel.query.companyid,
-        "industry":this.pageModel.query.industry,
+        "imei": this.pageModel.query.querycode,
+        "productname": this.pageModel.query.productname,
+        "projectname": this.pageModel.query.projectname,
+        "group": this.pageModel.query.group,
+        "companyid": this.pageModel.query.companyid,
+        "industry": this.pageModel.query.industry,
       }
       this.httpService.usePost('/searchCompanyDevices', param).then(item => {
         try {
 
           if (item != null) {
-            this.pageModel.deviceList = _.orderBy(item, [device => device.sn.toLowerCase()], ['asc']);
+            this.pageModel.deviceList = item;
+            this.getTabledata();
           }
 
         } catch (e) {
@@ -283,10 +260,10 @@ export class DeviceComponent implements OnInit {
   /**
  * Add new contact
  *
- * @param addModalContent      Id of the add contact modal;
+ * @param registerDeviceModal      Id of the add contact modal;
  */
-  addRegisterModal(addModalContent) {
-    this.addModal = this.modal.open(addModalContent, {
+  openRegisterModal(registerDeviceModal) {
+    this.addModal = this.modal.open(registerDeviceModal, {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
@@ -294,11 +271,11 @@ export class DeviceComponent implements OnInit {
     this.pageModel.deviceDetail;
   }
 
-/**
-* Add new contact
-*
-* @param addTableDataModalContent      Id of the add contact modal;
-*/
+  /**
+  * Add new contact
+  *
+  * @param addTableDataModalContent      Id of the add contact modal;
+  */
   addMaxModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown modal-xl'
@@ -320,17 +297,20 @@ export class DeviceComponent implements OnInit {
   }
 
   /**
-   * Edit selected contact row.
+   * Edit selected row.
    *
    * @param editDeviceModel     Id of the edit contact model.
    * @param row     The row which needs to be edited.
    */
-  editTableDataModal(editDeviceModel, row) {
+  openEditModal(editDeviceModel, row) {
     this.selectedDevice = Object.assign({}, row);
     this.editModal = this.modal.open(editDeviceModel, {
       windowClass: 'animated fadeInDown'
+      , size: 'lg'
     });
     // this.contactFlag = false;
+    this.pageModel.deviceDetail.productSelected = row;
+    // this.singlebasicSelected = this.singleSelectArray[0].item_text;
     this.contactFlag = true;
   }
 
@@ -339,13 +319,15 @@ export class DeviceComponent implements OnInit {
    *
    * @param addDeviceForm     Add contact form
    */
-  registerDevice(addDeviceForm: NgForm) {
+  registerDeviceDetail(addDeviceForm: NgForm) {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       //to do ユーザー名で　ロケーションデータを取る
       // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
       this.pageModel.deviceDetail.companyid = this.pageModel.deviceDetail.companySelected["companyid"];
-      this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslSelected["item_id"];
+      // this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslSelected["item_id"];
+      this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslChecked == false ? '0' : '1';
+
       this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected["productid"];
 
       var param = {
@@ -437,15 +419,15 @@ export class DeviceComponent implements OnInit {
           // $("#addinfo").hide();
           // $('.modal-backdrop').remove();
           alert('デバイス情報を改修しました');
-          
-        /**
-         * Add contact if valid addform value
-         */
-        if (editDeviceForm.valid === true) {
 
-          editDeviceForm.reset();
-          this.editModal.close(editDeviceForm.resetForm);
-        }
+          /**
+           * Add contact if valid addform value
+           */
+          if (editDeviceForm.valid === true) {
+
+            editDeviceForm.reset();
+            this.editModal.close(editDeviceForm.resetForm);
+          }
         }
       } catch (e) {
         console.log(e);
@@ -637,6 +619,14 @@ export class DeviceComponent implements OnInit {
       let index = 0;
       const removedIndex = [];
       const temp = [...this.pageModel.deviceList];
+
+      for (const row of temp) {
+        if (row.isSelected == true) {
+          removedIndex.push(row.deviceid);
+        }
+        index++;
+      }
+
       for (const row of temp) {
         for (const selectedRow of this.selected) {
           if (row.deviceid === selectedRow.deviceid) {
@@ -845,4 +835,87 @@ export class DeviceComponent implements OnInit {
       reader.readAsBinaryString(file);
     }
   }
+
+
+  getTabledata() {
+    this.PERSON = this.pageModel.deviceList;
+    this.collectionSize = this.PERSON.length;
+    this.PERSON.forEach(x => x.isSelected = false)
+    this.PaginationData();
+  }
+  /**
+ * Pagination table
+ */
+  get PaginationData() {
+    if (this.PERSON) {
+      // if (this.pageSize > 0) {
+      // } else {
+      //   if (this.PERSON.length > 100) {
+      //     this.pageSize = 20
+      //   } else {
+      //     this.pageSize = 10
+      //   }
+      // }
+      return this.PERSON.map((person, i) => ({ deviceid: i + 1, ...person }))
+        .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
+    }
+  }
+
+  sortData(nm) {
+    if (this.sortOn == 1) {
+      this.PERSON.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.sortOn = 2;
+    } else {
+      this.PERSON.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.sortOn = 1;
+    }
+  }
+
+  checkAll(ev) {
+    this.PERSON.forEach(x => x.isSelected = ev.target.checked)
+    this.deviceSelected = ev.target.checked;
+  }
+
+  checkChange(ev, selectDevice) {
+    this.PERSON.forEach(function (device) {
+      if (device.deviceid === selectDevice['deviceid']) { device.isSelected = ev.target.checked }
+    });
+
+    // this.selected.splice(0, this.selected.length);
+    // this.selected.push(...selected);
+  }
+
+  isAllChecked() {
+    // return this.PERSON.every(_ => _.deviceSelected);
+    // this.deviceSelected=true;
+
+  }
+
+  /**
+* Remove overlay when open sidebar
+*
+* @param NgForm    Content overlay
+*/
+  cancleModel(openForm: NgForm) {
+    // const toggleIcon = document.getElementById('compose-sidebar');
+    // const toggleOverlay = document.getElementById('app-content-overlay');
+    // if (event.currentTarget.className === 'close close-icon' || 'app-content-overlay') {
+    //   this.renderer.removeClass(toggleIcon, 'show');
+    //   this.renderer.removeClass(toggleOverlay, 'show');
+    // }
+    /**
+ * Add contact if valid addform value
+ */
+    if (openForm.valid === true) {
+      openForm.reset();
+      if (this.addModal != null) {
+        this.addModal.close(openForm.resetForm);
+      }
+      if (this.editModal != null) {
+        this.editModal.close(openForm.resetForm);
+      }
+    }
+  }
+
+
 }
