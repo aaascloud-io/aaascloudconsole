@@ -46,7 +46,14 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 			+ "FROM cloud_user u "
 			+ "INNER JOIN cloud_company c ON c.companyid = u.companyid "
 			+ "WHERE u.userid IN :userids "
-			+ "AND c.companyname LIKE :companyname ", nativeQuery = true)
-	public List<Cloud_userEntity> searchUnderUsersByCompanyname(@Param("userids") List<Integer> userids, @Param("companyname") String companyname);
+			+ "AND c.companyname LIKE :companyname "
+			+ "AND u.firstname LIKE :firstname "
+			+ "AND u.lastname LIKE :lastname "
+			+ "AND u.email LIKE :email ", nativeQuery = true)
+	public List<Cloud_userEntity> searchUnderUsersByCompanyname(@Param("userids") List<Integer> userids,
+			@Param("companyname") String companyname,
+			@Param("firstname") String firstname,
+			@Param("lastname") String lastname,
+			@Param("email") String email);
 
 }
