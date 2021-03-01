@@ -9,11 +9,7 @@
             <div class="card">
 
               <div class="card-content">
-                <div class="card-head">
-                  <div class="card-header">
-
-                  </div>
-                </div>
+                
                 <div class="card-body">
                   <!-- Task List table -->
                   <div class="row">
@@ -30,9 +26,19 @@
                     
                   </div>
 
-                  <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
-                    [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
-                    (select)='onSelectContact($event)' fxFlex="auto" [perfectScrollbar]="config">
+                  <ngx-datatable #table 
+                    class="bootstrap row contacts-table" 
+                    [rows]="rows" 
+                    [columnMode]="'flex'" 
+                    [headerHeight]="50"
+                    [footerHeight]="50" 
+                    [rowHeight]="60" 
+                    [limit]="50" 
+                    [selected]="selected" 
+                    [selectionType]="'checkbox'"
+                    (select)='onSelectContact($event)' 
+                    fxFlex="auto" 
+                    [perfectScrollbar]="config">
 
                     <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
                       <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
@@ -52,12 +58,12 @@
                         </div>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="No" [flexGrow]="1" [minWidth]="20">
+                    <ngx-datatable-column name="No." [flexGrow]="1" [minWidth]="20">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        {{i+1}}
+                        {{rows.indexOf(row) + 1}}.
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="プロジェクトID" [flexGrow]="1" [minWidth]="60">
+                    <ngx-datatable-column name="プロジェクトID" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         {{row.projectid}}
                       </ng-template>
@@ -67,18 +73,18 @@
                         {{row.projectname}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="プロダクトID" [flexGrow]="1" [minWidth]="90">
+                    <ngx-datatable-column name="プロダクトID" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         {{row.productid}}
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="プロジェクト詳細" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
+                    <ngx-datatable-column name="プロジェクト詳細" [flexGrow]="1" [minWidth]="200" [cellClass]="'my-custom-cell'">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         {{row.projectsummary}}
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column name="デバイスグループ数" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
+                    <ngx-datatable-column name="デバイスグループ数" [flexGrow]="1" [minWidth]="180" [cellClass]="'my-custom-cell'">
                       <ng-template ngx-datatable-cell-template let-row="row">
                           {{row.groupCounts}}
                       </ng-template>
@@ -90,10 +96,18 @@
                       </ng-template>
                   </ngx-datatable-column>
 
+                  <ngx-datatable-column name="デバイス連携" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
+                    <ng-template ngx-datatable-cell-template let-row="row">
+                      <a [routerLink]="" class="primary edit mr-1 mrless"
+                      (click)="deviceLink(deviceLinkModalContent, row)"><i class="la la-calendar-plus-o"></i>
+                    </a>
+                    </ng-template>
+                </ngx-datatable-column>
+
                     <ngx-datatable-column name="操作" [flexGrow]="1" [minWidth]="100">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a [routerLink]="" class="primary edit mr-1 mrless"
-                          (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
+                          (click)="editProjectDataModal(editProjectDataModalContent, row)"><i class="la la-pencil"></i>
                         </a>
                         <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
                       </ng-template>
@@ -109,8 +123,89 @@
   </div>
 </div>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- プロジェクト詳細 -->
-<ng-template #editTableDataModalContent let-c="close" let-d="dismiss">
+<!-- プロジェクト詳細と修正 -->
+<ng-template #editProjectDataModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="projectDataUpdate(projectEditForm,selectedProject.projectid)" #projectEditForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">プロジェクト詳細</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group col-12">
+        <label >プロジェクトID</label>
+        <input type="text" [(ngModel)]="selectedProject.projectid" #editname="ngModel" name="projectrowid" id="projectrowid"
+          class="name form-control" placeholder="selectedProject.projectid"
+           required disabled>
+      </div>
+      <div class="form-group col-12">
+        <label >プロジェクト名</label>
+        <input type="text" [(ngModel)]="selectedProject.projectname" #editname="ngModel" name="projectname" id="projectname"
+          class="name form-control" placeholder="selectedProject.projectnameame"
+           required>
+      </div>
+
+
+      <div class="form-group col-12">
+        <label >プロジェクト詳細</label>
+        <input type="text" [(ngModel)]="selectedProject.projectsummary"  #editemail="ngModel" name="projectsummary" id="projectsummary"
+          class="email form-control" placeholder="selectedProject.projectsummary"
+           required>
+      </div>
+
+
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- プロジェクト新規追加 -->
+<ng-template #addNewProject let-c="close" let-d="dismiss">
+  <form (ngSubmit)="addNewProjectForm(NewProjectForm)" #NewProjectForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">プロジェクト新規追加</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      
+      <div class="form-group col-12">
+        <h6>プロジェクト名</h6>
+        <input type="text"  [(ngModel)]="pageModel.addProject.projectName" name="projectName" class="form-control" placeholder="">
+      </div>
+      <div class="form-group col-12">
+        <h6>プロダクトID</h6>
+        <input type="text"  [(ngModel)]="pageModel.addProject.productId" name="productId" class="form-control" placeholder="">
+      </div>
+      <div class="form-group col-12">
+        <h6>プロジェクト詳細</h6>
+        <input type="text"  [(ngModel)]="pageModel.addProject.projectSummary" name="projectSummary" class="form-control" placeholder="">
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- プロジェクトのデバイス連携 -->
+<ng-template #deviceLinkModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">エラー詳細</h5>
@@ -163,42 +258,6 @@
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
-      </div>
-    </div>
-  </form>
-</ng-template>
-
-
-<!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- 新規追加 -->
-<ng-template #addNewProject let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewProjectForm(NewProjectForm)" #NewProjectForm="ngForm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">プロジェクト新規追加</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      
-      <div class="form-group col-12">
-        <h6>プロジェクト名</h6>
-        <input type="text"  [(ngModel)]="pageModel.addProject.projectName" name="projectName" class="form-control" placeholder="">
-      </div>
-      <div class="form-group col-12">
-        <h6>プロダクトID</h6>
-        <input type="text"  [(ngModel)]="pageModel.addProject.productId" name="productId" class="form-control" placeholder="">
-      </div>
-      <div class="form-group col-12">
-        <h6>プロジェクト詳細</h6>
-        <input type="text"  [(ngModel)]="pageModel.addProject.projectSummary" name="projectSummary" class="form-control" placeholder="">
-      </div>
-
-    </div>
-    <div class="modal-footer">
-      <div class="form-group position-relative has-icon-left mb-0">
-        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
       </div>
     </div>
   </form>

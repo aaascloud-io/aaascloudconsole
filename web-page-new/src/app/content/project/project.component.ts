@@ -69,6 +69,8 @@ export class ProjectComponent implements OnInit {
   temp = [];
   temp2 = this.rows;
 
+  selectedProject: any;
+
   public config: PerfectScrollbarConfigInterface = { };
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -113,15 +115,8 @@ export class ProjectComponent implements OnInit {
         projectSummary:'',
         userId:'',
       },
-      updataProduct: {
-        productId: 0,
-        productTypeId: 0,
-        productcode: '',
-        productName: '',
-        model: '',
-        version: '',
-        sim: 0,
-        summary: ''
+      projectDetail: {
+        
       },
       loginUser: {
         loginuserid: null,
@@ -368,13 +363,53 @@ export class ProjectComponent implements OnInit {
   //   this.contactFlag = false;
   // }
 
-  editTableDataModal(editTableDataModalContent, row) {
-    this.selectedContact = Object.assign({}, row);
-    this.selectedErrorItem = Object.assign({},row);
-    this.editModal = this.modal.open(editTableDataModalContent, {
+
+  // プロジェクト詳細と修正
+    // // Modal を開く
+  editProjectDataModal(editProjectDataModalContent, row) {
+    // this.selectedContact = Object.assign({}, row);
+    this.selectedProject = Object.assign({},row);
+
+    console.log("这是 edit 功能内的 selectedProject 值");
+    console.log(this.selectedProject);
+
+    this.editModal = this.modal.open(editProjectDataModalContent, {
       windowClass: 'animated fadeInDown'
     });
     this.contactFlag = false;
+  }
+
+    // ModalデータをAPIに更新
+  /**
+   * Update contact details
+   *
+   * @param projectEditForm      Edit form for values check
+   * @param projectid      Id match to the selected row Id
+   */
+  projectDataUpdate(projectEditForm: NgForm, projectid) {
+    let routeif: UserInfo = this.dataFatoryService.getUserInfo();
+    if (routeif != null) {
+
+    }
+    // for (const row of this.rows) {
+    //   if (row.id === id && editForm.valid === true) {
+    //     row.name = this.selectedContact['name'];
+    //     row.email = this.selectedContact['email'];
+    //     row.phone = this.selectedContact['phone'];
+    //     this.editModal.close(editForm.resetForm);
+    //     break;
+    //   }
+    // }
+  }
+
+  closeProjectEditModal(editProjectDataModalContent){
+    
+  }
+
+
+  // デバイス連携
+  deviceLink(deviceLinkModalContent,row){
+
   }
 
   /**
