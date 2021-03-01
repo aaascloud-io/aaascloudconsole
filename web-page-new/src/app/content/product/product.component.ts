@@ -14,8 +14,6 @@ import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 class Contact {
   constructor(
     public id: number,
-    public name: string,
-    public email: string,
     public phone: string,
     public producttypeid: any,
     public productid: any,
@@ -71,7 +69,7 @@ export class ProductComponent implements OnInit {
   public multipleSelectArray = formInputData.multipleSelectArray;
   public singleSelectArray = selectData.singleSelectArray;
 
-  protected pageModel = {
+  pageModel = {
     USERCODE: null,
     addList: [],
     dataAll: [],
@@ -101,7 +99,12 @@ export class ProductComponent implements OnInit {
       loginrole: null,
       logincompanyid: '',
     },
-    userInfoParame: {}
+    userInfoParame: {},
+    query:{
+      producttypeid: null,
+      productname:'',
+      sakuseiuserid: null,
+    },
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -124,7 +127,7 @@ export class ProductComponent implements OnInit {
     private dataFatoryService: DataFatoryService,
   ) {
     this.getProductTypes();
-    this.getProductAll();
+    // this.getProductAll();
   }
 
   ngOnInit(): void {
@@ -149,7 +152,7 @@ export class ProductComponent implements OnInit {
         "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
       }
     }
-    this.getProductTypes();
+    this.getProductAll();
   }
 
   /**
@@ -221,21 +224,11 @@ export class ProductComponent implements OnInit {
    * @param row     Selected row for delete contact
    */
   deleteRow(row) {
-    // let index = 0;
-    // const temp = [...this.rows];
-    // for (const tempRow of temp) {
-    //   if (tempRow.id === row.id) {
-    //     temp.splice(index, 1);
-    //     break;
-    //   }
-    //   index++;
-    // }
-    // this.rows = temp;
     if (confirm("削除してもよろしいでしょうか")) {
       var query = {
-        "loginInfo": {
-          "loginuserid": this.pageModel.loginUser.loginuserid,
-          "logincompanyid": this.pageModel.loginUser.logincompanyid
+        "loginInfo": this.pageModel.loginUser,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.loginUser.loginuserid,
         },
         "productid": row.productid,
       }
@@ -243,6 +236,40 @@ export class ProductComponent implements OnInit {
         try {
           if (item.body.resultCode === "0000") {
 
+            this.getProductAll();
+            alert('削除成功です。');
+          } else {
+            console.log('削除失敗です。');
+          }
+        } catch (e) {
+          console.log('削除失敗です。');
+        }
+      });
+    }
+  }
+
+  /**
+   * 選択されたプロダクトを削除する
+   */
+  deleteCheckedRow() {
+
+    this.rows;
+    if (confirm("選択したデーターを削除しますか")) {
+
+      var deleteCheckedids = [];
+      for (var selecteInfo of this.selected) {
+        deleteCheckedids.push(selecteInfo.productid);
+      }
+      var query = {
+        "loginInfo": this.pageModel.loginUser,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.loginUser.loginuserid,
+        },
+        "productidlist": deleteCheckedids,
+      }
+      this.httpService.delete('deleteProducts', query).then(item => {
+        try {
+          if (item.body.resultCode === "0000") {
             this.getProductAll();
             alert('削除成功です。');
           } else {
@@ -279,7 +306,7 @@ export class ProductComponent implements OnInit {
         "logincompanyid": this.pageModel.loginUser.logincompanyid
       },
       "targetUserInfo": {
-        "targetuserid": 3
+        "targetuserid": this.pageModel.loginUser.loginuserid,
       },
 
       "productid": this.selectedContact.productid,
@@ -323,51 +350,6 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  /**
-   * Delete selected contact
-   */
-  deleteCheckedRow() {
-    
-    // let index = 0;
-    // const removedIndex = [];
-    // const temp = [...this.rows];
-    // for (const row of temp) {
-    //   for (const selectedRow of this.selected) {
-    //     if (row.id === selectedRow.id) {
-    //       removedIndex.push(index);
-    //     }
-    //   }
-    //   index++;
-    // }
-    // for (let i = removedIndex.length - 1; i >= 0; i--) {
-    //   temp.splice(removedIndex[i], 1);
-    // }
-    // this.rows = temp;
-    // if (confirm("削除してもよろしいでしょうか")) {
-
-    //   var deleteCheckedids = [];
-    //   for (var selecteInfo of this.selected) {
-    //     deleteCheckedids.push({ "productid": selecteInfo.productid });
-    //   }
-    //   var query = {
-    //     "loginInfo": this.pageModel.userInfoParame,
-    //     "cloud_productModelList": deleteCheckedids,
-    //   }
-
-    //   this.httpService.delete('deleteProduct', query).then(item => {
-    //     try {
-    //       if (item.body.resultCode === "0000") {
-    //         this.getProductAll();
-    //         alert('削除成功です。');
-    //       } else {
-    //         console.log('削除失敗です。');
-    //       }
-    //     } catch (e) {
-    //       console.log('削除失敗です。');
-    //     }
-    //   });
-    // }
-  }
 
   /**
    * favorite set when add contact
@@ -395,9 +377,9 @@ export class ProductComponent implements OnInit {
     // }
 
     var query = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
+      "loginInfo": this.pageModel.loginUser,
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginuserid,
       },
 
       "producttypeid": this.pageModel.addProduct.productTypeId,
@@ -414,12 +396,12 @@ export class ProductComponent implements OnInit {
         if (item.resultCode === "0000") {
           console.log('登録成功です。');
           console.log(item);
-          this.getProductAll();
-          alert('登録成功です。');
           if (editForm.valid === true) {
             editForm.reset();
             this.addModal.close(editForm.resetForm);
           }
+          alert('登録成功です。');
+          this.getProductAll();
         }
       } catch (e) {
         console.log('登録失敗です。');
@@ -520,42 +502,12 @@ export class ProductComponent implements OnInit {
   }
 
   /**
-   * 一括登録用ファイルのロード(画面より)
-   * 
-   * @param event 
-   */
-  protected async changeTarget(event) {
-    var obj = this;
-    var file = event.target.files[0];
-    // Logger.info(this, `got target file. name:[${file.name}]`);
-    if (file) {
-      var reader = new FileReader();
-      reader.onload = (event) => {
-        const data = reader.result;
-        var workBook = XLSX.read(data, { type: 'binary' });
-        var jsonData = workBook.SheetNames.reduce((initial, name) => {
-          const sheet = workBook.Sheets[name];
-          initial[name] = XLSX.utils.sheet_to_json(sheet);
-          return initial;
-        }, {});
-        this.pageModel.dataAll = jsonData['rawData'];
-        // Logger.info(this, `loaded. size:[${this.pageModel.dataAll.length}]`);
-      }
-      reader.onerror = (event) => {
-        // obj.alert.danger("ファイル読み込み失敗しました");
-        this.alertService.error("ファイル読み込み失敗しました");
-
-      }
-      ///読み込み実施
-      reader.readAsBinaryString(file);
-    }
-  }
-
-  /**
    * プロダクト一覧取得
    */
   protected async getProductAll() {
-    this.httpService.usePost('getProductAll', {}).then(item => {
+    var query = this.pageModel.userInfoParame;
+
+    this.httpService.usePost('getProductAll', query).then(item => {
       try {
         this.rows = [];
         console.log(item);
@@ -573,8 +525,6 @@ export class ProductComponent implements OnInit {
             this.rows.push(new Contact(
               index,
               elem.productname,
-              "EMAIL",
-              "080-0000-000",
               elem.producttypeid,
               elem.productid,
               elem.productcode,
@@ -595,6 +545,63 @@ export class ProductComponent implements OnInit {
       }
     });
   }
+
+   /**
+   * プロダクトの条件より、取得する
+   */
+  async searchMyProducts() {
+    
+    var query = {
+      "loginInfo": this.pageModel.loginUser,
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginuserid,
+      },
+      "producttypeid": this.pageModel.query.producttypeid,
+      "productname": this.pageModel.query.productname,
+      "sakuseiuserid": this.pageModel.query.sakuseiuserid,
+
+    };
+
+
+    this.httpService.usePost('searchMyProduct', query).then(item => {
+      try {
+        this.rows = [];
+        console.log(item);
+        var index = 1;
+        this.pageModel.productList = item;
+        if (item != null) {
+          item.forEach((elem) => {
+            var producttypename = ""
+            // プロダクトタイプ名の検索
+            for (const productType of this.productTypes) {
+              if (productType.producttypeid === elem.producttypeid) {
+                producttypename = productType.producttypename;
+              }
+            }
+            this.rows.push(new Contact(
+              index,
+              elem.productname,
+              elem.producttypeid,
+              elem.productid,
+              elem.productcode,
+              elem.productname,
+              elem.model,
+              elem.simflag,
+              elem.version,
+              elem.summary,
+              producttypename,
+            ));
+            index++;
+          });
+          this.rows = [...this.rows];
+        }
+
+      } catch (e) {
+        console.log('ユーザー数数を検索API エラー　発生しました。');
+      }
+    });
+  }
+
   /**
    * プロダクト一覧取得
    */

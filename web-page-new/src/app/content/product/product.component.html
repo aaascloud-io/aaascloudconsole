@@ -8,6 +8,52 @@
             <div class="card">
               <div class="card-content">
                 <div class="card-body">
+                  <div class="row">
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">タイプ</label>
+                        <select class="form-control" id="typeId" name="typeId"
+                          [(ngModel)]="pageModel.query.producttypeid" #editname="ngModel" name="producttypeid"
+                          id="producttypeid">
+                          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+                            {{type.producttypename}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">プロダクト名</label>
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="pageModel.query.productname">
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">作成者</label>
+                        <input type="text" class="form-control" id="" placeholder="">
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <div class="heading-elements mt-0 pull-right" style="padding-top:20px;">
+                          <button class="btn btn-primary btn-sm gap_contact" (click)="searchMyProducts()">
+                            <i class="d-md-none d-block feather ft-plus white"></i>
+                            <span class="d-md-block d-none">検　索</span></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body">
                   <!-- Task List table -->
                   <div class="row">
                     <div class="col-sm-12">
@@ -54,20 +100,19 @@
                         <a>{{row.productcode}}</a>
                       </ng-template>
                     </ngx-datatable-column>
-                    <!-- <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column> -->
-                    <ngx-datatable-column name="型番" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.model}}</a>
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="プロダクトID" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.productid}}</a>
-                      </ng-template>
-                    </ngx-datatable-column>
                     <ngx-datatable-column name="プロダクト名" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a>{{row.productname}}</a>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <!-- <ngx-datatable-column name="プロダクトID" [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        <a>{{row.productid}}</a>
+                      </ng-template>
+                    </ngx-datatable-column> -->
+                    <ngx-datatable-column name="型番" [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        <a>{{row.model}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="SIMカード" [flexGrow]="1" [minWidth]="140">
@@ -79,6 +124,11 @@
                     <ngx-datatable-column name="バージョン" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a>{{row.version}}</a>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="作成者" [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        <a>{{row.username}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
