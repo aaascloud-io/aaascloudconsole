@@ -8,6 +8,52 @@
             <div class="card">
               <div class="card-content">
                 <div class="card-body">
+                  <div class="row">
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">会社名</label>
+                        <select class="form-control" name="company" id="company"
+                        [(ngModel)]="pageModel.adduserInfo.companyInfo.companyid" placeholder="選択してください。"
+                        #editname="ngModel">
+                        <option *ngFor="let companyInfo of pageModel.companyInfoAll; let i = index"
+                          [ngValue]="companyInfo.companyid">
+                          {{companyInfo.companyname}}
+                        </option>
+                      </select>
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">姓名</label>
+                        <input type="text" class="form-control" id="" placeholder="" [(ngModel)]="pageModel.query.name">
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">メール</label>
+                        <input type="text" class="form-control" id="" placeholder=""  [(ngModel)]="pageModel.query.mail">
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <div class="heading-elements mt-0 pull-right" style="padding-top:20px;">
+                          <button class="btn btn-primary btn-sm gap_contact" (click)="searchMyUsers()">
+                            <i class="d-md-none d-block feather ft-plus white"></i>
+                            <span class="d-md-block d-none">検　索</span></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body">
                   <!-- Task List table -->
                   <div class="row">
                     <div class="col-sm-12">
@@ -55,7 +101,7 @@
                       </ng-template>
                     </ngx-datatable-column>
                     <!-- <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column> -->
-                    <ngx-datatable-column name="アドレス" [flexGrow]="1" [minWidth]="140">
+                    <ngx-datatable-column name="住所" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a>{{row.address}}</a>
                       </ng-template>
@@ -67,15 +113,13 @@
                     </ngx-datatable-column>
                     <ngx-datatable-column name="ユーザー数" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="['/user']"
-                          [queryParams]="{userid:row.userid, companyid:row.companyid}">{{row.userCount}}</a>
+                        <a>{{row.userCount}}</a>
                         <!-- <a (click)="reload()">{{row.userCount}}</a> -->
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="デバイス数" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="['/device']"
-                          [queryParams]="{userid:row.userid, companyid:row.companyid}">{{row.devicecount}}</a>
+                        <a>{{row.devicecount}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
@@ -133,7 +177,7 @@
           name="corporatenumber" id="corporatenumber" class="name form-control" placeholder="法人番号" maxlength="13">
       </div>
       <div class="form-group col-12">
-        <h6>アドレス</h6>
+        <h6>住所</h6>
         <input type="text" [(ngModel)]="pageModel.updataUserInfo.address" #editaddress="ngModel" name="address"
           id="address" class="name form-control" placeholder="アドレス" maxlength="100">
       </div>
@@ -162,7 +206,7 @@
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"
-          (click)="onUpdate()"><i class="la la-paper-plane-o d-lg-none"></i> <span
+          ><i class="la la-paper-plane-o d-lg-none"></i> <span
             class="d-none d-lg-block">保存</span></button>
       </div>
     </div>
@@ -170,7 +214,7 @@
 </ng-template>
 <ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
   <!-- <form #editAddForm="ngForm"> -->
-  <form #editAddForm="ngForm">
+  <form #addForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">新規</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -182,8 +226,8 @@
         <h6>ユーザー名</h6>
         <input type="text" [(ngModel)]="pageModel.adduserInfo.username" #editname="ngModel" name="username"
           id="username" class="name form-control" placeholder="半角英数で入力してください"
-          [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
-        <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback">
+          [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
+        <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">ユーザー名を入力してください</div>
         </div>
       </div>
@@ -191,11 +235,11 @@
         <h6>権限</h6>
         <select class="form-control" id="role" name="role" [(ngModel)]="pageModel.adduserInfo.role" #editname="ngModel"
           name="username" id="username" class="name form-control"
-          [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
+          [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
           <option [value]=1>管理者</option>
           <option [value]=2>使用者</option>
         </select>
-        <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback">
+        <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">権限を選択してください</div>
         </div>
       </div>
@@ -220,13 +264,13 @@
                   <select class="form-control" name="company" id="company"
                     [(ngModel)]="pageModel.adduserInfo.companyInfo.companyid" placeholder="選択してください。"
                     #editname="ngModel" (change)="show()"
-                    [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
+                    [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
                     <option *ngFor="let companyInfo of pageModel.companyInfoAll; let i = index"
                       [ngValue]="companyInfo.companyid">
                       {{companyInfo.companyname}}
                     </option>
                   </select>
-                  <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback">
+                  <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback">
                     <div *ngIf="editname.errors.required">ユーザータイプを選んでください</div>
                   </div>
                 </div>
@@ -237,9 +281,9 @@
                     placeholder="法人番号" disabled maxlength="13">
                 </div>
                 <div class="form-group col-12">
-                  <h6>アドレス</h6>
+                  <h6>住所</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.address" #editversion="ngModel"
-                    name="address" id="address" class="name form-control" placeholder="アドレス" disabled maxlength="100">
+                    name="address" id="address" class="name form-control" placeholder="住所" disabled maxlength="100">
                 </div>
                 <div class="form-group col-12">
                   <h6>業種</h6>
@@ -265,7 +309,7 @@
                   <div class="form-group position-relative has-icon-left mb-0">
                     <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
                       data-dismiss="modal"><i class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block"
-                        (ngSubmit)="addCompUser(editAddForm)">登録</span></button>
+                        (ngSubmit)="addCompUser(addForm)">登録</span></button>
                   </div>
                 </div>
               </ng-template>
@@ -277,8 +321,8 @@
                   <h6 style="width: 410px;">会社名</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.companyname" #editname="ngModel"
                     name="companyname" id="companyname" class="name form-control" placeholder="会社名"
-                    [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
-                  <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback">
+                    [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
+                  <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback">
                     <div *ngIf="editname.errors.required">会社名を入力してください</div>
                   </div>
                 </div>
@@ -286,15 +330,15 @@
                   <h6>法人番号</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.corporatenumber"
                     #editversion="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
-                    placeholder="法人番号" [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
-                  <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback" maxlength="13">
+                    placeholder="法人番号" [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
+                  <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback" maxlength="13">
                     <div *ngIf="editname.errors.required">法人番号を入力してください</div>
                   </div>
                 </div>
                 <div class="form-group col-12">
-                  <h6>アドレス</h6>
+                  <h6>住所</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.address" #editversion="ngModel"
-                    name="address" id="address" class="name form-control" placeholder="アドレス" maxlength="100">
+                    name="address" id="address" class="name form-control" placeholder="住所" maxlength="100">
                 </div>
                 <div class="form-group col-12">
                   <h6>業種</h6>
@@ -320,7 +364,8 @@
                   <div class="form-group position-relative has-icon-left mb-0">
                     <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
                       data-dismiss="modal" data-dismiss="modal"><i class="la la-paper-plane-o d-lg-none"></i> <span
-                        class="d-none d-lg-block" (ngSubmit)="addNewCompUser(editAddForm)" aria-label="Close">登録</span></button>
+                        class="d-none d-lg-block" (ngSubmit)="addNewCompUser(addForm)"
+                        aria-label="Close">登録</span></button>
                   </div>
                 </div>
               </ng-template>

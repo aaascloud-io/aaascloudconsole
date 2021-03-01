@@ -69,16 +69,13 @@ export class UserComponent implements OnInit {
   temp = [];
   temp2 = this.rows;
   singlebasicSelected: any;
-  queryParams_userid: any;
-  queryParams_companyid: any;
-
 
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
   public multipleSelectArray = formInputData.multipleSelectArray;
   public singleSelectArray = selectData.singleSelectArray;
 
-  protected pageModel = {
+  pageModel = {
     // 一括登録のデバイス定義リスト
     addList: [],
     dataAll: [],
@@ -133,6 +130,12 @@ export class UserComponent implements OnInit {
       }
     },
 
+    query: {
+      username: '',
+      name: '',
+      mail: ''
+
+    },
     companyInfoAll: []
   }
 
@@ -162,12 +165,6 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // 画面遷移する場合、値を取得する
-    this.queryParams_userid = this.activatedRoute.snapshot.queryParams['userid'];
-    this.queryParams_companyid = this.activatedRoute.snapshot.queryParams['companyid'];
-    console.log("画面遷移の取得した値：" + this.queryParams_userid);
-    console.log("画面遷移の取得した値：" + this.queryParams_companyid);
-
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
     // 画面初期ログイン情報取得
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
@@ -188,14 +185,6 @@ export class UserComponent implements OnInit {
       "loginrole": this.pageModel.loginUser.loginrole,
       "logincompanyid": this.pageModel.loginUser.logincompanyid,
       "loginupperuserid": this.pageModel.loginUser.loginupperuserid
-    }
-
-    if (this.queryParams_userid && this.queryParams_companyid) {
-      this.pageModel.userInfoParame.targetUserInfo.targetuserid = this.queryParams_userid;
-      this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid = this.queryParams_companyid;
-    } else {
-      this.pageModel.userInfoParame.targetUserInfo.targetuserid = this.pageModel.loginUser.loginuserid;
-      this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid = this.pageModel.loginUser.logincompanyid;
     }
 
     console.log("param情報：" + JSON.stringify(this.pageModel.loginUser));
@@ -285,16 +274,7 @@ export class UserComponent implements OnInit {
    * @param row     Selected row for delete contact
    */
   deleteRow(row) {
-    // let index = 0;
-    // const temp = [...this.rows];
-    // for (const tempRow of temp) {
-    //   if (tempRow.id === row.id) {
-    //     temp.splice(index, 1);
-    //     break;
-    //   }
-    //   index++;
-    // }
-    // this.rows = temp;
+
     if (confirm("削除してもよろしいでしょうか")) {
 
 
@@ -332,21 +312,6 @@ export class UserComponent implements OnInit {
    * 複数のユーザーを削除する
    */
   deleteCheckedRow() {
-    // let index = 0;
-    // const removedIndex = [];
-    // const temp = [...this.rows];
-    // for (const row of temp) {
-    //   for (const selectedRow of this.selected) {
-    //     if (row.id === selectedRow.id) {
-    //       removedIndex.push(index);
-    //     }
-    //   }
-    //   index++;
-    // }
-    // for (let i = removedIndex.length - 1; i >= 0; i--) {
-    //   temp.splice(removedIndex[i], 1);
-    // }
-    // this.rows = temp;
     if (confirm("削除してもよろしいでしょうか")) {
 
 
@@ -417,6 +382,10 @@ export class UserComponent implements OnInit {
         console.log(item);
         this.getUserAll();
         alert('更新成功です。');
+        if (editUpdateForm.valid === true) {
+          editUpdateForm.reset();
+          this.updateModal.close(editUpdateForm.resetForm);
+        }
         // editUpdateForm.reset();
         // this.editModal(editUpdateForm.resetForm);
       } catch (e) {
@@ -430,7 +399,7 @@ export class UserComponent implements OnInit {
    *
    * @param 
    */
-  addCompUser() {
+  addCompUser(addForm: NgForm) {
     var companyid = this.pageModel.adduserInfo.companyInfo.companyid;
     var username = this.pageModel.adduserInfo.username;
     var role = this.pageModel.adduserInfo.role;
@@ -463,7 +432,7 @@ export class UserComponent implements OnInit {
         "username": this.pageModel.adduserInfo.username,
         "role": this.pageModel.adduserInfo.role,
       }
-      this.registerUser(query);
+      this.registerUser(query, addForm);
     }
     // addForm.reset();
     // this.addModal.close(addForm.resetForm);
@@ -474,7 +443,7 @@ export class UserComponent implements OnInit {
    * 
    * 
    */
-  addNewCompUser() {
+  addNewCompUser(addForm: NgForm) {
     var companyname = this.pageModel.adduserInfo.newCompanyInfo.companyname;
     var corporatenumber = this.pageModel.adduserInfo.newCompanyInfo.corporatenumber;
     var username = this.pageModel.adduserInfo.username;
@@ -521,7 +490,7 @@ export class UserComponent implements OnInit {
         "fax": this.pageModel.adduserInfo.newCompanyInfo.fax,
       };
 
-      this.registerUser(query);
+      this.registerUser(query, addForm);
     }
   }
 
@@ -529,13 +498,18 @@ export class UserComponent implements OnInit {
    * ユーザー登録
    * @param query
    */
-  registerUser(query) {
+  registerUser(query, addForm: NgForm) {
 
     this.httpService.usePost('registerUser', query).then(item => {
       try {
         if (item.resultCode == "0000") {
+
           this.getUserAll();
           alert('ユーザー情報は登録成功です。');
+          if (addForm.valid === true) {
+            addForm.reset();
+            this.addModal.close(addForm.resetForm);
+          }
         }
       } catch (e) {
         console.log('登録失敗です。');
@@ -627,11 +601,58 @@ export class UserComponent implements OnInit {
     var query = {
       "loginInfo": this.pageModel.userInfoParame.loginInfo,
       "targetUserInfo": {
-        "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
-        "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        "targetuserid": this.pageModel.loginUser.loginuserid,
+        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
       },
     }
-    this.httpService.usePost('getSonUsers', query).then(item => {
+    this.httpService.usePost('getUnderUsers', query).then(item => {
+      try {
+        this.rows = [];
+        console.log(item);
+        var index = 1;
+        this.pageModel.userList = item;
+        item.forEach((elem) => {
+          this.rows.push(new Contact(
+            index,
+            elem.userid,
+            elem.username,
+            elem.companyid,
+            elem.loginid,
+            elem.role,
+            elem.upperuserid,
+            elem.companyName,
+            elem.devicecount,
+            elem.userCount,
+            elem.projectCount,
+            elem.address,
+            elem.mail,
+            elem.tel,
+            elem.fax,
+          ));
+          index++;
+        });
+        this.rows = [...this.rows];
+        // }
+
+      } catch (e) {
+        console.log('');
+      }
+    });
+  }
+
+  /**
+   * 
+   */
+  async searchMyUsers() {
+    var query = {
+      "loginInfo": this.pageModel.userInfoParame.loginInfo,
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginuserid,
+        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
+      },
+      
+    }
+    this.httpService.usePost('searchUnderUsers', query).then(item => {
       try {
         this.rows = [];
         console.log(item);
@@ -671,7 +692,7 @@ export class UserComponent implements OnInit {
    */
   protected async getUnderCompanies() {
     var query = {
-      "loginuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid
+      "loginuserid": this.pageModel.loginUser.loginuserid
     }
     this.httpService.usePost('getUnderCompanies', query).then(item => {
       try {
