@@ -69,6 +69,7 @@
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a [routerLink]="['/user']"
                           [queryParams]="{userid:row.userid, companyid:row.companyid}">{{row.userCount}}</a>
+                        <!-- <a (click)="reload()">{{row.userCount}}</a> -->
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="デバイス数" [flexGrow]="1" [minWidth]="140">
@@ -99,7 +100,7 @@
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 
 <ng-template #editTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="onUpdate()" #editForm="ngForm">
+  <form (ngSubmit)="onUpdate(editUpdateForm)" #editUpdateForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">編集</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -181,8 +182,8 @@
   </form>
 </ng-template>
 <ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
-  <form #editForm="ngForm">
-    <!-- <form (ngSubmit)="addUser()" #editForm="ngForm"> -->
+  <!-- <form #editAddForm="ngForm"> -->
+  <form #editAddForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">新規</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -194,8 +195,8 @@
         <h6>ユーザー名</h6>
         <input type="text" [(ngModel)]="pageModel.adduserInfo.username" #editname="ngModel" name="username"
           id="username" class="name form-control" placeholder="半角英数で入力してください"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+          [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
+        <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">ユーザー名を入力してください</div>
         </div>
       </div>
@@ -203,11 +204,11 @@
         <h6>権限</h6>
         <select class="form-control" id="role" name="role" [(ngModel)]="pageModel.adduserInfo.role" #editname="ngModel"
           name="username" id="username" class="name form-control"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+          [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
           <option [value]=1>管理者</option>
           <option [value]=2>使用者</option>
         </select>
-        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+        <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">権限を選択してください</div>
         </div>
       </div>
@@ -232,13 +233,13 @@
                   <select class="form-control" name="company" id="company"
                     [(ngModel)]="pageModel.adduserInfo.companyInfo.companyid" placeholder="選択してください。"
                     #editname="ngModel" (change)="show()"
-                    [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+                    [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
                     <option *ngFor="let companyInfo of pageModel.companyInfoAll; let i = index"
                       [ngValue]="companyInfo.companyid">
                       {{companyInfo.companyname}}
                     </option>
                   </select>
-                  <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+                  <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback">
                     <div *ngIf="editname.errors.required">ユーザータイプを選んでください</div>
                   </div>
                 </div>
@@ -277,7 +278,7 @@
                   <div class="form-group position-relative has-icon-left mb-0">
                     <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
                       data-dismiss="modal"><i class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block"
-                        (click)="addCompUser()">登録</span></button>
+                        (ngSubmit)="addCompUser(editAddForm)">登録</span></button>
                   </div>
                 </div>
               </ng-template>
@@ -289,8 +290,8 @@
                   <h6 style="width: 410px;">会社名</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.companyname" #editname="ngModel"
                     name="companyname" id="companyname" class="name form-control" placeholder="会社名"
-                    [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-                  <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+                    [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
+                  <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback">
                     <div *ngIf="editname.errors.required">会社名を入力してください</div>
                   </div>
                 </div>
@@ -298,8 +299,8 @@
                   <h6>法人番号</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.corporatenumber"
                     #editversion="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
-                    placeholder="法人番号" [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-                  <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+                    placeholder="法人番号" [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
+                  <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback">
                     <div *ngIf="editname.errors.required">法人番号を入力してください</div>
                   </div>
                 </div>
@@ -331,8 +332,8 @@
                 <div class="modal-footer">
                   <div class="form-group position-relative has-icon-left mb-0">
                     <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
-                      data-dismiss="modal"><i class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block"
-                        (click)="addNewCompUser()">登録</span></button>
+                      data-dismiss="modal" data-dismiss="modal"><i class="la la-paper-plane-o d-lg-none"></i> <span
+                        class="d-none d-lg-block" (ngSubmit)="addNewCompUser(editAddForm)" aria-label="Close">登録</span></button>
                   </div>
                 </div>
               </ng-template>
