@@ -19,16 +19,17 @@ public interface  Cloud_projectRepository extends CrudRepository<Cloud_projectEn
 	@Autowired
 	public List<Cloud_projectEntity> searchByUserid(@Param("userid") Integer userid);
 
-//	/*
-//	 * プロジェクト検索
-//	 *
-//	 *
-//	 */
-//	@Query("SELECT c.* FROM cloud_project c "
-//			+ "WHERE c.userid = :userid "
-//			+ "AND c.projectname LIKE :projectname "
-//			+ "ORDER BY c.projectname")
-//	public List<Cloud_projectEntity> searchByUseridProjectnameLike(@Param("userid") Integer userid, @Param("projectname") String projectname);
+	/*
+	 * プロジェクト検索
+	 *
+	 *
+	 */
+	@Query("SELECT c.* FROM cloud_project c "
+			+ "WHERE c.userid = :userid "
+			+ "AND c.projectname LIKE :projectname "
+			+ "ORDER BY c.projectname")
+	@Autowired
+	public List<Cloud_projectEntity> searchByUseridAndProjectnameLike(@Param("userid") Integer userid, @Param("projectname") String projectname);
 
 	/*
 	 * プロジェクト一覧（プロジェクト数取得用）

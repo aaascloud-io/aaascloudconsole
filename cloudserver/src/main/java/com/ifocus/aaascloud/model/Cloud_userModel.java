@@ -28,6 +28,9 @@ public class Cloud_userModel extends UserModel {
 	private Integer userid;
 	private Integer companyid;
 	private String username;
+	private String firstName;
+	private String lastName;
+	private String email;
 	private String loginid;
 	private String password;
 	private Integer role;
@@ -62,6 +65,45 @@ public class Cloud_userModel extends UserModel {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.companyname.trim() + "%";
+		}
+	}
+
+	/*
+	 * firstName情報検索条件取得
+	 *
+	 */
+	public String getFirstNameForSearch() {
+
+		if (this.firstName == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.firstName.trim() + "%";
+		}
+	}
+
+	/*
+	 * lastName情報検索条件取得
+	 *
+	 */
+	public String getLastNameForSearch() {
+
+		if (this.lastName == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.lastName.trim() + "%";
+		}
+	}
+
+	/*
+	 * email情報検索条件取得
+	 *
+	 */
+	public String getEmailForSearch() {
+
+		if (this.email == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.email.trim() + "%";
 		}
 	}
 }
