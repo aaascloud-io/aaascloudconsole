@@ -149,6 +149,29 @@ public class Cloud_userService {
 	}
 
 	/*
+	 * 配下ユーザ一覧取得
+	 *
+	 *
+	 */
+	public List<Cloud_userModel> getUnderUsers(List<Integer> userids) throws Exception {
+		List<Cloud_userEntity> returnList = (List<Cloud_userEntity>) cloud_userRepository.findAllById(userids);
+		return getModelsByEntitys(returnList);
+
+	}
+
+	/*
+	 * 配下ユーザ検索
+	 *
+	 *
+	 */
+	public List<Cloud_userModel> searchUnderUsers(List<Integer> userids, Cloud_userModel model) throws Exception {
+		List<Cloud_userEntity> returnList = (List<Cloud_userEntity>) cloud_userRepository.searchUnderUsersByCompanyname(
+				userids, model.getCompanynameForSearch(), model.getFirstNameForSearch(), model.getLastNameForSearch(), model.getEmailForSearch());
+		return getModelsByEntitys(returnList);
+
+	}
+
+	/*
 	 * ユーザ登録
 	 * @param loginInfo LoginInfo
 	 * @param cloud_userModel Cloud_userModel
@@ -198,6 +221,9 @@ public class Cloud_userService {
 		// entity.setUserid(model.getUserid());  新規登録時に、useridがない。
 		entity.setCompanyid(model.getCompanyid());
 		entity.setUsername(model.getUsername());
+		entity.setLastname(model.getLastName());
+		entity.setFirstname(model.getFirstName());
+		entity.setEmail(model.getEmail());
 		entity.setRole(model.getRole());
 		entity.setUpperuserid(model.getTargetUserInfo().getTargetuserid());
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
@@ -382,6 +408,9 @@ public class Cloud_userService {
 		Cloud_userModel model = new Cloud_userModel();
 		model.setUserid(entity.getUserid());
 		model.setUsername(entity.getUsername());
+		model.setLastName(entity.getLastname());
+		model.setFirstName(entity.getFirstname());
+		model.setEmail(entity.getEmail());
 		model.setCompanyid(entity.getCompanyid());
 		model.setRole(entity.getRole());
 		model.setUpperuserid(entity.getUpperuserid());

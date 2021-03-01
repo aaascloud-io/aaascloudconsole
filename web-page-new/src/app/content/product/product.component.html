@@ -8,6 +8,52 @@
             <div class="card">
               <div class="card-content">
                 <div class="card-body">
+                  <div class="row">
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">タイプ</label>
+                        <select class="form-control" id="typeId" name="typeId"
+                          [(ngModel)]="pageModel.query.producttypeid" #editname="ngModel" name="producttypeid"
+                          id="producttypeid">
+                          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+                            {{type.producttypename}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">プロダクト名</label>
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="pageModel.query.productname">
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">作成者</label>
+                        <input type="text" class="form-control" id="" placeholder="">
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <div class="heading-elements mt-0 pull-right" style="padding-top:20px;">
+                          <button class="btn btn-primary btn-sm gap_contact" (click)="searchMyProducts()">
+                            <i class="d-md-none d-block feather ft-plus white"></i>
+                            <span class="d-md-block d-none">検　索</span></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body">
                   <!-- Task List table -->
                   <div class="row">
                     <div class="col-sm-12">
@@ -15,10 +61,10 @@
                         (click)="addTableDataModal(addTableDataModalContent)">
                         <i class="d-md-none d-block feather ft-plus white"></i>
                         <span class="d-md-block d-none">新　規</span></button>
-                      <!-- <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
+                      <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
                         (click)="deleteCheckedRow()">
                         <i class="d-md-none d-block feather ft-plus white"></i>
-                        <span class="d-md-block d-none">削　除</span></button> -->
+                        <span class="d-md-block d-none">削　除</span></button>
                     </div>
                   </div>
                   <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'"
@@ -26,7 +72,7 @@
                     [selectionType]="'checkbox'" (select)='onSelectContact($event)' fxFlex="auto"
                     [perfectScrollbar]="config">
 
-                    <!-- <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
+                    <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
                       <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
                         let-selectFn="selectFn">
                         <span class="custom-control custom-checkbox">
@@ -43,39 +89,30 @@
                           <label class="custom-control-label" for="select{{rowIndex}}"></label>
                         </div>
                       </ng-template>
-                    </ngx-datatable-column> -->
+                    </ngx-datatable-column>
                     <ngx-datatable-column name="タイプ" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <select class="form-control select-style" id="typeId" name="typeId" [(ngModel)]="row.producttypeid" disabled>
-                          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
-                            <a>{{type.producttypename}}</a>
-                          </option>
-                        </select>
+                        <a>{{row.producttypename}}</a>
                       </ng-template>
-
-                      <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
-                        {{type.producttypename}}
-                      </option>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="プロダクトコード" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="">{{row.productcode}}</a>
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <!-- <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="140"></ngx-datatable-column> -->
-                    <ngx-datatable-column name="型番" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.model}}</a>
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="プロダクトID" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        <a>{{row.productid}}</a>
+                        <a>{{row.productcode}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="プロダクト名" [flexGrow]="1" [minWidth]="140">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a>{{row.productname}}</a>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <!-- <ngx-datatable-column name="プロダクトID" [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        <a>{{row.productid}}</a>
+                      </ng-template>
+                    </ngx-datatable-column> -->
+                    <ngx-datatable-column name="型番" [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        <a>{{row.model}}</a>
                       </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="SIMカード" [flexGrow]="1" [minWidth]="140">
@@ -89,10 +126,15 @@
                         <a>{{row.version}}</a>
                       </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100" >
+                    <ngx-datatable-column name="作成者" [flexGrow]="1" [minWidth]="140">
+                      <ng-template ngx-datatable-cell-template let-row="row">
+                        <a>{{row.username}}</a>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Actions" [flexGrow]="1" [minWidth]="100">
                       <ng-template ngx-datatable-cell-template let-row="row">
                         <a [routerLink]="" class="primary edit mr-1 mrless"
-                          (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
+                          (click)="editTableDataModal(editupdateDataModal, row)"><i class="la la-pencil"></i>
                         </a>
                         <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
                       </ng-template>
@@ -110,8 +152,8 @@
 </div>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 
-<ng-template #editTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="onUpdate()" #editForm="ngForm">
+<ng-template #editupdateDataModal let-c="close" let-d="dismiss">
+  <form (ngSubmit)="onUpdate(editForm)" #editForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">編集</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -136,7 +178,7 @@
         <h6>プロダクト名</h6>
         <input type="text" [(ngModel)]="selectedContact.productname" #editname="ngModel" name="name" id="name"
           class="name form-control" placeholder="プロダクト名"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required maxlength="50">
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">プロダクト名を入力してください</div>
         </div>
@@ -144,17 +186,17 @@
       <div class="form-group col-12">
         <h6>プロダクトコード</h6>
         <input type="text" [(ngModel)]="selectedContact.productcode" #editmodel="ngModel" name="productcode"
-          id="productcode" class="name form-control" placeholder="プロダクトコード">
+          id="productcode" class="name form-control" placeholder="プロダクトコード" maxlength="10">
       </div>
       <div class="form-group col-12">
         <h6>型番</h6>
         <input type="text" [(ngModel)]="selectedContact.model" #editmodel="ngModel" name="model" id="model"
-          class="name form-control" placeholder="型番">
+          class="name form-control" placeholder="型番" maxlength="20">
       </div>
       <div class="form-group col-12">
         <h6>バージョン</h6>
         <input type="text" [(ngModel)]="selectedContact.version" #editversion="ngModel" name="version" id="version"
-          class="name form-control" placeholder="バージョン">
+          class="name form-control" placeholder="バージョン" maxlength="20">
       </div>
       <div class="form-group col-12">
         <h6>SIMカード有無</h6>
@@ -166,21 +208,20 @@
       <div class="form-group col-12">
         <h6>説明</h6>
         <textarea id="summary" rows="5" class="form-control square" name="message" [(ngModel)]="selectedContact.summary"
-          placeholder="message"></textarea>
+          placeholder="message" maxlength="100"></textarea>
       </div>
 
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
-        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"
-          (click)="onUpdate()"><i class="la la-paper-plane-o d-lg-none"></i> <span
-            class="d-none d-lg-block">保存</span></button>
+        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
       </div>
     </div>
   </form>
 </ng-template>
 <ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact()" #editForm="ngForm">
+  <form (ngSubmit)="addNewContact(editForm)" #editForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">新規</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -205,7 +246,7 @@
         <h6>プロダクト名</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.productName" #editname="ngModel" name="name" id="name"
           class="name form-control" placeholder="プロダクト名"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required maxlength="50">
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">プロダクト名を入力してください</div>
         </div>
@@ -213,17 +254,17 @@
       <div class="form-group col-12">
         <h6>プロダクトコード</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.productcode" #editmodel="ngModel" name="productcode"
-          id="productcode" class="name form-control" placeholder="プロダクトコード">
+          id="productcode" class="name form-control" placeholder="プロダクトコード" maxlength="10">
       </div>
       <div class="form-group col-12">
         <h6>型番</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.model" #editmodel="ngModel" name="model" id="model"
-          class="name form-control" placeholder="型番">
+          class="name form-control" placeholder="型番" maxlength="20">
       </div>
       <div class="form-group col-12">
         <h6>バージョン</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.version" #editversion="ngModel" name="version" id="version"
-          class="name form-control" placeholder="バージョン">
+          class="name form-control" placeholder="バージョン" maxlength="20">
       </div>
       <div class="form-group col-12">
         <h6>SIMカード有無</h6>
@@ -235,7 +276,7 @@
       <div class="form-group col-12">
         <h6>説明</h6>
         <textarea id="summary" rows="5" class="form-control square" name="summary"
-          [(ngModel)]="pageModel.addProduct.summary" placeholder="summary"></textarea>
+          [(ngModel)]="pageModel.addProduct.summary" placeholder="summary" maxlength="100"></textarea>
       </div>
 
     </div>

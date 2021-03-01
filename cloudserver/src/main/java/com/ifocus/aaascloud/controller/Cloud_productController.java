@@ -20,8 +20,6 @@ import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.util.Util;
 
-import net.sf.json.JSONObject;
-
 @Controller
 public class Cloud_productController {
 
@@ -42,16 +40,42 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 本人限定チェック
-		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
-			return response;
-		}
 		try {
+			// アクセス権限ユーザ一覧を取得する
+			List<Integer> useridlist = accessService.getAccessUsers(model.getLoginInfo().getLoginuserid());
 			// マイプロダクト一覧を取得する
-			List<Cloud_productModel> list = cloud_productService.getMyProductList(model);
+			List<Cloud_productModel> list = cloud_productService.getMyProductList(useridlist, model);
+
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			response.setCount(list.size());
+			response.setData(Util.getJsonString(list));
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
+	 * プロダクトを検索する
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/searchMyProduct", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> searchMyProduct(@RequestBody Cloud_productModel model) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// マイプロダクトを検索する
+			List<Cloud_productModel> list = cloud_productService.searchMyProductList(model);
 
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
@@ -80,22 +104,15 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 本人限定チェック
-		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
-			return response;
-		}
 		try {
 			// プロダクト詳細を取得する
-			Cloud_productEntity entity = cloud_productService.getProductDetail(model.getProductid());
+			Cloud_productModel cloud_productModel = cloud_productService.getProductDetail(model.getProductid());
 
-			if (entity != null) {
+			if (cloud_productModel != null) {
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-				response.setData(this.getJsonFromCloud_productEntity(entity));
+				response.setData(Util.getJsonString(cloud_productModel));
 			} else {
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0004);
@@ -124,13 +141,6 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 本人限定チェック
-		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
-			return response;
-		}
 		try {
 			Cloud_productEntity inserEntity = getCloud_productEntity(model);
 
@@ -170,16 +180,9 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 本人限定チェック
-		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
-			return response;
-		}
 		try {
 
-			Cloud_productEntity updateEntity = getCloud_productEntity(model);
+			Cloud_productEntity updateEntity = getCloud_productEntityforUpdate(model);
 
 			/* 更新するため、productidを設定する */
 			if (model.getProductid() == null) {
@@ -229,13 +232,6 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 本人限定チェック
-		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
-			return response;
-		}
 		try {
 			/* 削除するため、productidを設定する */
 			if (model.getProductid() == null) {
@@ -274,13 +270,6 @@ public class Cloud_productController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// 本人限定チェック
-		if (model.getTargetUserInfo().getTargetuserid() != model.getLoginInfo().getLoginuserid()) {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "本人限定です。");
-			return response;
-		}
 		try {
 			/* 一括削除する */
 			cloud_productService.deleteProducts(model.getProductidlist());
@@ -315,6 +304,7 @@ public class Cloud_productController {
 		entity.setVersion(model.getVersion());
 		entity.setSimflag(model.getSimflag());
 		entity.setSummary(model.getSummary());
+		entity.setCreateuserid(model.getTargetUserInfo().getTargetuserid());
 		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
@@ -325,27 +315,27 @@ public class Cloud_productController {
 	}
 
 	/**
-	 * プロダクトのEntityからJson作成
-	 * @param entity Cloud_productEntity
-	 * @return String Json形式
+	 * プロダクトを更新するためのEntity作成
+	 * @param model Cloud_productModel
+	 * @return Cloud_productEntity
 	 */
-	private String getJsonFromCloud_productEntity(Cloud_productEntity entity) {
+	private Cloud_productEntity getCloud_productEntityforUpdate(Cloud_productModel model) {
+		Cloud_productEntity entity = new Cloud_productEntity();
 
-		if (entity == null ) {
-			return "";
-		}
-		JSONObject resJasonObj = new JSONObject();
-		// 情報設定
-		resJasonObj.put("productid", entity.getProductid());
-		resJasonObj.put("producttypeid", entity.getProducttypeid());
-		resJasonObj.put("productcode", entity.getProductcode());
-		resJasonObj.put("productname", entity.getProductname());
-		resJasonObj.put("model", entity.getModel());
-		resJasonObj.put("version", entity.getVersion());
-		resJasonObj.put("simflag", entity.getSimflag());
-		resJasonObj.put("summary", entity.getSummary());
+		/* システム日時 */
+		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+		entity.setProductcode(model.getProductcode());
+		entity.setProducttypeid(model.getProducttypeid());
+		entity.setProductname(model.getProductname());
+		entity.setModel(model.getModel());
+		entity.setVersion(model.getVersion());
+		entity.setSimflag(model.getSimflag());
+		entity.setSummary(model.getSummary());
+		entity.setAlive(AliveConstant.ALIVE);
+		entity.setU_uid(model.getLoginInfo().getLoginuserid());
+		entity.setU_time(systemTime);
 
-		return resJasonObj.toString();
+		return entity;
 	}
 
 }

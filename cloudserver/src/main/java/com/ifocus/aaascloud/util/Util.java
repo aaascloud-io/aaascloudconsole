@@ -4,12 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -29,14 +23,14 @@ public class Util {
 	private static final Logger LOG = LoggerFactory.getLogger(Util.class);
 
 	private Util () {
-		
+
 	}
 
 	private static KeyCloakUserService keyCloakUserService;
-	
+
 	@Autowired
 	private KeyCloakUserService autoWiredKUS;
-	
+
 	@PostConstruct
 	public void setKeyCloakUserService() {
 		Util.keyCloakUserService = autoWiredKUS;
@@ -107,7 +101,7 @@ public class Util {
 		LOG.info("getUserModels() START");
 
 		// KeyCloakサービスを呼び出し
-		List<UserModel> returnList = new ArrayList();
+		List<UserModel> returnList = new ArrayList<UserModel>();
 		for (Cloud_userModel model:modelList) {
 			// ユーザ情報取得
 			UserModel userModel = keyCloakUserService.getUserModelFromUsername(model.getUsername());
@@ -145,25 +139,10 @@ public class Util {
 	 * @return List<String> デバイスのIMEIリスト
 	 */
 	public static List<String> getImeiList(List<Cloud_deviceModel> deviceList) {
-		List<String> returnList = new ArrayList();
+		List<String> returnList = new ArrayList<String>();
 		for (Cloud_deviceModel model:deviceList) {
 			if (model.getImei() != null) {
 				returnList.add(model.getImei().trim());
-			}
-		}
-		return returnList;
-	}
-
-	/**
-	 * モデルからICCID取得
-	 * @param deviceList List<Cloud_deviceModel> デバイスリスト
-	 * @return List<String> デバイスのICCIDリスト
-	 */
-	public static List<String> getIccidList(List<Cloud_deviceModel> deviceList) {
-		List<String> returnList = new ArrayList();
-		for (Cloud_deviceModel model:deviceList) {
-			if (model.getIccid() != null) {
-				returnList.add(model.getIccid().trim());
 			}
 		}
 		return returnList;
@@ -175,7 +154,7 @@ public class Util {
 	 * @return List<String> デバイスのSNリスト
 	 */
 	public static List<String> getSnList(List<Cloud_deviceModel> deviceList) {
-		List<String> returnList = new ArrayList();
+		List<String> returnList = new ArrayList<String>();
 		for (Cloud_deviceModel model:deviceList) {
 			if (model.getSn() != null) {
 				returnList.add(model.getSn().trim());

@@ -3,12 +3,22 @@ package com.ifocus.aaascloud.model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.ifocus.aaascloud.constant.CommonConstant;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Cloud_userModel {
+public class Cloud_userModel extends UserModel {
+
+	public Cloud_userModel() {
+		super(null, null, null, null, null);
+	}
+
+	public Cloud_userModel(String uid, String username, String firstName, String lastName, String email) {
+		super(uid, username, firstName, lastName, email);
+	}
 
 	private LoginInfo loginInfo;
 	private TargetUserInfo targetUserInfo;
@@ -18,6 +28,9 @@ public class Cloud_userModel {
 	private Integer userid;
 	private Integer companyid;
 	private String username;
+	private String firstName;
+	private String lastName;
+	private String email;
 	private String loginid;
 	private String password;
 	private Integer role;
@@ -42,4 +55,55 @@ public class Cloud_userModel {
 	// ユーザ数
 	private Integer usercount;
 
+	/*
+	 * companyname情報検索条件取得
+	 *
+	 */
+	public String getCompanynameForSearch() {
+
+		if (this.companyname == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.companyname.trim() + "%";
+		}
+	}
+
+	/*
+	 * firstName情報検索条件取得
+	 *
+	 */
+	public String getFirstNameForSearch() {
+
+		if (this.firstName == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.firstName.trim() + "%";
+		}
+	}
+
+	/*
+	 * lastName情報検索条件取得
+	 *
+	 */
+	public String getLastNameForSearch() {
+
+		if (this.lastName == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.lastName.trim() + "%";
+		}
+	}
+
+	/*
+	 * email情報検索条件取得
+	 *
+	 */
+	public String getEmailForSearch() {
+
+		if (this.email == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.email.trim() + "%";
+		}
+	}
 }

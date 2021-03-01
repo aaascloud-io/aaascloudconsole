@@ -22,7 +22,6 @@ public class Cloud_deviceModel {
 	private String groupname;
 	private String devicename;
 	private String imei;
-	private String iccid;
 	private String sn;
 	private String sim_iccid;
 	private String sim_imsi;

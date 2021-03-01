@@ -24,9 +24,8 @@ public class Cloud_deviceEntity {
 	private Integer projectid;
 	private Integer groupid;
 	private String devicename;
-	private String imei;
-	private String iccid;
 	private String sn;
+	private String imei;
 	private String sim_iccid;
 	private String sim_imsi;
 	private String sim_tel;

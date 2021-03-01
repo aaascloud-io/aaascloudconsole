@@ -44,7 +44,6 @@ export class ProjectComponent implements OnInit {
   selectedErrorItem:any;
 
 
-
   columns: any = [];
   contactName: any;
   contactEmail: any;
@@ -68,6 +67,9 @@ export class ProjectComponent implements OnInit {
   selected = [];
   temp = [];
   temp2 = this.rows;
+
+  selectedProject: any;
+  searchValue:any;
 
   public config: PerfectScrollbarConfigInterface = { };
 
@@ -113,15 +115,17 @@ export class ProjectComponent implements OnInit {
         projectSummary:'',
         userId:'',
       },
-      updataProduct: {
-        productId: 0,
-        productTypeId: 0,
-        productcode: '',
-        productName: '',
-        model: '',
-        version: '',
-        sim: 0,
-        summary: ''
+      projectDetail: {
+        deviceCounts:'',
+        groupCounts:'',
+        productid:'',
+        projectid:'',
+        projectname:'',
+        projectsummary:'',
+        alive:'',
+        groupList:[],
+        deviceList:[],
+        userId:1,
       },
       loginUser: {
         loginuserid: null,
@@ -141,21 +145,6 @@ export class ProjectComponent implements OnInit {
      * OnInit
      */
   ngOnInit() {
-    // this.rows.push(new Contact(1, 'Scott Marsh', 'scott@gmail.com', '(954)-654-5641',
-    //   '../../../assets/images/portrait/small/avatar-s-5.png', false, 'online'));
-    // this.rows.push(new Contact(2, 'Russell Bry', 'russell@gmail.com', '(235)-654-5642',
-    //   '../../../assets/images/portrait/small/avatar-s-3.png', false, 'busy'));
-    // this.rows.push(new Contact(3, 'james john', 'john@gmail.com', '(125)-654-5643',
-    //   '../../../assets/images/portrait/small/avatar-s-1.png', true, 'away'));
-    // this.rows.push(new Contact(4, 'Cynth Tuck', 'tuck@gmail.com', '(974)-654-5644',
-    //   '../../../assets/images/portrait/small/avatar-s-4.png', false, 'busy'));
-    // this.rows.push(new Contact(5, 'Margi Govan', 'govan@gmail.com', '(954)-654-5645',
-    //   '../../../assets/images/portrait/small/avatar-s-6.png', true, 'online'));
-    // this.rows.push(new Contact(6, 'Eugene Wood', 'wood@gmail.com', '(987)-654-5646',
-    //   '../../../assets/images/portrait/small/avatar-s-9.png', false, 'busy'));
-    // this.rows.push(new Contact(7, 'Eric Marshall', 'eric@gmail.com', '(545)-654-5647',
-    //   '../../../assets/images/portrait/small/avatar-s-7.png', false, 'online'));
-
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     console.log("这里是project的item数据");
     console.log(item);
@@ -183,11 +172,7 @@ export class ProjectComponent implements OnInit {
   }
 
   async initData(){
-    // var param = {
-    //   username:"ifocus"
-    // };
     this.rows = [];
-
     var res = await this.httpService.post("/getProjects",this.pageModel.userInfoParame);
     console.log("这里是project的res数据");
     console.log(res);
@@ -288,6 +273,59 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  searchProject(){
+    console.log("这是搜索条件");
+    console.log(this.searchValue);
+    let routeif: UserInfo = this.dataFatoryService.getUserInfo();
+    if (routeif != null) {
+
+      var param = {
+        "loginInfo": {
+          "loginuserid": routeif.uid,
+          "loginusername": routeif.login_id,
+          "loginrole": routeif.role,
+          "logincompanyid": routeif.company
+        },
+        "targetUserInfo": {
+          "targetuserid": routeif.uid,
+          "targetuserCompanyid": routeif.company
+        },
+        "projectname": this.searchValue,
+      };
+      console.log("这是目前的 param");
+      console.log(param);
+
+      this.httpService.useRpPost('searchProjects',param).then(item=>{
+        console.log("这是 searchProject 的 item");
+        console.log(item);
+        let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
+        console.log("这是jsonItem的值");
+        console.log(jsonItem);
+        this.rows = [];
+        jsonItem.forEach(element => {
+          this.pageModel.data.push(element);
+          this.rows.push(element);
+        });
+        console.log("这是rows的data值");
+        console.log(this.rows);
+
+        this.rows = [...this.rows];
+        this.temp2 = [...this.rows];
+        console.log("这是...运算符后的data值");
+        console.log(this.rows);
+
+      });
+    }
+  }
+
+
+  clearSearchProject(){
+    this.searchValue = "";
+    console.log("清除搜索条件");
+    console.log(this.searchValue);
+    this.ngOnInit();
+  }
+
   // プロジェクト削除
   /**
    * Delete contact row
@@ -297,7 +335,8 @@ export class ProjectComponent implements OnInit {
     let index = 0;
     console.log("这是 delete 里面的 row");
     console.log(row);
-    let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    if (confirm(row.projectname + "を削除します。よろしいですか？")){
+      let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     if (routeif != null) {
       var param = {
         "loginInfo": {
@@ -336,6 +375,8 @@ export class ProjectComponent implements OnInit {
           alert(e);
         }
       });
+    }
+    
 
     // const temp = [...this.rows];
     // for (const tempRow of temp) {
@@ -368,13 +409,90 @@ export class ProjectComponent implements OnInit {
   //   this.contactFlag = false;
   // }
 
-  editTableDataModal(editTableDataModalContent, row) {
-    this.selectedContact = Object.assign({}, row);
-    this.selectedErrorItem = Object.assign({},row);
-    this.editModal = this.modal.open(editTableDataModalContent, {
+
+  // プロジェクト詳細と修正
+    // // Modal を開く
+  editProjectDataModal(editProjectDataModalContent, row) {
+    // this.selectedContact = Object.assign({}, row);
+    this.selectedProject = Object.assign({},row);
+
+    console.log("这是 edit 功能内的 selectedProject 值");
+    console.log(this.selectedProject);
+
+    this.editModal = this.modal.open(editProjectDataModalContent, {
       windowClass: 'animated fadeInDown'
     });
     this.contactFlag = false;
+  }
+
+    // ModalデータをAPIに更新
+  /**
+   * Update contact details
+   *
+   * @param projectEditForm      Edit form for values check
+   * @param projectid      Id match to the selected row Id
+   */
+  projectDataUpdate(projectEditForm: NgForm, projectid) {
+    console.log("这是 projectDataUpdate 方法里传入的 projectEditForm 和 projectid");
+    console.log(projectEditForm);
+    console.log(projectid);
+    console.log("这是目前的 selectedProject");
+    console.log(this.selectedProject);
+
+    let routeif: UserInfo = this.dataFatoryService.getUserInfo();
+    if (routeif != null) {
+      this.pageModel.projectDetail.projectid = projectid;
+      this.pageModel.projectDetail.productid = this.selectedProject.productid;
+      this.pageModel.projectDetail.projectname = this.selectedProject.projectname;
+      this.pageModel.projectDetail.projectsummary = this.selectedProject.projectsummary;
+      var param = {
+        "loginInfo": {
+          "loginuserid": routeif.uid,
+          "loginusername": routeif.login_id,
+          "loginrole": routeif.role,
+          "logincompanyid": routeif.company
+        },
+        "targetUserInfo": {
+          "targetuserid": routeif.uid,
+          "targetuserCompanyid": routeif.company
+        },
+        "projectid": this.pageModel.projectDetail.projectid,
+        "productid": this.pageModel.projectDetail.productid,
+        "projectname": this.pageModel.projectDetail.projectname,
+        "projectsummary": this.pageModel.projectDetail.projectsummary,
+      };
+      console.log("这是目前的 param");
+      console.log(param);
+
+      this.httpService.useRpPut('updateProject', param).then(item => {
+        console.log("这是目前的 item");
+        console.log(item);
+        try {
+          if (item.resultCode == "0000") {
+  
+            this.ngOnInit();
+            alert('プロジェクト情報を改修しました');
+          if (projectEditForm.valid === true) {
+  
+            projectEditForm.reset();
+            this.editModal.close(projectEditForm.resetForm);
+          }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }
+  }
+
+  closeProjectEditModal(editProjectDataModalContent){
+    
+  }
+
+
+  // デバイス連携
+  deviceLink(deviceLinkModalContent,row){
+
   }
 
   /**
@@ -389,21 +507,7 @@ export class ProjectComponent implements OnInit {
   }
 
 
-  /**
-   * Search contact from contact table
-   *
-   * @param event     Convert value uppercase to lowercase;
-   */
-  updateFilter(event) {
-    const val = event.target.value;
-    this.rows = [...this.temp2];
-    this.temp = [...this.rows];
-    const temp = this.rows.filter(function (d) {
-      return d.projectname.toLowerCase().indexOf(val) !== -1 || !val;
-    });
-    this.rows = temp;
-    this.table.offset = 0;
-  }
+  
 
   /**
    * Choose contact image
@@ -639,4 +743,30 @@ export class ProjectComponent implements OnInit {
       this._renderer.removeClass(toggle, 'show');
     }
   }
+
+
+
+
+
+
+  // デバイス検索（本地検索）、機能廃棄、API検索に交換
+    // 用法：
+        // 在搜索框中监测按键抬起  (keyup)='updateFilter($event)'
+  /**
+   * Search contact from contact table
+   *
+   * @param event     Convert value uppercase to lowercase;
+   */
+  updateFilter(event) {
+    const val = event.target.value;
+    this.rows = [...this.temp2];
+    this.temp = [...this.rows];
+    const temp = this.rows.filter(function (d) {
+      return d.projectname.toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    this.rows = temp;
+    this.table.offset = 0;
+  }
+
+
 }
