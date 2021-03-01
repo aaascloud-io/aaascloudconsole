@@ -111,7 +111,7 @@
       <div class="form-group col-12">
         <h6>ユーザー名</h6>
         <input type="text" [(ngModel)]="selectedContact.username" #editusername="ngModel" name="username" id="username"
-          class="name form-control" placeholder="ユーザー名" disabled>
+          class="name form-control" placeholder="ユーザー名" disabled maxlength="50">
       </div>
       <div class="form-group col-12">
         <h6>権限</h6>
@@ -125,50 +125,37 @@
       <div class="form-group col-12">
         <h6>会社名</h6>
         <input type="text" [(ngModel)]="pageModel.updataUserInfo.companyname" #editcompanyname="ngModel"
-          name="companyname" id="companyname" class="name form-control" placeholder="会社名">
+          name="companyname" id="companyname" class="name form-control" placeholder="会社名" maxlength="50">
       </div>
-      <!-- <div class="form-group col-12">
-        <h6 style="width: 410px;">会社名</h6>
-        <select class="form-control" name="company" id="company" [(ngModel)]="pageModel.updataUserInfo.companyid"
-          placeholder="選択してください。" #editcompanyid="ngModel" (change)="show()"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required disabled>
-          <option *ngFor="let companyInfo of pageModel.companyInfoAll; let i = index" [ngValue]="companyInfo.companyid">
-            {{companyInfo.companyname}}
-          </option>
-        </select>
-        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">ユーザータイプを選んでください</div>
-        </div>
-      </div> -->
       <div class="form-group col-12">
         <h6>法人番号</h6>
         <input type="text" [(ngModel)]="pageModel.updataUserInfo.corporatenumber" #editcorporatenumber="ngModel"
-          name="corporatenumber" id="corporatenumber" class="name form-control" placeholder="法人番号">
+          name="corporatenumber" id="corporatenumber" class="name form-control" placeholder="法人番号" maxlength="13">
       </div>
       <div class="form-group col-12">
         <h6>アドレス</h6>
         <input type="text" [(ngModel)]="pageModel.updataUserInfo.address" #editaddress="ngModel" name="address"
-          id="address" class="name form-control" placeholder="アドレス">
+          id="address" class="name form-control" placeholder="アドレス" maxlength="100">
       </div>
       <div class="form-group col-12">
         <h6>業種</h6>
         <input type="text" [(ngModel)]="pageModel.updataUserInfo.industry" #editindustry="ngModel" name="industry"
-          id="industry" class="name form-control" placeholder="業種">
+          id="industry" class="name form-control" placeholder="業種" maxlength="50">
       </div>
       <div class="form-group col-12">
         <h6>メール</h6>
         <input type="text" [(ngModel)]="pageModel.updataUserInfo.mail" #editmail="ngModel" name="mail" id="mail"
-          class="name form-control" placeholder="メール">
+          class="name form-control" placeholder="メール" maxlength="50">
       </div>
       <div class="form-group col-12">
         <h6>電話</h6>
         <input type="text" [(ngModel)]="pageModel.updataUserInfo.tel" #edittel="ngModel" name="tel" id="tel"
-          class="name form-control" placeholder="電話">
+          class="name form-control" placeholder="電話" maxlength="13">
       </div>
       <div class="form-group col-12">
         <h6>Fax</h6>
         <input type="text" [(ngModel)]="pageModel.updataUserInfo.fax" #editfax="ngModel" name="fax" id="fax"
-          class="name form-control" placeholder="Fax">
+          class="name form-control" placeholder="Fax" maxlength="13">
       </div>
 
     </div>
@@ -247,32 +234,32 @@
                   <h6>法人番号</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.corporatenumber"
                     #editversion="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
-                    placeholder="法人番号" disabled>
+                    placeholder="法人番号" disabled maxlength="13">
                 </div>
                 <div class="form-group col-12">
                   <h6>アドレス</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.address" #editversion="ngModel"
-                    name="address" id="address" class="name form-control" placeholder="アドレス" disabled>
+                    name="address" id="address" class="name form-control" placeholder="アドレス" disabled maxlength="100">
                 </div>
                 <div class="form-group col-12">
                   <h6>業種</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.industry" #editversion="ngModel"
-                    name="industry" id="industry" class="name form-control" placeholder="業種" disabled>
+                    name="industry" id="industry" class="name form-control" placeholder="業種" disabled maxlength="50">
                 </div>
                 <div class="form-group col-12">
                   <h6>メール</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.mail" #editversion="ngModel"
-                    name="mail" id="mail" class="name form-control" placeholder="メール" disabled>
+                    name="mail" id="mail" class="name form-control" placeholder="メール" disabled maxlength="50">
                 </div>
                 <div class="form-group col-12">
                   <h6>電話</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.tel" #editversion="ngModel"
-                    name="tel" id="tel" class="name form-control" placeholder="電話" disabled>
+                    name="tel" id="tel" class="name form-control" placeholder="電話" disabled maxlength="13">
                 </div>
                 <div class="form-group col-12">
                   <h6>Fax</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.fax" #editversion="ngModel"
-                    name="fax" id="fax" class="name form-control" placeholder="Fax" disabled>
+                    name="fax" id="fax" class="name form-control" placeholder="Fax" disabled maxlength="13">
                 </div>
                 <div class="modal-footer">
                   <div class="form-group position-relative has-icon-left mb-0">
@@ -300,34 +287,34 @@
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.corporatenumber"
                     #editversion="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
                     placeholder="法人番号" [ngClass]="{ 'is-invalid': editAddForm.submitted && editname.invalid }" required>
-                  <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback">
+                  <div *ngIf="editAddForm.submitted && editname.invalid" class="invalid-feedback" maxlength="13">
                     <div *ngIf="editname.errors.required">法人番号を入力してください</div>
                   </div>
                 </div>
                 <div class="form-group col-12">
                   <h6>アドレス</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.address" #editversion="ngModel"
-                    name="address" id="address" class="name form-control" placeholder="アドレス">
+                    name="address" id="address" class="name form-control" placeholder="アドレス" maxlength="100">
                 </div>
                 <div class="form-group col-12">
                   <h6>業種</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.industry" #editversion="ngModel"
-                    name="industry" id="industry" class="name form-control" placeholder="業種">
+                    name="industry" id="industry" class="name form-control" placeholder="業種" maxlength="50">
                 </div>
                 <div class="form-group col-12">
                   <h6>メール</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.mail" #editversion="ngModel"
-                    name="mail" id="mail" class="name form-control" placeholder="メール">
+                    name="mail" id="mail" class="name form-control" placeholder="メール" maxlength="50">
                 </div>
                 <div class="form-group col-12">
                   <h6>電話</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.tel" #editversion="ngModel"
-                    name="tel" id="tel" class="name form-control" placeholder="電話">
+                    name="tel" id="tel" class="name form-control" placeholder="電話" maxlength="13">
                 </div>
                 <div class="form-group col-12">
                   <h6>Fax</h6>
                   <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.fax" #editversion="ngModel"
-                    name="fax" id="fax" class="name form-control" placeholder="Fax">
+                    name="fax" id="fax" class="name form-control" placeholder="Fax" maxlength="13">
                 </div>
                 <div class="modal-footer">
                   <div class="form-group position-relative has-icon-left mb-0">
@@ -344,164 +331,3 @@
     </div>
   </form>
 </ng-template>
-
-<!-- <ng-template #addTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">登録</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group col-12">
-        <input type="text" [(ngModel)]="contactName" name="name" id="contact-name" class="contact-name form-control"
-          placeholder="IMEI" #contactname="ngModel"
-          [ngClass]="{ 'is-invalid': addForm.submitted && contactname.invalid }" required>
-        <div *ngIf="addForm.submitted && contactname.invalid" class="invalid-feedback">
-          <div *ngIf="contactname.errors.required">Name is required</div>
-        </div>
-      </div>
-      <div class="form-group col-12">
-        <input type="text" [(ngModel)]="contactEmail" name="email" id="contact-email" class="contact-email form-control"
-          placeholder="ICCID" #contactemail="ngModel"
-          [ngClass]="{ 'is-invalid':addForm.submitted && contactemail.invalid }" required email>
-        <div *ngIf="addForm.submitted && contactemail.invalid" class="invalid-feedback">
-          <div *ngIf="contactemail.errors.required">Email is required</div>
-          <div *ngIf="contactemail.errors.email">Email must be a valid email address</div>
-        </div>
-      </div>
-      <div class="form-group col-12">
-        <input type="text" [(ngModel)]="contactPhone" name="contactPhone" #contactphone="ngModel" id="contact-phone"
-          class="contact-phone form-control" placeholder="IMSI" (keyup)="onFormat()" maxlength="14">
-      </div>
-      <div class="form-group col-12">
-        <h4 class="card-title">識別コード</h4>
-        <input type="text" class="form-control" id="defaultInputText" placeholder="識別コード">
-      </div>
-
-
-      <div class="form-group col-12">
-
-        <ng-select [items]="singleSelectArray" [searchable]="true" bindLabel="item_text" placeholder="所有者"
-          [(ngModel)]="singlebasicSelected">
-        </ng-select>
-      </div>
-      <div class="form-group col-12">
-
-        <ng-select [searchable]="true" bindLabel="item_text" placeholder="暗号化通信" [(ngModel)]="singlebasicSelected">
-          <option value=0 selected>OFF</option>
-          <option value=1>ON</option>
-        </ng-select>
-      </div>
-
-      <div class="form-group col-12">
-        <h6>暗号化キー</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
-      </div>
-      <div class="form-group col-12">
-        <h6>接続サーバーアドレス</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
-      </div>
-      <div class="form-group col-12">
-        <h6>接続サーバーポート番号</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
-      </div>
-      <div class="form-group col-12">
-        <h6>バンディング済みフラグ</h6>
-        <input type="text" class="form-control" id="" placeholder="空白の場合、サーバーで自動生成します">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <div class="form-group position-relative has-icon-left mb-0">
-        <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
-      </div>
-    </div>
-  </form>
-</ng-template> -->
-
-<!-- <ng-template #addTableDatasModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">一括登録</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group col-12">
-        <i class="feather ft-download info" (click)="downloadSampleFiles()">サンプルファイルをダウンロード</i>
-      </div>
-      <div class="custom-file form-group col-12">
-        <input type="file" class="custom-file-input" accept='contactImage/*' (change)="changeTarget($event)"
-          id="customFile">
-        <label class="custom-file-label">ファイルを選択</label>
-      </div>
-    </div>
-    <div class="form-group col-12">
-      <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
-        <thead>
-          <tr>
-            <th scope="col">no.</th>
-            <th scope="col">imei</th>
-            <th scope="col">iccid</th>
-            <th scope="col">imsi</th>
-            <th scope="col">uid</th>
-            <th scope="col">secMode</th>
-            <th scope="col">psk</th>
-            <th scope="col">host</th>
-            <th scope="col">port</th>
-            <th scope="col">bind</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of pageModel.dataAll; let i = index;">
-            <td data-label="no.">{{i + 1}}</td>
-            <td data-label="imei">{{item.imei}}</td>
-            <td data-label="iccid">{{item.iccid}}</td>
-            <td data-label="imsi">{{item.imsi}}</td>
-            <td data-label="uid">{{item.uid}}</td>
-            <td data-label="secMode">{{item.securityMode}}</td>
-            <td data-label="psk">{{item.psk}}</td>
-            <td data-label="host">{{item.serverHost}}</td>
-            <td data-label="port">{{item.serverPort}}</td>
-            <td data-label="bind">{{item.isBind}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="modal-footer">
-      <div class="form-group position-relative has-icon-left mb-0">
-        <button type="button" id="add-contact-item" class="btn btn-info add-contact-item"><i
-            class="la la-paper-plane-o d-lg-none"></i>
-          <span class="d-none d-lg-block">一括登録</span></button>
-      </div>
-    </div>
-  </form>
-</ng-template> -->
-<!-- <ng-template #addGroupModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">グループ選択</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group col-12">
-        <label class="card-title" for="countrySelect">グループを選択してください。</label>
-        <ng-select [items]="singleSelectArray" [searchable]="true" bindLabel="item_text" placeholder="所有者"
-          [(ngModel)]="singlebasicSelected">
-        </ng-select>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <div class="form-group position-relative has-icon-left mb-0">
-        <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
-      </div>
-    </div>
-  </form>
-</ng-template> -->

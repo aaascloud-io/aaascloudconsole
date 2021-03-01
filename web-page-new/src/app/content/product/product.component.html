@@ -186,17 +186,17 @@
       <div class="form-group col-12">
         <h6>プロダクトコード</h6>
         <input type="text" [(ngModel)]="selectedContact.productcode" #editmodel="ngModel" name="productcode"
-          id="productcode" class="name form-control" placeholder="プロダクトコード">
+          id="productcode" class="name form-control" placeholder="プロダクトコード" maxlength="10">
       </div>
       <div class="form-group col-12">
         <h6>型番</h6>
         <input type="text" [(ngModel)]="selectedContact.model" #editmodel="ngModel" name="model" id="model"
-          class="name form-control" placeholder="型番">
+          class="name form-control" placeholder="型番" maxlength="20">
       </div>
       <div class="form-group col-12">
         <h6>バージョン</h6>
         <input type="text" [(ngModel)]="selectedContact.version" #editversion="ngModel" name="version" id="version"
-          class="name form-control" placeholder="バージョン">
+          class="name form-control" placeholder="バージョン" maxlength="20">
       </div>
       <div class="form-group col-12">
         <h6>SIMカード有無</h6>
@@ -208,7 +208,7 @@
       <div class="form-group col-12">
         <h6>説明</h6>
         <textarea id="summary" rows="5" class="form-control square" name="message" [(ngModel)]="selectedContact.summary"
-          placeholder="message"></textarea>
+          placeholder="message" maxlength="100"></textarea>
       </div>
 
     </div>
@@ -246,7 +246,7 @@
         <h6>プロダクト名</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.productName" #editname="ngModel" name="name" id="name"
           class="name form-control" placeholder="プロダクト名"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required maxlength="50">
         <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
           <div *ngIf="editname.errors.required">プロダクト名を入力してください</div>
         </div>
@@ -254,17 +254,17 @@
       <div class="form-group col-12">
         <h6>プロダクトコード</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.productcode" #editmodel="ngModel" name="productcode"
-          id="productcode" class="name form-control" placeholder="プロダクトコード">
+          id="productcode" class="name form-control" placeholder="プロダクトコード" maxlength="10">
       </div>
       <div class="form-group col-12">
         <h6>型番</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.model" #editmodel="ngModel" name="model" id="model"
-          class="name form-control" placeholder="型番">
+          class="name form-control" placeholder="型番" maxlength="20">
       </div>
       <div class="form-group col-12">
         <h6>バージョン</h6>
         <input type="text" [(ngModel)]="pageModel.addProduct.version" #editversion="ngModel" name="version" id="version"
-          class="name form-control" placeholder="バージョン">
+          class="name form-control" placeholder="バージョン" maxlength="20">
       </div>
       <div class="form-group col-12">
         <h6>SIMカード有無</h6>
@@ -276,7 +276,7 @@
       <div class="form-group col-12">
         <h6>説明</h6>
         <textarea id="summary" rows="5" class="form-control square" name="summary"
-          [(ngModel)]="pageModel.addProduct.summary" placeholder="summary"></textarea>
+          [(ngModel)]="pageModel.addProduct.summary" placeholder="summary" maxlength="100"></textarea>
       </div>
 
     </div>
