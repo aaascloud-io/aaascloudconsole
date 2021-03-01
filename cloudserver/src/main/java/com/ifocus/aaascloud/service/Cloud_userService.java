@@ -149,6 +149,28 @@ public class Cloud_userService {
 	}
 
 	/*
+	 * 配下ユーザ一覧取得
+	 *
+	 *
+	 */
+	public List<Cloud_userModel> getUnderUsers(List<Integer> userids) throws Exception {
+		List<Cloud_userEntity> returnList = (List<Cloud_userEntity>) cloud_userRepository.findAllById(userids);
+		return getModelsByEntitys(returnList);
+
+	}
+
+//	/*
+//	 * 配下ユーザ検索
+//	 *
+//	 *
+//	 */
+//	public List<Cloud_userModel> searchUnderUsers(List<Integer> userids, Cloud_userModel model) throws Exception {
+//		List<Cloud_userEntity> returnList = (List<Cloud_userEntity>) cloud_userRepository.searchUnderUsersByCompanyname(userids, model.getCompanynameForSearch());
+//		return getModelsByEntitys(returnList);
+//
+//	}
+
+	/*
 	 * ユーザ登録
 	 * @param loginInfo LoginInfo
 	 * @param cloud_userModel Cloud_userModel

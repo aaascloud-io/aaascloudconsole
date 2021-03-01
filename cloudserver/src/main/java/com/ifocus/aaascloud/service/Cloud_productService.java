@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
+import com.ifocus.aaascloud.entity.Cloud_producttypeEntity;
+import com.ifocus.aaascloud.entity.Cloud_producttypeRepository;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 
 @SpringBootApplication
@@ -22,6 +24,8 @@ public class Cloud_productService {
 
 	@Autowired
 	private Cloud_productRepository cloud_productRepository ;
+	@Autowired
+	private Cloud_producttypeRepository cloud_producttypeRepository ;
 
 	/*
 	 *マイプロダクト一覧取得
@@ -29,7 +33,21 @@ public class Cloud_productService {
 	 *
 	 */
 	public List<Cloud_productModel> getMyProductList(Cloud_productModel model) throws Exception {
-		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByUserid(model.getLoginInfo().getLoginuserid());
+		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByUserid(model.getTargetUserInfo().getTargetuserid());
+		return getModelsByEntitys(list);
+
+	}
+
+	/*
+	 *マイプロダクト検索
+	 *
+	 *
+	 */
+	public List<Cloud_productModel> searchMyProductList(Cloud_productModel model) throws Exception {
+		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByProducttypenameAndProductname(
+				model.getTargetUserInfo().getTargetuserid(),
+				model.getProducttypenameForSearch(),
+				model.getProductnameForSearch());
 		return getModelsByEntitys(list);
 
 	}
@@ -59,7 +77,7 @@ public class Cloud_productService {
 	}
 
 	/*
-	 * プロダクトID一覧（プロダクト数取得用）
+	 * プロダクト検索（プロダクト管理用）
 	 * @param userids List<Integer> ターゲットユーザーIDリスト
 	 * @List<Integer> プロジェクト一覧
 	 */
@@ -123,7 +141,7 @@ public class Cloud_productService {
 	 *
 	 */
 	public List<Cloud_productModel> getModelsByEntitys(List<Cloud_productEntity> entityList) throws Exception {
-		List<Cloud_productModel> modelList = new ArrayList();
+		List<Cloud_productModel> modelList = new ArrayList<Cloud_productModel>();
 		for (Cloud_productEntity entity:entityList) {
 			modelList.add(getModelByEntity(entity));
 		}
@@ -142,6 +160,11 @@ public class Cloud_productService {
 		Cloud_productModel model = new Cloud_productModel();
 		model.setProductid(entity.getProductid());
 		model.setProducttypeid(entity.getProducttypeid());
+
+		// プロダクトタイプ取得＆設定
+		Optional<Cloud_producttypeEntity> producttype = cloud_producttypeRepository.findById(entity.getProducttypeid());
+		model.setProducttypename(producttype.get().getProducttypename());
+
 		model.setProductcode(entity.getProductcode());
 		model.setProductname(entity.getProductname());
 		model.setModel(entity.getModel());

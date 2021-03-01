@@ -366,7 +366,6 @@ public class Cloud_deviceService {
 		model.setGroupid(entity.getGroupid());
 		model.setDevicename(entity.getDevicename());
 		model.setImei(entity.getImei());
-		model.setIccid(entity.getIccid());
 		model.setSn(entity.getSn());
 		model.setSim_iccid(entity.getSim_iccid());
 		model.setSim_imsi(entity.getSim_imsi());
@@ -412,7 +411,6 @@ public class Cloud_deviceService {
 		model.setGroupid(entity.getGroupid());
 		model.setDevicename(entity.getDevicename());
 		model.setImei(entity.getImei());
-		model.setIccid(entity.getIccid());
 		model.setSn(entity.getSn());
 		model.setSim_iccid(entity.getSim_iccid());
 		model.setSim_imsi(entity.getSim_imsi());
@@ -522,7 +520,6 @@ public class Cloud_deviceService {
 		entity.setGroupid(CommonConstant.GROUP_NOT_SET);
 		entity.setDevicename(model.getDevicename());
 		entity.setImei(model.getImei());
-		entity.setIccid(model.getIccid());
 		entity.setSn(model.getSn());
 		entity.setSim_iccid(model.getSim_iccid());
 		entity.setSim_imsi(model.getSim_imsi());
@@ -576,7 +573,6 @@ public class Cloud_deviceService {
 
 		entity.setDevicename(model.getDevicename());
 		entity.setImei(model.getImei());
-		entity.setIccid(model.getIccid());
 		entity.setSn(model.getSn());
 		entity.setSim_iccid(model.getSim_iccid());
 		entity.setSim_imsi(model.getSim_imsi());
@@ -623,7 +619,6 @@ public class Cloud_deviceService {
 		entity.setGroupid(model.getGroupid());
 		entity.setDevicename(model.getDevicename());
 		entity.setImei(model.getImei());
-		entity.setIccid(model.getIccid());
 		entity.setSn(model.getSn());
 		entity.setSim_iccid(model.getSim_iccid());
 		entity.setSim_imsi(model.getSim_imsi());

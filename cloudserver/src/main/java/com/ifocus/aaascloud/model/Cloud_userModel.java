@@ -3,12 +3,22 @@ package com.ifocus.aaascloud.model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.ifocus.aaascloud.constant.CommonConstant;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Cloud_userModel {
+public class Cloud_userModel extends UserModel {
+
+	public Cloud_userModel() {
+		super(null, null, null, null, null);
+	}
+
+	public Cloud_userModel(String uid, String username, String firstName, String lastName, String email) {
+		super(uid, username, firstName, lastName, email);
+	}
 
 	private LoginInfo loginInfo;
 	private TargetUserInfo targetUserInfo;
@@ -42,4 +52,16 @@ public class Cloud_userModel {
 	// ユーザ数
 	private Integer usercount;
 
+	/*
+	 * companyname情報検索条件取得
+	 *
+	 */
+	public String getCompanynameForSearch() {
+
+		if (this.companyname == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.companyname.trim() + "%";
+		}
+	}
 }

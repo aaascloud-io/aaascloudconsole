@@ -62,7 +62,7 @@ public class Cloud_errlogController {
 				List<Cloud_deviceModel> deviceList  = cloud_deviceService.getUnderCompanyDevicesByUserids(list);
 
 				// エラーログ一覧を取得する
-				List<Cloud_errlogModel> errlogList = cloud_errlogService.getErrlogList(list,Util.getImeiList(deviceList),Util.getIccidList(deviceList),Util.getSnList(deviceList));
+				List<Cloud_errlogModel> errlogList = cloud_errlogService.getErrlogList(list,Util.getImeiList(deviceList),Util.getSnList(deviceList));
 
 				/* 正常終了 */
 				response.setStatus(200);
