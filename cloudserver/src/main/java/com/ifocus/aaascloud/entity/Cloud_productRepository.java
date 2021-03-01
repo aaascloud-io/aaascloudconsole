@@ -22,8 +22,8 @@ public interface  Cloud_productRepository extends CrudRepository<Cloud_productEn
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_product c WHERE c.i_uid = :userid",nativeQuery = true)
-	public List<Cloud_productEntity> searchMyProductsByUserid(@Param("userid") Integer userid);
+	@Query(value = "SELECT c.* FROM cloud_product c WHERE c.createuserid IN :createuserids",nativeQuery = true)
+	public List<Cloud_productEntity> searchMyProductsByUserid(@Param("createuserids") List<Integer> createuserids);
 
 	/*
 	 * プロダクト検索（プロダクト管理用）
@@ -32,9 +32,10 @@ public interface  Cloud_productRepository extends CrudRepository<Cloud_productEn
 	 */
 	@Query(value = "SELECT c.* FROM cloud_product c "
 			+ " INNER JOIN cloud_producttype d ON d.producttypeid = c.producttypeid "
-			+ " WHERE c.i_uid = :userid "
+			+ " INNER JOIN cloud_user u ON c.createuserid = u.userid "
+			+ " WHERE u.username LIKE :username "
 			+ " AND c.productname LIKE :productname "
 			+ " AND d.producttypename LIKE :producttypename ",nativeQuery = true)
-	public List<Cloud_productEntity> searchMyProductsByProducttypenameAndProductname(@Param("userid") Integer userid, @Param("producttypename") String producttypename, @Param("productname") String productname);
+	public List<Cloud_productEntity> searchMyProductsByProducttypenameAndProductname(@Param("username") String username, @Param("producttypename") String producttypename, @Param("productname") String productname);
 
 }

@@ -28,6 +28,7 @@ public class Cloud_productEntity {
 	private String version;
 	private Integer simflag;
 	private String summary;
+	private Integer createuserid;
 	private Integer alive;
 	@Column(updatable = false)
 	private Integer i_uid;
