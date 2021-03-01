@@ -9,6 +9,7 @@ import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from '../../_common/_interface/userInfo'
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
+import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
 class Contact {
@@ -60,7 +61,7 @@ export class UserComponent implements OnInit {
   placement = 'bottom-right';
   imagepathdefault: any;
   addModal = null;
-  editModal = null;
+  updateModal = null;
   value: any;
   loadingIndicator: true;
   selected = [];
@@ -153,6 +154,7 @@ export class UserComponent implements OnInit {
     private alertService: AlertService,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
     this.getUserAll();
@@ -220,7 +222,7 @@ export class UserComponent implements OnInit {
      */
   editTableDataModal(editTableDataModalContent, row) {
     this.selectedContact = Object.assign({}, row);
-    this.editModal = this.modal.open(editTableDataModalContent, {
+    this.updateModal = this.modal.open(editTableDataModalContent, {
       windowClass: 'animated fadeInDown'
     });
     this.contactFlag = false;
@@ -311,6 +313,7 @@ export class UserComponent implements OnInit {
             this.selectedUserid = [];
             this.selected = [];
             this.getUserAll();
+            alert('削除成功です。');
           } else {
             console.log('削除失敗です。');
             this.selectedUserid = [];
@@ -365,6 +368,7 @@ export class UserComponent implements OnInit {
             this.selectedUserid = [];
             this.selected = [];
             this.getUserAll();
+            alert('削除成功です。');
           } else {
             console.log('削除失敗です。');
             this.selectedUserid = [];
@@ -384,7 +388,7 @@ export class UserComponent implements OnInit {
    *
    * @param
    */
-  onUpdate() {
+  onUpdate(editUpdateForm: NgForm) {
     var query = {
       "loginInfo": {
         "loginuserid": this.pageModel.loginUser.loginuserid,
@@ -399,12 +403,12 @@ export class UserComponent implements OnInit {
       "username": this.selectedContact.username,
       "companyid": this.pageModel.updataUserInfo.companyid,
       "corporatenumber": this.pageModel.updataUserInfo.corporatenumber,
-      "companyname":  this.pageModel.updataUserInfo.companyname,
-      "address":  this.pageModel.updataUserInfo.address,
-      "industry":  this.pageModel.updataUserInfo.industry,
-      "mail":  this.pageModel.updataUserInfo.mail,
-      "tel":  this.pageModel.updataUserInfo.tel,
-      "fax":  this.pageModel.updataUserInfo.fax
+      "companyname": this.pageModel.updataUserInfo.companyname,
+      "address": this.pageModel.updataUserInfo.address,
+      "industry": this.pageModel.updataUserInfo.industry,
+      "mail": this.pageModel.updataUserInfo.mail,
+      "tel": this.pageModel.updataUserInfo.tel,
+      "fax": this.pageModel.updataUserInfo.fax
     }
 
     this.httpService.put('updateUser', query).then(item => {
@@ -412,6 +416,9 @@ export class UserComponent implements OnInit {
         console.log('更新成功です。');
         console.log(item);
         this.getUserAll();
+        alert('更新成功です。');
+        // editUpdateForm.reset();
+        // this.editModal(editUpdateForm.resetForm);
       } catch (e) {
         console.log('更新失敗です。');
       }
@@ -526,9 +533,10 @@ export class UserComponent implements OnInit {
 
     this.httpService.usePost('registerUser', query).then(item => {
       try {
-        console.log('登録成功です。');
-        console.log(item);
-        this.getUserAll();
+        if (item.resultCode == "0000") {
+          this.getUserAll();
+          alert('ユーザー情報は登録成功です。');
+        }
       } catch (e) {
         console.log('登録失敗です。');
       }
@@ -698,6 +706,14 @@ export class UserComponent implements OnInit {
     }
   }
 
+  // reload() {
+  //   // window.location.reload();
+  //   this.router.onSameUrlNavigation = 'reload';
+  //   this.router.navigateByUrl('/user').then(() => {
+  //     this.router.navigate(['/user']);
+  //     this.router.onSameUrlNavigation = 'ignore';
+  //   });
+  // }
   // /**
   //  * 
   //  */

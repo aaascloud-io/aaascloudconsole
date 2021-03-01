@@ -2,8 +2,7 @@ package com.ifocus.aaascloud.entity;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -15,8 +14,6 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	 *
 	 *
 	 */
-	@Query("SELECT c FROM cloud_user c WHERE c.username = :username ")
-	@Autowired
 	public Cloud_userEntity findByUsername(@Param("username") String username);
 
 	/*
@@ -24,8 +21,6 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	 *
 	 *
 	 */
-	@Query("SELECT c FROM cloud_user c WHERE c.upperuserid = :upperuserid")
-	@Autowired
 	public List<Cloud_userEntity> getUsersByUpperuserid(@Param("upperuserid") Integer upperuserid);
 
 	/*
@@ -33,8 +28,6 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	 *
 	 *
 	 */
-	@Query("SELECT DISTINCT c FROM cloud_user c WHERE c.upperuserid = :upperuserid")
-	@Autowired
 	public List<Cloud_userEntity> getUnderUserCompanyIdsByUpperuserid(@Param("upperuserid") Integer upperuserid);
 
 	/*
@@ -42,21 +35,25 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	 *
 	 *
 	 */
-	@Query("SELECT c FROM cloud_user c WHERE c.companyid = :companyid")
-	@Autowired
 	public List<Cloud_userEntity> getUsersByCompanyid(@Param("companyid") Integer companyid);
 
-	public List<Cloud_userEntity> findByCompanyid(Integer companyid);
+	/*
+	 * 配下ユーザ検索
+	 *
+	 *
+	 */
+	@Query(value = "SELECT u.* "
+			+ "FROM cloud_user u "
+			+ "INNER JOIN cloud_company c ON c.companyid = u.companyid "
+			+ "WHERE u.userid IN :userids "
+			+ "AND c.companyname LIKE :companyname "
+			+ "AND u.firstname LIKE :firstname "
+			+ "AND u.lastname LIKE :lastname "
+			+ "AND u.email LIKE :email ", nativeQuery = true)
+	public List<Cloud_userEntity> searchUnderUsersByCompanyname(@Param("userids") List<Integer> userids,
+			@Param("companyname") String companyname,
+			@Param("firstname") String firstname,
+			@Param("lastname") String lastname,
+			@Param("email") String email);
 
-//	/*
-//	 * 配下ユーザ検索
-//	 *
-//	 *
-//	 */
-//	@Query(value = "SELECT u.* "
-//			+ "FROM cloud_user u "
-//			+ "INNER JOIN cloud_company c ON c.companyid = u.companyid "
-//			+ "WHERE u.userid IN :userids "
-//			+ "AND c.companyname LIKE :companyname ")
-//	public List<Cloud_userEntity> searchUnderUsersByCompanyname(@Param("userids") List<Integer> userids, @Param("companyname") String companyname);
 }

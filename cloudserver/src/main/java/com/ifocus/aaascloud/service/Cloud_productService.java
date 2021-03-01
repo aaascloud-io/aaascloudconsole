@@ -14,6 +14,8 @@ import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_producttypeEntity;
 import com.ifocus.aaascloud.entity.Cloud_producttypeRepository;
+import com.ifocus.aaascloud.entity.Cloud_userEntity;
+import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 
 @SpringBootApplication
@@ -26,14 +28,16 @@ public class Cloud_productService {
 	private Cloud_productRepository cloud_productRepository ;
 	@Autowired
 	private Cloud_producttypeRepository cloud_producttypeRepository ;
+	@Autowired
+	private Cloud_userRepository cloud_userRepository ;
 
 	/*
 	 *マイプロダクト一覧取得
 	 *
 	 *
 	 */
-	public List<Cloud_productModel> getMyProductList(Cloud_productModel model) throws Exception {
-		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByUserid(model.getTargetUserInfo().getTargetuserid());
+	public List<Cloud_productModel> getMyProductList(List<Integer> useridlist, Cloud_productModel model) throws Exception {
+		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByUserid(useridlist);
 		return getModelsByEntitys(list);
 
 	}
@@ -45,7 +49,7 @@ public class Cloud_productService {
 	 */
 	public List<Cloud_productModel> searchMyProductList(Cloud_productModel model) throws Exception {
 		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByProducttypenameAndProductname(
-				model.getTargetUserInfo().getTargetuserid(),
+				model.getCreateusernameForSearch(),
 				model.getProducttypenameForSearch(),
 				model.getProductnameForSearch());
 		return getModelsByEntitys(list);
@@ -92,9 +96,9 @@ public class Cloud_productService {
 	 *
 	 *
 	 */
-	public Cloud_productEntity getProductDetail(Integer productid) throws Exception {
+	public Cloud_productModel getProductDetail(Integer productid) throws Exception {
 		Optional<Cloud_productEntity> entity = cloud_productRepository.findById(productid);
-		return entity.get();
+		return getModelByEntity(entity.get());
 
 	}
 
@@ -172,6 +176,10 @@ public class Cloud_productService {
 		model.setSimflag(entity.getSimflag());
 		model.setSummary(entity.getSummary());
 		model.setAlive(entity.getAlive());
+		model.setCreateuserid(entity.getCreateuserid());
+		// 作成者名取得
+		Optional<Cloud_userEntity> createuser = cloud_userRepository.findById(entity.getCreateuserid());
+		model.setCreateusername(createuser.get().getUsername());
 
 		return model;
 

@@ -60,7 +60,7 @@ public class AccessService {
 	 *
 	 */
 	public List<Integer> getAccessUsers(Integer userid) throws Exception {
-		List<Integer> returnList = new ArrayList();
+		List<Integer> returnList = new ArrayList<Integer>();
 		returnList.add(userid);
 		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
 		if (list.isEmpty()) {
@@ -80,7 +80,7 @@ public class AccessService {
 	 *
 	 */
 	public List<Cloud_userModel> getAccessModelUsers(Integer userid) throws Exception {
-		List<Cloud_userModel> returnList = new ArrayList();
+		List<Cloud_userModel> returnList = new ArrayList<Cloud_userModel>();
 		returnList.add(getModel(cloud_userRepository.findById(userid).get()));
 		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
 		if (list.isEmpty()) {
@@ -203,7 +203,7 @@ public class AccessService {
 	 *
 	 */
 	public List<Cloud_displaysettingsModel> getModelsByEntitys(List<Cloud_displaysettingsEntity> entityList) throws Exception {
-		List<Cloud_displaysettingsModel> modelList = new ArrayList();
+		List<Cloud_displaysettingsModel> modelList = new ArrayList<Cloud_displaysettingsModel>();
 		for (Cloud_displaysettingsEntity entity:entityList) {
 			modelList.add(getDisplaysettingsModelModel(entity));
 		}

@@ -19,6 +19,7 @@ import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
+import com.ifocus.aaascloud.model.UserModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
@@ -107,6 +108,9 @@ public class Cloud_userController {
 				// 情報設定
 				resJasonObj.put("userid", model.getUserid());
 				resJasonObj.put("username", model.getUsername());
+				resJasonObj.put("firstname", model.getFirstName());
+				resJasonObj.put("lastname", model.getLastName());
+				resJasonObj.put("email", model.getEmail());
 				resJasonObj.put("companyid", model.getCompanyid());
 				resJasonObj.put("loginid", model.getLoginid());
 				resJasonObj.put("role", model.getRole());
@@ -146,108 +150,111 @@ public class Cloud_userController {
 		return response;
 	}
 
-//	/**
-//	 * 配下ユーザ検索
-//	 * @param json
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	@RequestMapping(value = "/searchUnderUsers", method = RequestMethod.POST)
-//	@ResponseBody
-//	@CrossOrigin(origins = "*", maxAge = 3600)
-//	public BaseHttpResponse<String> searchUnderUsers(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
-//
-//		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
-//
-//		Integer loginuserid = cloud_userModel.getLoginInfo().getLoginuserid();
-//		Integer targetuserid = cloud_userModel.getTargetUserInfo().getTargetuserid();
-//
-//		if (null != loginuserid && null != targetuserid) {
-//
-//			List<Cloud_userModel> list = new ArrayList<Cloud_userModel>();
-//			if (loginuserid.equals(targetuserid)) {
-//				try {
-//					List<Integer> userids = accessService.getAccessUsers(targetuserid);
-//					list = cloud_userService.searchUnderUsers(userids, cloud_userModel);
-//				} catch (Exception e) {
-//					/* 異常系 */
-//					response.setStatus(200);
-//					response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-//					response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_userService.getUnderUsers:" + e.getMessage());
-//					return response;
-//				}
-//			} else {
-//				// 権限判断
-//				if (cloud_userService.isAncestor(loginuserid, targetuserid)) {
-//					try {
-//						List<Integer> userids = accessService.getAccessUsers(targetuserid);
-//						list = cloud_userService.searchUnderUsers(userids, cloud_userModel);
-//					} catch (Exception e) {
-//						/* 異常系 */
-//						response.setStatus(200);
-//						response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-//						response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_userService.getUnderUsers:" + e.getMessage());
-//						return response;
-//					}
-//				} else {
-//					/* 異常系 */
-//					response.setStatus(200);
-//					response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-//					response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "loginuserid&targetuseridが必須です。");
-//					return response;
-//				}
-//			}
-//
-//			String responseData = new String();
-//			List<JSONObject> returnList = new ArrayList<JSONObject>();
-//			for (Cloud_userModel model : list) {
-//				if (returnList.isEmpty()) {
-//					responseData = responseData + "[";
-//				} else {
-//					responseData = responseData + ",";
-//				}
-//				JSONObject resJasonObj = new JSONObject();
-//				// 情報設定
-//				resJasonObj.put("userid", model.getUserid());
-//				resJasonObj.put("username", model.getUsername());
-//				resJasonObj.put("companyid", model.getCompanyid());
-//				resJasonObj.put("loginid", model.getLoginid());
-//				resJasonObj.put("role", model.getRole());
-//				resJasonObj.put("upperuserid", model.getUpperuserid());
-//				resJasonObj.put("companyName", model.getCompanyname());
-//				resJasonObj.put("devicecount", model.getDevicecount());
-//
-//
-//				// アクセス権限ユーザ一覧を取得する
-//				List<Integer> underUserList = accessService.getAccessUsers(model.getUserid());
-//				// 配下ユーザ数
-//				resJasonObj.put("userCount", underUserList.size());
-//
-//				// プロジェクト一覧を取得する
-//				List<Cloud_projectModel> projectList = cloud_projectService.getMyUnderProjects(underUserList);
-//				// 配下プロジェクト数
-//				resJasonObj.put("projectCount", projectList.size());
-//
-//				returnList.add(resJasonObj);
-//				responseData = responseData + resJasonObj.toString();
-//			}
-//			responseData = responseData + "]";
-//
-//			response.setStatus(200);
-//			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-//			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-//			response.setCount(list.size());
-//			response.setData(responseData);
-//		} else {
-//			/* 異常系 */
-//			response.setStatus(200);
-//			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
-//			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "userid&targetuseridが必須です。");
-//			return response;
-//		}
-//
-//		return response;
-//	}
+	/**
+	 * 配下ユーザ検索
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/searchUnderUsers", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> searchUnderUsers(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		Integer loginuserid = cloud_userModel.getLoginInfo().getLoginuserid();
+		Integer targetuserid = cloud_userModel.getTargetUserInfo().getTargetuserid();
+
+		if (null != loginuserid && null != targetuserid) {
+
+			List<Cloud_userModel> list = new ArrayList<Cloud_userModel>();
+			if (loginuserid.equals(targetuserid)) {
+				try {
+					List<Integer> userids = accessService.getAccessUsers(targetuserid);
+					list = cloud_userService.searchUnderUsers(userids, cloud_userModel);
+				} catch (Exception e) {
+					/* 異常系 */
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_userService.getUnderUsers:" + e.getMessage());
+					return response;
+				}
+			} else {
+				// 権限判断
+				if (cloud_userService.isAncestor(loginuserid, targetuserid)) {
+					try {
+						List<Integer> userids = accessService.getAccessUsers(targetuserid);
+						list = cloud_userService.searchUnderUsers(userids, cloud_userModel);
+					} catch (Exception e) {
+						/* 異常系 */
+						response.setStatus(200);
+						response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+						response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_userService.getUnderUsers:" + e.getMessage());
+						return response;
+					}
+				} else {
+					/* 異常系 */
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "loginuserid&targetuseridが必須です。");
+					return response;
+				}
+			}
+
+			String responseData = new String();
+			List<JSONObject> returnList = new ArrayList<JSONObject>();
+			for (Cloud_userModel model : list) {
+				if (returnList.isEmpty()) {
+					responseData = responseData + "[";
+				} else {
+					responseData = responseData + ",";
+				}
+				JSONObject resJasonObj = new JSONObject();
+				// 情報設定
+				resJasonObj.put("userid", model.getUserid());
+				resJasonObj.put("username", model.getUsername());
+				resJasonObj.put("firstname", model.getFirstName());
+				resJasonObj.put("lastname", model.getLastName());
+				resJasonObj.put("email", model.getEmail());
+				resJasonObj.put("companyid", model.getCompanyid());
+				resJasonObj.put("loginid", model.getLoginid());
+				resJasonObj.put("role", model.getRole());
+				resJasonObj.put("upperuserid", model.getUpperuserid());
+				resJasonObj.put("companyName", model.getCompanyname());
+				resJasonObj.put("devicecount", model.getDevicecount());
+
+
+				// アクセス権限ユーザ一覧を取得する
+				List<Integer> underUserList = accessService.getAccessUsers(model.getUserid());
+				// 配下ユーザ数
+				resJasonObj.put("userCount", underUserList.size());
+
+				// プロジェクト一覧を取得する
+				List<Cloud_projectModel> projectList = cloud_projectService.getMyUnderProjects(underUserList);
+				// 配下プロジェクト数
+				resJasonObj.put("projectCount", projectList.size());
+
+				returnList.add(resJasonObj);
+				responseData = responseData + resJasonObj.toString();
+			}
+			responseData = responseData + "]";
+
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			response.setCount(list.size());
+			response.setData(responseData);
+		} else {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "userid&targetuseridが必須です。");
+			return response;
+		}
+
+		return response;
+	}
 
 	/**
 	 * ユーザ一覧を取得する
@@ -311,6 +318,9 @@ public class Cloud_userController {
 				// 情報設定
 				resJasonObj.put("userid", model.getUserid());
 				resJasonObj.put("username", model.getUsername());
+				resJasonObj.put("firstname", model.getFirstName());
+				resJasonObj.put("lastname", model.getLastName());
+				resJasonObj.put("email", model.getEmail());
 				resJasonObj.put("companyid", model.getCompanyid());
 				resJasonObj.put("loginid", model.getLoginid());
 				resJasonObj.put("role", model.getRole());
@@ -374,12 +384,18 @@ public class Cloud_userController {
 		}
 
 		// KeyCloakに存在しない場合、
-		if (!keyCloakUserService.isValidUsername(cloud_userModel.getLoginInfo().getLoginusername())) {
+		if (!keyCloakUserService.isValidUsername(cloud_userModel.getUsername())) {
 			/* 異常系 */
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0008);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録ユーザ名です。");
 			return response;
+		} else {
+			// KeyCloakからユーザ情報取得＆設定
+			UserModel usermodel = keyCloakUserService.getUserModelFromUsername(cloud_userModel.getUsername());
+			cloud_userModel.setLastName(usermodel.getLastName());
+			cloud_userModel.setFirstName(usermodel.getFirstName());
+			cloud_userModel.setEmail(usermodel.getEmail());
 		}
 
 		try {
