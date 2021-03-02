@@ -93,11 +93,11 @@
                       <i class="d-md-none d-block feather ft-plus white"></i>
                       <span class="d-md-block d-none">新　規</span></button>
                     <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
-                      (click)="addMaxModal(addExcelModalContent)">
+                      (click)="openExcelModal(registerExcelModal)">
                       <i class="d-md-none d-block feather ft-plus white"></i>
                       <span class="d-md-block d-none">一括登録</span></button>
                     <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
-                      (click)="addTableDataModal(addGroupModalContent)">
+                      (click)="openSelectGroupModal(selectGroupModal)">
                       <i class="d-md-none d-block feather ft-plus white"></i>
                       <span class="d-md-block d-none">グループ追加</span></button>
                     <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
@@ -114,7 +114,7 @@
                       <th scope="col" class="thcolor"><input type="checkbox" [checked]="isAllChecked()" (change)="checkAll($event)">
                       </th>
                       <th scope="col" class="thcolor">No.</th>
-                      <th scope="col" class="thcolor" (click)="sortData('sn')">SN</th>
+                      <th scope="col" class="thcolor" (click)="sortData('sn')">SN<i class="la la-sort-down"></i><i class="la la-sort-up"></i></th>
                       <th scope="col" class="thcolor" (click)="sortData('imei')">IMEI</th>
                       <th scope="col" class="thcolor" (click)="sortData('iccid')">ICCID</th>
                       <th scope="col" class="thcolor" (click)="sortData('devicename')">状態</th>
@@ -183,12 +183,12 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>デバイス名</h6>
           <input type="text" [(ngModel)]="selectedDevice.devicename" name="devicename" class="form-control"
-            placeholder="">
+            placeholder="" maxlength="50" >
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SN<code>＊</code></h6>
           <input type="text" [(ngModel)]="selectedDevice.sn" name="sn" id="contact-phone"
-            class="contact-phone form-control" placeholder="SN" maxlength="14">
+            class="contact-phone form-control" placeholder="SN" readonly="readonly" maxlength="20">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>IMEI<code>＊</code></h6>
@@ -198,7 +198,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>ICCID</h6>
           <input type="text" [(ngModel)]="selectedDevice.iccid" name="iccid" class="contact-email form-control"
-            placeholder="ICCID">
+            placeholder="ICCID" maxlength="20" >
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者</h6>
@@ -223,16 +223,12 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカードIMSI</h6>
-          <input type="text" [(ngModel)]="selectedDevice.sim_imsi" name="simimsi" class="form-control" placeholder="">
+          <input type="text" [(ngModel)]="selectedDevice.sim_imsi" name="simimsi" class="form-control" placeholder="" maxlength="20" >
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
-          <input type="text" [(ngModel)]="selectedDevice.sim_tel" name="simtel" class="form-control"
-            placeholder="SIMカード電話番号">
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>SIMカードICCID</h6>
-          <input type="text" [(ngModel)]="selectedDevice.sim_iccid" name="simiccid" class="form-control" placeholder="">
+          <input type="text" [(ngModel)]="selectedDevice.sim_tel"  name="simtel"  class="phone form-control"
+            placeholder="SIMカード電話番号" (keyup)="editTelFormat()" maxlength="14">
         </div>
       </div>
     </div>
@@ -269,18 +265,18 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SN<code>＊</code></h6>
-          <input type="text" [(ngModel)]="pageModel.deviceDetail.sn" name="sn" id="contact-phone" maxlength="50"
+          <input type="text" [(ngModel)]="pageModel.deviceDetail.sn" name="sn" id="contact-phone" maxlength="20"
             class="contact-phone form-control" placeholder="SN">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>IMEI<code>＊</code></h6>
           <input type="text" [(ngModel)]="pageModel.deviceDetail.imei" name="imei" class="contact-name form-control"
-            maxlength="50" placeholder="IMEI">
+            maxlength="20" placeholder="IMEI">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>ICCID</h6>
           <input type="text" [(ngModel)]="pageModel.deviceDetail.iccid" name="iccid" class="contact-email form-control"
-            maxlength="50" placeholder="ICCID">
+            maxlength="20" placeholder="ICCID">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者</h6>
@@ -331,8 +327,8 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
-          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="simtel" class="form-control"
-            maxlength="50" placeholder="SIMカード電話番号">
+          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel"  name="simtel"  class="phone form-control"
+            placeholder="SIMカード電話番号" (keyup)="registerTelFormat()" maxlength="14">
         </div>
       </div>
     </div>
@@ -351,7 +347,7 @@
   </form>
 </ng-template>
 
-<ng-template #addExcelModalContent let-c="close" let-d="dismiss">
+<ng-template #registerExcelModal let-c="close" let-d="dismiss">
   <form (ngSubmit)="registerDevices(addExeclForm)" #addExeclForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">一括登録</h5>
@@ -442,8 +438,8 @@
   </form>
 </ng-template>
 
-<ng-template #addGroupModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact(groupSelectForm)" #groupSelectForm="ngForm">
+<ng-template #selectGroupModal let-c="close" let-d="dismiss">
+  <form (ngSubmit)="groupSelect(groupSelectForm)" #groupSelectForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">グループ選択</h5>
       <button type="button" name="groupSelect" class="close" aria-label="Close" (click)="d('Cross click')">

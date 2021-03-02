@@ -37,7 +37,6 @@ export class DeviceComponent implements OnInit {
   columns: any = [];
   contactName: any;
   contactEmail: any;
-  contactPhone: any;
   contactImage: any;
   contactFavorite: boolean;
   contactactive: string;
@@ -45,7 +44,6 @@ export class DeviceComponent implements OnInit {
   name = 'Angular';
   public imagePath;
   imgURL: any;
-  contactFlag: boolean;
   addContact: any;
   placement = 'bottom-right';
   imagepathdefault: any;
@@ -88,7 +86,6 @@ export class DeviceComponent implements OnInit {
   TableData: any;
   sortOn: any;
   checkOn: 1;
-
 
   public pageModel = {
     //Login情報
@@ -267,21 +264,19 @@ export class DeviceComponent implements OnInit {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
-    this.contactFlag = true;
     this.pageModel.deviceDetail;
   }
 
   /**
   * Add new contact
   *
-  * @param addTableDataModalContent      Id of the add contact modal;
+  * @param registerExcelModal      Id of the add contact modal;
   */
-  addMaxModal(addTableDataModalContent) {
-    this.addModal = this.modal.open(addTableDataModalContent, {
+  openExcelModal(registerExcelModal) {
+    this.addModal = this.modal.open(registerExcelModal, {
       windowClass: 'animated fadeInDown modal-xl'
       , size: 'lg'
     });
-    this.contactFlag = true;
   }
 
   /**
@@ -289,11 +284,10 @@ export class DeviceComponent implements OnInit {
 *
 * @param addTableDataModalContent      Id of the add contact modal;
 */
-  addTableDataModal(addTableDataModalContent) {
+  openSelectGroupModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown'
     });
-    this.contactFlag = true;
   }
 
   /**
@@ -308,10 +302,8 @@ export class DeviceComponent implements OnInit {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
-    // this.contactFlag = false;
     this.pageModel.deviceDetail.productSelected = row;
     // this.singlebasicSelected = this.singleSelectArray[0].item_text;
-    this.contactFlag = true;
   }
 
   /**
@@ -488,7 +480,7 @@ export class DeviceComponent implements OnInit {
  *
  * @param addForm     Add contact form
  */
-  addNewContact(addForm: NgForm) {
+  groupSelect(addForm: NgForm) {
 
     let item: UserInfo = this.dataFatoryService.getUserInfo();
     if (item != null) {
@@ -720,49 +712,49 @@ export class DeviceComponent implements OnInit {
   /**
    * Set the phone number format
    */
-  onFormat() {
-    if (this.contactFlag === true) {
-      this.value = this.contactPhone;
-    } else if (this.contactFlag === false) {
-      this.value = this.selectedDevice['phone'];
-    }
+  editTelFormat() {
+    const no = this.onFormatFn(this.selectedDevice['sim_tel']);
+    this.selectedDevice['sim_tel'] = no;
+  }
 
+  registerTelFormat() {
+    const no = this.onFormatFn(this.pageModel.deviceDetail['sim_tel']);
+    this.pageModel.deviceDetail['sim_tel'] = no;
+  }
+
+  /**
+   * Set the phone number format
+   */
+  onFormatFn(phonenm) {
     let country, city, number;
-
-    switch (this.value.length) {
+    switch (phonenm.length) {
       case 6:
         country = 1;
-        city = this.value.slice(0, 3);
-        number = this.value.slice(3);
+        city = phonenm.slice(0, 3);
+        number = phonenm.slice(3);
         break;
 
       case 7:
-        country = this.value[0];
-        city = this.value.slice(1, 4);
-        number = this.value.slice(4);
+        country = phonenm[0];
+        city = phonenm.slice(1, 4);
+        number = phonenm.slice(4);
         break;
 
       case 8:
-        country = this.value.slice(0, 3);
-        city = this.value.slice(3, 5);
-        number = this.value.slice(5);
+        country = phonenm.slice(0, 3);
+        city = phonenm.slice(3, 5);
+        number = phonenm.slice(5);
         break;
 
       default:
-        return this.value;
+        return phonenm;
     }
     if (country === 1) {
       country = '';
     }
-
     number = number.slice(0, 3) + '-' + number.slice(3);
-
     const no = '(' + city + ')' + '-' + number;
-    if (this.contactFlag === true) {
-      this.contactPhone = no;
-    } else if (this.contactFlag === false) {
-      this.selectedDevice['phone'] = no;
-    }
+    return no;
   }
 
   /**
