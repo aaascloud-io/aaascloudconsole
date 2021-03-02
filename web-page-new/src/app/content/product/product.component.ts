@@ -671,7 +671,7 @@ export class ProductComponent implements OnInit {
   }
 
   /**
-   * 取消ボタンを押下
+   * 取消ボタンを押下 
    * 
    */
   cancleModel(openForm: NgForm) {
