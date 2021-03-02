@@ -231,7 +231,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let element of rows;let i = index">
+                    <tr *ngFor="let element of PaginationData;let i = index">
                       <td>
                         <input type="checkbox" [checked]="element.isSelected" (change)="checkChange($event,element)">
                       </td>
@@ -298,17 +298,9 @@
         </div>
       </div>
       <div class="form-group col-12">
-        <h6>作成者<code>＊</code></h6>
-        <select class="form-control" id="typeId" name="typeId" [(ngModel)]="selectedContact.createuserid"
-          #editname="ngModel" name="producttypeid" id="producttypeid"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-          <option *ngFor="let user of users; let i = index" [ngValue]="user.createuserid">
-            {{user.firstname + user.lastname}}
-          </option>
-        </select>
-        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">作成者を選択してください。</div>
-        </div>
+        <h6>作成者</h6>
+        <input type="text" [(ngModel)]="selectedContact.createusername" #editmodel="ngModel" name="createusername"
+          id="createusername" class="name form-control" placeholder="プロダクトコード" maxlength="10" disabled>
       </div>
       <div class="form-group col-12">
         <h6>プロダクト名<code>＊</code></h6>
@@ -336,11 +328,20 @@
       </div>
       <div class="form-group col-12">
         <h6>SIMカード有無<code>＊</code></h6>
+        <div class="float-left">
+          <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" name="sim"
+            [(ngModel)]="this.simFlg"></ui-switch>
+        </div>
+      </div>
+      <br>
+      <br>
+      <!-- <div class="form-group col-12">
+        <h6>SIMカード有無<code>＊</code></h6>
         <select class="form-control" id="sim" name="sim" [(ngModel)]="selectedContact.simflag">
           <option [value]=0>有</option>
           <option [value]=1>無</option>
         </select>
-      </div>
+      </div> -->
       <div class="form-group col-12">
         <h6>説明</h6>
         <textarea id="summary" rows="5" class="form-control square" name="message" [(ngModel)]="selectedContact.summary"
@@ -420,20 +421,14 @@
           class="name form-control" placeholder="バージョン" maxlength="20">
       </div>
       <div class="form-group col-12">
-        <h6>SIMカード有無</h6>
-        <!-- <ng-select [items]="sslSelectArray" [searchable]="true" bindLabel="item_text" placeholder="暗号化通信" name="ssl"
-          [(ngModel)]="pageModel.deviceDetail.sslSelected">
-        </ng-select> -->
+        <h6>SIMカード有無<code>＊</code></h6>
         <div class="float-left">
           <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" name="sim"
-            [(ngModel)]="simFlg"></ui-switch>
+            [(ngModel)]="pageModel.addProduct.sim"></ui-switch>
         </div>
-        <!-- <h6>SIMカード有無<code>＊</code></h6>
-        <select class="form-control" id="sim" name="sim" [(ngModel)]="pageModel.addProduct.sim">
-          <option [value]=0>有</option>
-          <option [value]=1>無</option>
-        </select> -->
       </div>
+      <br>
+      <br>
       <div class="form-group col-12">
         <h6>説明</h6>
         <textarea id="summary" rows="5" class="form-control square" name="summary"

@@ -23,7 +23,8 @@ class Contact {
     public version: string,
     public summary: string,
     public producttypename: string,
-    public createusername: string
+    public createusername: string,
+    public createuserid: string
   ) { }
 }
 const formInputData = require('../../../assets/data/forms/form-elements/form-inputs.json');
@@ -85,7 +86,7 @@ export class ProductComponent implements OnInit {
       productName: '',
       model: '',
       version: '',
-      sim: 0,
+      sim: false,
       summary: ''
     },
     updataProduct: {
@@ -185,6 +186,7 @@ export class ProductComponent implements OnInit {
       windowClass: 'animated fadeInDown'
     });
     this.contactFlag = false;
+    this.simFlg = this.selectedContact.simflag === 1 ? true : false;
   }
 
   /**
@@ -286,17 +288,8 @@ export class ProductComponent implements OnInit {
    * @param id      Id match to the selected row Id
    */
   onUpdate(editForm: NgForm) {
-    // for (const row of this.rows) {
-    //   if (row.id === id && editForm.valid === true) {
-    //     row.name = this.selectedContact['name'];
-    //     row.email = this.selectedContact['email'];
-    //     row.phone = this.selectedContact['phone'];
-    //     row.phone = this.selectedContact['phone'];
-    //     this.editModal.close(editForm.resetForm);
-    //     break;
-    //   }
-    // }
 
+    this.selectedContact.simflag = this.simFlg === true ? 1 : 0;
     var query = {
       "loginInfo": {
         "loginuserid": this.pageModel.loginUser.loginuserid,
@@ -394,6 +387,7 @@ export class ProductComponent implements OnInit {
     }
 
     if (flg) {
+      var sim = this.pageModel.addProduct.sim === true ? '1' : '0';
       var query = {
         "loginInfo": this.pageModel.loginUser,
         "targetUserInfo": {
@@ -406,7 +400,7 @@ export class ProductComponent implements OnInit {
         "productname": this.pageModel.addProduct.productName,
         "model": this.pageModel.addProduct.model,
         "version": this.pageModel.addProduct.version,
-        "simflag": this.pageModel.addProduct.sim,
+        "simflag": sim,
         "summary": this.pageModel.addProduct.summary
       }
 
@@ -558,6 +552,7 @@ export class ProductComponent implements OnInit {
               elem.summary,
               producttypename,
               elem.createusername,
+              elem.createuserid
             ));
             index++;
           });
@@ -649,7 +644,7 @@ export class ProductComponent implements OnInit {
     this.productList = this.rows;
     this.collectionSize = this.productList.length;
     this.productList.forEach(x => x.isSelected = false)
-    this.PaginationData();
+    this.productList();
   }
 
   /**
@@ -665,7 +660,7 @@ export class ProductComponent implements OnInit {
       //     this.pageSize = 10
       //   }
       // }
-      return this.productList.map((person, i) => ({ deviceid: i + 1, ...person }))
+      return this.productList.map((person, i) => ({ productid: i + 1, ...person }))
         .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
     }
   }
