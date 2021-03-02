@@ -111,18 +111,33 @@
                 <table class="table grid-breakpoints">
                   <thead>
                     <tr>
-                      <th scope="col" class="thcolor"><input type="checkbox" [checked]="isAllChecked()" (change)="checkAll($event)">
+                      <th scope="col" class="thcolor"><input type="checkbox" [checked]="isAllChecked()"
+                          (change)="checkAll($event)">
                       </th>
                       <th scope="col" class="thcolor">No.</th>
-                      <th scope="col" class="thcolor" (click)="sortData('sn')">SN<i class="la la-sort-down"></i><i class="la la-sort-up"></i></th>
-                      <th scope="col" class="thcolor" (click)="sortData('imei')">IMEI</th>
-                      <th scope="col" class="thcolor" (click)="sortData('iccid')">ICCID</th>
-                      <th scope="col" class="thcolor" (click)="sortData('devicename')">状態</th>
-                      <th scope="col" class="thcolor" (click)="sortData('companyname')">所有者</th>
-                      <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト</th>
-                      <th scope="col" class="thcolor" (click)="sortData('productname')">プロジェクト</th>
-                      <th scope="col" class="thcolor" (click)="sortData('projectname')">グループ</th>
-                      <th scope="col"class="thcolor" >操作</th>
+                      <th scope="col" class="thcolor" (click)="sortData('sn')">SN<i *ngIf="pageModel.sort.snUp"
+                          class="la la-sort-up"></i><i *ngIf="pageModel.sort.snDown" class="la la-sort-down"></i></th>
+                      <th scope="col" class="thcolor" (click)="sortData('imei')">IMEI
+                        <i *ngIf="pageModel.sort.imeiUp" class="la la-sort-up"></i><i *ngIf="pageModel.sort.imeiDown"
+                          class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" (click)="sortData('sim_iccid')">ICCID<i
+                          *ngIf="pageModel.sort.iccidUp" class="la la-sort-up"></i><i *ngIf="pageModel.sort.iccidDown"
+                          class="la la-sort-down"></i></th>
+                      <th scope="col" class="thcolor">状態</th>
+                      <th scope="col" class="thcolor" (click)="sortData('companyname')">所有者<i
+                          *ngIf="pageModel.sort.companynameUp" class="la la-sort-up"></i><i
+                          *ngIf="pageModel.sort.companynameDown" class="la la-sort-down"></i></th>
+                      <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト<i
+                          *ngIf="pageModel.sort.productnameUp" class="la la-sort-up"></i><i
+                          *ngIf="pageModel.sort.productnameDown" class="la la-sort-down"></i></th>
+                      <th scope="col" class="thcolor" (click)="sortData('projectname')">プロジェクト<i
+                          *ngIf="pageModel.sort.projectnameUp" class="la la-sort-up"></i><i
+                          *ngIf="pageModel.sort.projectnameDown" class="la la-sort-down"></i></th>
+                      <th scope="col" class="thcolor" (click)="sortData('groupname')">グループ<i
+                          *ngIf="pageModel.sort.groupnameUp" class="la la-sort-up"></i><i
+                          *ngIf="pageModel.sort.groupnameDown" class="la la-sort-down"></i></th>
+                      <th scope="col" class="thcolor">操作</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -133,12 +148,12 @@
                       <td>{{i+1}}</td>
                       <td>{{ element.sn }}</td>
                       <td>{{ element.imei}}</td>
-                      <td>{{ element.iccid }}</td>
-                      <td>{{ element.iccid }}</td>
+                      <td>{{ element.sim_iccid }}</td>
+                      <td>設計中</td>
                       <td>{{ element.companyname}}</td>
                       <td>{{ element.productname}}</td>
                       <td>{{ element.projectname}}</td>
-                      <td>{{ element.group}}</td>
+                      <td>{{ element.groupname}}</td>
 
                       <td>
                         <a [routerLink]="" class="primary edit mr-1 mrless"
@@ -183,7 +198,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>デバイス名</h6>
           <input type="text" [(ngModel)]="selectedDevice.devicename" name="devicename" class="form-control"
-            placeholder="" maxlength="50" >
+            placeholder="" maxlength="50">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SN<code>＊</code></h6>
@@ -197,8 +212,8 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>ICCID</h6>
-          <input type="text" [(ngModel)]="selectedDevice.iccid" name="iccid" class="contact-email form-control"
-            placeholder="ICCID" maxlength="20" >
+          <input type="text" [(ngModel)]="selectedDevice.sim_iccid" name="iccid" class="contact-email form-control"
+            placeholder="ICCID" maxlength="20">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者</h6>
@@ -223,11 +238,12 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカードIMSI</h6>
-          <input type="text" [(ngModel)]="selectedDevice.sim_imsi" name="simimsi" class="form-control" placeholder="" maxlength="20" >
+          <input type="text" [(ngModel)]="selectedDevice.sim_imsi" name="simimsi" class="form-control" placeholder=""
+            maxlength="20">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
-          <input type="text" [(ngModel)]="selectedDevice.sim_tel"  name="simtel"  class="phone form-control"
+          <input type="text" [(ngModel)]="selectedDevice.sim_tel" name="simtel" class="phone form-control"
             placeholder="SIMカード電話番号" (keyup)="editTelFormat()" maxlength="14">
         </div>
       </div>
@@ -265,18 +281,26 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SN<code>＊</code></h6>
-          <input type="text" [(ngModel)]="pageModel.deviceDetail.sn" name="sn" id="contact-phone" maxlength="20"
-            class="contact-phone form-control" placeholder="SN">
+          <input type="text" [(ngModel)]="pageModel.deviceDetail.sn" #snname="ngModel" name="sn" id="contact-phone"
+            maxlength="20" class="contact-phone form-control" placeholder="SN"
+            [ngClass]="{ 'is-invalid': registerDeviceForm.submitted && snname.invalid }" required>
+          <div *ngIf="registerDeviceForm.submitted && snname.invalid" class="invalid-feedback">
+            <div *ngIf="snname.errors.required">sn is required</div>
+          </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>IMEI<code>＊</code></h6>
           <input type="text" [(ngModel)]="pageModel.deviceDetail.imei" name="imei" class="contact-name form-control"
-            maxlength="20" placeholder="IMEI">
+            maxlength="20" placeholder="IMEI" #imeiname="ngModel"
+            [ngClass]="{ 'is-invalid': registerDeviceForm.submitted && imeiname.invalid }" required>
+          <div *ngIf="registerDeviceForm.submitted && imeiname.invalid" class="invalid-feedback">
+            <div *ngIf="imeiname.errors.required">imei is required</div>
+          </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>ICCID</h6>
-          <input type="text" [(ngModel)]="pageModel.deviceDetail.iccid" name="iccid" class="contact-email form-control"
-            maxlength="20" placeholder="ICCID">
+          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_iccid" name="iccid"
+            class="contact-email form-control" maxlength="20" placeholder="ICCID">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者</h6>
@@ -287,8 +311,11 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクト<code>＊</code></h6>
           <ng-select [items]="productSelectArray" [searchable]="true" bindLabel="productname" placeholder="プロダクト"
-            name="product" [(ngModel)]="pageModel.deviceDetail.productSelected">
+            name="product" [(ngModel)]="pageModel.deviceDetail.productSelected" >
           </ng-select>
+          <!-- <div *ngIf="registerDeviceForm.submitted && productngname.valueAccessor" class="invalid-feedback">
+            <div *ngIf="productngname.errors.required">product is required</div>
+          </div> -->
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>暗号化キー</h6>
@@ -327,7 +354,7 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
-          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel"  name="simtel"  class="phone form-control"
+          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="simtel" class="phone form-control"
             placeholder="SIMカード電話番号" (keyup)="registerTelFormat()" maxlength="14">
         </div>
       </div>
@@ -376,7 +403,6 @@
             <th scope="col">imei</th>
             <th scope="col">iccid</th>
             <th scope="col">sn</th>
-            <th scope="col">sim_iccid</th>
             <th scope="col">sim_imsi</th>
             <th scope="col">sim_tel</th>
             <th scope="col">encryptedCommunications</th>
@@ -400,9 +426,8 @@
             <td data-label="groupId">{{item.groupid}}</td>
             <td data-label="deviceName">{{item.devicename}}</td>
             <td data-label="imei">{{item.imei}}</td>
-            <td data-label="iccid">{{item.iccid}}</td>
+            <td data-label="iccid">{{item.sim_iccid}}</td>
             <td data-label="sn">{{item.sn}}</td>
-            <td data-label="sim_iccid">{{item.sim_iccid}}</td>
             <td data-label="sim_imsi">{{item.sim_imsi}}</td>
             <td data-label="sim_tel">{{item.sim_tel}}</td>
             <td data-label="encryptedCommunications">{{item.encryptedcommunications}}</td>

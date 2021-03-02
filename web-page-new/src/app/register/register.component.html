@@ -9,13 +9,12 @@
                         <div class="card border-grey border-lighten-3 px-1 py-1 m-0">
                             <div class="card-header border-0 pb-0">
                                 <div class="card-title text-center">
-                                    <img src="assets/images/logo/logo-dark.png" alt="branding logo">
+                                    <img src="assets/custom/images/logo.png" alt="branding logo">
                                 </div>
-                                <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2">
-                                    <span>Easily Using</span></h6>
+                                <h6 class="card-subtitle text-muted text-center font-small-3 pt-2">
+                                    <span>i-focus</span></h6>
                             </div>
                             <div class="card-content">
-                                <app-social-signin></app-social-signin>
                                 <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1">
                                     <span>OR Using Email</span></p>
                                 <div class="card-body">
@@ -32,17 +31,6 @@
                                             </div>
                                         </fieldset>
                                         <fieldset class="form-group position-relative has-icon-left">
-                                            <input type="email" formControlName="email" class="form-control" email
-                                                [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
-                                                placeholder="Your Email Address" required>
-                                            <div class="form-control-position">
-                                                <i class="feather ft-mail"></i>
-                                            </div>
-                                            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                                                <div *ngIf="f.email.errors.required">Email is required</div>
-                                            </div>
-                                        </fieldset>
-                                        <fieldset class="form-group position-relative has-icon-left">
                                             <input type="password" formControlName="password" class="form-control"
                                                 [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
                                                 id="user-password" placeholder="Enter Password" required>
@@ -51,8 +39,30 @@
                                             </div>
                                             <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                                                 <div *ngIf="f.password.errors.required">Password is required</div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                            <input type="password" formControlName="newpassword" class="form-control"
+                                                [ngClass]="{ 'is-invalid': submitted && f.newpassword.errors }"
+                                                id="newpassword" placeholder="New Password" required>
+                                            <div class="form-control-position">
+                                                <i class="la la-key"></i>
+                                            </div>
+                                            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                                <div *ngIf="f.password.errors.required">Password is required</div>
                                                 <div *ngIf="f.password.errors.minlength">Password must be at least 6
                                                     characters</div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                            <input type="password" formControlName="confirmpassword" class="form-control"
+                                                [ngClass]="{ 'is-invalid': pageModel.pwdDifferent }"
+                                                id="confirmpassword" placeholder="New Password" required>
+                                            <div class="form-control-position">
+                                                <i class="la la-key"></i>
+                                            </div>
+                                            <div *ngIf="pageModel.pwdDifferent" class="invalid-feedback">
+                                                Password pwdDifferent
                                             </div>
                                         </fieldset>
                                         <div class="form-group row">

@@ -141,6 +141,23 @@ public class Cloud_deviceService {
 	}
 
 	/*
+	 * 自社デバイス一覧取得(デバイス選択子画面用：プロジェクトとグループに所属しない自社デバイス)
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceModel> デバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getMySelectableDevicesByCompanyid(Cloud_deviceModel model) throws Exception {
+
+		// 会社IDを設定する
+		this.setCompanyIDToModel(model);
+
+		// 全社のデバイス一覧取得
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchSelectableDevicesByCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
+		return this.getModelsByEntitys(list);
+
+	}
+
+	/*
 	 * プロジェクトデバイス一覧取得(グループに所属なし)
 	 * @param projectid Integer プロジェクトID
 	 * @return List<Cloud_deviceModel> プロジェクトデバイス一覧

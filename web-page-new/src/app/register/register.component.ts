@@ -6,6 +6,8 @@ import { AlertService } from '../_services/alert.service';
 import { UserService } from '../_api/user/user.service';
 import { ToastrService } from 'ngx-toastr';
 import * as firebase from 'firebase/app';
+import { HttpService } from '../_services/HttpService';
+
 
 @Component({
   templateUrl: 'register.component.html',
@@ -20,7 +22,16 @@ export class RegisterComponent implements OnInit {
   user = {};
   users = [];
   defaultImage = '../assets/images/portrait/small/default.png';
+  public pageModel={
+    userid:'',
+    password:'',
+    newpassword:'',
+    confirmpassword:'',
+    pwdDifferent:true
+  }
   constructor(
+    private httpService: HttpService,
+
     private formBuilder: FormBuilder,
     private router: Router,
     private alertService: AlertService,
@@ -31,9 +42,12 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
       firstName: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      // email: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      newpassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmpassword: ['', [Validators.required, Validators.minLength(6)]]
     });
+    this.pageModel.pwdDifferent=false;
 
     this.userService.getUsers().subscribe(users => {
       this.users = users.map(item => {
@@ -50,59 +64,49 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.controls;
   }
 
-  tryRegister() {
+  async tryRegister() {
     this.submitted = true;
     if (this.registerForm.invalid) {
       return;
     }
+    if(this.registerForm.value.newpassword!=this.registerForm.value.confirmpassword){
+      this.pageModel.pwdDifferent=true;
+      return;
+    }
     this.loading = true;
+    try {
+      ///認証
+      await this.httpService.accessToken(
+        this.f.email.value,
+        this.f.password.value
+      );
+      // ///権限チェック
+      // await this.userService.authorized().toPromise();
+      ///自身の情報取得
+      // var res = await this.userService.getMyInfo().toPromise();
+
+      var param ={ 
+        "username":　this.f.email.value ,
+        "password":　this.f.newpassword.value
+      };
+      var resUser = await this.httpService.usePost('/updateProfile', param).then(item => {
+        try {
+          if (item != null) {
 
 
-    this.authService.doRegister(this.registerForm.value).then(
-      res => {
-        this.user = {
-          name: this.registerForm.value.firstName,
-          image: '../../../../assets/images/portrait/small/default.png',
-          uid: res.user.uid
-        };
-        const currentUser = firebase.auth().currentUser;
-        currentUser.updateProfile({
-          photoURL: this.defaultImage,
-          displayName: this.registerForm.value.firstName
-        }).then( user => {
-          console.log(user, 'user succesfull update');
-        }, err => {
-          console.log(err);
-        });
-        this.loading = false;
-        console.log(res);
-        this.errorMessage = '';
-        this.alertService.success('Registration successful', true);
-        if (this.users.length === 0) {
-          this.userService.createUser(this.user).then(user => {
-            console.log(user);
-          });
-        } else if (this.users.length !== 0) {
-          for (let i = 0; i < this.users.length; i++) {
-            if (this.users[i].uid !== res.user.uid) {
-              this.userService.createUser(this.user).then(user => {
-                console.log(user);
-              });
-              break;
-            } else {
-              console.log('error');
-            }
           }
-        } else {
-          console.log('error');
+
+        } catch (e) {
+          console.log('ユーザーを検索API エラー　発生しました。');
         }
-        this.router.navigate(['/login']);
-      },
-      err => {
-        console.log(err);
-        this.loading = false;
-        this.alertService.error(err.message);
-      }
-    );
+      })
+
+      // this.router.navigate(["/main/page/dashboard"]);
+    } catch (err) {
+      // this.handleError('操作失敗', err);
+      this.alertService.error(err.message);
+    }
+
+
   }
 }
