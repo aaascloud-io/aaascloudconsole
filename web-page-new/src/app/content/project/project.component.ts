@@ -376,17 +376,6 @@ export class ProjectComponent implements OnInit {
         }
       });
     }
-    
-
-    // const temp = [...this.rows];
-    // for (const tempRow of temp) {
-    //   if (tempRow.id === row.id) {
-    //     temp.splice(index, 1);
-    //     break;
-    //   }
-    //   index++;
-    // }
-    // this.rows = temp;
   }
 
   /**
@@ -485,9 +474,6 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  closeProjectEditModal(editProjectDataModalContent){
-    
-  }
 
 
   // デバイス連携
