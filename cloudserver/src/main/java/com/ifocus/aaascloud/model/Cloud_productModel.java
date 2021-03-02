@@ -25,6 +25,8 @@ public class Cloud_productModel {
 	private String summary;
 	private Integer createuserid;
 	private String createusername;
+	private String lastname;
+	private String firstname;
 	private Integer alive;
 	// 一括削除用リスト
 	private List<Integer> productidlist;
@@ -58,15 +60,29 @@ public class Cloud_productModel {
 	}
 
 	/*
-	 * createusername情報検索条件取得
+	 * lastname情報検索条件取得
 	 *
 	 */
-	public String getCreateusernameForSearch() {
+	public String getLastnameForSearch() {
 
-		if (this.createusername == null) {
+		if (this.lastname == null) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
-			return "%" + this.createusername.trim() + "%";
+			return "%" + this.lastname.trim() + "%";
 		}
 	}
+
+	/*
+	 * firstname情報検索条件取得
+	 *
+	 */
+	public String getFirstnameForSearch() {
+
+		if (this.firstname == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.firstname.trim() + "%";
+		}
+	}
+
 }

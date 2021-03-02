@@ -47,9 +47,12 @@ public class Cloud_productService {
 	 *
 	 *
 	 */
-	public List<Cloud_productModel> searchMyProductList(Cloud_productModel model) throws Exception {
+	public List<Cloud_productModel> searchMyProductList(List<Integer> userList,Cloud_productModel model) throws Exception {
+
 		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByProducttypenameAndProductname(
-				model.getCreateusernameForSearch(),
+				userList,
+				model.getLastnameForSearch(),
+				model.getFirstnameForSearch(),
 				model.getProducttypenameForSearch(),
 				model.getProductnameForSearch());
 		return getModelsByEntitys(list);
@@ -179,7 +182,9 @@ public class Cloud_productService {
 		model.setCreateuserid(entity.getCreateuserid());
 		// 作成者名取得
 		Optional<Cloud_userEntity> createuser = cloud_userRepository.findById(entity.getCreateuserid());
-		model.setCreateusername(createuser.get().getUsername());
+		model.setFirstname(createuser.get().getFirstname());
+		model.setLastname(createuser.get().getLastname());
+		model.setCreateusername(createuser.get().getLastname() + " " + createuser.get().getFirstname());
 
 		return model;
 

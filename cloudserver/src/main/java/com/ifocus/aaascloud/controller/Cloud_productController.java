@@ -74,8 +74,10 @@ public class Cloud_productController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// アクセス権限ユーザ一覧を取得する
+			List<Integer> useridlist = accessService.getAccessUsers(model.getLoginInfo().getLoginuserid());
 			// マイプロダクトを検索する
-			List<Cloud_productModel> list = cloud_productService.searchMyProductList(model);
+			List<Cloud_productModel> list = cloud_productService.searchMyProductList(useridlist, model);
 
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
