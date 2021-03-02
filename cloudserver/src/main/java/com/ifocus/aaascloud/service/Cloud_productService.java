@@ -51,8 +51,7 @@ public class Cloud_productService {
 
 		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByProducttypenameAndProductname(
 				userList,
-				model.getLastnameForSearch(),
-				model.getFirstnameForSearch(),
+				model.getCreateusernameForSearch(),
 				model.getProducttypenameForSearch(),
 				model.getProductnameForSearch());
 		return getModelsByEntitys(list);
