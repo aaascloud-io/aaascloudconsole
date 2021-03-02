@@ -428,6 +428,22 @@ public class Cloud_deviceService {
 		Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(entity.getCompanyid());
 		model.setCompanyname(company.get().getCompanyname());
 
+		// プロダクト名
+		if (entity.getProductid() != null) {
+			Optional<Cloud_productEntity> product = cloud_productRepository.findById(entity.getProductid());
+			model.setProductname(product.get().getProductname());
+		}
+		// プロジェクト名
+		if (entity.getProjectid() != null) {
+			Optional<Cloud_projectEntity> project = cloud_projectRepository.findById(entity.getProjectid());
+			model.setProjectname(project.get().getProjectname());
+		}
+		// グループ名
+		if (entity.getGroupid() != null) {
+			Optional<Cloud_groupEntity> group = cloud_groupRepository.findById(entity.getGroupid());
+			model.setGroupname(group.get().getGroupname());
+		}
+
 		model.setUserid(entity.getUserid());
 		model.setLastprojectId(entity.getLastprojectId());
 		model.setLastgroupid(entity.getLastgroupid());
