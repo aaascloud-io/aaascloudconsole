@@ -368,3 +368,10 @@
 :host ::ng-deep .content-right {
   width: calc(100% - -30px) !important;
 }
+
+::ng-deep .datatable-header .datatable-header-cell {
+  background-color: #6b6f82 !important;
+}
+::ng-deep .datatable-header .datatable-header-cell-label {
+  color:white !important; 
+}
