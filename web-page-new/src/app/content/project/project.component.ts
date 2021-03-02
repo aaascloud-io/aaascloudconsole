@@ -3,37 +3,12 @@ import { NgForm } from '@angular/forms';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
-
 import { HttpService } from 'src/app/_services/HttpService';
 import { HttpClient } from '@angular/common/http';
-
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
-
-
-class Contact {
-  constructor(
-    public id: number,
-    public name: string,
-    public email: string,
-    public phone: string,
-    public image: any,
-    public isFavorite: boolean,
-    public isActive: string
-  ) { }
-}
-
-class ErrorList{
-  constructor(
-    public errorCode: number,
-    public deviceId: number,
-    public adminUser: string,
-    public happenTime: object,
-    public status:any,
-  ){}
-}
 
 @Component({
   selector: 'app-project',
@@ -41,20 +16,9 @@ class ErrorList{
   styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit {
-  selectedErrorItem:any;
 
-
-  columns: any = [];
-  contactName: any;
-  contactEmail: any;
-  contactPhone: any;
-  contactImage: any;
-  contactFavorite: boolean;
-  contactactive: string;
-  rows: any[] = [];
+  
   name = 'Angular';
-  public imagePath;
-  imgURL: any;
   selectedContact: any;
   contactFlag: boolean;
   addContact: any;
@@ -66,10 +30,18 @@ export class ProjectComponent implements OnInit {
   loadingIndicator: true;
   selected = [];
   temp = [];
+  
+  // 需要用到的数据
+  rows: any[] = [];
   temp2 = this.rows;
+  PERSON: any;
+  collectionSize: any;
+  page = 1;
+  pageSize: any;
 
   selectedProject: any;
   searchValue:any;
+
 
   public config: PerfectScrollbarConfigInterface = { };
 
@@ -92,7 +64,6 @@ export class ProjectComponent implements OnInit {
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
     ) { 
-      // this.initData();
     }
 
     protected pageModel = {
@@ -100,15 +71,6 @@ export class ProjectComponent implements OnInit {
       addList: [],
       dataAll: [],
       productList: [],
-      addProduct: {
-        productTypeId: null,
-        productcode: '',
-        productName: '',
-        model: '',
-        version: '',
-        sim: 0,
-        summary: ''
-      },
       addProject:{
         projectName:'',
         productId:'',
@@ -127,14 +89,18 @@ export class ProjectComponent implements OnInit {
         deviceList:[],
         userId:1,
       },
+
+      // 登录数据
       loginUser: {
         loginuserid: null,
         loginusername: '',
         loginrole: null,
         logincompanyid: '',
       },
+      // 登录用数据
       userInfoParame: {
       },
+
       data:[],
       selectedData : {},
     }
@@ -145,8 +111,9 @@ export class ProjectComponent implements OnInit {
      * OnInit
      */
   ngOnInit() {
+    // 获取登录时必须的认证数据，并存在pageModal的 loginUser 和 userInfoParame 中
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    console.log("这里是project的item数据");
+    console.log("这里是初始化获取的item数据");
     console.log(item);
     this.pageModel.loginUser.loginuserid = item.uid;
     this.pageModel.loginUser.loginusername = item.login_id;
@@ -172,6 +139,7 @@ export class ProjectComponent implements OnInit {
   }
 
   async initData(){
+    // 把服务器请求到的数据存在 rows 数组中
     this.rows = [];
     var res = await this.httpService.post("/getProjects",this.pageModel.userInfoParame);
     console.log("这里是project的res数据");
@@ -199,25 +167,6 @@ export class ProjectComponent implements OnInit {
     // this.pageModel.productLength = jsonItem.productCount;
 
   }
-
-
-
-
-
-
-
-  /**
-   * Add new contact
-   *
-   * @param addNewProjectModal      Id of the add contact modal;
-   */
-  // addTableDataModal(addTableDataModalContent) {
-  //   this.addModal = this.modal.open(addTableDataModalContent, {
-  //     windowClass: 'animated fadeInDown'
-  //   });
-  //   this.contactFlag = true;
-  // }
-
 
 
   // 新規プロジェクト
@@ -273,6 +222,7 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  // 検索機能
   searchProject(){
     console.log("这是搜索条件");
     console.log(this.searchValue);
@@ -318,7 +268,7 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-
+  // 検索条件クリア
   clearSearchProject(){
     this.searchValue = "";
     console.log("清除搜索条件");
@@ -413,7 +363,6 @@ export class ProjectComponent implements OnInit {
     });
     this.contactFlag = false;
   }
-
     // ModalデータをAPIに更新
   /**
    * Update contact details
@@ -476,260 +425,57 @@ export class ProjectComponent implements OnInit {
 
 
 
+
+
+  
   // デバイス連携
   deviceLink(deviceLinkModalContent,row){
 
   }
 
-  /**
-   * Selected contact
-   *
-   * @param selected      Selected contact;
-   */
-  // onSelectContact({ selected }) {
-  onSelectContact({ selected }) {
-    this.selected.splice(0, this.selected.length);
-    this.selected.push(...selected);
+  checkAll(e){
+
   }
+  isAllChecked() {
+
+  }
+  sortData(){
+
+  }
+
+  getTabledata() {
+    this.PERSON = this.pageModel.data;
+    this.collectionSize = this.PERSON.length;
+    this.PERSON.forEach(x => x.isSelected = false)
+    this.PaginationData();
+  }
+  /**
+ * Pagination table
+ */
+  get PaginationData() {
+    if (this.PERSON) {
+      // if (this.pageSize > 0) {
+      // } else {
+      //   if (this.PERSON.length > 100) {
+      //     this.pageSize = 20
+      //   } else {
+      //     this.pageSize = 10
+      //   }
+      // }
+      return this.PERSON.map((person, i) => ({ deviceid: i + 1, ...person }))
+        .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
+    }
+  }
+ 
 
 
   
 
-  /**
-   * Choose contact image
-   *
-   * @param event     Select contact image;
-   */
-  preview(event) {
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      this.contactImage = e.target.result;
-    };
-    reader.readAsDataURL(event.target.files[0]);
-  }
+ 
 
 
 
   
-
-  /**
-   * Update contact details
-   *
-   * @param editForm      Edit form for values check
-   * @param id      Id match to the selected row Id
-   */
-  onUpdate(editForm: NgForm, id) {
-    for (const row of this.rows) {
-      if (row.id === id && editForm.valid === true) {
-        row.name = this.selectedContact['name'];
-        row.email = this.selectedContact['email'];
-        row.phone = this.selectedContact['phone'];
-        this.editModal.close(editForm.resetForm);
-        break;
-      }
-    }
-  }
-
-  /**
-   * Contact changed to favorite or non-favorite
-   *
-   * @param row     Row of the favorite contact
-   */
-  favoriteChange(row) {
-    if (row.isFavorite) {
-      row.isFavorite = row.isFavorite ? false : true;
-    } else {
-      row.isFavorite = true;
-    }
-  }
-
-  /**
-   * Delete selected contact
-   */
-  deleteCheckedRow() {
-    if(confirm("選択したデバイスを全削除します。よろしいですか？")){
-      let index = 0;
-      const removedIndex = [];
-      const temp = [...this.rows];
-      console.log("这是this.rows的值");
-      console.log(this.rows);
-      console.log(temp);
-      console.log(this.selected);
-      for (const row of temp) {
-        for (const selectedRow of this.selected) {
-          if (row.projectid === selectedRow.projectid) {
-            removedIndex.push(index);
-          }
-        }
-        index++;
-      }
-      for (let i = removedIndex.length - 1; i >= 0; i--) {
-        temp.splice(removedIndex[i], 1);
-      }
-      this.rows = temp;
-      this.selected = [];
-
-      let item: UserInfo = this.dataFatoryService.getUserInfo();
-      if (item != null) {
-        var param = {
-          "loginInfo": {
-            "loginuserid": item.uid,
-            "loginusername": item.login_id,
-            "loginrole": item.role,
-            "logincompanyid": item.company
-          },
-          "targetUserInfo": {
-            "targetuserid": item.uid,
-            "targetuserCompanyid": item.company
-          },
-          "deviceidlist": removedIndex,
-        }
-      }
-      this.httpService.useRpDelete('deleteProject', param).then(item => {
-        try {
-          if (item.resultCode == "0000") {
-
-            this.ngOnInit();
-            // $("#addinfo").hide();
-            // $('.modal-backdrop').remove();
-            alert('選択したプロジェクトを削除しました');
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      }
-      );
-    }
-  }
-
-  /**
-   * favorite set when add contact
-   *
-   * @param event     favorite set on click event
-   */
-  addFavoriteImage(event) {
-    if (event.target.checked === true) {
-      this.contactFavorite = true;
-    } else {
-      this.contactFavorite = false;
-    }
-  }
-
-  /**
-   * New contact add to the table
-   *
-   * @param addForm     Add contact form
-   */
-  addNewContact(addForm: NgForm) {
-    if (this.contactImage == null) {
-      this.contactImage = '../../../assets/images/portrait/small/default.png';
-    } else {
-      this.contactImage = this.contactImage;
-    }
-
-    if (this.contactactive === undefined) {
-      this.contactactive = 'away';
-    } else {
-      this.contactactive = this.contactactive;
-    }
-
-    /**
-     * Add contact if valid addform value
-     */
-    if (addForm.valid === true) {
-      this.rows.push(
-        new Contact(
-          this.rows.length + 1,
-          this.contactName,
-          this.contactEmail,
-          this.contactPhone,
-          this.contactImage,
-          this.contactFavorite,
-          this.contactactive
-        )
-      );
-      this.rows = [...this.rows];
-      addForm.reset();
-      this.addModal.close(addForm.resetForm);
-    }
-  }
-
-  /**
-   * Set the phone number format
-   */
-  onFormat() {
-    if (this.contactFlag === true) {
-      this.value = this.contactPhone;
-    } else if (this.contactFlag === false) {
-      this.value = this.selectedContact['phone'];
-    }
-
-    let country, city, number;
-
-    switch (this.value.length) {
-      case 6:
-        country = 1;
-        city = this.value.slice(0, 3);
-        number = this.value.slice(3);
-        break;
-
-      case 7:
-        country = this.value[0];
-        city = this.value.slice(1, 4);
-        number = this.value.slice(4);
-        break;
-
-      case 8:
-        country = this.value.slice(0, 3);
-        city = this.value.slice(3, 5);
-        number = this.value.slice(5);
-        break;
-
-      default:
-        return this.value;
-    }
-    if (country === 1) {
-      country = '';
-    }
-
-    number = number.slice(0, 3) + '-' + number.slice(3);
-
-    const no = '(' + city + ')' + '-' + number;
-    if (this.contactFlag === true) {
-      this.contactPhone = no;
-    } else if (this.contactFlag === false) {
-      this.selectedContact['phone'] = no;
-    }
-  }
-
-  /**
-   * Sidebar open/close in responsive
-   *
-   * @param event     Sidebar open/close
-   */
-  sidebar(event) {
-    const toggleIcon = document.getElementById('sidebar-left');
-    const toggle = document.getElementById('content-overlay');
-    if (event.currentTarget.className === 'sidebar-toggle d-block d-lg-none') {
-      this._renderer.addClass(toggleIcon, 'show');
-      this._renderer.addClass(toggle, 'show');
-    }
-  }
-
-  /**
-   * Overlay add/remove fuction in responsive
-   *
-   * @param event     Overlay click event
-   */
-  contentOverlay(event) {
-    const toggleIcon = document.getElementById('sidebar-left');
-    const toggle = document.getElementById('content-overlay');
-    if (event.currentTarget.className === 'content-overlay show') {
-      this._renderer.removeClass(toggleIcon, 'show');
-      this._renderer.removeClass(toggle, 'show');
-    }
-  }
-
 
 
 
@@ -754,5 +500,208 @@ export class ProjectComponent implements OnInit {
     this.table.offset = 0;
   }
 
+
+
+
+
+////////////////////////////////////////////////////////////////////////////
+// 以下为垃圾代码
+  /**
+   * Overlay add/remove fuction in responsive
+   *
+   * @param event     Overlay click event
+   */
+  // contentOverlay(event) {
+  //   const toggleIcon = document.getElementById('sidebar-left');
+  //   const toggle = document.getElementById('content-overlay');
+  //   if (event.currentTarget.className === 'content-overlay show') {
+  //     this._renderer.removeClass(toggleIcon, 'show');
+  //     this._renderer.removeClass(toggle, 'show');
+  //   }
+  // }
+
+  /**
+   * Set the phone number format
+   */
+  // onFormat() {
+  //   if (this.contactFlag === true) {
+  //     this.value = this.contactPhone;
+  //   } else if (this.contactFlag === false) {
+  //     this.value = this.selectedContact['phone'];
+  //   }
+
+  //   let country, city, number;
+
+  //   switch (this.value.length) {
+  //     case 6:
+  //       country = 1;
+  //       city = this.value.slice(0, 3);
+  //       number = this.value.slice(3);
+  //       break;
+
+  //     case 7:
+  //       country = this.value[0];
+  //       city = this.value.slice(1, 4);
+  //       number = this.value.slice(4);
+  //       break;
+
+  //     case 8:
+  //       country = this.value.slice(0, 3);
+  //       city = this.value.slice(3, 5);
+  //       number = this.value.slice(5);
+  //       break;
+
+  //     default:
+  //       return this.value;
+  //   }
+  //   if (country === 1) {
+  //     country = '';
+  //   }
+
+  //   number = number.slice(0, 3) + '-' + number.slice(3);
+
+  //   const no = '(' + city + ')' + '-' + number;
+  //   if (this.contactFlag === true) {
+  //     this.contactPhone = no;
+  //   } else if (this.contactFlag === false) {
+  //     this.selectedContact['phone'] = no;
+  //   }
+  // }
+
+  /**
+   * Sidebar open/close in responsive
+   *
+   * @param event     Sidebar open/close
+   */
+  // sidebar(event) {
+  //   const toggleIcon = document.getElementById('sidebar-left');
+  //   const toggle = document.getElementById('content-overlay');
+  //   if (event.currentTarget.className === 'sidebar-toggle d-block d-lg-none') {
+  //     this._renderer.addClass(toggleIcon, 'show');
+  //     this._renderer.addClass(toggle, 'show');
+  //   }
+  // }
+
+  /**
+   * New contact add to the table
+   *
+   * @param addForm     Add contact form
+   */
+  // addNewContact(addForm: NgForm) {
+  //   if (this.contactImage == null) {
+  //     this.contactImage = '../../../assets/images/portrait/small/default.png';
+  //   } else {
+  //     this.contactImage = this.contactImage;
+  //   }
+
+  //   if (this.contactactive === undefined) {
+  //     this.contactactive = 'away';
+  //   } else {
+  //     this.contactactive = this.contactactive;
+  //   }
+
+  //   if (addForm.valid === true) {
+  //     this.rows.push(
+  //       new Contact(
+  //         this.rows.length + 1,
+  //         this.contactName,
+  //         this.contactEmail,
+  //         this.contactPhone,
+  //         this.contactImage,
+  //         this.contactFavorite,
+  //         this.contactactive
+  //       )
+  //     );
+  //     this.rows = [...this.rows];
+  //     addForm.reset();
+  //     this.addModal.close(addForm.resetForm);
+  //   }
+  // }
+
+  /**
+   * favorite set when add contact
+   *
+   * @param event     favorite set on click event
+   */
+  // addFavoriteImage(event) {
+  //   if (event.target.checked === true) {
+  //     this.contactFavorite = true;
+  //   } else {
+  //     this.contactFavorite = false;
+  //   }
+  // }
+
+   /**
+   * Contact changed to favorite or non-favorite
+   *
+   * @param row     Row of the favorite contact
+   */
+  // favoriteChange(row) {
+  //   if (row.isFavorite) {
+  //     row.isFavorite = row.isFavorite ? false : true;
+  //   } else {
+  //     row.isFavorite = true;
+  //   }
+  // }
+
+    /**
+   * Update contact details
+   *
+   * @param editForm      Edit form for values check
+   * @param id      Id match to the selected row Id
+   */
+  // onUpdate(editForm: NgForm, id) {
+  //   for (const row of this.rows) {
+  //     if (row.id === id && editForm.valid === true) {
+  //       row.name = this.selectedContact['name'];
+  //       row.email = this.selectedContact['email'];
+  //       row.phone = this.selectedContact['phone'];
+  //       this.editModal.close(editForm.resetForm);
+  //       break;
+  //     }
+  //   }
+  // }
+
+  /**
+   * Add new contact
+   *
+   * @param addNewProjectModal      Id of the add contact modal;
+   */
+  // addTableDataModal(addTableDataModalContent) {
+  //   this.addModal = this.modal.open(addTableDataModalContent, {
+  //     windowClass: 'animated fadeInDown'
+  //   });
+  //   this.contactFlag = true;
+  // }
+
+   /**
+   * Selected contact
+   *
+   * @param selected      Selected contact;
+   */
+  // onSelectContact({ selected }) {
+  //   this.selected.splice(0, this.selected.length);
+  //   this.selected.push(...selected);
+  // }
+
+   /**
+   * Choose contact image
+   *
+   * @param event     Select contact image;
+   */
+  // preview(event) {
+  //   const reader = new FileReader();
+  //   reader.onload = (e: any) => {
+  //     this.contactImage = e.target.result;
+  //   };
+  //   reader.readAsDataURL(event.target.files[0]);
+  // }
+
+    /**
+   * Delete selected contact
+   */
+  // deleteCheckedRow() {
+    
+  // }
 
 }
