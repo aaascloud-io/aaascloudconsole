@@ -14,7 +14,10 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.projectid = 0 AND c.companyid = :companyid", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c "
+			+ "WHERE c.companyid = :companyid "
+			+ "AND (c.projectid IS NULL OR c.projectid = 0) "
+			+ "AND (c.groupid IS NULL OR c.groupid = 0) ", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchSelectableDevicesByCompanyid(@Param("companyid") Integer companyid);
 
 	/*
@@ -211,5 +214,43 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ "AND d.userid IN :userids "
 			+ "ORDER BY d.productid,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchUnderCompanyDevicesByProducttypeAndUseridIn( @Param("producttype") String producttype, @Param("userids") List<Integer> userids);
+
+	/*
+	 * IMEI存在チェック
+	 *
+	 *
+	 */
+	public List<Cloud_deviceEntity> searchDevicesByImeiIn(@Param("imei") List<String> imei);
+
+	/*
+	 * SN存在チェック
+	 *
+	 *
+	 */
+	public List<Cloud_deviceEntity> searchDeviceBySnIn(@Param("sn") List<String> sn);
+
+	/*
+	 * SIM_IMSI存在チェック
+	 *
+	 *
+	 */
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.sim_imsi IN :sim_imsi ", nativeQuery = true)
+	public List<Cloud_deviceEntity> searchDeviceBySim_imsiIn(@Param("sim_imsi") List<String> sim_imsi);
+
+	/*
+	 * SIM_ICCID存在チェック
+	 *
+	 *
+	 */
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.sim_iccid IN :sim_iccid ", nativeQuery = true)
+	public List<Cloud_deviceEntity> searchDeviceBySim_iccidIn(@Param("sim_iccid") List<String> sim_iccid);
+
+	/*
+	 * SIM_TEL存在チェック
+	 *
+	 *
+	 */
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.sim_tel IN :sim_tel ", nativeQuery = true)
+	public List<Cloud_deviceEntity> searchDeviceBySim_telIn(@Param("sim_tel") List<String> sim_tel);
 
 }

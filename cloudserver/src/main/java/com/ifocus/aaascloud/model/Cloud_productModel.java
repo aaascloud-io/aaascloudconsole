@@ -25,6 +25,8 @@ public class Cloud_productModel {
 	private String summary;
 	private Integer createuserid;
 	private String createusername;
+	private String lastname;
+	private String firstname;
 	private Integer alive;
 	// 一括削除用リスト
 	private List<Integer> productidlist;
@@ -69,4 +71,5 @@ public class Cloud_productModel {
 			return "%" + this.createusername.trim() + "%";
 		}
 	}
+
 }

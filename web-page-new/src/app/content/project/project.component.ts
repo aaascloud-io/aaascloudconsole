@@ -3,37 +3,12 @@ import { NgForm } from '@angular/forms';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
-
 import { HttpService } from 'src/app/_services/HttpService';
 import { HttpClient } from '@angular/common/http';
-
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
-
-
-class Contact {
-  constructor(
-    public id: number,
-    public name: string,
-    public email: string,
-    public phone: string,
-    public image: any,
-    public isFavorite: boolean,
-    public isActive: string
-  ) { }
-}
-
-class ErrorList{
-  constructor(
-    public errorCode: number,
-    public deviceId: number,
-    public adminUser: string,
-    public happenTime: object,
-    public status:any,
-  ){}
-}
 
 @Component({
   selector: 'app-project',
@@ -41,37 +16,25 @@ class ErrorList{
   styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit {
-  selectedErrorItem:any;
 
-
-  columns: any = [];
-  contactName: any;
-  contactEmail: any;
-  contactPhone: any;
-  contactImage: any;
-  contactFavorite: boolean;
-  contactactive: string;
-  rows: any[] = [];
-  name = 'Angular';
-  public imagePath;
-  imgURL: any;
-  selectedContact: any;
-  contactFlag: boolean;
-  addContact: any;
-  placement = 'bottom-right';
-  imagepathdefault: any;
-  addModal = null;
-  editModal = null;
   value: any;
-  loadingIndicator: true;
-  selected = [];
+  // 重要参数
+  rows: any[] = [];
   temp = [];
   temp2 = this.rows;
-
+  contactFlag: boolean;
+  addModal = null;
+  editModal = null;
+  // 选中的单条数据
   selectedProject: any;
-  searchValue:any;
+  // 选中的多条数据
+  selected = [];
+  searchValue: any;
+  pageSize = 20;
 
-  public config: PerfectScrollbarConfigInterface = { };
+  // Product绑定系列参数
+
+  public config: PerfectScrollbarConfigInterface = {};
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
   @ViewChild(PerfectScrollbarDirective) directiveRef?: PerfectScrollbarDirective;
@@ -91,63 +54,57 @@ export class ProjectComponent implements OnInit {
     private _httpClient: HttpClient,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
-    ) { 
-      // this.initData();
-    }
+  ) {
+    // this.initData();
+  }
 
-    protected pageModel = {
-      USERCODE:null,
-      addList: [],
-      dataAll: [],
-      productList: [],
-      addProduct: {
-        productTypeId: null,
-        productcode: '',
-        productName: '',
-        model: '',
-        version: '',
-        sim: 0,
-        summary: ''
-      },
-      addProject:{
-        projectName:'',
-        productId:'',
-        projectSummary:'',
-        userId:'',
-      },
-      projectDetail: {
-        deviceCounts:'',
-        groupCounts:'',
-        productid:'',
-        projectid:'',
-        projectname:'',
-        projectsummary:'',
-        alive:'',
-        groupList:[],
-        deviceList:[],
-        userId:1,
-      },
-      loginUser: {
-        loginuserid: null,
-        loginusername: '',
-        loginrole: null,
-        logincompanyid: '',
-      },
-      userInfoParame: {
-      },
-      data:[],
-      selectedData : {},
-    }
+  protected pageModel = {
+    USERCODE: null,
+    addList: [],
+    dataAll: [],
+    productList: [],
+    addProduct: {
+      productTypeId: null,
+      productcode: '',
+      productName: '',
+      model: '',
+      version: '',
+      sim: 0,
+      summary: ''
+    },
+    addProject: {
+      projectName: '',
+      productId: '',
+      projectSummary: '',
+      userId: '',
+    },
+    projectDetail: {
+      deviceCounts: '',
+      groupCounts: '',
+      productid: '',
+      projectid: '',
+      projectname: '',
+      projectsummary: '',
+      alive: '',
+      groupList: [],
+      deviceList: [],
+      userId: 1,
+    },
+    loginUser: {
+      loginuserid: null,
+      loginusername: '',
+      loginrole: null,
+      logincompanyid: '',
+    },
+    userInfoParame: {
+    },
+    data: [],
+    selectedData: {},
+    deviceData:{},
+  }
 
-      
-
-    /**
-     * OnInit
-     */
   ngOnInit() {
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    console.log("这里是project的item数据");
-    console.log(item);
     this.pageModel.loginUser.loginuserid = item.uid;
     this.pageModel.loginUser.loginusername = item.login_id;
     this.pageModel.loginUser.loginrole = item.role;
@@ -165,71 +122,37 @@ export class ProjectComponent implements OnInit {
         "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
       },
     };
-    console.log("这里是project的pageModel数据");
-    console.log(this.pageModel.userInfoParame);
     this.initData();
-
   }
 
-  async initData(){
+  async initData() {
     this.rows = [];
-    var res = await this.httpService.post("/getProjects",this.pageModel.userInfoParame);
-    console.log("这里是project的res数据");
-    console.log(res);
-
+    var res = await this.httpService.post("/getProjects", this.pageModel.userInfoParame);
     let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-    console.log("这是jsonItem的值");
-    console.log(jsonItem);
     jsonItem.forEach(element => {
       this.pageModel.data.push(element);
       this.rows.push(element);
     });
-    console.log("这是rows的data值");
-    console.log(this.rows);
-
     this.rows = [...this.rows];
     this.temp2 = [...this.rows];
     console.log("这是...运算符后的data值");
     console.log(this.rows);
 
-    // jsonItem.productList.forEach((elem) => {
-    //   let product_info = JSON.parse(elem);
-    //   this.pageModel.products.push(product_info)
-    // });
-    // this.pageModel.productLength = jsonItem.productCount;
-
+    var deviceTemp = await this.httpService.post("/getCompanyDevices", this.pageModel.userInfoParame);
+    console.log("这是device的数据");
+    console.log(deviceTemp);
   }
 
-
-
-
-
-
-
-  /**
-   * Add new contact
-   *
-   * @param addNewProjectModal      Id of the add contact modal;
-   */
-  // addTableDataModal(addTableDataModalContent) {
-  //   this.addModal = this.modal.open(addTableDataModalContent, {
-  //     windowClass: 'animated fadeInDown'
-  //   });
-  //   this.contactFlag = true;
-  // }
-
-
-
   // 新規プロジェクト
-    // Modal を開く
-  addNewProjectModal(addNewProjectModal){
+  // Modal を開く
+  addNewProjectModal(addNewProjectModal) {
     this.addModal = this.modal.open(addNewProjectModal, {
       windowClass: 'animated fadeInDown'
     });
     this.contactFlag = true;
   }
-    // ModalデータをAPIに更新
-  addNewProjectForm(NewProjectForm:NgForm){
+  // ModalデータをAPIに更新
+  addNewProjectForm(NewProjectForm: NgForm) {
     let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     if (routeif != null) {
       var param = {
@@ -244,41 +167,38 @@ export class ProjectComponent implements OnInit {
           "targetuserCompanyid": routeif.company
         },
         "projectname": this.pageModel.addProject.projectName,
-        "productid":this.pageModel.addProject.productId,
-        "projectsummary":this.pageModel.addProject.projectSummary,
+        "productid": this.pageModel.addProject.productId,
+        "projectsummary": this.pageModel.addProject.projectSummary,
       }
     }
     console.log("这是 addNewProjectForm 的 param");
     console.log(param);
-    this.httpService.useRpPost('registerProject',param).then(item=>{
+    this.httpService.useRpPost('registerProject', param).then(item => {
       console.log("这是 addNewProjectForm 的 item");
       console.log(item);
-      try{
-        if(item.resultCode == "0000"){
+      try {
+        if (item.resultCode == "0000") {
           this.pageModel.addProject.projectName = '';
           this.pageModel.addProject.productId = '';
           this.pageModel.addProject.projectSummary = '';
           this.ngOnInit();
           alert("プロジェクトを登録しました。");
         }
-      }catch(e){
+      } catch (e) {
         alert(e);
       }
     });
-
     if (NewProjectForm.valid === true) {
-
       NewProjectForm.reset();
       this.addModal.close(NewProjectForm.resetForm);
     }
   }
 
-  searchProject(){
+  searchProject() {
     console.log("这是搜索条件");
     console.log(this.searchValue);
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
-
       var param = {
         "loginInfo": {
           "loginuserid": routeif.uid,
@@ -295,7 +215,7 @@ export class ProjectComponent implements OnInit {
       console.log("这是目前的 param");
       console.log(param);
 
-      this.httpService.useRpPost('searchProjects',param).then(item=>{
+      this.httpService.useRpPost('searchProjects', param).then(item => {
         console.log("这是 searchProject 的 item");
         console.log(item);
         let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
@@ -318,15 +238,13 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-
-  clearSearchProject(){
+  // 検索条件クリア
+  clearSearchProject() {
     this.searchValue = "";
-    console.log("清除搜索条件");
-    console.log(this.searchValue);
     this.ngOnInit();
   }
 
-  // プロジェクト削除
+  // プロジェクト単体削除
   /**
    * Delete contact row
    * @param row     Selected row for delete contact
@@ -335,86 +253,60 @@ export class ProjectComponent implements OnInit {
     let index = 0;
     console.log("这是 delete 里面的 row");
     console.log(row);
-    if (confirm(row.projectname + "を削除します。よろしいですか？")){
+    if (confirm(row.projectname + "を削除します。よろしいですか？")) {
       let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    if (routeif != null) {
-      var param = {
-        "loginInfo": {
-          "loginuserid": routeif.uid,
-          "loginusername": routeif.login_id,
-          "loginrole": routeif.role,
-          "logincompanyid": routeif.company,
-        },
-        "targetUserInfo": {
-          "targetuserid": routeif.uid,
-          "targetuserCompanyid": routeif.company,
-        },
-        // "deviceCounts": row.deviceCounts,
-        // "groupCounts":row.groupCounts,
-        // "productid":row.productid,
-        "projectid":row.projectid,
-        // "projectname":row.projectname,
-        // "projectsummary":row.projectsummary,
-      };
-    }
+      if (routeif != null) {
+        var param = {
+          "loginInfo": {
+            "loginuserid": routeif.uid,
+            "loginusername": routeif.login_id,
+            "loginrole": routeif.role,
+            "logincompanyid": routeif.company,
+          },
+          "targetUserInfo": {
+            "targetuserid": routeif.uid,
+            "targetuserCompanyid": routeif.company,
+          },
+          // "deviceCounts": row.deviceCounts,
+          // "groupCounts":row.groupCounts,
+          // "productid":row.productid,
+          "projectid": row.projectid,
+          // "projectname":row.projectname,
+          // "projectsummary":row.projectsummary,
+        };
+      }
       console.log("这是 delete 的 param");
       console.log(param);
       // var res = await this.httpService.post("/deleteProject",param);
       // console.log("这是 delete 的 res");
       // console.log(res);
-      this.httpService.delete('deleteProject',param).then(item=>{
+      this.httpService.delete('deleteProject', param).then(item => {
         console.log("这是 delete 的 item");
         console.log(item);
-        try{
-          if(item.body.resultCode == "0000"){
+        try {
+          if (item.body.resultCode == "0000") {
 
             this.ngOnInit();
             alert("プロジェクトを削除しました。");
           }
-        }catch(e){
+        } catch (e) {
           alert(e);
         }
       });
     }
   }
 
-  /**
-   * Edit selected contact row.
-   *
-   * @param editTableDataModalContent     Id of the edit contact model.
-   * @param row     The row which needs to be edited.
-   */
-  // editTableDataModal(editTableDataModalContent, row) {
-  //   console.log("模态框导入row");
-  //   console.log(row);
-  //   this.pageModel.selectedData = Object.assign({},row)
-  //   console.log("模态框导入selectedData");
-  //   console.log(this.pageModel.selectedData);
-
-    
-  //   this.editModal = this.modal.open(editTableDataModalContent, {
-  //     windowClass: 'animated fadeInDown'
-  //   });
-  //   this.contactFlag = false;
-  // }
-
-
   // プロジェクト詳細と修正
-    // // Modal を開く
+  // // Modal を開く
   editProjectDataModal(editProjectDataModalContent, row) {
     // this.selectedContact = Object.assign({}, row);
-    this.selectedProject = Object.assign({},row);
-
-    console.log("这是 edit 功能内的 selectedProject 值");
-    console.log(this.selectedProject);
-
+    this.selectedProject = Object.assign({}, row);
     this.editModal = this.modal.open(editProjectDataModalContent, {
       windowClass: 'animated fadeInDown'
     });
     this.contactFlag = false;
   }
-
-    // ModalデータをAPIに更新
+  // ModalデータをAPIに更新
   /**
    * Update contact details
    *
@@ -422,12 +314,6 @@ export class ProjectComponent implements OnInit {
    * @param projectid      Id match to the selected row Id
    */
   projectDataUpdate(projectEditForm: NgForm, projectid) {
-    console.log("这是 projectDataUpdate 方法里传入的 projectEditForm 和 projectid");
-    console.log(projectEditForm);
-    console.log(projectid);
-    console.log("这是目前的 selectedProject");
-    console.log(this.selectedProject);
-
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       this.pageModel.projectDetail.projectid = projectid;
@@ -450,22 +336,20 @@ export class ProjectComponent implements OnInit {
         "projectname": this.pageModel.projectDetail.projectname,
         "projectsummary": this.pageModel.projectDetail.projectsummary,
       };
-      console.log("这是目前的 param");
-      console.log(param);
 
       this.httpService.useRpPut('updateProject', param).then(item => {
         console.log("这是目前的 item");
         console.log(item);
         try {
           if (item.resultCode == "0000") {
-  
+
             this.ngOnInit();
             alert('プロジェクト情報を改修しました');
-          if (projectEditForm.valid === true) {
-  
-            projectEditForm.reset();
-            this.editModal.close(projectEditForm.resetForm);
-          }
+            if (projectEditForm.valid === true) {
+
+              projectEditForm.reset();
+              this.editModal.close(projectEditForm.resetForm);
+            }
           }
         } catch (e) {
           console.log(e);
@@ -474,13 +358,7 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-
-
-  // デバイス連携
-  deviceLink(deviceLinkModalContent,row){
-
-  }
-
+  // 選択したプロジェクトを複数削除
   /**
    * Selected contact
    *
@@ -491,84 +369,11 @@ export class ProjectComponent implements OnInit {
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
   }
-
-
-  
-
-  /**
-   * Choose contact image
-   *
-   * @param event     Select contact image;
-   */
-  preview(event) {
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      this.contactImage = e.target.result;
-    };
-    reader.readAsDataURL(event.target.files[0]);
-  }
-
-
-
-  
-
-  /**
-   * Update contact details
-   *
-   * @param editForm      Edit form for values check
-   * @param id      Id match to the selected row Id
-   */
-  onUpdate(editForm: NgForm, id) {
-    for (const row of this.rows) {
-      if (row.id === id && editForm.valid === true) {
-        row.name = this.selectedContact['name'];
-        row.email = this.selectedContact['email'];
-        row.phone = this.selectedContact['phone'];
-        this.editModal.close(editForm.resetForm);
-        break;
-      }
-    }
-  }
-
-  /**
-   * Contact changed to favorite or non-favorite
-   *
-   * @param row     Row of the favorite contact
-   */
-  favoriteChange(row) {
-    if (row.isFavorite) {
-      row.isFavorite = row.isFavorite ? false : true;
-    } else {
-      row.isFavorite = true;
-    }
-  }
-
-  /**
-   * Delete selected contact
-   */
   deleteCheckedRow() {
-    if(confirm("選択したデバイスを全削除します。よろしいですか？")){
+    if (confirm("選択したデバイスを全削除します。よろしいですか？")) {
       let index = 0;
       const removedIndex = [];
       const temp = [...this.rows];
-      console.log("这是this.rows的值");
-      console.log(this.rows);
-      console.log(temp);
-      console.log(this.selected);
-      for (const row of temp) {
-        for (const selectedRow of this.selected) {
-          if (row.projectid === selectedRow.projectid) {
-            removedIndex.push(index);
-          }
-        }
-        index++;
-      }
-      for (let i = removedIndex.length - 1; i >= 0; i--) {
-        temp.splice(removedIndex[i], 1);
-      }
-      this.rows = temp;
-      this.selected = [];
-
       let item: UserInfo = this.dataFatoryService.getUserInfo();
       if (item != null) {
         var param = {
@@ -582,162 +387,37 @@ export class ProjectComponent implements OnInit {
             "targetuserid": item.uid,
             "targetuserCompanyid": item.company
           },
-          "deviceidlist": removedIndex,
+          "projectlist": this.selected,
         }
       }
-      this.httpService.useRpDelete('deleteProject', param).then(item => {
+      this.httpService.useRpDelete('deleteProjects', param).then(item => {
         try {
           if (item.resultCode == "0000") {
-
+            this.searchValue = "";
             this.ngOnInit();
-            // $("#addinfo").hide();
-            // $('.modal-backdrop').remove();
             alert('選択したプロジェクトを削除しました');
           }
         } catch (e) {
           console.log(e);
         }
-      }
-      );
+      });
     }
   }
 
-  /**
-   * favorite set when add contact
-   *
-   * @param event     favorite set on click event
-   */
-  addFavoriteImage(event) {
-    if (event.target.checked === true) {
-      this.contactFavorite = true;
-    } else {
-      this.contactFavorite = false;
-    }
+  // デバイス連携
+  // Modal 開く
+  deviceLinkModal(deviceLinkModalContent, row) {
+    this.selectedProject = Object.assign({}, row);
+    this.editModal = this.modal.open(deviceLinkModalContent, {
+      windowClass: 'animated fadeInDown',
+      size: 'lg'
+    });
   }
 
-  /**
-   * New contact add to the table
-   *
-   * @param addForm     Add contact form
-   */
-  addNewContact(addForm: NgForm) {
-    if (this.contactImage == null) {
-      this.contactImage = '../../../assets/images/portrait/small/default.png';
-    } else {
-      this.contactImage = this.contactImage;
-    }
-
-    if (this.contactactive === undefined) {
-      this.contactactive = 'away';
-    } else {
-      this.contactactive = this.contactactive;
-    }
-
-    /**
-     * Add contact if valid addform value
-     */
-    if (addForm.valid === true) {
-      this.rows.push(
-        new Contact(
-          this.rows.length + 1,
-          this.contactName,
-          this.contactEmail,
-          this.contactPhone,
-          this.contactImage,
-          this.contactFavorite,
-          this.contactactive
-        )
-      );
-      this.rows = [...this.rows];
-      addForm.reset();
-      this.addModal.close(addForm.resetForm);
-    }
-  }
-
-  /**
-   * Set the phone number format
-   */
-  onFormat() {
-    if (this.contactFlag === true) {
-      this.value = this.contactPhone;
-    } else if (this.contactFlag === false) {
-      this.value = this.selectedContact['phone'];
-    }
-
-    let country, city, number;
-
-    switch (this.value.length) {
-      case 6:
-        country = 1;
-        city = this.value.slice(0, 3);
-        number = this.value.slice(3);
-        break;
-
-      case 7:
-        country = this.value[0];
-        city = this.value.slice(1, 4);
-        number = this.value.slice(4);
-        break;
-
-      case 8:
-        country = this.value.slice(0, 3);
-        city = this.value.slice(3, 5);
-        number = this.value.slice(5);
-        break;
-
-      default:
-        return this.value;
-    }
-    if (country === 1) {
-      country = '';
-    }
-
-    number = number.slice(0, 3) + '-' + number.slice(3);
-
-    const no = '(' + city + ')' + '-' + number;
-    if (this.contactFlag === true) {
-      this.contactPhone = no;
-    } else if (this.contactFlag === false) {
-      this.selectedContact['phone'] = no;
-    }
-  }
-
-  /**
-   * Sidebar open/close in responsive
-   *
-   * @param event     Sidebar open/close
-   */
-  sidebar(event) {
-    const toggleIcon = document.getElementById('sidebar-left');
-    const toggle = document.getElementById('content-overlay');
-    if (event.currentTarget.className === 'sidebar-toggle d-block d-lg-none') {
-      this._renderer.addClass(toggleIcon, 'show');
-      this._renderer.addClass(toggle, 'show');
-    }
-  }
-
-  /**
-   * Overlay add/remove fuction in responsive
-   *
-   * @param event     Overlay click event
-   */
-  contentOverlay(event) {
-    const toggleIcon = document.getElementById('sidebar-left');
-    const toggle = document.getElementById('content-overlay');
-    if (event.currentTarget.className === 'content-overlay show') {
-      this._renderer.removeClass(toggleIcon, 'show');
-      this._renderer.removeClass(toggle, 'show');
-    }
-  }
-
-
-
-
-
-
+// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   // デバイス検索（本地検索）、機能廃棄、API検索に交換
-    // 用法：
-        // 在搜索框中监测按键抬起  (keyup)='updateFilter($event)'
+  // 用法：
+  // 在搜索框中监测按键抬起  (keyup)='updateFilter($event)'
   /**
    * Search contact from contact table
    *
@@ -754,5 +434,201 @@ export class ProjectComponent implements OnInit {
     this.table.offset = 0;
   }
 
+  /**
+ * Overlay add/remove fuction in responsive
+ *
+ * @param event     Overlay click event
+ */
+  // contentOverlay(event) {
+  //   const toggleIcon = document.getElementById('sidebar-left');
+  //   const toggle = document.getElementById('content-overlay');
+  //   if (event.currentTarget.className === 'content-overlay show') {
+  //     this._renderer.removeClass(toggleIcon, 'show');
+  //     this._renderer.removeClass(toggle, 'show');
+  //   }
+  // }
+
+  /**
+   * Sidebar open/close in responsive
+   *
+   * @param event     Sidebar open/close
+   */
+  // sidebar(event) {
+  //   const toggleIcon = document.getElementById('sidebar-left');
+  //   const toggle = document.getElementById('content-overlay');
+  //   if (event.currentTarget.className === 'sidebar-toggle d-block d-lg-none') {
+  //     this._renderer.addClass(toggleIcon, 'show');
+  //     this._renderer.addClass(toggle, 'show');
+  //   }
+  // }
+
+  /**
+     * Set the phone number format
+     */
+  // onFormat() {
+  //   if (this.contactFlag === true) {
+  //     this.value = this.contactPhone;
+  //   } else if (this.contactFlag === false) {
+  //     this.value = this.selectedContact['phone'];
+  //   }
+
+  //   let country, city, number;
+
+  //   switch (this.value.length) {
+  //     case 6:
+  //       country = 1;
+  //       city = this.value.slice(0, 3);
+  //       number = this.value.slice(3);
+  //       break;
+
+  //     case 7:
+  //       country = this.value[0];
+  //       city = this.value.slice(1, 4);
+  //       number = this.value.slice(4);
+  //       break;
+
+  //     case 8:
+  //       country = this.value.slice(0, 3);
+  //       city = this.value.slice(3, 5);
+  //       number = this.value.slice(5);
+  //       break;
+
+  //     default:
+  //       return this.value;
+  //   }
+  //   if (country === 1) {
+  //     country = '';
+  //   }
+  //   number = number.slice(0, 3) + '-' + number.slice(3);
+  //   const no = '(' + city + ')' + '-' + number;
+  //   if (this.contactFlag === true) {
+  //     this.contactPhone = no;
+  //   } else if (this.contactFlag === false) {
+  //     this.selectedContact['phone'] = no;
+  //   }
+  // }
+
+  /**
+   * New contact add to the table
+   *
+   * @param addForm     Add contact form
+   */
+  // addNewContact(addForm: NgForm) {
+  //   if (this.contactImage == null) {
+  //     this.contactImage = '../../../assets/images/portrait/small/default.png';
+  //   } else {
+  //     this.contactImage = this.contactImage;
+  //   }
+
+  //   if (this.contactactive === undefined) {
+  //     this.contactactive = 'away';
+  //   } else {
+  //     this.contactactive = this.contactactive;
+  //   }
+  //   if (addForm.valid === true) {
+  //     this.rows.push(
+  //       new Contact(
+  //         this.rows.length + 1,
+  //         this.contactName,
+  //         this.contactEmail,
+  //         this.contactPhone,
+  //         this.contactImage,
+  //         this.contactFavorite,
+  //         this.contactactive
+  //       )
+  //     );
+  //     this.rows = [...this.rows];
+  //     addForm.reset();
+  //     this.addModal.close(addForm.resetForm);
+  //   }
+  // }
+
+  /**
+   * favorite set when add contact
+   *
+   * @param event     favorite set on click event
+   */
+  // addFavoriteImage(event) {
+  //   if (event.target.checked === true) {
+  //     this.contactFavorite = true;
+  //   } else {
+  //     this.contactFavorite = false;
+  //   }
+  // }
+
+  /**
+ * Contact changed to favorite or non-favorite
+ *
+ * @param row     Row of the favorite contact
+ */
+  // favoriteChange(row) {
+  //   if (row.isFavorite) {
+  //     row.isFavorite = row.isFavorite ? false : true;
+  //   } else {
+  //     row.isFavorite = true;
+  //   }
+  // }
+
+  /**
+ * Add new contact
+ *
+ * @param addNewProjectModal      Id of the add contact modal;
+ */
+  // addTableDataModal(addTableDataModalContent) {
+  //   this.addModal = this.modal.open(addTableDataModalContent, {
+  //     windowClass: 'animated fadeInDown'
+  //   });
+  //   this.contactFlag = true;
+  // }
+  /**
+ * Edit selected contact row.
+ *
+ * @param editTableDataModalContent     Id of the edit contact model.
+ * @param row     The row which needs to be edited.
+ */
+  // editTableDataModal(editTableDataModalContent, row) {
+  //   console.log("模态框导入row");
+  //   console.log(row);
+  //   this.pageModel.selectedData = Object.assign({},row)
+  //   console.log("模态框导入selectedData");
+  //   console.log(this.pageModel.selectedData);
+
+
+  //   this.editModal = this.modal.open(editTableDataModalContent, {
+  //     windowClass: 'animated fadeInDown'
+  //   });
+  //   this.contactFlag = false;
+  // }
+
+  /**
+ * Choose contact image
+ *
+ * @param event     Select contact image;
+ */
+  // preview(event) {
+  //   const reader = new FileReader();
+  //   reader.onload = (e: any) => {
+  //     this.contactImage = e.target.result;
+  //   };
+  //   reader.readAsDataURL(event.target.files[0]);
+  // }
+
+  /**
+ * Update contact details
+ *
+ * @param editForm      Edit form for values check
+ * @param id      Id match to the selected row Id
+ */
+  // onUpdate(editForm: NgForm, id) {
+  //   for (const row of this.rows) {
+  //     if (row.id === id && editForm.valid === true) {
+  //       row.name = this.selectedContact['name'];
+  //       row.email = this.selectedContact['email'];
+  //       row.phone = this.selectedContact['phone'];
+  //       this.editModal.close(editForm.resetForm);
+  //       break;
+  //     }
+  //   }
+  // }
 
 }

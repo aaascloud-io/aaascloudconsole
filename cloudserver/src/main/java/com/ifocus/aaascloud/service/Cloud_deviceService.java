@@ -141,6 +141,23 @@ public class Cloud_deviceService {
 	}
 
 	/*
+	 * 自社デバイス一覧取得(デバイス選択子画面用：プロジェクトとグループに所属しない自社デバイス)
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceModel> デバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getMySelectableDevicesByCompanyid(Cloud_deviceModel model) throws Exception {
+
+		// 会社IDを設定する
+		this.setCompanyIDToModel(model);
+
+		// 全社のデバイス一覧取得
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchSelectableDevicesByCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
+		return this.getModelsByEntitys(list);
+
+	}
+
+	/*
 	 * プロジェクトデバイス一覧取得(グループに所属なし)
 	 * @param projectid Integer プロジェクトID
 	 * @return List<Cloud_deviceModel> プロジェクトデバイス一覧
@@ -350,6 +367,226 @@ public class Cloud_deviceService {
 			}
 		}
 		return returnList;
+
+	}
+
+	/*
+	 * デバイス登録時IMEI存在チェック
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceDetailModel> デバイス情報リスト
+	 *
+	 */
+	public List<Cloud_deviceDetailModel> checkImeiExistedInDB(Cloud_deviceModel model) throws Exception {
+
+		List<Cloud_deviceDetailModel> returnList = new ArrayList<Cloud_deviceDetailModel>();
+
+		List<String> imeiList = getImeiList(model);
+		List<Cloud_deviceEntity> devices = cloud_deviceRepository.searchDevicesByImeiIn(imeiList);
+
+		if (!devices.isEmpty()) {
+			for (Cloud_deviceEntity entity:devices) {
+				for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+					// 同じの場合、
+					if (entity.getImei().equals(deviceDetailModel.getImei())) {
+						// 戻るリストに追加
+						returnList.add(deviceDetailModel);
+					}
+				}
+			}
+		}
+		return returnList;
+	}
+
+	/*
+	 * デバイス登録時SN存在チェック
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceDetailModel> デバイス情報リスト
+	 *
+	 */
+	public List<Cloud_deviceDetailModel> checkSnExistedInDB(Cloud_deviceModel model) throws Exception {
+
+		List<Cloud_deviceDetailModel> returnList = new ArrayList<Cloud_deviceDetailModel>();
+
+		List<String> snList = getSnList(model);
+		List<Cloud_deviceEntity> devices = cloud_deviceRepository.searchDeviceBySnIn(snList);
+
+		if (!devices.isEmpty()) {
+			for (Cloud_deviceEntity entity:devices) {
+				for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+					// 同じの場合、
+					if (entity.getSn().equals(deviceDetailModel.getSn())) {
+						// 戻るリストに追加
+						returnList.add(deviceDetailModel);
+					}
+				}
+			}
+		}
+		return returnList;
+	}
+
+	/*
+	 * デバイス登録時SIM_IMSI存在チェック
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceDetailModel> デバイス情報リスト
+	 *
+	 */
+	public List<Cloud_deviceDetailModel> checkSim_imsiExistedInDB(Cloud_deviceModel model) throws Exception {
+
+		List<Cloud_deviceDetailModel> returnList = new ArrayList<Cloud_deviceDetailModel>();
+
+		List<String> sim_imsiList = getSim_imsiList(model);
+		List<Cloud_deviceEntity> devices = cloud_deviceRepository.searchDeviceBySim_imsiIn(sim_imsiList);
+
+		if (!devices.isEmpty()) {
+			for (Cloud_deviceEntity entity:devices) {
+				for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+					// 同じの場合、
+					if (entity.getSim_imsi().equals(deviceDetailModel.getSim_imsi())) {
+						// 戻るリストに追加
+						returnList.add(deviceDetailModel);
+					}
+				}
+			}
+		}
+		return returnList;
+	}
+
+	/*
+	 * デバイス登録時SIM_ICCID存在チェック
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceDetailModel> デバイス情報リスト
+	 *
+	 */
+	public List<Cloud_deviceDetailModel> checkSim_iccidExistedInDB(Cloud_deviceModel model) throws Exception {
+
+		List<Cloud_deviceDetailModel> returnList = new ArrayList<Cloud_deviceDetailModel>();
+
+		List<String> sim_iccidList = getSim_iccidList(model);
+		List<Cloud_deviceEntity> devices = cloud_deviceRepository.searchDeviceBySim_iccidIn(sim_iccidList);
+
+		if (!devices.isEmpty()) {
+			for (Cloud_deviceEntity entity:devices) {
+				for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+					// 同じの場合、
+					if (entity.getSim_iccid().equals(deviceDetailModel.getSim_iccid())) {
+						// 戻るリストに追加
+						returnList.add(deviceDetailModel);
+					}
+				}
+			}
+		}
+		return returnList;
+	}
+
+	/*
+	 * デバイス登録時SIM_TEL存在チェック
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceDetailModel> デバイス情報リスト
+	 *
+	 */
+	public List<Cloud_deviceDetailModel> checkSim_telExistedInDB(Cloud_deviceModel model) throws Exception {
+
+		List<Cloud_deviceDetailModel> returnList = new ArrayList<Cloud_deviceDetailModel>();
+
+		List<String> sim_telList = getSim_telList(model);
+		List<Cloud_deviceEntity> devices = cloud_deviceRepository.searchDeviceBySim_telIn(sim_telList);
+
+		if (!devices.isEmpty()) {
+			for (Cloud_deviceEntity entity:devices) {
+				for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+					// 同じの場合、
+					if (entity.getSim_tel().equals(deviceDetailModel.getSim_tel())) {
+						// 戻るリストに追加
+						returnList.add(deviceDetailModel);
+					}
+				}
+			}
+		}
+		return returnList;
+	}
+
+	/*
+	 * IMEIリスト取得
+	 */
+	private List<String> getImeiList(Cloud_deviceModel model) throws Exception {
+
+		List<String> list = new ArrayList<String>();
+		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+			// NULLでない場合、
+			if (deviceDetailModel.getImei() != null) {
+				// 戻るリストに追加
+				list.add(deviceDetailModel.getImei());
+			}
+		}
+		return list;
+
+	}
+
+	/*
+	 * SNリスト取得
+	 */
+	private List<String> getSnList(Cloud_deviceModel model) throws Exception {
+
+		List<String> list = new ArrayList<String>();
+		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+			// NULLでない場合、
+			if (deviceDetailModel.getSn() != null) {
+				// 戻るリストに追加
+				list.add(deviceDetailModel.getSn());
+			}
+		}
+		return list;
+
+	}
+
+	/*
+	 * SIM_IMSIリスト取得
+	 */
+	private List<String> getSim_imsiList(Cloud_deviceModel model) throws Exception {
+
+		List<String> list = new ArrayList<String>();
+		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+			// NULLでない場合、
+			if (deviceDetailModel.getSim_imsi() != null) {
+				// 戻るリストに追加
+				list.add(deviceDetailModel.getSim_imsi());
+			}
+		}
+		return list;
+
+	}
+
+	/*
+	 * SIM_ICCIDリスト取得
+	 */
+	private List<String> getSim_iccidList(Cloud_deviceModel model) throws Exception {
+
+		List<String> list = new ArrayList<String>();
+		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+			// NULLでない場合、
+			if (deviceDetailModel.getSim_iccid() != null) {
+				// 戻るリストに追加
+				list.add(deviceDetailModel.getSim_iccid());
+			}
+		}
+		return list;
+
+	}
+
+	/*
+	 * SIM_TELリスト取得
+	 */
+	private List<String> getSim_telList(Cloud_deviceModel model) throws Exception {
+
+		List<String> list = new ArrayList<String>();
+		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+			// NULLでない場合、
+			if (deviceDetailModel.getSim_tel() != null) {
+				// 戻るリストに追加
+				list.add(deviceDetailModel.getSim_tel());
+			}
+		}
+		return list;
 
 	}
 

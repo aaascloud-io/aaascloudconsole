@@ -158,6 +158,70 @@ public class Cloud_deviceController {
 	}
 
 	/**
+	 * 自社デバイス一覧取得(デバイス選択子画面用)
+	 * @param cloud_deviceModel Cloud_deviceModel デバイス情報
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getMySelectableDevices", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> getMySelectableDevices(@RequestBody Cloud_deviceModel cloud_deviceModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		// 必須チェック
+		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
+
+			List<Cloud_deviceModel> list = new ArrayList<Cloud_deviceModel>();
+			if (cloud_deviceModel.getLoginInfo().getLoginuserid().equals(cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
+				try {
+					list = cloud_deviceService.getMySelectableDevicesByCompanyid(cloud_deviceModel);
+				} catch (Exception e) {
+					/* 異常系 */
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getMySelectableDevicesByCompanyid:" + e.getMessage());
+					return response;
+				}
+			} else {
+				// 権限判断
+				if (cloud_userService.isAncestor(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
+					try {
+						list = cloud_deviceService.getMySelectableDevicesByCompanyid(cloud_deviceModel);
+					} catch (Exception e) {
+						/* 異常系 */
+						response.setStatus(200);
+						response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+						response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getMySelectableDevicesByCompanyid:" + e.getMessage());
+						return response;
+					}
+				} else {
+					/* 異常系 */
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "cloud_userService.isAncestor");
+					return response;
+				}
+			}
+
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			response.setCount(list.size());
+			response.setData(Util.getJsonString(list));
+		} else {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "userid&targetuseridが必須です。");
+			return response;
+		}
+
+		return response;
+	}
+
+	/**
 	 * デバイス詳細を取得する
 	 * @param cloud_deviceModel Cloud_deviceModel デバイス情報
 	 * @return BaseHttpResponse<String>
@@ -224,24 +288,121 @@ public class Cloud_deviceController {
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
 
-				// プロジェクトを更新する
+				cloud_deviceModel.getDeviceDetailList().add(cloud_deviceModel.getDeviceDetail());
+
+				// プロダクト存在チェックを行う
+				List<Cloud_deviceDetailModel> productErrorList = cloud_deviceService.checkProductExistedInDB(cloud_deviceModel);
+				// DB存在しないプロダクトがあれば、
+				if (!productErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(productErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkProductExistedInDB");
+					response.setData(Util.getJsonString(productErrorList));
+					return response;
+				}
+
+				// プロジェクト存在チェックを行う
+				List<Cloud_deviceDetailModel> projectErrorList = cloud_deviceService.checkProjectExistedInDB(cloud_deviceModel);
+				// DB存在しないプロジェクトがあれば、
+				if (!projectErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(projectErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkProjectExistedInDB");
+					response.setData(Util.getJsonString(projectErrorList));
+					return response;
+				}
+
+				// グループ存在チェックを行う
+				List<Cloud_deviceDetailModel> groupErrorList = cloud_deviceService.checkGroupExistedInDB(cloud_deviceModel);
+				// DB存在しないグループがあれば、
+				if (!groupErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(groupErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkGroupExistedInDB");
+					response.setData(Util.getJsonString(groupErrorList));
+					return response;
+				}
+
+				// IMEI存在チェックを行う
+				List<Cloud_deviceDetailModel> imeiErrorList = cloud_deviceService.checkImeiExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!imeiErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(imeiErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkImeiExistedInDB");
+					response.setData(Util.getJsonString(imeiErrorList));
+					return response;
+				}
+
+				// SN存在チェックを行う
+				List<Cloud_deviceDetailModel> snErrorList = cloud_deviceService.checkSnExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!snErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(snErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSnExistedInDB");
+					response.setData(Util.getJsonString(snErrorList));
+					return response;
+				}
+
+				// SIM_IMSI存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_imsiErrorList = cloud_deviceService.checkSim_imsiExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_imsiErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_imsiErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_imsiExistedInDB");
+					response.setData(Util.getJsonString(sim_imsiErrorList));
+					return response;
+				}
+
+				// SIM_ICCID存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_iccidErrorList = cloud_deviceService.checkSim_iccidExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_iccidErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_iccidErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_iccidExistedInDB");
+					response.setData(Util.getJsonString(sim_iccidErrorList));
+					return response;
+				}
+
+				// SIM_TEL存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_telErrorList = cloud_deviceService.checkSim_telExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_telErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_telErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_telExistedInDB");
+					response.setData(Util.getJsonString(sim_telErrorList));
+					return response;
+				}
+
+				// デバイスを更新する
 				Integer deviceid = cloud_deviceService.registerDevice(cloud_deviceModel);
 
 				if (deviceid != null) {
 
-//					String responseData = new String();
-//					responseData = responseData + "{";
-//
-//					JSONObject resJasonObj = new JSONObject();
-//					// 情報設定
-//					resJasonObj.put("registerCount", 1);
-//
-//					responseData = responseData + "}";
-
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-					response.setData(deviceid.toString());
+					response.setData(Util.getJsonString(deviceid));
 				} else {
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0100);
@@ -284,7 +445,6 @@ public class Cloud_deviceController {
 
 				// プロダクト存在チェックを行う
 				List<Cloud_deviceDetailModel> productErrorList = cloud_deviceService.checkProductExistedInDB(cloud_deviceModel);
-
 				// DB存在しないプロダクトがあれば、
 				if (!productErrorList.isEmpty()) {
 
@@ -293,11 +453,11 @@ public class Cloud_deviceController {
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkProductExistedInDB");
 					response.setData(Util.getJsonString(productErrorList));
+					return response;
 				}
 
 				// プロジェクト存在チェックを行う
 				List<Cloud_deviceDetailModel> projectErrorList = cloud_deviceService.checkProjectExistedInDB(cloud_deviceModel);
-
 				// DB存在しないプロジェクトがあれば、
 				if (!projectErrorList.isEmpty()) {
 
@@ -306,11 +466,11 @@ public class Cloud_deviceController {
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkProjectExistedInDB");
 					response.setData(Util.getJsonString(projectErrorList));
+					return response;
 				}
 
 				// グループ存在チェックを行う
 				List<Cloud_deviceDetailModel> groupErrorList = cloud_deviceService.checkGroupExistedInDB(cloud_deviceModel);
-
 				// DB存在しないグループがあれば、
 				if (!groupErrorList.isEmpty()) {
 
@@ -319,6 +479,72 @@ public class Cloud_deviceController {
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkGroupExistedInDB");
 					response.setData(Util.getJsonString(groupErrorList));
+					return response;
+				}
+
+				// IMEI存在チェックを行う
+				List<Cloud_deviceDetailModel> imeiErrorList = cloud_deviceService.checkImeiExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!imeiErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(imeiErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkImeiExistedInDB");
+					response.setData(Util.getJsonString(imeiErrorList));
+					return response;
+				}
+
+				// SN存在チェックを行う
+				List<Cloud_deviceDetailModel> snErrorList = cloud_deviceService.checkSnExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!snErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(snErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSnExistedInDB");
+					response.setData(Util.getJsonString(snErrorList));
+					return response;
+				}
+
+				// SIM_IMSI存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_imsiErrorList = cloud_deviceService.checkSim_imsiExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_imsiErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_imsiErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_imsiExistedInDB");
+					response.setData(Util.getJsonString(sim_imsiErrorList));
+					return response;
+				}
+
+				// SIM_ICCID存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_iccidErrorList = cloud_deviceService.checkSim_iccidExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_iccidErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_iccidErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_iccidExistedInDB");
+					response.setData(Util.getJsonString(sim_iccidErrorList));
+					return response;
+				}
+
+				// SIM_TEL存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_telErrorList = cloud_deviceService.checkSim_telExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_telErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_telErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_telExistedInDB");
+					response.setData(Util.getJsonString(sim_telErrorList));
+					return response;
 				}
 
 				// デバイスを一括登録する
@@ -344,6 +570,110 @@ public class Cloud_deviceController {
 					response.setResultCode(ErrorConstant.ERROR_CODE_0100);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "registerDevices");
 				}
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessOK");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0100);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
+	 * デバイスをチェックする
+	 * @param cloud_deviceModel Cloud_deviceModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/checkDevices", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> checkDevices(@RequestBody Cloud_deviceModel cloud_deviceModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
+
+				// IMEI存在チェックを行う
+				List<Cloud_deviceDetailModel> imeiErrorList = cloud_deviceService.checkImeiExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!imeiErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(imeiErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkImeiExistedInDB");
+					response.setData(Util.getJsonString(imeiErrorList));
+					return response;
+				}
+
+				// SN存在チェックを行う
+				List<Cloud_deviceDetailModel> snErrorList = cloud_deviceService.checkSnExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!snErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(snErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSnExistedInDB");
+					response.setData(Util.getJsonString(snErrorList));
+					return response;
+				}
+
+				// SIM_IMSI存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_imsiErrorList = cloud_deviceService.checkSim_imsiExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_imsiErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_imsiErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_imsiExistedInDB");
+					response.setData(Util.getJsonString(sim_imsiErrorList));
+					return response;
+				}
+
+				// SIM_ICCID存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_iccidErrorList = cloud_deviceService.checkSim_iccidExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_iccidErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_iccidErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_iccidExistedInDB");
+					response.setData(Util.getJsonString(sim_iccidErrorList));
+					return response;
+				}
+
+				// SIM_TEL存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_telErrorList = cloud_deviceService.checkSim_telExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_telErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_telErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_telExistedInDB");
+					response.setData(Util.getJsonString(sim_telErrorList));
+					return response;
+				}
+
+				// 正常終了
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 
 			} else {
 				/* 異常系 */
