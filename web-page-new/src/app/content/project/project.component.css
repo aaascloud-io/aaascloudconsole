@@ -369,9 +369,8 @@
   width: calc(100% - -30px) !important;
 }
 
-::ng-deep .datatable-header .datatable-header-cell {
+
+.thcolor{
   background-color: #6b6f82 !important;
-}
-::ng-deep .datatable-header .datatable-header-cell-label {
-  color:white !important; 
+  color:aliceblue; 
 }
