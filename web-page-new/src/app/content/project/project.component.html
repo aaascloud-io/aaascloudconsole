@@ -1,27 +1,75 @@
 <div class="app-content content">
   <div class="content-wrapper">
     <div class="content-header row mb-1 ml-1">
-      <h4>プロジェクト管理</h4>
+      <!-- <h4>プロジェクト管理</h4> -->
     </div>
     <div class="">
       <div class="content-body">
-        <div class="content-overlay" id='content-overlay'></div>
+        <div>
+          <label for="switch">条件検索：</label>
+          <input id="switch" name="switch" type="checkbox" [(ngModel)]="show" />
+        </div>
+
+        <section class="row" *ngIf="show">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">プロジェクト名</label>
+                        <!-- <input type='text'
+                          style='padding:8px;margin:15px auto;width:200px;height: calc(1.875rem + 2px);border-radius: 0.21rem;border: 1px solid #babfc7;'
+                          [(ngModel)]="searchValue" /> -->
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="searchValue">
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <div class="heading-elements mt-0 pull-right" style="padding-top:20px;">
+                          <button class="btn btn-primary btn-sm gap_contact" (click)="searchProject()">
+                            <i class="d-md-none d-block feather ft-plus white"></i>
+                            <span class="d-md-block d-none">検　索</span></button>
+
+                          <button class="btn btn-warning btn-sm gap_contact" (click)="clearSearchProject()">
+                              <i class="d-md-none d-block feather ft-plus white"></i>
+                              <span class="d-md-block d-none">クリア</span></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="row">
           <div class="col-12">
             <div class="card">
-
               <div class="card-content">
-
                 <div class="card-body">
                   <!-- Task List table -->
-                  <div class="row">
+                  <div class="row mb-3">
                     <div class="col-sm-12">
-                      <button type="button" class="btn btn-primary btn-sm mb-2 mr-1"
+                      <!-- <button type="button" class="btn btn-primary btn-sm mb-2 mr-1"
                         (click)="addNewProjectModal(addNewProject)">新 規</button>
-                      <button type="button" class="btn btn-danger btn-sm mb-2 mr-1">一括削除</button>
+                      <button type="button" class="btn btn-danger btn-sm mb-2 mr-1"
+                        (click)="deleteCheckedRow()">一括削除</button> -->
+                      
+                      <button class="btn btn-primary btn-sm gap_contact"
+                        (click)="addNewProjectModal(addNewProject)">
+                        <i class="d-md-none d-block feather ft-plus white"></i>
+                        <span class="d-md-block d-none">新　規</span></button>
+                      <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
+                        (click)="deleteCheckedRow()">
+                        <i class="d-md-none d-block feather ft-plus white"></i>
+                        <span class="d-md-block d-none">一括削除</span></button>
                     </div>
                   </div>
-                  <div class="row">
+                  <!-- <div class="row">
                     <div class="col-sm-12">
                       <span class="mr-1">プロジェクト名：
                         <input type='text'
@@ -31,21 +79,19 @@
                       <button type="button" class="btn btn-primary btn-sm mr-1" (click)="searchProject()">検　索</button>
                       <button type="button" class="btn btn-warning btn-sm mr-1"
                         (click)="clearSearchProject()">クリア</button>
-
                     </div>
-                  </div>
-
+                  </div> -->
                   <div class="table-responsive">
-                    <table class="table grid-breakpoints">
+                    <table class="table grid-breakpoints table-hover">
                       <thead>
                         <tr>
-                          <th scope="col" class="thcolor"><input type="checkbox">
+                          <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAll($event)">
                           </th>
                           <th scope="col" class="thcolor">No.</th>
-                          <th scope="col" class="thcolor">プロジェクトID</th>
-                          <th scope="col" class="thcolor">プロジェクト名</th>
-                          <th scope="col" class="thcolor">プロダクトID</th>
-                          <th scope="col" class="thcolor">プロジェクト詳細</th>
+                          <th scope="col" class="thcolor" (click)="sortData('projectid')">プロジェクトID</th>
+                          <th scope="col" class="thcolor" (click)="sortData('projectname')">プロジェクト名</th>
+                          <th scope="col" class="thcolor" (click)="sortData('productid')">プロダクトID</th>
+                          <th scope="col" class="thcolor" (click)="sortData('projectsummary')">プロジェクト詳細</th>
                           <th scope="col" class="thcolor">デバイスグループ数</th>
                           <th scope="col" class="thcolor">デバイス数</th>
                           <th scope="col" class="thcolor">デバイス連携</th>
@@ -55,24 +101,29 @@
                       <tbody>
                         <tr *ngFor="let element of PaginationData;let i = index">
                           <td>
-                            <input type="checkbox">
+                            <input type="checkbox" [checked]="element.isSelected"
+                              (change)="checkChange($event,element)">
                           </td>
                           <td>{{i+1}}</td>
-                          <td>{{ element.projectid }}</td>
+                          <td >{{ element.projectid }}</td>
                           <td>{{ element.projectname}}</td>
                           <td>{{ element.productid }}</td>
                           <td>{{ element.projectsummary }}</td>
                           <td>{{ element.groupCounts}}</td>
                           <td>{{ element.deviceCounts}}</td>
-                          <td></td>
+                          <td>
+                            <a class="primary edit mr-1 mrless"
+                              (click)="deviceLinkModal(deviceLinkModalContent, row)"><i
+                                class="la la-calendar-plus-o"></i>
+                            </a>
+                          </td>
 
                           <td>
-                            <a [routerLink]="" class="primary edit mr-1 mrless"
+                            <a class="primary edit mr-1"
                               (click)="editProjectDataModal(editProjectDataModalContent, element)"><i
                                 class="la la-pencil"></i>
                             </a>
-                            <a class="danger delete mr-1 mrless"><i class="la la-trash-o"
-                                (click)="deleteRow(element)"></i></a>
+                            <a class="danger delete mr-1"><i class="la la-trash-o" (click)="deleteRow(element)"></i></a>
                           </td>
                         </tr>
                       </tbody>
@@ -184,59 +235,83 @@
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 <!-- プロジェクトのデバイス連携 -->
 <ng-template #deviceLinkModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+  <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">エラー詳細</h5>
+      <h5 class="modal-title" id="exampleModalLabel1">デバイス連携</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
-      <div class="form-group col-12">
-        <label>エラーコード</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.errcode" #editname="ngModel" name="errcode" id="errcode"
-          class="name form-control" placeholder="Name" disabled
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-        <!-- <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">Name is required</div>
-        </div> -->
+      <div class="table-responsive form-group col-12">
+        <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
+          <thead>
+            <tr>
+              <th scope="col">no.</th>
+              <th scope="col">projectid</th>
+              <th scope="col">groupId</th>
+              <th scope="col">deviceName</th>
+              <th scope="col">imei</th>
+              <th scope="col">iccid</th>
+              <th scope="col">sn</th>
+              <th scope="col">sim_iccid</th>
+              <th scope="col">sim_imsi</th>
+              <th scope="col">sim_tel</th>
+              <th scope="col">encryptedCommunications</th>
+              <th scope="col">encryptedKey</th>
+              <th scope="col">connectServerURL</th>
+              <th scope="col">connectServerPort</th>
+              <th scope="col">bindingFlag</th>
+              <th scope="col">fmLastestVersion</th>
+              <th scope="col">versionComfirmTime</th>
+              <th scope="col">productId</th>
+              <th scope="col">companyId</th>
+              <th scope="col">userId</th>
+              <th scope="col">lastProjectId</th>
+              <th scope="col">lastGroupId</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of rows; let i = index;">
+              <td data-label="no.">{{i + 1}}</td>
+              <td data-label="projectid">{{item.projectid}}</td>
+              <td data-label="groupId">{{item.groupid}}</td>
+              <td data-label="deviceName">{{item.devicename}}</td>
+              <td data-label="imei">{{item.imei}}</td>
+              <td data-label="iccid">{{item.iccid}}</td>
+              <td data-label="sn">{{item.sn}}</td>
+              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
+              <td data-label="sim_imsi">{{item.sim_imsi}}</td>
+              <td data-label="sim_tel">{{item.sim_tel}}</td>
+              <td data-label="encryptedCommunications">{{item.encryptedcommunications}}</td>
+              <td data-label="encryptedKey">{{item.encryptedkey}}</td>
+              <td data-label="connectServerURL">{{item.connectserverurl}}</td>
+              <td data-label="connectServerPort">{{item.connectserverport}}</td>
+              <td data-label="bindingFlag">{{item.bindingflag}}</td>
+              <td data-label="fmLastestVersion">{{item.fmlastestversion}}</td>
+              <td data-label="versionComfirmTime">{{item.versioncomfirmtime}}</td>
+              <td data-label="productId">{{item.productid}}</td>
+              <td data-label="companyId">{{item.companyid}}</td>
+              <!-- <td data-label="industry">{{item.industry}}</td> -->
+              <td data-label="userId">{{item.userid}}</td>
+              <td data-label="lastProjectId">{{item.lastprojectId}}</td>
+              <td data-label="lastGroupId">{{item.lastgroupid}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-
-      <div class="form-group col-12">
-        <label>デバイスID</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.device" disabled #editemail="ngModel" name="email" id="email"
-          class="email form-control" [ngClass]="{ 'is-invalid':editForm.submitted && editemail.invalid }" required
-          email>
-      </div>
-
-
-      <div class="form-group col-12">
-        <label>管理者</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.userid" disabled #editphone="ngModel" name="phone" id="phone"
-          class="phone form-control" placeholder="Phone Number" maxlength="14">
-      </div>
-
-
-      <div class="form-group col-12">
-        <label>発生日時</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.datatime" disabled #editTime="ngModel" name="time" id="time"
-          class="phone form-control" placeholder="Phone Number" maxlength="14">
-      </div>
-
-      <div class="form-group col-12">
-        <label>対応ステータス</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.statusflag" disabled #editStatus="ngModel" name="status"
-          id="status" class="phone form-control" placeholder="Phone Number" maxlength="14">
-      </div>
-
-
+      
+      
+      
+      
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
-        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+        <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">Add
+            New</span></button>
       </div>
     </div>
   </form>
 </ng-template>
+
