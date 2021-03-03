@@ -2,6 +2,7 @@ package com.ifocus.aaascloud.controller;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
+import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_productService;
@@ -27,6 +29,8 @@ public class Cloud_productController {
 	private AccessService accessService;
 	@Autowired
 	private Cloud_productService cloud_productService;
+	@Autowired
+	private Cloud_productRepository cloud_productRepository;
 
 	/**
 	 * プロダクト一覧を取得する
@@ -322,7 +326,8 @@ public class Cloud_productController {
 	 * @return Cloud_productEntity
 	 */
 	private Cloud_productEntity getCloud_productEntityforUpdate(Cloud_productModel model) {
-		Cloud_productEntity entity = new Cloud_productEntity();
+		Optional<Cloud_productEntity> product = cloud_productRepository.findById(model.getProductid());
+		Cloud_productEntity entity = product.get();
 
 		/* システム日時 */
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
