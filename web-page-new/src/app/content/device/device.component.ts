@@ -85,6 +85,7 @@ export class DeviceComponent implements OnInit {
   page = 1;
   TableData: any;
   sortOn: any;
+
   checkOn: 1;
 
   public pageModel = {
@@ -113,7 +114,6 @@ export class DeviceComponent implements OnInit {
       deviceid: '',
       devicename: '',
       imei: '',
-      iccid: '',
       sn: '',
       companySelected: {},
       companyid: '',
@@ -132,6 +132,24 @@ export class DeviceComponent implements OnInit {
       sim_tel: '',
       sim_iccid: ''
     },
+    sort: {
+      snUp: false,
+      snDown: false,
+      imeiUp: false,
+      imeiDown: false,
+      iccidUp: false,
+      iccidDown: false,
+      // devicenameUp: false,
+      // devicenameDown: false,
+      companynameUp: false,
+      companynameDown: false,
+      productnameUp: false,
+      productnameDown: false,
+      projectnameUp: false,
+      projectnameDown: false,
+      groupnameUp: false,
+      groupnameDown: false,
+    }
 
   }
 
@@ -860,6 +878,75 @@ export class DeviceComponent implements OnInit {
     } else {
       this.PERSON.sort((a, b) => a[nm].localeCompare(b[nm]));
       this.sortOn = 1;
+    }
+    this.pageModel.sort.snUp = false;
+    this.pageModel.sort.snDown = false;
+    this.pageModel.sort.imeiUp = false;
+    this.pageModel.sort.imeiDown = false;
+    this.pageModel.sort.iccidUp = false;
+    this.pageModel.sort.iccidDown = false;
+    // this.pageModel.sort.devicenameUp = false;
+    // this.pageModel.sort.devicenameDown = false;
+    this.pageModel.sort.companynameUp = false;
+    this.pageModel.sort.companynameDown = false;
+
+    switch (nm) {
+      case 'sn':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.snUp = true
+        } else {
+          this.pageModel.sort.snDown = true
+        }
+        break;
+      case 'imei':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.imeiUp = true
+        } else {
+          this.pageModel.sort.imeiDown = true
+        }
+        break;
+      case 'sim_iccid':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.iccidUp = true
+        } else {
+          this.pageModel.sort.iccidDown = true
+        }
+        break;
+      // case 'devicename':
+      //   if (this.sortOn == 1) {
+      //     this.pageModel.sort.devicenameUp = true
+      //   } else {
+      //     this.pageModel.sort.devicenameDown = true
+      //   }
+      //   break;
+      case 'companyname':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.companynameUp = true
+        } else {
+          this.pageModel.sort.companynameDown = true
+        }
+        break;
+      case 'productname':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.productnameUp = true
+        } else {
+          this.pageModel.sort.productnameDown = true
+        }
+        break;
+      case 'projectname':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.projectnameUp = true
+        } else {
+          this.pageModel.sort.projectnameDown = true
+        }
+        break;
+      case 'groupname':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.groupnameUp = true
+        } else {
+          this.pageModel.sort.groupnameDown = true
+        }
+        break;
     }
   }
 

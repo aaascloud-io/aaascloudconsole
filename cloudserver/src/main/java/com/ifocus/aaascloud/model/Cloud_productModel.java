@@ -60,28 +60,15 @@ public class Cloud_productModel {
 	}
 
 	/*
-	 * lastname情報検索条件取得
+	 * createusername情報検索条件取得
 	 *
 	 */
-	public String getLastnameForSearch() {
+	public String getCreateusernameForSearch() {
 
-		if (this.lastname == null) {
+		if (this.createusername == null) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
-			return "%" + this.lastname.trim() + "%";
-		}
-	}
-
-	/*
-	 * firstname情報検索条件取得
-	 *
-	 */
-	public String getFirstnameForSearch() {
-
-		if (this.firstname == null) {
-			return CommonConstant.DEFAULT_MATCH_ALL;
-		} else {
-			return "%" + this.firstname.trim() + "%";
+			return "%" + this.createusername.trim() + "%";
 		}
 	}
 
