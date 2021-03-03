@@ -141,6 +141,16 @@ export class ProjectComponent implements OnInit {
     var deviceTemp = await this.httpService.post("/getCompanyDevices", this.pageModel.userInfoParame);
     console.log("这是device的数据");
     console.log(deviceTemp);
+
+    this.httpService.usePost('/getCompanyDevices', this.pageModel.userInfoParame).then(item => {
+      try {
+        if (item != null) {
+          this.pageModel.deviceData = item;
+        }
+      } catch (e) {
+        console.log('ユーザー数数を検索API エラー　発生しました。');
+      }
+    })
   }
 
   // 新規プロジェクト
