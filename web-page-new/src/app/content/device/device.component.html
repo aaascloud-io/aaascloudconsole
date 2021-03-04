@@ -355,7 +355,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
           <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="simtel" class="phone form-control"
-            placeholder="SIMカード電話番号" (keyup)="registerTelFormat()" maxlength="14">
+            placeholder="SIMカード電話番号" (keyup)="registerTelFormat()" maxlength="14" numbersOnly>
         </div>
       </div>
     </div>
