@@ -3,35 +3,28 @@
     <div class="content-header row mb-1 ml-1"><h4>エラー管理</h4></div>
     <div class=""> 
       <div class="content-body">
-        <div class="content-overlay" id='content-overlay' (click)="contentOverlay($event)"></div>
         <section class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-head">
-                <div class="card-header">
-                  <h4 class="card-title">エラー一覧</h4>
-                  
-                </div>
-              </div>
               <div class="card-content">
                 <div class="card-body">
                   <!-- Task List table -->
 
-                  <!-- <div class="table-responsive">
+                  <div class="table-responsive">
                     <table class="table table-hover table-xl mb-0 order-tbl_change">
                       <thead>
                         <tr>
-                          <th class="border-top-0">No</th>
-                          <th class="border-top-0">エラーコード</th>
-                          <th class="border-top-0">デバイスID</th>
-                          <th class="border-top-0">管理者</th>
-                          <th class="border-top-0">発生日時</th>
-                          <th class="border-top-0">対応ステータス</th>
-                          <th class="border-top-0">操作</th>
+                          <th class="col" class="thcolor">No</th>
+                          <th class="col" class="thcolor">エラーコード</th>
+                          <th class="col" class="thcolor">デバイスID</th>
+                          <th class="col" class="thcolor">管理者</th>
+                          <th class="col" class="thcolor">発生日時</th>
+                          <th class="col" class="thcolor">対応ステータス</th>
+                          <th class="col" class="thcolor">操作</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let item of pageModel.data;let i = index;">
+                        <tr *ngFor="let item of PaginationData;let i = index;">
                           <td>{{i+1}}</td>
                           <td>{{item.errcode}}</td>
                           <td>{{item.device}}</td>
@@ -44,10 +37,20 @@
                         </tr>
                       </tbody>
                     </table>
-                  </div> -->
+                    <div class="d-flex justify-content-between p-2">
+                      <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+                      </ngb-pagination>
+                      <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                        <option [ngValue]="10">10 items per page</option>
+                        <option [ngValue]="20">20 items per page</option>
+                        <option [ngValue]="50">50 items per page</option>
+                        <option [ngValue]="100">100 items per page</option>
+                      </select>
+                    </div>
+                  </div>
 
 
-                  <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
+                  <!-- <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
                     [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
                     (select)='onSelectContact($event)' fxFlex="auto" [perfectScrollbar]="config">
 
@@ -89,9 +92,8 @@
                         </a>
                       </ng-template>
                     </ngx-datatable-column>
-                  </ngx-datatable>
+                  </ngx-datatable> -->
 
-                  
                 </div>
               </div>
             </div>
