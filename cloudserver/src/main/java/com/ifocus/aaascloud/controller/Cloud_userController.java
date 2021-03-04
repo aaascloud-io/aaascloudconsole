@@ -19,12 +19,12 @@ import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
+import com.ifocus.aaascloud.model.ReturnModel;
 import com.ifocus.aaascloud.model.UserModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
-import com.ifocus.aaascloud.util.KeyCloakUserService;
 
 import net.sf.json.JSONObject;
 
@@ -41,8 +41,6 @@ public class Cloud_userController {
 	private Cloud_companyService cloud_companyService;
 	@Autowired
 	private Cloud_userRepository cloud_userRepository;
-
-	private KeyCloakUserService keyCloakUserService;
 
 	/**
 	 * 配下ユーザ一覧を取得する
@@ -374,25 +372,26 @@ public class Cloud_userController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-		// admin権限以外の場合、
-		if (1 != cloud_userModel.getLoginInfo().getLoginrole() ) {
-			/* 異常系 */
+		// 権限チェック
+		ReturnModel returnModel = accessService.checkAddUserAccess(cloud_userModel);
+		if (!returnModel.getKey().equals(ErrorConstant.ERROR_CODE_0000)) {
+			/* 異常系:権限なし */
 			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "admin権限が必要。");
+			response.setResultCode(returnModel.getKey());
+			response.setResultMsg("accessService.checkAddUserAccess: " + returnModel.getValue());
 			return response;
 		}
 
 		// KeyCloakに存在しない場合、
-		if (!keyCloakUserService.isValidUsername(cloud_userModel.getUsername())) {
+		if (!cloud_userService.isValidUsername(cloud_userModel.getUsername())) {
 			/* 異常系 */
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0008);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録ユーザ名です。");
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録のユーザ名です。");
 			return response;
 		} else {
 			// KeyCloakからユーザ情報取得＆設定
-			UserModel usermodel = keyCloakUserService.getUserModelFromUsername(cloud_userModel.getUsername());
+			UserModel usermodel = cloud_userService.getUserModelFromUsername(cloud_userModel.getUsername());
 			cloud_userModel.setLastName(usermodel.getLastName());
 			cloud_userModel.setFirstName(usermodel.getFirstName());
 			cloud_userModel.setEmail(usermodel.getEmail());
@@ -441,13 +440,13 @@ public class Cloud_userController {
 			Optional<Cloud_userEntity> tempEntity = cloud_userRepository.findById(cloud_userModel.getUserid());
 			Cloud_userEntity entity = tempEntity.get();
 			// ユーザ名が更新されるなら、
-			if (entity.getUsername() != cloud_userModel.getUsername()) {
+			if (!entity.getUsername().equals(cloud_userModel.getUsername())) {
 				// KeyCloakに存在しない場合、
-				if (!keyCloakUserService.isValidUsername(cloud_userModel.getUsername())) {
+				if (!cloud_userService.isValidUsername(cloud_userModel.getUsername())) {
 					/* 異常系 */
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0008);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録ユーザ名です。");
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録のユーザ名です。");
 					return response;
 				}
 			}
