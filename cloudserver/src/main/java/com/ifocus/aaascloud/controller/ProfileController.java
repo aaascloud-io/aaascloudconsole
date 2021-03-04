@@ -1,5 +1,6 @@
 package com.ifocus.aaascloud.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,13 +12,14 @@ import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.UserModel;
-import com.ifocus.aaascloud.util.KeyCloakUserService;
+import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.Util;
 
 @Controller
 public class ProfileController {
 
-	private KeyCloakUserService keyCloakUserService;
+	@Autowired
+	private Cloud_userService cloud_userService;
 
 	/**
 	 * プロファイルを取得する
@@ -90,7 +92,7 @@ public class ProfileController {
 
 				try {
 					// パスワードを変更する
-					keyCloakUserService.changePassword(cloud_userModel.getUsername(), cloud_userModel.getPassword());
+					cloud_userService.changePassword(cloud_userModel.getUsername(), cloud_userModel.getPassword());
 
 					// 正常終了
 					response.setStatus(200);
@@ -102,7 +104,7 @@ public class ProfileController {
 					/* 異常系 */
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0006);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0006 + "KeyCloakUserService.changePassword:" + e.getMessage());
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0006 + "cloud_userService.changePassword:" + e.getMessage());
 					return response;
 				}
 

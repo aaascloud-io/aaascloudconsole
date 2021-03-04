@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.CorporateNumberConstant;
+import com.ifocus.aaascloud.constant.ErrorConstant;
+import com.ifocus.aaascloud.constant.RoleConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_displaysettingsEntity;
@@ -21,6 +23,7 @@ import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.Cloud_displaysettingsModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
+import com.ifocus.aaascloud.model.ReturnModel;
 
 @SpringBootApplication
 @RestController
@@ -51,6 +54,44 @@ public class AccessService {
 			System.out.println(e.getMessage());
 			return false;
 		}
+	}
+
+	/*
+	 * ユーザ登録権限をチェックする
+	 * @param cloud_userModel Cloud_userModel 登録ユーザ対象情報
+	 * @return ReturnModel
+	 *         0000 = アクセス可能
+	 *         0011 = 会社新規の場合、最初に管理者を登録してください。
+	 *         0012 = 自社ユーザ新規の場合、管理者権限が必要です。
+	 *         0013 = 管理者を追加するには、上位会社に依頼してください。
+	 *
+	 */
+	public ReturnModel checkAddUserAccess(Cloud_userModel cloud_userModel) throws Exception {
+
+		LoginInfo loginInfo = cloud_userModel.getLoginInfo();
+		// 会社新規の場合
+		if (cloud_userModel.getCompanyid() == null) {
+			// 登録ユーザが管理者でない場合、
+			if (cloud_userModel.getRole() != RoleConstant.ADMIN) {
+				return new ReturnModel(ErrorConstant.ERROR_CODE_0011, ErrorConstant.ERROR_MSG_0011);
+			}
+		// 既存会社の場合
+		} else {
+			// 自社の場合
+			if (loginInfo.getLogincompanyid() == cloud_userModel.getCompanyid()) {
+				// admin権限以外の場合、
+				if (RoleConstant.ADMIN != loginInfo.getLoginrole() ) {
+					return new ReturnModel(ErrorConstant.ERROR_CODE_0012, ErrorConstant.ERROR_MSG_0012);
+				}
+				// 登録ユーザが管理者である場合、
+				if (cloud_userModel.getRole() == RoleConstant.ADMIN ) {
+					return new ReturnModel(ErrorConstant.ERROR_CODE_0013, ErrorConstant.ERROR_MSG_0013);
+				}
+			// 配下会社の場合
+			} else {
+			}
+		}
+		return new ReturnModel(ErrorConstant.ERROR_CODE_0000, ErrorConstant.ERROR_MSG_0000);
 	}
 
 	/*

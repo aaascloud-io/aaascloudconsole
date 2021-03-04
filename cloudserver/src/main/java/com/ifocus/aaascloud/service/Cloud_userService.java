@@ -22,6 +22,7 @@ import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.model.UserModel;
+import com.ifocus.aaascloud.util.KeyCloakUserService;
 import com.ifocus.aaascloud.util.Util;
 
 @SpringBootApplication
@@ -38,6 +39,8 @@ public class Cloud_userService {
 	private Cloud_companyService cloud_companyService ;
 	@Autowired
 	private Cloud_deviceService cloud_deviceService ;
+	@Autowired
+	private KeyCloakUserService keyCloakUserService;
 
 	/*
 	 * ログイン認証
@@ -77,6 +80,37 @@ public class Cloud_userService {
 		return true;
 	}
 
+
+	/*
+	 * KeyCloakに存在チェック
+	 * @param username String ユーザ名
+	 * @return boolean
+	 *         true = 有効
+	 *         false = 無効
+	 *
+	 */
+	public boolean isValidUsername(String username) throws Exception {
+		return keyCloakUserService.isValidUsername(username);
+	}
+
+	/*
+	 * KeyCloakからユーザ情報取得
+	 * @param username String ユーザー名（CloudのログインID）
+	 * @return UserModel ユーザー情報
+	 *
+	 */
+	public UserModel getUserModelFromUsername(String username) throws Exception {
+		return keyCloakUserService.getUserModelFromUsername(username);
+	}
+
+	/*
+	 * KeyCloakのパスワードを変更する
+	 * @param username String ユーザー名（CloudのログインID）
+	 * @param newPassword String 新パスワード
+	 */
+	public void changePassword(String username, String newPassword) throws Exception {
+		keyCloakUserService.changePassword(username, newPassword);
+	}
 
 	/*
 	 * 先祖であるかどうかを判断する
@@ -227,6 +261,7 @@ public class Cloud_userService {
 		entity.setEmail(model.getEmail());
 		entity.setRole(model.getRole());
 		entity.setUpperuserid(model.getTargetUserInfo().getTargetuserid());
+		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
