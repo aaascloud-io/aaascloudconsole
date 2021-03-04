@@ -171,6 +171,7 @@ export class ProductComponent implements OnInit {
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown'
+      ,size: 'lg'
     });
     this.contactFlag = true;
   }
@@ -184,6 +185,7 @@ export class ProductComponent implements OnInit {
     this.selectedContact = Object.assign({}, row);
     this.updateModal = this.modal.open(editTableDataModalContent, {
       windowClass: 'animated fadeInDown'
+      ,size: 'lg'
     });
     this.contactFlag = false;
     this.simFlg = this.selectedContact.simflag === 1 ? true : false;
@@ -249,7 +251,6 @@ export class ProductComponent implements OnInit {
    */
   deleteCheckedRow() {
 
-    this.rows;
     if (confirm("選択したデーターを削除しますか")) {
 
       var deleteCheckedids = [];
@@ -450,17 +451,6 @@ export class ProductComponent implements OnInit {
       this._renderer.removeClass(toggleIcon, 'show');
       this._renderer.removeClass(toggle, 'show');
     }
-  }
-
-  /**
- * 一括登録用サンプルのダウンロード(画面より)
- * 
- */
-  protected downloadSampleFiles() {
-    let link = document.createElement("a");
-    link.download = "productInsert.xlsx";
-    link.href = "assets/excel/productInsert.xlsx";
-    link.click();
   }
 
   /**
