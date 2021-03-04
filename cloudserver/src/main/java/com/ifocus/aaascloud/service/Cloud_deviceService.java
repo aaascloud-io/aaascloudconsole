@@ -28,6 +28,7 @@ import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_deviceDetailModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
+import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.util.Util;
 
@@ -248,6 +249,29 @@ public class Cloud_deviceService {
 		// デバイス更新
 		Cloud_deviceEntity updatedEntity = cloud_deviceRepository.save(this.getEntitByModelForUpdate(model));
 		return updatedEntity.getDeviceid();
+
+	}
+
+	/*
+	 * デバイスのプロジェクト情報をクリアする（プロジェクトのみ）
+	 * @param model Integer Cloud_projectDetailModel
+	 *
+	 */
+	public void clearProjectInfoForProjectOnly(Cloud_projectDetailModel model) throws Exception {
+
+		// デバイス一覧取得
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchProjectDevicesWithNoGroupByProjectid(model.getProjectid());
+		/* システム日時 */
+		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+		for (Cloud_deviceEntity entity:list) {
+			// プロジェクト情報をクリアする
+			entity.setProjectid(null);
+			entity.setU_uid(model.getLoginInfo().getLoginuserid());
+			entity.setU_time(systemTime);
+		}
+		// デバイス更新
+		cloud_deviceRepository.saveAll(list);
+		return ;
 
 	}
 
