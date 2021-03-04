@@ -22,6 +22,7 @@ import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.model.UserModel;
+import com.ifocus.aaascloud.util.KeyCloakUserService;
 import com.ifocus.aaascloud.util.Util;
 
 @SpringBootApplication
@@ -38,6 +39,8 @@ public class Cloud_userService {
 	private Cloud_companyService cloud_companyService ;
 	@Autowired
 	private Cloud_deviceService cloud_deviceService ;
+
+	private KeyCloakUserService keyCloakUserService;
 
 	/*
 	 * ログイン認証
@@ -77,6 +80,16 @@ public class Cloud_userService {
 		return true;
 	}
 
+
+	/*
+	 * KeyCloakに存在チェック
+	 * @param username String ユーザ名
+	 * @return Cloud_userModel ログインユーザー情報モデル
+	 *
+	 */
+	public boolean isValidUsername(String username) throws Exception {
+		return keyCloakUserService.isValidUsername(username);
+	}
 
 	/*
 	 * 先祖であるかどうかを判断する
