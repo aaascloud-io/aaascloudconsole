@@ -261,6 +261,7 @@ public class Cloud_userService {
 		entity.setEmail(model.getEmail());
 		entity.setRole(model.getRole());
 		entity.setUpperuserid(model.getTargetUserInfo().getTargetuserid());
+		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
