@@ -16,6 +16,10 @@ public class ErrorConstant {
 	public static final String ERROR_CODE_0008 = "0008";
 	public static final String ERROR_CODE_0009 = "0009";
 
+	public static final String ERROR_CODE_0011 = "0011";
+	public static final String ERROR_CODE_0012 = "0012";
+	public static final String ERROR_CODE_0013 = "0013";
+
 	public static final String ERROR_CODE_0100 = "0100";
 	public static final String ERROR_CODE_0101 = "0101";
 	public static final String ERROR_CODE_0102 = "0102";
@@ -36,6 +40,10 @@ public class ErrorConstant {
 	public static final String ERROR_MSG_0007 = "DB存在チェックエラー:";
 	public static final String ERROR_MSG_0008 = "KeyCloak認証サーバー存在チェックエラー:";
 	public static final String ERROR_MSG_0009 = "代理店取得エラー:";
+
+	public static final String ERROR_MSG_0011 = "権限なし：会社新規の場合、最初に管理者を登録してください。";
+	public static final String ERROR_MSG_0012 = "権限なし：自社ユーザ新規の場合、管理者権限が必要です。";
+	public static final String ERROR_MSG_0013 = "権限なし：管理者を追加するには、上位会社に依頼してください。";
 
 	public static final String ERROR_MSG_0100 = "登録失敗：";
 	public static final String ERROR_MSG_0101 = "更新失敗：";
