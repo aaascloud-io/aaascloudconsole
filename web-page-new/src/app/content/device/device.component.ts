@@ -179,7 +179,6 @@ export class DeviceComponent implements OnInit {
   }
 
   Init(pre: any) {
-    this.getDropdownList();
     let item: UserInfo = this.dataFatoryService.getUserInfo();
     if (item != null) {
       var param = {
@@ -194,6 +193,7 @@ export class DeviceComponent implements OnInit {
           "targetuserCompanyid": item.company
         }
       }
+      this.getDropdownList(param);
 
       this.httpService.usePost('/getCompanyDevices', param).then(item => {
         try {
@@ -246,12 +246,12 @@ export class DeviceComponent implements OnInit {
     }
   }
 
-  getDropdownList() {
-    let item: UserInfo = this.dataFatoryService.getUserInfo();
-    var param = {
-      "loginuserid": item.uid
-    };
-    this.httpService.usePost('/getUnderCompanies', param).then(item => {
+  getDropdownList(param:any) {
+    // let item: UserInfo = this.dataFatoryService.getUserInfo();
+    // var param = {
+    //   {"loginuserid": item.uid}
+    // };
+    this.httpService.usePost('/getUnderCompanies', {"loginuserid": param.loginInfo.loginuserid}).then(item => {
       try {
         if (item != null) {
           this.companySelectArray = item;
@@ -261,7 +261,7 @@ export class DeviceComponent implements OnInit {
       }
     })
 
-    this.httpService.usePost('/getProductAll', {}).then(item => {
+    this.httpService.usePost('/getProductAll', param).then(item => {
       try {
         if (item != null) {
           this.productSelectArray = item;
@@ -282,7 +282,7 @@ export class DeviceComponent implements OnInit {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
-    this.pageModel.deviceDetail;
+    // this.pageModel.deviceDetail;
   }
 
   /**
@@ -315,6 +315,7 @@ export class DeviceComponent implements OnInit {
    * @param row     The row which needs to be edited.
    */
   openEditModal(editDeviceModel, row) {
+    row.sim_tel= this.onFormatFn(row.sim_tel);
     this.selectedDevice = Object.assign({}, row);
     this.editModal = this.modal.open(editDeviceModel, {
       windowClass: 'animated fadeInDown'
@@ -333,12 +334,12 @@ export class DeviceComponent implements OnInit {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       //to do ユーザー名で　ロケーションデータを取る
-      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
-      this.pageModel.deviceDetail.companyid = this.pageModel.deviceDetail.companySelected["companyid"];
+      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);;
+      this.pageModel.deviceDetail.companyid = this.pageModel.deviceDetail.companySelected!=null? this.pageModel.deviceDetail.companySelected["companyid"]:'';
       // this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslSelected["item_id"];
       this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslChecked == false ? '0' : '1';
 
-      this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected["productid"];
+      this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected!=null? this.pageModel.deviceDetail.productSelected["productid"]:'';
 
       var param = {
         "loginInfo": {
@@ -362,13 +363,7 @@ export class DeviceComponent implements OnInit {
           // $("#addinfo").hide();
           // $('.modal-backdrop').remove();
           alert('デバイス情報を登録しました');
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    /**
+              /**
      * Add contact if valid addform value
      */
     if (addDeviceForm.valid === true) {
@@ -376,6 +371,11 @@ export class DeviceComponent implements OnInit {
       addDeviceForm.reset();
       this.addModal.close(addDeviceForm.resetForm);
     }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
   }
 
   /**
@@ -765,7 +765,11 @@ export class DeviceComponent implements OnInit {
         break;
 
       default:
-        return phonenm;
+        // country = phonenm.slice(0, 3);
+        // city = phonenm.slice(3, 5);
+        // number = phonenm.slice(6);
+        break;
+        // return phonenm;
     }
     if (country === 1) {
       country = '';
