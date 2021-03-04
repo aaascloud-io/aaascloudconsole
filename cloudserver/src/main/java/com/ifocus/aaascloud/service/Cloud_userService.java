@@ -39,7 +39,7 @@ public class Cloud_userService {
 	private Cloud_companyService cloud_companyService ;
 	@Autowired
 	private Cloud_deviceService cloud_deviceService ;
-
+	@Autowired
 	private KeyCloakUserService keyCloakUserService;
 
 	/*
@@ -84,11 +84,32 @@ public class Cloud_userService {
 	/*
 	 * KeyCloakに存在チェック
 	 * @param username String ユーザ名
-	 * @return Cloud_userModel ログインユーザー情報モデル
+	 * @return boolean
+	 *         true = 有効
+	 *         false = 無効
 	 *
 	 */
 	public boolean isValidUsername(String username) throws Exception {
 		return keyCloakUserService.isValidUsername(username);
+	}
+
+	/*
+	 * KeyCloakからユーザ情報取得
+	 * @param username String ユーザー名（CloudのログインID）
+	 * @return UserModel ユーザー情報
+	 *
+	 */
+	public UserModel getUserModelFromUsername(String username) throws Exception {
+		return keyCloakUserService.getUserModelFromUsername(username);
+	}
+
+	/*
+	 * KeyCloakのパスワードを変更する
+	 * @param username String ユーザー名（CloudのログインID）
+	 * @param newPassword String 新パスワード
+	 */
+	public void changePassword(String username, String newPassword) throws Exception {
+		keyCloakUserService.changePassword(username, newPassword);
 	}
 
 	/*
