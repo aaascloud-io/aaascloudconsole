@@ -1,6 +1,7 @@
 package com.ifocus.aaascloud.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ifocus.aaascloud.constant.CommonConstant;
@@ -114,6 +115,18 @@ public class Cloud_deviceModel {
 		} else {
 			return "%" + this.groupname.trim() + "%";
 		}
+	}
+
+	/*
+	 * add DeviceDetail To DeviceDetailList
+	 *
+	 */
+	public void addDeviceDetailToDeviceDetailList() {
+
+		if (this.deviceDetailList == null) {
+			deviceDetailList = new ArrayList<Cloud_deviceDetailModel>();
+		}
+		deviceDetailList.add(this.getDeviceDetail());
 	}
 
 }

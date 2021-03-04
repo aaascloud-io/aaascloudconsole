@@ -28,22 +28,26 @@ export class ProjectComponent implements OnInit {
   editModal = null;
   value: any;
   loadingIndicator: true;
-  selected = [];
   temp = [];
   temp2 = [];
   
   // 需要用到的数据
     // rows 用于存储核心数据
   rows: any[] = [];
-
-  PERSON: any;
   collectionSize: any;
+    // 用来表示当前的页码
   page = 1;
+    // 默认为一页显示10条数据
   pageSize =10;
   tableDisplayData:any;
-
+    // 选中的单条数据
   selectedProject: any;
+    // 选中的多条数据
+  selected = [];
   searchValue:any;
+  sortOn: any;
+  checkOn: 1;
+  show = false;
 
 
   public config: PerfectScrollbarConfigInterface = { };
@@ -103,6 +107,8 @@ export class ProjectComponent implements OnInit {
       // 登录用数据
       userInfoParame: {
       },
+      loginInfo:{},
+      targetUserInfo:{},
 
       data:[],
       selectedData : {},
@@ -123,17 +129,15 @@ export class ProjectComponent implements OnInit {
     this.pageModel.loginUser.loginrole = item.role;
     this.pageModel.loginUser.logincompanyid = item.company;
 
-    this.pageModel.userInfoParame = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "loginusername": this.pageModel.loginUser.loginusername,
-        "loginrole": this.pageModel.loginUser.loginrole,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
+    this.pageModel.loginInfo = {
+        "loginuserid": item.uid,
+        "loginusername": item.login_id,
+        "loginrole": item.role,
+        "logincompanyid": item.company,
       },
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
-      },
+    this.pageModel.targetUserInfo = {
+      "targetuserid": item.uid,
+      "targetuserCompanyid": item.company,
     };
     console.log("这里是 project 的 pageModel 的 userInfoParame 数据");
     console.log(this.pageModel.userInfoParame);
@@ -144,7 +148,13 @@ export class ProjectComponent implements OnInit {
   async initData(){
     // 把服务器请求到的数据存在 rows 数组中
     this.rows = [];
-    var res = await this.httpService.post("/getProjects",this.pageModel.userInfoParame);
+    let param = {
+      "loginInfo":this.pageModel.loginInfo,
+      "targetUserInfo":this.pageModel.targetUserInfo,
+    };
+    console.log("这里是 initData 的 param 数据");
+    console.log(param);
+    var res = await this.httpService.post("/getProjects",param);
     let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
     jsonItem.forEach(element => {
       this.rows.push(element);
@@ -179,16 +189,10 @@ export class ProjectComponent implements OnInit {
     let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     if (routeif != null) {
       var param = {
-        "loginInfo": {
-          "loginuserid": routeif.uid,
-          "loginusername": routeif.login_id,
-          "loginrole": routeif.role,
-          "logincompanyid": routeif.company
-        },
-        "targetUserInfo": {
-          "targetuserid": routeif.uid,
-          "targetuserCompanyid": routeif.company
-        },
+        // 登録データ
+        "loginInfo":this.pageModel.loginInfo,
+        "targetUserInfo":this.pageModel.targetUserInfo,
+        // プロジェクト更新データ
         "projectname": this.pageModel.addProject.projectName,
         "productid":this.pageModel.addProject.productId,
         "projectsummary":this.pageModel.addProject.projectSummary,
@@ -225,18 +229,9 @@ export class ProjectComponent implements OnInit {
     console.log(this.searchValue);
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
-
       var param = {
-        "loginInfo": {
-          "loginuserid": routeif.uid,
-          "loginusername": routeif.login_id,
-          "loginrole": routeif.role,
-          "logincompanyid": routeif.company
-        },
-        "targetUserInfo": {
-          "targetuserid": routeif.uid,
-          "targetuserCompanyid": routeif.company
-        },
+        "loginInfo":this.pageModel.loginInfo,
+        "targetUserInfo":this.pageModel.targetUserInfo,
         "projectname": this.searchValue,
       };
       console.log("这是目前的 param");
@@ -249,9 +244,7 @@ export class ProjectComponent implements OnInit {
         console.log("这是jsonItem的值");
         console.log(jsonItem);
         this.rows = [];
-        this.pageModel.data = [];
         jsonItem.forEach(element => {
-          this.pageModel.data.push(element);
           this.rows.push(element);
         });
         console.log("这是rows的data值");
@@ -286,22 +279,9 @@ export class ProjectComponent implements OnInit {
       let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     if (routeif != null) {
       var param = {
-        "loginInfo": {
-          "loginuserid": routeif.uid,
-          "loginusername": routeif.login_id,
-          "loginrole": routeif.role,
-          "logincompanyid": routeif.company,
-        },
-        "targetUserInfo": {
-          "targetuserid": routeif.uid,
-          "targetuserCompanyid": routeif.company,
-        },
-        // "deviceCounts": row.deviceCounts,
-        // "groupCounts":row.groupCounts,
-        // "productid":row.productid,
+        "loginInfo":this.pageModel.loginInfo,
+        "targetUserInfo":this.pageModel.targetUserInfo,
         "projectid":row.projectid,
-        // "projectname":row.projectname,
-        // "projectsummary":row.projectsummary,
       };
     }
       console.log("这是 delete 的 param");
@@ -368,12 +348,6 @@ export class ProjectComponent implements OnInit {
    * @param projectid      Id match to the selected row Id
    */
   projectDataUpdate(projectEditForm: NgForm, projectid) {
-    console.log("这是 projectDataUpdate 方法里传入的 projectEditForm 和 projectid");
-    console.log(projectEditForm);
-    console.log(projectid);
-    console.log("这是目前的 selectedProject");
-    console.log(this.selectedProject);
-
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       this.pageModel.projectDetail.projectid = projectid;
@@ -381,16 +355,8 @@ export class ProjectComponent implements OnInit {
       this.pageModel.projectDetail.projectname = this.selectedProject.projectname;
       this.pageModel.projectDetail.projectsummary = this.selectedProject.projectsummary;
       var param = {
-        "loginInfo": {
-          "loginuserid": routeif.uid,
-          "loginusername": routeif.login_id,
-          "loginrole": routeif.role,
-          "logincompanyid": routeif.company
-        },
-        "targetUserInfo": {
-          "targetuserid": routeif.uid,
-          "targetuserCompanyid": routeif.company
-        },
+        "loginInfo":this.pageModel.loginInfo,
+        "targetUserInfo":this.pageModel.targetUserInfo,
         "projectid": this.pageModel.projectDetail.projectid,
         "productid": this.pageModel.projectDetail.productid,
         "projectname": this.pageModel.projectDetail.projectname,
@@ -420,6 +386,57 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  // 選択したプロジェクトを複数削除
+  /**
+   * Delete selected contact
+   */
+  deleteCheckedRow() {
+    console.log("这是复选后的rows");
+    console.log(this.rows);
+    if (confirm("選択したデーターを削除しますか")) {
+      var deleteCheckedids = [];
+      for (var row of this.rows) {
+        if (row.isSelected) {
+          this.selected.push(row);
+        }
+      }
+      console.log("这是复选后的selected");
+      console.log(this.selected);
+
+      var query = {
+        "loginInfo": this.pageModel.loginUser,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.loginUser.loginuserid,
+        },
+        "projectlist": this.selected,
+      }
+      // this.httpService.delete('deleteProducts', query).then(item => {
+      //   try {
+      //     if (item.body.resultCode === "0000") {
+      //       this.searchMyProduct();
+      //       alert('削除成功です。');
+      //       this.productSelected = false;
+      //     } else {
+      //       console.log('削除失敗です。');
+      //     }
+      //   } catch (e) {
+      //     console.log('削除失敗です。');
+      //   }
+      // });
+      this.httpService.useRpDelete('deleteProjects', query).then(item => {
+        try {
+          if (item.resultCode == "0000") {
+            this.searchValue = "";
+            this.ngOnInit();
+            alert('選択したプロジェクトを削除しました');
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }
+  }
+
 
 
 
@@ -430,41 +447,65 @@ export class ProjectComponent implements OnInit {
 
   }
 
-  checkAll(e){
-
+  checkAll(ev){
+    this.rows.forEach(x => x.isSelected = ev.target.checked)
+    // this.selectedProject = ev.target.checked;
+    console.log("这是checkall的函数内部");
+    console.log(ev);
+    console.log(this.rows);
+    console.log(this.selectedProject);
   }
+  checkChange(ev, element) {
+    console.log("这是checkChange的函数内部");
+    console.log(ev);
+    console.log(element);
+    console.log(this.rows);
+    this.rows.forEach(function (project) {
+      if (project.projectid === element['projectid']) { project.isSelected = ev.target.checked }
+    });
+    console.log(this.rows);
+  }
+
   isAllChecked() {
-
-  }
-  sortData(){
 
   }
 
   getTabledata() {
-    this.PERSON = this.rows;
-    this.collectionSize = this.PERSON.length;
+    this.tableDisplayData = this.rows;
+    // 获取当前页码
+    this.collectionSize = this.tableDisplayData.length;
     // 每个元素添加了 isSelected 属性
-    this.PERSON.forEach(x => x.isSelected = false)
-
-    this.tableDisplayData = this.PaginationData();
-
+    this.tableDisplayData.forEach(x => x.isSelected = false)
+    // this.tableDisplayData = this.PaginationData();
   }
   /**
  * Pagination table
  */
   get PaginationData() {
-    if (this.PERSON) {
-      // if (this.pageSize > 0) {
-      // } else {
-      //   if (this.PERSON.length > 100) {
-      //     this.pageSize = 20
-      //   } else {
-      //     this.pageSize = 10
-      //   }
-      // }
-      return this.PERSON.map((person, i) => ({ projectid: i + 1, ...person }))
+    if (this.tableDisplayData) {
+      return this.tableDisplayData.map((tabledisplaydata, i) => ({ projectid: i + 1, ...tabledisplaydata }))
         .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
     }
+  }
+
+  sortData(nm) {
+    if (this.sortOn == 1) {
+      this.rows.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.sortOn = 2;
+    } else {
+      this.rows.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.sortOn = 1;
+    }
+  }
+
+// デバイス連携
+  // Modal 開く
+  deviceLinkModal(deviceLinkModalContent, row) {
+    this.selectedProject = Object.assign({}, row);
+    this.editModal = this.modal.open(deviceLinkModalContent, {
+      windowClass: 'animated fadeInDown',
+      size: 'lg'
+    });
   }
  
 
@@ -489,16 +530,16 @@ export class ProjectComponent implements OnInit {
    *
    * @param event     Convert value uppercase to lowercase;
    */
-  updateFilter(event) {
-    const val = event.target.value;
-    this.rows = [...this.temp2];
-    this.temp = [...this.rows];
-    const temp = this.rows.filter(function (d) {
-      return d.projectname.toLowerCase().indexOf(val) !== -1 || !val;
-    });
-    this.rows = temp;
-    this.table.offset = 0;
-  }
+  // updateFilter(event) {
+  //   const val = event.target.value;
+  //   this.rows = [...this.temp2];
+  //   this.temp = [...this.rows];
+  //   const temp = this.rows.filter(function (d) {
+  //     return d.projectname.toLowerCase().indexOf(val) !== -1 || !val;
+  //   });
+  //   this.rows = temp;
+  //   this.table.offset = 0;
+  // }
 
 
 
@@ -697,11 +738,6 @@ export class ProjectComponent implements OnInit {
   //   reader.readAsDataURL(event.target.files[0]);
   // }
 
-    /**
-   * Delete selected contact
-   */
-  // deleteCheckedRow() {
-    
-  // }
+
 
 }

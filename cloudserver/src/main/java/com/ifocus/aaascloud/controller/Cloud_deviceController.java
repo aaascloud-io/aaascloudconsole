@@ -288,7 +288,7 @@ public class Cloud_deviceController {
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
 
-				cloud_deviceModel.getDeviceDetailList().add(cloud_deviceModel.getDeviceDetail());
+				cloud_deviceModel.addDeviceDetailToDeviceDetailList();
 
 				// プロダクト存在チェックを行う
 				List<Cloud_deviceDetailModel> productErrorList = cloud_deviceService.checkProductExistedInDB(cloud_deviceModel);

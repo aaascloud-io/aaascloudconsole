@@ -663,22 +663,23 @@ public class Cloud_deviceService {
 
 		// 会社名
 		Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(entity.getCompanyid());
-		model.setCompanyname(company.get().getCompanyname());
+		if (!company.isEmpty()) {	model.setCompanyname(company.get().getCompanyname());}
 
 		// プロダクト名
 		if (entity.getProductid() != null) {
 			Optional<Cloud_productEntity> product = cloud_productRepository.findById(entity.getProductid());
-			model.setProductname(product.get().getProductname());
+			if (!product.isEmpty()) {	model.setProductname(product.get().getProductname());}
 		}
 		// プロジェクト名
 		if (entity.getProjectid() != null) {
 			Optional<Cloud_projectEntity> project = cloud_projectRepository.findById(entity.getProjectid());
-			model.setProjectname(project.get().getProjectname());
+			if (!project.isEmpty()) {	model.setProjectname(project.get().getProjectname());}
+
 		}
 		// グループ名
 		if (entity.getGroupid() != null) {
 			Optional<Cloud_groupEntity> group = cloud_groupRepository.findById(entity.getGroupid());
-			model.setGroupname(group.get().getGroupname());
+			if (!group.isEmpty()) {		model.setGroupname(group.get().getGroupname());	}
 		}
 
 		model.setUserid(entity.getUserid());
