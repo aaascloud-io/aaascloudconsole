@@ -472,7 +472,8 @@ export class ProjectComponent implements OnInit {
 
   getTabledata() {
     this.tableDisplayData = this.rows;
-    // this.collectionSize = this.tableDisplayData.length;
+    // 获取当前页码
+    this.collectionSize = this.tableDisplayData.length;
     // 每个元素添加了 isSelected 属性
     this.tableDisplayData.forEach(x => x.isSelected = false)
     // this.tableDisplayData = this.PaginationData();
