@@ -372,4 +372,16 @@
   ::ng-deep .modal-xl .modal-lg {
     max-width: 90%;
     width: 90%;
+    max-height: 50%;
+    height:50%;
   }
+  
+.thcolor{
+  background-color: #6b6f82 !important;
+  color:aliceblue; 
+}
+
+.text-center{
+  text-align: center;
+  color:#000000;font-weight:bold;
+}

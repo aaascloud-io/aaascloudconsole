@@ -19,6 +19,9 @@ class Contact {
     public username: string,
     public companyid: number,
     public loginid: string,
+    public firstname: string,
+    public lastname: string,
+    public email: string,
     public role: number,
     public upperuserid: string,
     public companyName: string,
@@ -29,6 +32,7 @@ class Contact {
     public mail: string,
     public tel: string,
     public fax: string,
+    public name: string,
   ) { }
 }
 const formInputData = require('../../../assets/data/forms/form-elements/form-inputs.json');
@@ -43,6 +47,17 @@ export class UserComponent implements OnInit {
 
   userInfo: UserInfo;
 
+
+  pageSize: any;
+  collectionSize: any;
+  userList: any;
+  page = 1;
+  TableData: any;
+  sortOn: any;
+  checkOn: 1;
+  userSelected = false;
+
+  showSearch = false;
   companyId: any = null;
   columns: any = [];
   contactName: any;
@@ -52,9 +67,6 @@ export class UserComponent implements OnInit {
   contactFavorite: boolean;
   contactactive: string;
   rows: any[] = [];
-  name = 'Angular';
-  public imagePath;
-  imgURL: any;
   selectedContact: any;
   contactFlag: boolean;
   addContact: any;
@@ -70,6 +82,7 @@ export class UserComponent implements OnInit {
   temp2 = this.rows;
   singlebasicSelected: any;
 
+
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
   public multipleSelectArray = formInputData.multipleSelectArray;
@@ -79,12 +92,11 @@ export class UserComponent implements OnInit {
     // 一括登録のデバイス定義リスト
     addList: [],
     dataAll: [],
-    userList: [],
+    // userList: [],
     adduserInfo: {
       username: '',
       role: null,
-      passwrod: '',
-      passwrod2: '',
+      upperuserid: null,
       companyInfo: {
         corporatenumber: '',
         companyid: null,
@@ -131,12 +143,18 @@ export class UserComponent implements OnInit {
     },
 
     query: {
-      username: '',
-      name: '',
-      mail: ''
+      companyname: '',
+      lastname: '',
+      firstname: '',
+      email: ''
 
     },
-    companyInfoAll: []
+    companyInfoAll: [],
+    userRelationList: [],
+    userRelation: {
+      userid: null,
+      name: '',
+    },
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -160,11 +178,11 @@ export class UserComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
-    this.getUserAll();
+    // this.searchMyUsers();
   }
 
   ngOnInit(): void {
-
+    this.pageSize = 10;
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
     // 画面初期ログイン情報取得
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
@@ -172,8 +190,7 @@ export class UserComponent implements OnInit {
     //to do ユーザー名で　ロケーシ
     this.pageModel.loginUser.loginuserid = item.uid;
     this.pageModel.loginUser.loginusername = item.login_id;
-    // this.pageModel.loginUser.loginrole = item.role;
-    this.pageModel.loginUser.loginrole = 1;
+    this.pageModel.loginUser.loginrole = item.role;
     this.pageModel.loginUser.logincompanyid = item.company;
     this.pageModel.loginUser.loginupperuserid = item.upperuserid;
     this.companyId = item.company;
@@ -189,7 +206,7 @@ export class UserComponent implements OnInit {
 
     console.log("param情報：" + JSON.stringify(this.pageModel.loginUser));
     this.getUnderCompanies()
-    this.getUserAll();
+    this.searchMyUsers();
   }
 
   /**
@@ -200,6 +217,7 @@ export class UserComponent implements OnInit {
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown'
+      , size: 'lg'
     });
     this.contactFlag = true;
   }
@@ -212,7 +230,7 @@ export class UserComponent implements OnInit {
   editTableDataModal(editTableDataModalContent, row) {
     this.selectedContact = Object.assign({}, row);
     this.updateModal = this.modal.open(editTableDataModalContent, {
-      windowClass: 'animated fadeInDown'
+      windowClass: 'animated fadeInDown '
     });
     this.contactFlag = false;
     this.pageModel.updataUserInfo.companyid = this.selectedContact.companyid;
@@ -292,7 +310,7 @@ export class UserComponent implements OnInit {
           if (item.body.resultCode === "0000") {
             this.selectedUserid = [];
             this.selected = [];
-            this.getUserAll();
+            this.searchMyUsers();
             alert('削除成功です。');
           } else {
             console.log('削除失敗です。');
@@ -314,10 +332,13 @@ export class UserComponent implements OnInit {
   deleteCheckedRow() {
     if (confirm("削除してもよろしいでしょうか")) {
 
-
-      for (var selecteUser of this.selected) {
-        this.selectedUserid.push({ "userid": selecteUser.userid });
+      // 
+      for (var selecteUser of this.userList) {
+        if (selecteUser.isSelected) {
+          this.selectedUserid.push({ "userid": selecteUser.userid });
+        }
       }
+      // 削除パラメータの作成
       var query = {
         "loginInfo": this.pageModel.userInfoParame.loginInfo,
         "targetUserInfo": {
@@ -327,12 +348,13 @@ export class UserComponent implements OnInit {
         "cloud_userModelList": this.selectedUserid,
       }
 
+      // ユーザー情報の削除
       this.httpService.delete('deleteUser', query).then(item => {
         try {
           if (item.body.resultCode === "0000") {
             this.selectedUserid = [];
             this.selected = [];
-            this.getUserAll();
+            this.searchMyUsers();
             alert('削除成功です。');
           } else {
             console.log('削除失敗です。');
@@ -360,8 +382,7 @@ export class UserComponent implements OnInit {
         "logincompanyid": this.pageModel.loginUser.logincompanyid
       },
       "targetUserInfo": {
-        "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
-        "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        "targetuserid": this.selectedContact.userid,
       },
       "userid": this.selectedContact.userid,
       "role": this.selectedContact.role,
@@ -380,7 +401,7 @@ export class UserComponent implements OnInit {
       try {
         console.log('更新成功です。');
         console.log(item);
-        this.getUserAll();
+        this.ngOnInit();
         alert('更新成功です。');
         if (editUpdateForm.valid === true) {
           editUpdateForm.reset();
@@ -395,7 +416,7 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * ユーザー新規
+   * ユーザー新規登録（会社存在）
    *
    * @param 
    */
@@ -424,8 +445,7 @@ export class UserComponent implements OnInit {
       var query = {
         "loginInfo": this.pageModel.userInfoParame.loginInfo,
         "targetUserInfo": {
-          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
-          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid
+          "targetuserid": this.pageModel.adduserInfo.upperuserid,
         },
 
         "companyid": this.pageModel.adduserInfo.companyInfo.companyid,
@@ -440,7 +460,7 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * 
+   * ユーザー新規登録（新規会社）
    * 
    */
   addNewCompUser(addForm: NgForm) {
@@ -474,12 +494,11 @@ export class UserComponent implements OnInit {
       var query = {
         "loginInfo": this.pageModel.userInfoParame.loginInfo,
         "targetUserInfo": {
-          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
-          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserCompanyid
+          "targetuserid": this.pageModel.loginUser.loginuserid,
         },
 
         "username": this.pageModel.adduserInfo.username,
-        "upperuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
+        "upperuserid": this.pageModel.loginUser.loginuserid,
         "corporatenumber": this.pageModel.adduserInfo.newCompanyInfo.corporatenumber,
         "role": this.pageModel.adduserInfo.role,
         "companyname": this.pageModel.adduserInfo.newCompanyInfo.companyname,
@@ -502,15 +521,14 @@ export class UserComponent implements OnInit {
 
     this.httpService.usePost('registerUser', query).then(item => {
       try {
-        if (item.resultCode == "0000") {
-
-          this.getUserAll();
-          alert('ユーザー情報は登録成功です。');
-          if (addForm.valid === true) {
-            addForm.reset();
-            this.addModal.close(addForm.resetForm);
-          }
+        // if (item.resultCode == "0000") {
+        this.ngOnInit();
+        alert('ユーザー情報は登録成功です。');
+        if (addForm.valid === true) {
+          addForm.reset();
+          this.addModal.close(addForm.resetForm);
         }
+        // }
       } catch (e) {
         console.log('登録失敗です。');
       }
@@ -575,8 +593,8 @@ export class UserComponent implements OnInit {
     const toggleIcon = document.getElementById('sidebar-left');
     const toggle = document.getElementById('content-overlay');
     if (event.currentTarget.className === 'sidebar-toggle d-block d-lg-none') {
-      this._renderer.addClass(toggleIcon, 'show');
-      this._renderer.addClass(toggle, 'show');
+      this._renderer.addClass(toggleIcon, 'showSearch');
+      this._renderer.addClass(toggle, 'showSearch');
     }
   }
 
@@ -588,59 +606,14 @@ export class UserComponent implements OnInit {
   contentOverlay(event) {
     const toggleIcon = document.getElementById('sidebar-left');
     const toggle = document.getElementById('content-overlay');
-    if (event.currentTarget.className === 'content-overlay show') {
-      this._renderer.removeClass(toggleIcon, 'show');
-      this._renderer.removeClass(toggle, 'show');
+    if (event.currentTarget.className === 'content-overlay showSearch') {
+      this._renderer.removeClass(toggleIcon, 'showSearch');
+      this._renderer.removeClass(toggle, 'showSearch');
     }
   }
 
   /**
-   * ユーザー一覧取得
-   */
-  protected async getUserAll() {
-    var query = {
-      "loginInfo": this.pageModel.userInfoParame.loginInfo,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
-      },
-    }
-    this.httpService.usePost('getUnderUsers', query).then(item => {
-      try {
-        this.rows = [];
-        console.log(item);
-        var index = 1;
-        this.pageModel.userList = item;
-        item.forEach((elem) => {
-          this.rows.push(new Contact(
-            index,
-            elem.userid,
-            elem.username,
-            elem.companyid,
-            elem.loginid,
-            elem.role,
-            elem.upperuserid,
-            elem.companyName,
-            elem.devicecount,
-            elem.userCount,
-            elem.projectCount,
-            elem.address,
-            elem.mail,
-            elem.tel,
-            elem.fax,
-          ));
-          index++;
-        });
-        this.rows = [...this.rows];
-        // }
-
-      } catch (e) {
-        console.log('');
-      }
-    });
-  }
-
-  /**
+   * ユーザー一覧を取得する
    * 
    */
   async searchMyUsers() {
@@ -650,35 +623,56 @@ export class UserComponent implements OnInit {
         "targetuserid": this.pageModel.loginUser.loginuserid,
         "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
       },
-      
+      "companyname": this.pageModel.query.companyname,
+      "firstName": this.pageModel.query.firstname,
+      "lastName": this.pageModel.query.lastname,
+      "email": this.pageModel.query.email,
     }
     this.httpService.usePost('searchUnderUsers', query).then(item => {
       try {
         this.rows = [];
-        console.log(item);
-        var index = 1;
-        this.pageModel.userList = item;
-        item.forEach((elem) => {
-          this.rows.push(new Contact(
-            index,
-            elem.userid,
-            elem.username,
-            elem.companyid,
-            elem.loginid,
-            elem.role,
-            elem.upperuserid,
-            elem.companyName,
-            elem.devicecount,
-            elem.userCount,
-            elem.projectCount,
-            elem.address,
-            elem.mail,
-            elem.tel,
-            elem.fax,
-          ));
-          index++;
-        });
+        if (item) {
+
+          console.log(item);
+          var index = 1;
+          // this.pageModel.userList = item;
+          var companyname = '';
+          var address = '';
+          item.forEach((elem) => {
+            // 会社名の設定
+            for (const companyInfo of this.pageModel.companyInfoAll) {
+              if (elem.companyid === companyInfo.companyid) {
+                companyname = companyInfo.companyname
+                address = companyInfo.address
+              }
+            }
+            // rowsにデータを入れる
+            this.rows.push(new Contact(
+              index,
+              elem.userid,
+              elem.username,
+              elem.companyid,
+              elem.loginid,
+              elem.firstname,
+              elem.lastname,
+              elem.email,
+              elem.role,
+              elem.upperuserid,
+              companyname,
+              elem.devicecount,
+              elem.userCount,
+              elem.projectCount,
+              address,
+              elem.mail,
+              elem.tel,
+              elem.fax,
+              elem.lastname + ' ' + elem.firstname,
+            ));
+            index++;
+          });
+        }
         this.rows = [...this.rows];
+        this.getTabledata();
         // }
 
       } catch (e) {
@@ -727,19 +721,65 @@ export class UserComponent implements OnInit {
     }
   }
 
-  // reload() {
-  //   // window.location.reload();
-  //   this.router.onSameUrlNavigation = 'reload';
-  //   this.router.navigateByUrl('/user').then(() => {
-  //     this.router.navigate(['/user']);
-  //     this.router.onSameUrlNavigation = 'ignore';
-  //   });
-  // }
-  // /**
-  //  * 
-  //  */
-  // rotueUserInfo() {
-  //   this.router.navigate(['/device']);
-  // }
+  sortData(nm) {
+    if (this.sortOn == 1) {
+      this.userList.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.sortOn = 2;
+    } else {
+      this.userList.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.sortOn = 1;
+    }
+  }
+
+  checkAll(ev) {
+    this.userList.forEach(x => x.isSelected = ev.target.checked)
+    this.userSelected = ev.target.checked;
+  }
+
+  checkChange(ev, selected) {
+    this.userList.forEach(function (user) {
+      if (user.userid === selected['userid']) { user.isSelected = ev.target.checked }
+    });
+  }
+
+  isAllChecked() {
+    // return this.productList.every(_ => _.productSelected);
+    // this.productSelected=true;
+
+  }
+
+  getTabledata() {
+    this.userList = this.rows;
+    this.collectionSize = this.userList.length;
+    this.userList.forEach(x => x.isSelected = false)
+    // this.productList();
+  }
+
+  /**
+* Pagination table
+*/
+  get PaginationData() {
+    if (this.userList) {
+      return this.userList.map((person, i) => ({ userid: i + 1, ...person }))
+        .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
+    }
+  }
+
+  /**
+   * 取消ボタンを押下 
+   * 
+   */
+  cancleModel(openForm: NgForm) {
+    // if (openForm.valid === true) {
+    // openForm.reset();
+    if (this.addModal != null) {
+      openForm.reset();
+      this.addModal.close(openForm.resetForm);
+    }
+    if (this.updateModal != null) {
+      this.updateModal.close(openForm.resetForm);
+    }
+    // }
+  }
 }
 
