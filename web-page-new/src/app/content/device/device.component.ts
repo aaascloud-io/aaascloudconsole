@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, EventEmitter, Output, Renderer2 } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm ,Validators,FormControl} from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
@@ -87,7 +87,7 @@ export class DeviceComponent implements OnInit {
   sortOn: any;
 
   checkOn: 1;
-
+  simtel: any;
   public pageModel = {
     //Login情報
     LoginUser: {
@@ -174,6 +174,7 @@ export class DeviceComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.simtel=888888888
     this.pageSize = 10
     this.Init(null);
   }
@@ -315,7 +316,6 @@ export class DeviceComponent implements OnInit {
    * @param row     The row which needs to be edited.
    */
   openEditModal(editDeviceModel, row) {
-    row.sim_tel= this.onFormatFn(row.sim_tel);
     this.selectedDevice = Object.assign({}, row);
     this.editModal = this.modal.open(editDeviceModel, {
       windowClass: 'animated fadeInDown'
@@ -1000,5 +1000,14 @@ export class DeviceComponent implements OnInit {
     }
   }
 
+  // get phonenumber() {
+  //   return <FormControl>this.simtel;
+  // }
+
+  // private _buildForm(): FormGroup {
+  //   return this._fb.group({
+  //     phonenumber: ['', [Validators.required]]
+  //   })
+  // }
 
 }
