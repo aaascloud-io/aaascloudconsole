@@ -139,63 +139,62 @@
       </button>
     </div>
     <div class="modal-body">
-      <div class="form-group col-12">
-        <h6>プロダクトタイプ<code>＊</code></h6>
-        <select class="form-control" id="typeId" name="typeId" [(ngModel)]="selectedContact.producttypeid"
-          #editname="ngModel" name="producttypeid" id="producttypeid"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
-            {{type.producttypename}}
-          </option>
-        </select>
-        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">プロダクトタイプを選択してください。</div>
+      <div class="row">
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>プロダクトタイプ<code>＊</code></h6>
+          <select class="form-control" id="typeId" name="typeId" [(ngModel)]="selectedContact.producttypeid"
+            #editname="ngModel" name="producttypeid" id="producttypeid"
+            [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
+            <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+              {{type.producttypename}}
+            </option>
+          </select>
+          <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+            <div *ngIf="editname.errors.required">プロダクトタイプを選択してください。</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>作成者</h6>
+          <input type="text" [(ngModel)]="selectedContact.createusername" #editmodel="ngModel" name="createusername"
+            id="createusername" class="name form-control" placeholder="プロダクトコード" maxlength="10" disabled>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>プロダクト名<code>＊</code></h6>
+          <input type="text" [(ngModel)]="selectedContact.productname" #editname="ngModel" name="name" id="name"
+            class="name form-control" placeholder="プロダクト名"
+            [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required maxlength="50">
+          <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
+            <div *ngIf="editname.errors.required">プロダクト名を入力してください</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>プロダクトコード</h6>
+          <input type="text" [(ngModel)]="selectedContact.productcode" #editmodel="ngModel" name="productcode"
+            id="productcode" class="name form-control" placeholder="プロダクトコード" maxlength="10">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>型番</h6>
+          <input type="text" [(ngModel)]="selectedContact.model" #editmodel="ngModel" name="model" id="model"
+            class="name form-control" placeholder="型番" maxlength="20">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>バージョン</h6>
+          <input type="text" [(ngModel)]="selectedContact.version" #editversion="ngModel" name="version" id="version"
+            class="name form-control" placeholder="バージョン" maxlength="20">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>SIMカード有無<code>＊</code></h6>
+          <div class="float-left">
+            <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" name="sim"
+              [(ngModel)]="this.simFlg"></ui-switch>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>説明</h6>
+          <textarea id="summary" rows="5" class="form-control square" name="message"
+            [(ngModel)]="selectedContact.summary" placeholder="message" maxlength="100"></textarea>
         </div>
       </div>
-      <div class="form-group col-12">
-        <h6>作成者</h6>
-        <input type="text" [(ngModel)]="selectedContact.createusername" #editmodel="ngModel" name="createusername"
-          id="createusername" class="name form-control" placeholder="プロダクトコード" maxlength="10" disabled>
-      </div>
-      <div class="form-group col-12">
-        <h6>プロダクト名<code>＊</code></h6>
-        <input type="text" [(ngModel)]="selectedContact.productname" #editname="ngModel" name="name" id="name"
-          class="name form-control" placeholder="プロダクト名"
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required maxlength="50">
-        <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">プロダクト名を入力してください</div>
-        </div>
-      </div>
-      <div class="form-group col-12">
-        <h6>プロダクトコード</h6>
-        <input type="text" [(ngModel)]="selectedContact.productcode" #editmodel="ngModel" name="productcode"
-          id="productcode" class="name form-control" placeholder="プロダクトコード" maxlength="10">
-      </div>
-      <div class="form-group col-12">
-        <h6>型番</h6>
-        <input type="text" [(ngModel)]="selectedContact.model" #editmodel="ngModel" name="model" id="model"
-          class="name form-control" placeholder="型番" maxlength="20">
-      </div>
-      <div class="form-group col-12">
-        <h6>バージョン</h6>
-        <input type="text" [(ngModel)]="selectedContact.version" #editversion="ngModel" name="version" id="version"
-          class="name form-control" placeholder="バージョン" maxlength="20">
-      </div>
-      <div class="form-group col-12">
-        <h6>SIMカード有無<code>＊</code></h6>
-        <div class="float-left">
-          <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" name="sim"
-            [(ngModel)]="this.simFlg"></ui-switch>
-        </div>
-      </div>
-      <br>
-      <br>
-      <div class="form-group col-12">
-        <h6>説明</h6>
-        <textarea id="summary" rows="5" class="form-control square" name="message" [(ngModel)]="selectedContact.summary"
-          placeholder="message" maxlength="100"></textarea>
-      </div>
-
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
@@ -219,70 +218,69 @@
       </button>
     </div>
     <div class="modal-body">
-      <div class="form-group col-12">
-        <h6>プロダクトタイプ<code>＊</code></h6>
-        <select class="form-control" id="typeId" name="typeId" [(ngModel)]="pageModel.addProduct.productTypeId"
-          #editname="ngModel" [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
-          <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
-            {{type.producttypename}}
-          </option>
-        </select>
-        <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">プロダクトタイプを選んでください</div>
+      <div class="row">
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>プロダクトタイプ<code>＊</code></h6>
+          <select class="form-control" id="typeId" name="typeId" [(ngModel)]="pageModel.addProduct.productTypeId"
+            #editname="ngModel" [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
+            <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+              {{type.producttypename}}
+            </option>
+          </select>
+          <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback">
+            <div *ngIf="editname.errors.required">プロダクトタイプを選んでください</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>作成者<code>＊</code></h6>
+          <select class="form-control" id="createuserid" name="createuserid"
+            [(ngModel)]="pageModel.addProduct.createuserid" #edituserid="ngModel"
+            [ngClass]="{ 'is-invalid': addForm.submitted && edituserid.invalid }" required>
+            <option *ngFor="let user of users; let i = index" [ngValue]="user.userid">
+              {{user.firstname + user.lastname}}
+            </option>
+          </select>
+          <div *ngIf="addForm.submitted && edituserid.invalid" class="invalid-feedback">
+            <div *ngIf="edituserid.errors.required">作成者を選択してください。</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>プロダクト名<code>＊</code></h6>
+          <input type="text" [(ngModel)]="pageModel.addProduct.productName" #editproductName="ngModel" name="name"
+            id="name" class="name form-control" placeholder="プロダクト名"
+            [ngClass]="{ 'is-invalid': addForm.submitted && editproductName.invalid }" required maxlength="50">
+          <div *ngIf="addForm.submitted && editproductName.invalid" class="invalid-feedback">
+            <div *ngIf="editproductName.errors.required">プロダクト名を入力してください</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>プロダクトコード</h6>
+          <input type="text" [(ngModel)]="pageModel.addProduct.productcode" #editproductcode="ngModel"
+            name="productcode" id="productcode" class="name form-control" placeholder="プロダクトコード" maxlength="10">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>型番</h6>
+          <input type="text" [(ngModel)]="pageModel.addProduct.model" #editmodel="ngModel" name="model" id="model"
+            class="name form-control" placeholder="型番" maxlength="20">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>バージョン</h6>
+          <input type="text" [(ngModel)]="pageModel.addProduct.version" #editversion="ngModel" name="version"
+            id="version" class="name form-control" placeholder="バージョン" maxlength="20">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>SIMカード有無<code>＊</code></h6>
+          <div class="float-left">
+            <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" name="sim"
+              [(ngModel)]="pageModel.addProduct.sim"></ui-switch>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>説明</h6>
+          <textarea id="summary" rows="5" class="form-control square" name="summary"
+            [(ngModel)]="pageModel.addProduct.summary" placeholder="summary" maxlength="100"></textarea>
         </div>
       </div>
-      <div class="form-group col-12">
-        <h6>作成者<code>＊</code></h6>
-        <select class="form-control" id="createuserid" name="createuserid"
-          [(ngModel)]="pageModel.addProduct.createuserid" #edituserid="ngModel"
-          [ngClass]="{ 'is-invalid': addForm.submitted && edituserid.invalid }" required>
-          <option *ngFor="let user of users; let i = index" [ngValue]="user.userid">
-            {{user.firstname + user.lastname}}
-          </option>
-        </select>
-        <div *ngIf="addForm.submitted && edituserid.invalid" class="invalid-feedback">
-          <div *ngIf="edituserid.errors.required">作成者を選択してください。</div>
-        </div>
-      </div>
-      <div class="form-group col-12">
-        <h6>プロダクト名<code>＊</code></h6>
-        <input type="text" [(ngModel)]="pageModel.addProduct.productName" #editproductName="ngModel" name="name"
-          id="name" class="name form-control" placeholder="プロダクト名"
-          [ngClass]="{ 'is-invalid': addForm.submitted && editproductName.invalid }" required maxlength="50">
-        <div *ngIf="addForm.submitted && editproductName.invalid" class="invalid-feedback">
-          <div *ngIf="editproductName.errors.required">プロダクト名を入力してください</div>
-        </div>
-      </div>
-      <div class="form-group col-12">
-        <h6>プロダクトコード</h6>
-        <input type="text" [(ngModel)]="pageModel.addProduct.productcode" #editproductcode="ngModel" name="productcode"
-          id="productcode" class="name form-control" placeholder="プロダクトコード" maxlength="10">
-      </div>
-      <div class="form-group col-12">
-        <h6>型番</h6>
-        <input type="text" [(ngModel)]="pageModel.addProduct.model" #editmodel="ngModel" name="model" id="model"
-          class="name form-control" placeholder="型番" maxlength="20">
-      </div>
-      <div class="form-group col-12">
-        <h6>バージョン</h6>
-        <input type="text" [(ngModel)]="pageModel.addProduct.version" #editversion="ngModel" name="version" id="version"
-          class="name form-control" placeholder="バージョン" maxlength="20">
-      </div>
-      <div class="form-group col-12">
-        <h6>SIMカード有無<code>＊</code></h6>
-        <div class="float-left">
-          <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" name="sim"
-            [(ngModel)]="pageModel.addProduct.sim"></ui-switch>
-        </div>
-      </div>
-      <br>
-      <br>
-      <div class="form-group col-12">
-        <h6>説明</h6>
-        <textarea id="summary" rows="5" class="form-control square" name="summary"
-          [(ngModel)]="pageModel.addProduct.summary" placeholder="summary" maxlength="100"></textarea>
-      </div>
-
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">

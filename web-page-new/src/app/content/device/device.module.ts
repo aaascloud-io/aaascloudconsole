@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router'; 
 import { DeviceComponent } from './device.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DeviceRoutingModule } from './device-routing.module';

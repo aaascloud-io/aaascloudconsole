@@ -112,13 +112,14 @@ export class LoginComponent implements OnInit {
               returnUrl = this.returnUrl;
             }
             this.router.navigate([returnUrl]);
+          }else{
+            this.alertService.error("ユーザーを検索API エラー　発生しました。");
           }
-
         } catch (e) {
           console.log('ユーザーを検索API エラー　発生しました。');
+          throw(e);
         }
       })
-
       // this.router.navigate(["/main/page/dashboard"]);
     } catch (err) {
       // this.handleError('操作失敗', err);

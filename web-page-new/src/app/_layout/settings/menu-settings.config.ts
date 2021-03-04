@@ -27,6 +27,11 @@ export const MenuSettingsConfig: MenuConfig = {
   horizontal_menu: {
     items: [
       {
+        title: 'profile',
+        icon: 'la-user',
+        page: 'profile',
+      },
+      {
         title: 'Dashboard',
         icon: 'la-home',
         page: 'null',
@@ -930,6 +935,11 @@ export const MenuSettingsConfig: MenuConfig = {
         page: '/version',
         icon: 'la-cog'
       },
+      // {
+      //   title: 'プロファイル管理',
+      //   icon: 'la-group',
+      //   page: '/profile'
+      // },
       // {
       //   title: 'Templates',
       //   icon: 'la-television',
