@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
@@ -200,7 +201,7 @@ public class Cloud_userService {
 			entity.setTel(model.getTel());
 			entity.setFax(model.getFax());
 			entity.setLevel(myEntity.get().getLevel() + 1);   	// レベルアップ
-			entity.setAlive(0);									// セロ固定
+			entity.setAlive(AliveConstant.ALIVE);
 			entity.setI_uid(model.getLoginInfo().getLoginuserid());
 			entity.setI_time(systemTime);
 			entity.setU_uid(model.getLoginInfo().getLoginuserid());
@@ -244,71 +245,36 @@ public class Cloud_userService {
 	 */
 	public Integer updateSonUser(LoginInfo loginInfo, Cloud_userModel model) throws Exception {
 
+		////////////////////////////////////////////////////////
+		// 会社更新
+		////////////////////////////////////////////////////////
 
 		// 会社情報取得
-		Optional<Cloud_companyEntity> oldEntity = cloud_companyRepository.findById(model.getCompanyid());
+		Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(model.getCompanyid());
 
-		// 法人番号に変更がない場合
-		if (oldEntity.get().getCorporatenumber() == model.getCorporatenumber()) {
-			////////////////////////////////////////////////////////
-			// 会社更新
-			////////////////////////////////////////////////////////
-
-			/* システム日時 */
-			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
-			// 情報設定
-			Cloud_companyEntity entity = new Cloud_companyEntity();
-			entity.setCompanyid(model.getCompanyid());
-			entity.setCorporatenumber(model.getCorporatenumber());
-			entity.setCompanyname(model.getCompanyname());
-			entity.setAddress(model.getAddress());
-			entity.setIndustry(model.getIndustry());
-			entity.setMail(model.getMail());
-			entity.setTel(model.getTel());
-			entity.setFax(model.getFax());
-			entity.setU_uid(loginInfo.getLoginuserid());
-			entity.setU_time(systemTime);
-
-			cloud_companyService.updateCompany(entity);
-
-		// 法人番号に変更があった場合
-		} else {
-			////////////////////////////////////////////////////////
-			// 会社登録
-			////////////////////////////////////////////////////////
-
-			// 自社情報取得
-			Optional<Cloud_companyEntity> myEntity = cloud_companyRepository.findById(loginInfo.getLogincompanyid());
-
-			/* システム日時 */
-			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
-			// 情報設定
-			Cloud_companyEntity entity = new Cloud_companyEntity();
-			entity.setCorporatenumber(model.getCorporatenumber());
-			entity.setCompanyname(model.getCompanyname());
-			entity.setAddress(model.getAddress());
-			entity.setIndustry(model.getIndustry());
-			entity.setMail(model.getMail());
-			entity.setTel(model.getTel());
-			entity.setFax(model.getFax());
-			entity.setLevel(myEntity.get().getLevel() + 1);   // レベルアップ
-			entity.setI_uid(loginInfo.getLoginuserid());
-			entity.setI_time(systemTime);
-			entity.setU_uid(loginInfo.getLoginuserid());
-			entity.setU_time(systemTime);
-
-			Cloud_companyModel insertedEntity = cloud_companyService.registerCompany(entity);
-
-			// 登録した会社IDを設定する
-			model.setCompanyid(insertedEntity.getCompanyid());
-		}
-
-		// 情報設定
-
-		Optional<Cloud_userEntity> tempEntity = cloud_userRepository.findById(model.getUserid());
-		Cloud_userEntity entity = tempEntity.get();
 		/* システム日時 */
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+		// 情報設定
+		Cloud_companyEntity companyEntity = company.get();
+		companyEntity.setCompanyid(model.getCompanyid());
+		companyEntity.setCorporatenumber(model.getCorporatenumber());
+		companyEntity.setCompanyname(model.getCompanyname());
+		companyEntity.setAddress(model.getAddress());
+		companyEntity.setIndustry(model.getIndustry());
+		companyEntity.setMail(model.getMail());
+		companyEntity.setTel(model.getTel());
+		companyEntity.setFax(model.getFax());
+		companyEntity.setU_uid(loginInfo.getLoginuserid());
+		companyEntity.setU_time(systemTime);
+
+		cloud_companyService.updateCompany(companyEntity);
+
+		////////////////////////////////////////////////////////
+		// ユーザ更新
+		////////////////////////////////////////////////////////
+
+		Optional<Cloud_userEntity> user = cloud_userRepository.findById(model.getUserid());
+		Cloud_userEntity entity = user.get();
 		entity.setUserid(model.getUserid());
 		entity.setCompanyid(model.getCompanyid());
 		entity.setUsername(model.getUsername());
@@ -317,6 +283,7 @@ public class Cloud_userService {
 		entity.setU_time(systemTime);
 
 		Cloud_userEntity cloud_userEntity = cloud_userRepository.save(entity);
+
 		return cloud_userEntity.getUserid();
 
 	}
@@ -412,6 +379,11 @@ public class Cloud_userService {
 		model.setFirstName(entity.getFirstname());
 		model.setEmail(entity.getEmail());
 		model.setCompanyid(entity.getCompanyid());
+
+		// 会社名取得
+		Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(entity.getCompanyid());
+		model.setCompanyname(company.get().getCompanyname());
+
 		model.setRole(entity.getRole());
 		model.setUpperuserid(entity.getUpperuserid());
 
