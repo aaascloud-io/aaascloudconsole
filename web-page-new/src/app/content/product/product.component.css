@@ -370,10 +370,10 @@
   width: calc(100% - -30px) !important;
 }
 
-::ng-deep .modal-xl .modal-lg {
+/* ::ng-deep .modal-xl .modal-lg {
   max-width: 90%;
   width    : 90%;
-}
+} */
 
 .select-style {
   /* float              : left;
@@ -387,4 +387,16 @@
   border-right-style : none; 
   border-left-style  : none; 
   border-bottom-style: none; */
+}
+
+::ng-deep .modal-xl .modal-lg {
+  /* max-width: 90%;
+  width: 90%; */
+  max-height: 80%;
+  height: 80%;
+}
+
+.thcolor{
+  background-color: #6b6f82 !important;
+  color:aliceblue; 
 }

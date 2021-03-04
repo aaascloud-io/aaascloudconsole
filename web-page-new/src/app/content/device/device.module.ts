@@ -1,16 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router'; 
 import { DeviceComponent } from './device.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DeviceRoutingModule } from './device-routing.module';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule  } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BreadcrumbModule } from 'src/app/_layout/breadcrumb/breadcrumb.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { UiSwitchModule } from 'ngx-ui-switch';
+import { NumbersOnlyDirective } from '../../_directives/numbers-only.directive'
 
 @NgModule({
   imports: [
@@ -30,7 +31,7 @@ import { UiSwitchModule } from 'ngx-ui-switch';
       },
     ])
   ],
-  declarations: [DeviceComponent],
+  declarations: [DeviceComponent,NumbersOnlyDirective],
   exports: [RouterModule]
 
 })

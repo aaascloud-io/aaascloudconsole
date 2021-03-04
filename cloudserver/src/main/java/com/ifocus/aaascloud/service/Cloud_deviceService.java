@@ -513,7 +513,7 @@ public class Cloud_deviceService {
 		List<String> list = new ArrayList<String>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
 			// NULLでない場合、
-			if (deviceDetailModel.getImei() != null) {
+			if (deviceDetailModel.getImei() != null && !deviceDetailModel.getImei().isEmpty()) {
 				// 戻るリストに追加
 				list.add(deviceDetailModel.getImei());
 			}
@@ -530,7 +530,7 @@ public class Cloud_deviceService {
 		List<String> list = new ArrayList<String>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
 			// NULLでない場合、
-			if (deviceDetailModel.getSn() != null) {
+			if (deviceDetailModel.getSn() != null && !deviceDetailModel.getSn().isEmpty()) {
 				// 戻るリストに追加
 				list.add(deviceDetailModel.getSn());
 			}
@@ -547,7 +547,7 @@ public class Cloud_deviceService {
 		List<String> list = new ArrayList<String>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
 			// NULLでない場合、
-			if (deviceDetailModel.getSim_imsi() != null) {
+			if (deviceDetailModel.getSim_imsi() != null && !deviceDetailModel.getSim_imsi().isEmpty()) {
 				// 戻るリストに追加
 				list.add(deviceDetailModel.getSim_imsi());
 			}
@@ -564,7 +564,7 @@ public class Cloud_deviceService {
 		List<String> list = new ArrayList<String>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
 			// NULLでない場合、
-			if (deviceDetailModel.getSim_iccid() != null) {
+			if (deviceDetailModel.getSim_iccid() != null && !deviceDetailModel.getSim_iccid().isEmpty()) {
 				// 戻るリストに追加
 				list.add(deviceDetailModel.getSim_iccid());
 			}
@@ -581,7 +581,7 @@ public class Cloud_deviceService {
 		List<String> list = new ArrayList<String>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
 			// NULLでない場合、
-			if (deviceDetailModel.getSim_tel() != null) {
+			if (deviceDetailModel.getSim_tel() != null && !deviceDetailModel.getSim_tel().isEmpty()) {
 				// 戻るリストに追加
 				list.add(deviceDetailModel.getSim_tel());
 			}

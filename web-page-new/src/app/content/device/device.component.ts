@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, EventEmitter, Output, Renderer2 } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm ,Validators,FormControl} from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
@@ -87,7 +87,7 @@ export class DeviceComponent implements OnInit {
   sortOn: any;
 
   checkOn: 1;
-
+  simtel: any;
   public pageModel = {
     //Login情報
     LoginUser: {
@@ -174,12 +174,12 @@ export class DeviceComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.simtel=888888888
     this.pageSize = 10
     this.Init(null);
   }
 
   Init(pre: any) {
-    this.getDropdownList();
     let item: UserInfo = this.dataFatoryService.getUserInfo();
     if (item != null) {
       var param = {
@@ -194,6 +194,7 @@ export class DeviceComponent implements OnInit {
           "targetuserCompanyid": item.company
         }
       }
+      this.getDropdownList(param);
 
       this.httpService.usePost('/getCompanyDevices', param).then(item => {
         try {
@@ -246,12 +247,12 @@ export class DeviceComponent implements OnInit {
     }
   }
 
-  getDropdownList() {
-    let item: UserInfo = this.dataFatoryService.getUserInfo();
-    var param = {
-      "loginuserid": item.uid
-    };
-    this.httpService.usePost('/getUnderCompanies', param).then(item => {
+  getDropdownList(param:any) {
+    // let item: UserInfo = this.dataFatoryService.getUserInfo();
+    // var param = {
+    //   {"loginuserid": item.uid}
+    // };
+    this.httpService.usePost('/getUnderCompanies', {"loginuserid": param.loginInfo.loginuserid}).then(item => {
       try {
         if (item != null) {
           this.companySelectArray = item;
@@ -261,7 +262,7 @@ export class DeviceComponent implements OnInit {
       }
     })
 
-    this.httpService.usePost('/getProductAll', {}).then(item => {
+    this.httpService.usePost('/getProductAll', param).then(item => {
       try {
         if (item != null) {
           this.productSelectArray = item;
@@ -282,7 +283,7 @@ export class DeviceComponent implements OnInit {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
-    this.pageModel.deviceDetail;
+    // this.pageModel.deviceDetail;
   }
 
   /**
@@ -333,12 +334,12 @@ export class DeviceComponent implements OnInit {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       //to do ユーザー名で　ロケーションデータを取る
-      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
-      this.pageModel.deviceDetail.companyid = this.pageModel.deviceDetail.companySelected["companyid"];
+      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);;
+      this.pageModel.deviceDetail.companyid = this.pageModel.deviceDetail.companySelected!=null? this.pageModel.deviceDetail.companySelected["companyid"]:'';
       // this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslSelected["item_id"];
       this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslChecked == false ? '0' : '1';
 
-      this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected["productid"];
+      this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected!=null? this.pageModel.deviceDetail.productSelected["productid"]:'';
 
       var param = {
         "loginInfo": {
@@ -362,13 +363,7 @@ export class DeviceComponent implements OnInit {
           // $("#addinfo").hide();
           // $('.modal-backdrop').remove();
           alert('デバイス情報を登録しました');
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    /**
+              /**
      * Add contact if valid addform value
      */
     if (addDeviceForm.valid === true) {
@@ -376,6 +371,11 @@ export class DeviceComponent implements OnInit {
       addDeviceForm.reset();
       this.addModal.close(addDeviceForm.resetForm);
     }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
   }
 
   /**
@@ -765,7 +765,11 @@ export class DeviceComponent implements OnInit {
         break;
 
       default:
-        return phonenm;
+        // country = phonenm.slice(0, 3);
+        // city = phonenm.slice(3, 5);
+        // number = phonenm.slice(6);
+        break;
+        // return phonenm;
     }
     if (country === 1) {
       country = '';
@@ -996,5 +1000,14 @@ export class DeviceComponent implements OnInit {
     }
   }
 
+  // get phonenumber() {
+  //   return <FormControl>this.simtel;
+  // }
+
+  // private _buildForm(): FormGroup {
+  //   return this._fb.group({
+  //     phonenumber: ['', [Validators.required]]
+  //   })
+  // }
 
 }
