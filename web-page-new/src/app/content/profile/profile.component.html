@@ -40,18 +40,23 @@
                                 <div class="form-control-position">
                                     <i class="la la-key"></i>
                                 </div>
-                                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                                    <div *ngIf="f.password.errors.required">Password is required</div>
-                                    <div *ngIf="f.password.errors.minlength">Password must be at least 6
+                                <div *ngIf="submitted && f.newpassword.errors" class="invalid-feedback">
+                                    <div *ngIf="f.newpassword.errors.required">New Password is required</div>
+                                    <div *ngIf="f.newpassword.errors.minlength">New Password must be at least 6
                                         characters</div>
                                 </div>
                             </fieldset>
                             <fieldset class="form-group position-relative has-icon-left">
                                 <input type="password" formControlName="confirmpassword" class="form-control"
-                                    [ngClass]="{ 'is-invalid': pageModel.pwdDifferent }" id="confirmpassword"
+                                    [ngClass]="{ 'is-invalid': submitted && f.confirmpassword.errors  }" id="confirmpassword"
                                     placeholder="Confirm New Password" required>
                                 <div class="form-control-position">
                                     <i class="la la-key"></i>
+                                </div>
+                                <div *ngIf="submitted && f.confirmpassword.errors" class="invalid-feedback">
+                                    <div *ngIf="f.confirmpassword.errors.required">Confirm New Password is required</div>
+                                    <div *ngIf="f.confirmpassword.errors.minlength">Confirm New Password must be at least 6
+                                        characters</div>
                                 </div>
                                 <div *ngIf="pageModel.pwdDifferent" class="invalid-feedback">
                                     Password pwdDifferent
