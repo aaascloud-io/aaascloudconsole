@@ -528,34 +528,37 @@ export class ProjectComponent implements OnInit {
       if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
         for (var item of this.deviceList) {
           if (item.isSelected) {
-            this.selectedDevice.push(item);
+            console.log("这是标记为已选中的item");
+            console.log(item);
+            this.selectedDevice.push(item.deviceid);
           }
         }
         var param = {
           "loginInfo":this.pageModel.loginInfo,
           "targetUserInfo":this.pageModel.targetUserInfo,
+          "userid" :this.pageModel.loginUser.loginuserid, 
           "projectid": projectid,
           "deviceList": this.selectedDevice,
         };
         console.log("这是目前的 param");
         console.log(param);
-        this.httpService.useRpPut('updateProject', param).then(item => {
+        this.httpService.useRpPut('updateProjectDevices', param).then(item => {
           console.log("这是目前的 item");
           console.log(item);
-          // try {
-          //   if (item.resultCode == "0000") {
+          try {
+            if (item.resultCode == "0000") {
     
-          //     this.ngOnInit();
-          //     alert('プロジェクト情報を改修しました');
-          //   if (projectDeviceForm.valid === true) {
+              this.ngOnInit();
+              alert('プロジェクト情報を改修しました');
+            if (projectDeviceForm.valid === true) {
     
-          //     projectDeviceForm.reset();
-          //     this.editModal.close(projectDeviceForm.resetForm);
-          //   }
-          //   }
-          // } catch (e) {
-          //   console.log(e);
-          // }
+              projectDeviceForm.reset();
+              this.editModal.close(projectDeviceForm.resetForm);
+            }
+            }
+          } catch (e) {
+            console.log(e);
+          }
         });
       }
 
