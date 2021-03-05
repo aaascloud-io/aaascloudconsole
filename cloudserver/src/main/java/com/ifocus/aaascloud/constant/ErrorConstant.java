@@ -20,6 +20,12 @@ public class ErrorConstant {
 	public static final String ERROR_CODE_0012 = "0012";
 	public static final String ERROR_CODE_0013 = "0013";
 
+	public static final String ERROR_CODE_0021 = "0021";
+	public static final String ERROR_CODE_0022 = "0022";
+	public static final String ERROR_CODE_0023 = "0023";
+	public static final String ERROR_CODE_0024 = "0024";
+	public static final String ERROR_CODE_0025 = "0025";
+
 	public static final String ERROR_CODE_0100 = "0100";
 	public static final String ERROR_CODE_0101 = "0101";
 	public static final String ERROR_CODE_0102 = "0102";
@@ -44,6 +50,12 @@ public class ErrorConstant {
 	public static final String ERROR_MSG_0011 = "権限なし：会社新規の場合、最初に管理者を登録してください。";
 	public static final String ERROR_MSG_0012 = "権限なし：自社ユーザ新規の場合、管理者権限が必要です。";
 	public static final String ERROR_MSG_0013 = "権限なし：管理者を追加するには、上位会社に依頼してください。";
+
+	public static final String ERROR_MSG_0021 = "IMEI重複チェックエラー:";
+	public static final String ERROR_MSG_0022 = "SN重複チェックエラー:";
+	public static final String ERROR_MSG_0023 = "SIM_IMSI重複チェックエラー:";
+	public static final String ERROR_MSG_0024 = "SIM_ICCID重複チェックエラー:";
+	public static final String ERROR_MSG_0025 = "SIM_TEL重複チェックエラー:";
 
 	public static final String ERROR_MSG_0100 = "登録失敗：";
 	public static final String ERROR_MSG_0101 = "更新失敗：";
