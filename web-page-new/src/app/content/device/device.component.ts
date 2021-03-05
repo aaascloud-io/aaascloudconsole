@@ -13,7 +13,6 @@ import { number } from 'ngx-custom-validators/src/app/number/validator';
 // import * as _ from 'lodash';
 import { map, startWith } from 'rxjs/operators';
 import { NgBlockUI, BlockUI } from 'ng-block-ui';
-import { InteractivityChecker } from '@angular/cdk/a11y';
 
 class Contact {
   constructor(
@@ -179,7 +178,6 @@ export class DeviceComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.simtel = 888888888
     this.pageSize = 10
     this.Init(null);
   }
