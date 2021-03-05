@@ -23,6 +23,7 @@ public class Cloud_groupModel {
 	private Integer alive;
 	private Integer groupDeviceCounts;
 	private List<Cloud_deviceModel> deviceList;
+	private List<Integer> groupidList = new ArrayList<Integer>();
 
 	/**
 	 *  deviceidリスト

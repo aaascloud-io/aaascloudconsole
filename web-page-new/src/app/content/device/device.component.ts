@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef,EventEmitter, Output, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, Renderer2 } from '@angular/core';
 import { NgForm, Validators, FormControl } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
@@ -152,8 +152,11 @@ export class DeviceComponent implements OnInit {
     }
 
   }
-  
+
+  @ViewChild('aForm') aForm: ElementRef;
+  @ViewChild('f') f: NgForm;
   @ViewChild('registerForm') registerForm: ElementRef;
+  @ViewChild('registerDeviceForm') registerDeviceForm: NgForm;
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
   @ViewChild(PerfectScrollbarDirective) directiveRef?: PerfectScrollbarDirective;
 
@@ -175,7 +178,6 @@ export class DeviceComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.simtel = 888888888
     this.pageSize = 10
     this.Init(null);
   }
@@ -331,7 +333,7 @@ export class DeviceComponent implements OnInit {
    *
    * @param addDeviceForm     Add contact form
    */
-  registerDeviceDetail(addDeviceForm: NgForm) {
+  registerDeviceDetail(addDeviceForm: NgForm, registerForm: ElementRef) {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       //to do ユーザー名で　ロケーションデータを取る
@@ -370,8 +372,10 @@ export class DeviceComponent implements OnInit {
             addDeviceForm.reset();
             this.addModal.close(addDeviceForm.resetForm);
           }
-        }else{
-          this.setFocus(item.resultCode)
+        }else if(item.resultCode == "0002"){
+          alert('権限ないです、登録失敗しました');
+        }else {
+          this.setFocus(item.resultCode, registerForm)
           alert(item.resultMsg);
         }
       } catch (e) {
@@ -729,6 +733,13 @@ export class DeviceComponent implements OnInit {
     }
   }
 
+  lengthCheck(value,name,templateForm: ElementRef){
+    if(value.length>0 && value.length<11)
+    {
+      alert("Tel Numberを11桁を入力してください。");
+      this.setFocus(name,templateForm)
+    }
+  }
   /**
    * Set the phone number format
    */
@@ -969,10 +980,17 @@ export class DeviceComponent implements OnInit {
     // this.selected.splice(0, this.selected.length);
     // this.selected.push(...selected);
   }
-  setFocus(name) {    
-    const ele = this.registerForm.nativeElement[name];    
-    if (ele) {
-      ele.focus();
+  setFocus(name, templateForm: ElementRef) {
+    const ctrls = Object.keys(templateForm);
+    for (let key = 0; key < ctrls.length; key++) {
+      var keystr = key.toString();
+      if (keystr == ctrls[key]) {
+        if (templateForm[key].name == name) {
+          const control = templateForm[key];
+          control.focus();
+          control.select();
+        }
+      }
     }
   }
 

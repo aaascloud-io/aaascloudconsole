@@ -185,18 +185,18 @@ public class Cloud_groupService {
 
 	/*
 	 * グループ一括削除
-	 * @param groupList List<Cloud_groupModel> グループリスト
+	 * @param groupidList List<Integer> グループリスト
 	 *
 	 */
-	public void deleteGroups(List<Cloud_groupModel> groupList) throws Exception {
+	public void deleteGroups(List<Integer> groupidList) throws Exception {
 
-		if (groupList != null && !groupList.isEmpty()) {
-			for (Cloud_groupModel model:groupList) {
+		if (groupidList != null && !groupidList.isEmpty()) {
+			for (Integer groupid:groupidList) {
 
 				////////////////////////////////////////////////////////
 				// グループ削除
 				////////////////////////////////////////////////////////
-				deleteGroup(model);
+				deleteGroup(groupid);
 
 			}
 		}
@@ -208,8 +208,8 @@ public class Cloud_groupService {
 	 * グループ削除
 	 *
 	 */
-	public void deleteGroup(Cloud_groupModel model) throws Exception {
-		cloud_groupRepository.deleteById(model.getGroupid());
+	public void deleteGroup(Integer groupid) throws Exception {
+		cloud_groupRepository.deleteById(groupid);
 	}
 
 
