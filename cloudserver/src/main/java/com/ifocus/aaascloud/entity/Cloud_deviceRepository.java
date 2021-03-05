@@ -108,7 +108,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.projectid = :projectid AND (c.groupid IS NULL OR AND c.groupid = 0) ", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.projectid = :projectid AND (c.groupid IS NULL OR c.groupid = 0) ", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchProjectDevicesWithNoGroupByProjectid(@Param("projectid") Integer projectid);
 
 	/*
