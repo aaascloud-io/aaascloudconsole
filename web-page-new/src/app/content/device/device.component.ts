@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, EventEmitter, Output, Renderer2 } from '@angular/core';
-import { NgForm ,Validators,FormControl} from '@angular/forms';
+import { Component, OnInit, ViewChild, ElementRef,EventEmitter, Output, Renderer2 } from '@angular/core';
+import { NgForm, Validators, FormControl } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
@@ -152,7 +152,8 @@ export class DeviceComponent implements OnInit {
     }
 
   }
-
+  
+  @ViewChild('registerForm') registerForm: ElementRef;
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
   @ViewChild(PerfectScrollbarDirective) directiveRef?: PerfectScrollbarDirective;
 
@@ -174,7 +175,7 @@ export class DeviceComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.simtel=888888888
+    this.simtel = 888888888
     this.pageSize = 10
     this.Init(null);
   }
@@ -247,12 +248,12 @@ export class DeviceComponent implements OnInit {
     }
   }
 
-  getDropdownList(param:any) {
+  getDropdownList(param: any) {
     // let item: UserInfo = this.dataFatoryService.getUserInfo();
     // var param = {
     //   {"loginuserid": item.uid}
     // };
-    this.httpService.usePost('/getUnderCompanies', {"loginuserid": param.loginInfo.loginuserid}).then(item => {
+    this.httpService.usePost('/getUnderCompanies', { "loginuserid": param.loginInfo.loginuserid }).then(item => {
       try {
         if (item != null) {
           this.companySelectArray = item;
@@ -335,11 +336,11 @@ export class DeviceComponent implements OnInit {
     if (routeif != null) {
       //to do ユーザー名で　ロケーションデータを取る
       // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);;
-      this.pageModel.deviceDetail.companyid = this.pageModel.deviceDetail.companySelected!=null? this.pageModel.deviceDetail.companySelected["companyid"]:'';
+      this.pageModel.deviceDetail.companyid = this.pageModel.deviceDetail.companySelected != null ? this.pageModel.deviceDetail.companySelected["companyid"] : '';
       // this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslSelected["item_id"];
       this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslChecked == false ? '0' : '1';
 
-      this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected!=null? this.pageModel.deviceDetail.productSelected["productid"]:'';
+      this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected != null ? this.pageModel.deviceDetail.productSelected["productid"] : '';
 
       var param = {
         "loginInfo": {
@@ -363,14 +364,15 @@ export class DeviceComponent implements OnInit {
           // $("#addinfo").hide();
           // $('.modal-backdrop').remove();
           alert('デバイス情報を登録しました');
-              /**
-     * Add contact if valid addform value
-     */
-    if (addDeviceForm.valid === true) {
 
-      addDeviceForm.reset();
-      this.addModal.close(addDeviceForm.resetForm);
-    }
+          if (addDeviceForm.valid === true) {
+
+            addDeviceForm.reset();
+            this.addModal.close(addDeviceForm.resetForm);
+          }
+        }else{
+          this.setFocus(item.resultCode)
+          alert(item.resultMsg);
         }
       } catch (e) {
         console.log(e);
@@ -769,7 +771,7 @@ export class DeviceComponent implements OnInit {
         // city = phonenm.slice(3, 5);
         // number = phonenm.slice(6);
         break;
-        // return phonenm;
+      // return phonenm;
     }
     if (country === 1) {
       country = '';
@@ -967,6 +969,12 @@ export class DeviceComponent implements OnInit {
     // this.selected.splice(0, this.selected.length);
     // this.selected.push(...selected);
   }
+  setFocus(name) {    
+    const ele = this.registerForm.nativeElement[name];    
+    if (ele) {
+      ele.focus();
+    }
+  }
 
   isAllChecked() {
     // return this.PERSON.every(_ => _.deviceSelected);
@@ -999,15 +1007,11 @@ export class DeviceComponent implements OnInit {
       }
     }
   }
+  counter
+  onChange(event) {
+    this.counter = this.counter + 1;
+  }
 
-  // get phonenumber() {
-  //   return <FormControl>this.simtel;
-  // }
 
-  // private _buildForm(): FormGroup {
-  //   return this._fb.group({
-  //     phonenumber: ['', [Validators.required]]
-  //   })
-  // }
 
 }
