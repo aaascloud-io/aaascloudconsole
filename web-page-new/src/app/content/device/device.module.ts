@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { DeviceComponent } from './device.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DeviceRoutingModule } from './device-routing.module';
-
 import { FormsModule  } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
