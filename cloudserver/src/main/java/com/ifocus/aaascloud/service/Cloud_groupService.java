@@ -74,7 +74,7 @@ public class Cloud_groupService {
 	public Cloud_groupModel getGroupInfo(Cloud_groupModel cloud_groupModel) throws Exception {
 		Cloud_groupModel model = new Cloud_groupModel();
 		Optional<Cloud_groupEntity> entity = cloud_groupRepository.findById(cloud_groupModel.getGroupid());
-		if (!entity.isEmpty()) {
+		if (!entity.isPresent()) {
 			model = getModelByEntity(entity.get());
 //			model.setGroupid(entity.get().getGroupid());
 //			model.setProjectid(entity.get().getProjectid());
@@ -229,7 +229,7 @@ public class Cloud_groupService {
 
 		// プロジェクト情報取得&設定
 		Optional<Cloud_projectEntity> project  = cloud_projectRepository.findById(entity.getProjectid());
-		if (!project.isEmpty()) {
+		if (!project.isPresent()) {
 			model.setProjectname(project.get().getProjectname());
 		}
 
