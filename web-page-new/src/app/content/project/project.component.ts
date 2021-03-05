@@ -46,7 +46,7 @@ export class ProjectComponent implements OnInit {
     // 选中的多条数据
   selected = [];
     // 待分配的硬件列表
-  deviceList:any;
+  usableDeviceList:any;
     // 选中的 device 列表
   selectedDevice = [];
     // 搜索框检索值
@@ -54,6 +54,8 @@ export class ProjectComponent implements OnInit {
   sortOn: any;
   checkOn: 1;
   show = false;
+    //已经在 project 中分配掉的 device 
+  linkedDeviceList =[];
 
   
 
@@ -157,7 +159,12 @@ export class ProjectComponent implements OnInit {
       "targetUserInfo":this.pageModel.targetUserInfo,
     };
     var res = await this.httpService.post("/getProjects",param);
+    
     let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+
+    console.log("这是从api取到的 jsonItem");
+    console.log(jsonItem);
+
     jsonItem.forEach(element => {
       this.rows.push(element);
     });
@@ -218,7 +225,6 @@ export class ProjectComponent implements OnInit {
     });
 
     if (NewProjectForm.valid === true) {
-
       NewProjectForm.reset();
       this.addModal.close(NewProjectForm.resetForm);
     }
@@ -404,7 +410,7 @@ export class ProjectComponent implements OnInit {
       console.log(this.selected);
 
       var query = {
-        "loginInfo": this.pageModel.loginUser,
+        "loginInfo": this.pageModel.loginInfo,
         "targetUserInfo":this.pageModel.targetUserInfo,
         "projectlist": this.selected,
       }
@@ -474,19 +480,22 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-// デバイス連携
+// デバイス連携追加
   // Modal 開く
-  deviceLinkModal(deviceLinkModalContent, row) {
-    this.getDeviceList();
+  deviceLinkAddModal(deviceLinkAddModalContent, row) {
+    this.getUsableDeviceList();
     this.selectedProject = Object.assign({}, row);
-    this.editModal = this.modal.open(deviceLinkModalContent, {
+    console.log("这是 selectedProject ");
+    console.log(this.selectedProject);
+
+    this.editModal = this.modal.open(deviceLinkAddModalContent, {
       windowClass: 'animated fadeInDown',
       size: 'lg'
     });
   }
 
-  async getDeviceList(){
-    this.deviceList = [];
+  async getUsableDeviceList(){
+    this.usableDeviceList = [];
     let param = {
       "loginInfo":this.pageModel.loginInfo,
       "targetUserInfo":this.pageModel.targetUserInfo,
@@ -496,40 +505,40 @@ export class ProjectComponent implements OnInit {
     var res = await this.httpService.post("/getMySelectableDevices",param);
     let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
     jsonItem.forEach(element => {
-      this.deviceList.push(element);
+      this.usableDeviceList.push(element);
     });
     console.log("这是deviceList的data值");
-    console.log(this.deviceList);
+    console.log(this.usableDeviceList);
 
-    this.deviceList = [...this.deviceList];
+    this.usableDeviceList = [...this.usableDeviceList];
     console.log("这是...运算符后的deviceList值");
-    console.log(this.deviceList);
+    console.log(this.usableDeviceList);
   }
 
-  checkAllDevice(ev){
-    this.deviceList.forEach(x => x.isSelected = ev.target.checked)
+  checkAllUsableDevice(ev){
+    this.usableDeviceList.forEach(x => x.isSelected = ev.target.checked)
     // this.selectedProject = ev.target.checked;
     console.log("这是checkall的函数内部");
     console.log(ev);
     console.log(this.rows);
     console.log(this.selectedProject);
   }
-  checkChangeDevice(ev, element) {
+  checkChangeUsableDevice(ev, element) {
     console.log("这是checkChangeDevice的函数内部");
     console.log(ev);
     console.log(element);
-    console.log(this.deviceList);
-    this.deviceList.forEach(function (device) {
+    console.log(this.usableDeviceList);
+    this.usableDeviceList.forEach(function (device) {
       if (device.deviceid === element['deviceid']) { device.isSelected = ev.target.checked }
     });
-    console.log(this.deviceList);
+    console.log(this.usableDeviceList);
   }
 
   projectDeviceDataUpdate(projectDeviceForm,projectid){
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
-        for (var item of this.deviceList) {
+        for (var item of this.usableDeviceList) {
           if (item.isSelected) {
             console.log("这是标记为已选中的item");
             console.log(item);
@@ -539,48 +548,130 @@ export class ProjectComponent implements OnInit {
         var param = {
           "loginInfo":this.pageModel.loginInfo,
           "targetUserInfo":this.pageModel.targetUserInfo,
-          "userid" :this.pageModel.loginUser.loginuserid, 
+          "userid" :this.pageModel.loginInfo['loginuserid'], 
           "projectid": projectid,
           "deviceList": this.selectedDevice,
         };
         console.log("这是目前的 param");
         console.log(param);
-        this.httpService.useRpPut('updateProjectDevices', param).then(item => {
+        this.httpService.useRpPut('addProjectDevices', param).then(item => {
           console.log("这是目前的 item");
           console.log(item);
           try {
             if (item.resultCode == "0000") {
-              
-              this.ngOnInit();
               this.selectedDevice=[];
               alert('プロジェクト情報を改修しました');
-            if (projectDeviceForm.valid === true) {
-    
-              projectDeviceForm.reset();
-              this.editModal.close(projectDeviceForm.resetForm);
+              if (projectDeviceForm.valid === true) {
+                projectDeviceForm.reset();
+                this.editModal.close(projectDeviceForm.resetForm);
+              }
             }
+            this.ngOnInit();
+          } catch (e) {
+            console.log(e);
+            this.ngOnInit();
+          };
+        });
+      }
+    }
+    this.ngOnInit();
+  }
+
+  // project　連携　DeviceList　一覧
+    // Modal 開く
+  deviceLinkListModal(deviceLinkListModalContent, row) {
+    this.getLinkedDeviceList(row.projectid);
+    this.selectedProject = Object.assign({}, row);
+    this.editModal = this.modal.open(deviceLinkListModalContent, {
+      windowClass: 'animated fadeInDown',
+      size: 'lg'
+    });
+  }
+
+  async getLinkedDeviceList(projectid){
+    this.linkedDeviceList = [];
+    let param = {
+      "loginInfo":this.pageModel.loginInfo,
+      "targetUserInfo":this.pageModel.targetUserInfo,
+      "userid":this.pageModel.loginInfo["loginuserid"],
+      "projectid": projectid,
+    };
+    console.log("这里是 initData 的 param 数据");
+    console.log(param);
+    var res = await this.httpService.post("/getProject",param);
+    console.log("这里是请求到的 res 数据");
+    console.log(res);
+    var jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+    console.log("jsonItem");
+    console.log(jsonItem);
+    jsonItem.deviceList.forEach(element => {
+      this.linkedDeviceList.push(element);
+    });
+    console.log("这是deviceList的data值");
+    console.log(this.linkedDeviceList);
+    this.linkedDeviceList = [...this.linkedDeviceList];
+  }
+
+  checkAllLinkedDevice(ev){
+    this.linkedDeviceList.forEach(x => x.isSelected = ev.target.checked)
+    // this.selectedProject = ev.target.checked;
+    console.log("这是checkall的函数内部");
+    console.log(ev);
+    console.log(this.rows);
+    console.log(this.linkedDeviceList);
+  }
+  checkChangeLinkedDevice(ev, element) {
+    console.log("这是checkChangeLinkedDevice的函数内部");
+    console.log(ev);
+    console.log(element);
+    console.log(this.linkedDeviceList);
+    this.linkedDeviceList.forEach(function (device) {
+      if (device.deviceid === element['deviceid']) { device.isSelected = ev.target.checked }
+    });
+    console.log(this.linkedDeviceList);
+  }
+
+  projectLinkedDeviceDataUpdate(projectLinkedDeviceForm,projectid){
+    let routeif: UserInfo = this.dataFatoryService.getUserInfo();
+    if (routeif != null) {
+      if (confirm("選択したデバイスをプロジェクトから削除しますか")) {
+        for (var item of this.linkedDeviceList) {
+          if (item.isSelected) {
+            console.log("这是标记为已选中的item");
+            console.log(item);
+            this.selectedDevice.push(item);
+          }
+        }
+        var param = {
+          "loginInfo":this.pageModel.loginInfo,
+          "targetUserInfo":this.pageModel.targetUserInfo,
+          
+          "projectid": projectid,
+          "deviceList": this.selectedDevice,
+        };
+        console.log("这是目前的 param");
+        console.log(param);
+        this.httpService.useRpPut('deleteProjectDevices', param).then(item => {
+          console.log("这是目前的 item");
+          console.log(item);
+          try {
+            if (item.resultCode == "0000") {
+              this.selectedDevice=[];
+              alert('プロジェクトからデバイスを削除しました。');
+              if (projectLinkedDeviceForm.valid === true) {
+                projectLinkedDeviceForm.reset();
+                this.editModal.close(projectLinkedDeviceForm.resetForm);
+              }
             }
           } catch (e) {
             console.log(e);
+            
           }
         });
       }
-
     }
+    this.ngOnInit();
   }
-
-
-  
-
- 
-
-
-
-  
-
-
-
-
 
   // デバイス検索（本地検索）、機能廃棄、API検索に交換
     // 用法：
