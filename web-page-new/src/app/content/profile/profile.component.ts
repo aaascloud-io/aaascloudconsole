@@ -6,6 +6,7 @@ import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 import { AlertService } from '../../_services/alert.service';
 import { NgForm } from '@angular/forms';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -27,6 +28,8 @@ export class ProfileComponent implements OnInit {
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
     private alertService:AlertService,
+    private authService:AuthService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -35,12 +38,22 @@ export class ProfileComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       newpassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmpassword: ['', [Validators.required, Validators.minLength(6)]]
+      confirmpassword: ['', [Validators.required, Validators.minLength(6)],]
     });
   }
 
   get f() {
     return this.profileForm.controls;
+  }
+
+  logout() {
+    if (localStorage.getItem('currentUser')) {
+      this.authService.doLogout().then(res => {
+        this.router.navigate(['/login']);
+      }, err => {
+        console.log(err);
+      });
+    }
   }
 
   async tryRegister() {
@@ -81,15 +94,18 @@ export class ProfileComponent implements OnInit {
         }
       }
 
-      var resUser = await this.httpService.usePost('/updateProfile', param).then(item => {
+      var resUser = await this.httpService.useRpPost('/updateProfile', param).then(item => {
         try {
           if (item != null) {
-
-
+            this.ngOnInit();
+            // $("#addinfo").hide();
+            // $('.modal-backdrop').remove();
+            alert('パスワードを変更しました');
+            this.logout();
           }
 
         } catch (e) {
-          console.log('ユーザーを検索API エラー　発生しました。');
+          console.log('パスワードを変更APIエラー発生しました');
         }
       })
 
