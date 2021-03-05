@@ -20,7 +20,6 @@ export class ProjectComponent implements OnInit {
   
   name = 'Angular';
   selectedContact: any;
-  contactFlag: boolean;
   addContact: any;
   placement = 'bottom-right';
   imagepathdefault: any;
@@ -88,12 +87,7 @@ export class ProjectComponent implements OnInit {
       addList: [],
       dataAll: [],
       productList: [],
-      addProject:{
-        projectName:'',
-        productId:'',
-        projectSummary:'',
-        userId:'',
-      },
+      
       projectDetail: {
         deviceCounts:'',
         groupCounts:'',
@@ -106,22 +100,19 @@ export class ProjectComponent implements OnInit {
         deviceList:[],
         userId:1,
       },
-
-      // 登录数据
-      loginUser: {
-        loginuserid: null,
-        loginusername: '',
-        loginrole: null,
-        logincompanyid: '',
-      },
-      // 登录用数据
-      userInfoParame: {
-      },
-      loginInfo:{},
-      targetUserInfo:{},
-
       data:[],
       selectedData : {},
+      
+      // 登录用数据
+      loginInfo:{},
+      targetUserInfo:{},
+      // 新规项目数据存储
+      addProject:{
+        projectName:'',
+        productId:'',
+        projectSummary:'',
+        userId:'',
+      },
     }
 
       
@@ -130,13 +121,8 @@ export class ProjectComponent implements OnInit {
      * OnInit
      */
   ngOnInit() {
-    // 获取登录时必须的认证数据，并存在pageModal的 loginUser 和 userInfoParame 中
+    // 获取登录时必须的认证数据，并存在 pageModal的 loginUser 和 userInfoParame 中
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    this.pageModel.loginUser.loginuserid = item.uid;
-    this.pageModel.loginUser.loginusername = item.login_id;
-    this.pageModel.loginUser.loginrole = item.role;
-    this.pageModel.loginUser.logincompanyid = item.company;
-
     this.pageModel.loginInfo = {
         "loginuserid": item.uid,
         "loginusername": item.login_id,
@@ -159,28 +145,14 @@ export class ProjectComponent implements OnInit {
       "targetUserInfo":this.pageModel.targetUserInfo,
     };
     var res = await this.httpService.post("/getProjects",param);
-    
+
     let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-
-    console.log("这是从api取到的 jsonItem");
-    console.log(jsonItem);
-
     jsonItem.forEach(element => {
       this.rows.push(element);
     });
-
     this.rows = [...this.rows];
-    console.log("这是从api取到的数据");
-    console.log(this.rows);
-
+    // 获取当前页表格内显示的值
     this.getTabledata();
-
-    // jsonItem.productList.forEach((elem) => {
-    //   let product_info = JSON.parse(elem);
-    //   this.pageModel.products.push(product_info)
-    // });
-    // this.pageModel.productLength = jsonItem.productCount;
-
   }
 
 
@@ -190,7 +162,6 @@ export class ProjectComponent implements OnInit {
     this.addModal = this.modal.open(addNewProjectModal, {
       windowClass: 'animated fadeInDown'
     });
-    this.contactFlag = true;
   }
     // ModalデータをAPIに更新
   addNewProjectForm(NewProjectForm:NgForm){
@@ -205,35 +176,29 @@ export class ProjectComponent implements OnInit {
         "productid":this.pageModel.addProject.productId,
         "projectsummary":this.pageModel.addProject.projectSummary,
       }
-    }
-    console.log("这是 addNewProjectForm 的 param");
-    console.log(param);
-    this.httpService.useRpPost('registerProject',param).then(item=>{
-      console.log("这是 addNewProjectForm 的 item");
-      console.log(item);
-      try{
-        if(item.resultCode == "0000"){
-          this.pageModel.addProject.projectName = '';
-          this.pageModel.addProject.productId = '';
-          this.pageModel.addProject.projectSummary = '';
-          this.ngOnInit();
-          alert("プロジェクトを登録しました。");
+      this.httpService.useRpPost('registerProject',param).then(item=>{
+        try{
+          if(item.resultCode == "0000"){
+            this.pageModel.addProject.projectName = '';
+            this.pageModel.addProject.productId = '';
+            this.pageModel.addProject.projectSummary = '';
+            this.ngOnInit();
+            alert("プロジェクトを登録しました。");
+          }
+        }catch(e){
+          alert(e);
         }
-      }catch(e){
-        alert(e);
+      });
+      if (NewProjectForm.valid === true) {
+        NewProjectForm.reset();
+        this.addModal.close(NewProjectForm.resetForm);
       }
-    });
-
-    if (NewProjectForm.valid === true) {
-      NewProjectForm.reset();
-      this.addModal.close(NewProjectForm.resetForm);
+      console.log("这是一个测试，能看到我说明被执行了");
     }
   }
 
   // 検索機能
   searchProject(){
-    console.log("这是搜索条件");
-    console.log(this.searchValue);
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       var param = {
@@ -241,25 +206,13 @@ export class ProjectComponent implements OnInit {
         "targetUserInfo":this.pageModel.targetUserInfo,
         "projectname": this.searchValue,
       };
-      console.log("这是目前的 param");
-      console.log(param);
-
       this.httpService.useRpPost('searchProjects',param).then(item=>{
-        console.log("这是 searchProject 的 item");
-        console.log(item);
         let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
-        console.log("这是jsonItem的值");
-        console.log(jsonItem);
         this.rows = [];
         jsonItem.forEach(element => {
           this.rows.push(element);
         });
-        console.log("这是rows的data值");
-        console.log(this.rows);
-
         this.rows = [...this.rows];
-        console.log("这是...运算符后的data值");
-        console.log(this.rows);
         this.getTabledata();
       });
     }
@@ -268,31 +221,20 @@ export class ProjectComponent implements OnInit {
   // 検索条件クリア
   clearSearchProject(){
     this.searchValue = "";
-    console.log("清除搜索条件");
-    console.log(this.searchValue);
     this.ngOnInit();
   }
 
   // プロジェクト削除
-  /**
-   * Delete contact row
-   * @param row     Selected row for delete contact
-   */
   deleteRow(row) {
-    let index = 0;
-    console.log("这是 delete 里面的 row");
-    console.log(row);
     if (confirm(row.projectname + "を削除します。よろしいですか？")){
       let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    if (routeif != null) {
-      var param = {
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
-        "projectid":row.projectid,
-      };
-    }
-      console.log("这是 delete 的 param");
-      console.log(param);
+      if (routeif != null) {
+        var param = {
+          "loginInfo":this.pageModel.loginInfo,
+          "targetUserInfo":this.pageModel.targetUserInfo,
+          "projectid":row.projectid,
+        };
+      }
       // var res = await this.httpService.post("/deleteProject",param);
       // console.log("这是 delete 的 res");
       // console.log(res);
@@ -301,7 +243,6 @@ export class ProjectComponent implements OnInit {
         console.log(item);
         try{
           if(item.body.resultCode == "0000"){
-
             this.ngOnInit();
             alert("プロジェクトを削除しました。");
           }
@@ -312,79 +253,37 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  /**
-   * Edit selected contact row.
-   *
-   * @param editTableDataModalContent     Id of the edit contact model.
-   * @param row     The row which needs to be edited.
-   */
-  // editTableDataModal(editTableDataModalContent, row) {
-  //   console.log("模态框导入row");
-  //   console.log(row);
-  //   this.pageModel.selectedData = Object.assign({},row)
-  //   console.log("模态框导入selectedData");
-  //   console.log(this.pageModel.selectedData);
-
-    
-  //   this.editModal = this.modal.open(editTableDataModalContent, {
-  //     windowClass: 'animated fadeInDown'
-  //   });
-  //   this.contactFlag = false;
-  // }
-
 
   // プロジェクト詳細と修正
     // // Modal を開く
   editProjectDataModal(editProjectDataModalContent, row) {
-    // this.selectedContact = Object.assign({}, row);
     this.selectedProject = Object.assign({},row);
-
-    console.log("这是 edit 功能内的 selectedProject 值");
-    console.log(this.selectedProject);
-
     this.editModal = this.modal.open(editProjectDataModalContent, {
       windowClass: 'animated fadeInDown'
     });
-    this.contactFlag = false;
   }
     // ModalデータをAPIに更新
-  /**
-   * Update contact details
-   *
-   * @param projectEditForm      Edit form for values check
-   * @param projectid      Id match to the selected row Id
-   */
   projectDataUpdate(projectEditForm: NgForm, projectid) {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
-      this.pageModel.projectDetail.projectid = projectid;
-      this.pageModel.projectDetail.productid = this.selectedProject.productid;
-      this.pageModel.projectDetail.projectname = this.selectedProject.projectname;
-      this.pageModel.projectDetail.projectsummary = this.selectedProject.projectsummary;
       var param = {
         "loginInfo":this.pageModel.loginInfo,
         "targetUserInfo":this.pageModel.targetUserInfo,
-        "projectid": this.pageModel.projectDetail.projectid,
-        "productid": this.pageModel.projectDetail.productid,
-        "projectname": this.pageModel.projectDetail.projectname,
-        "projectsummary": this.pageModel.projectDetail.projectsummary,
+        "projectid": projectid,
+        "productid": this.selectedProject.productid,
+        "projectname": this.selectedProject.projectname,
+        "projectsummary": this.selectedProject.projectsummary,
       };
-      console.log("这是目前的 param");
-      console.log(param);
-
       this.httpService.useRpPut('updateProject', param).then(item => {
-        console.log("这是目前的 item");
-        console.log(item);
         try {
           if (item.resultCode == "0000") {
-  
-            this.ngOnInit();
             alert('プロジェクト情報を改修しました');
-          if (projectEditForm.valid === true) {
-  
-            projectEditForm.reset();
-            this.editModal.close(projectEditForm.resetForm);
-          }
+            this.ngOnInit();
+            if (projectEditForm.valid === true) {
+              projectEditForm.reset();
+              this.editModal.close(projectEditForm.resetForm);
+            }
+            this.selectedProject={};
           }
         } catch (e) {
           console.log(e);
@@ -394,21 +293,13 @@ export class ProjectComponent implements OnInit {
   }
 
   // 選択したプロジェクトを複数削除
-  /**
-   * Delete selected contact
-   */
   deleteCheckedRow() {
-    console.log("这是复选后的rows");
-    console.log(this.rows);
     if (confirm("選択したデーターを削除しますか")) {
       for (var row of this.rows) {
         if (row.isSelected) {
           this.selected.push(row);
         }
       }
-      console.log("这是复选后的selected");
-      console.log(this.selected);
-
       var query = {
         "loginInfo": this.pageModel.loginInfo,
         "targetUserInfo":this.pageModel.targetUserInfo,
@@ -418,6 +309,7 @@ export class ProjectComponent implements OnInit {
         try {
           if (item.resultCode == "0000") {
             this.searchValue = "";
+            this.selected=[];
             this.ngOnInit();
             alert('選択したプロジェクトを削除しました');
           }
@@ -432,16 +324,8 @@ export class ProjectComponent implements OnInit {
   checkAll(ev){
     this.rows.forEach(x => x.isSelected = ev.target.checked)
     // this.selectedProject = ev.target.checked;
-    console.log("这是checkall的函数内部");
-    console.log(ev);
-    console.log(this.rows);
-    console.log(this.selectedProject);
   }
   checkChange(ev, element) {
-    console.log("这是checkChange的函数内部");
-    console.log(ev);
-    console.log(element);
-    console.log(this.rows);
     this.rows.forEach(function (project) {
       if (project.projectid === element['projectid']) { project.isSelected = ev.target.checked }
     });
@@ -485,9 +369,6 @@ export class ProjectComponent implements OnInit {
   deviceLinkAddModal(deviceLinkAddModalContent, row) {
     this.getUsableDeviceList();
     this.selectedProject = Object.assign({}, row);
-    console.log("这是 selectedProject ");
-    console.log(this.selectedProject);
-
     this.editModal = this.modal.open(deviceLinkAddModalContent, {
       windowClass: 'animated fadeInDown',
       size: 'lg'
