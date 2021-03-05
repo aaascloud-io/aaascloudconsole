@@ -290,18 +290,12 @@ public class Cloud_projectService {
 	}
 
 	/*
-	 * プロジェクトのデバイス更新
+	 * プロジェクトのデバイス追加
 	 * @param Cloud_projectDetailModel プロジェクト詳細
 	 * @return projectid Integer プロジェクトID
 	 *
 	 */
-	public void updateProjectDevices(Cloud_projectDetailModel model) throws Exception {
-
-		////////////////////////////////////////////////////////
-		// デバイスのプロジェクトIDをクリアする
-		////////////////////////////////////////////////////////
-
-		cloud_deviceService.clearProjectInfoForProjectOnly(model);
+	public void addProjectDevices(Cloud_projectDetailModel model) throws Exception {
 
 		////////////////////////////////////////////////////////
 		// プロジェクトのデバイス更新
@@ -321,6 +315,24 @@ public class Cloud_projectService {
 			// デバイス一括更新
 			cloud_deviceRepository.saveAll(entityList);
 		}
+
+		return ;
+
+	}
+
+	/*
+	 * プロジェクトのデバイス削除
+	 * @param Cloud_projectDetailModel プロジェクト詳細
+	 * @return projectid Integer プロジェクトID
+	 *
+	 */
+	public void deleteProjectDevices(Cloud_projectDetailModel model) throws Exception {
+
+		////////////////////////////////////////////////////////
+		// プロジェクトのデバイス削除
+		////////////////////////////////////////////////////////
+
+		cloud_deviceService.clearProjectInfoForProjectOnly(model);
 
 		return ;
 
