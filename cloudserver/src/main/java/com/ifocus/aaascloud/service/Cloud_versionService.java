@@ -52,6 +52,17 @@ public class Cloud_versionService {
 	}
 
 	/*
+	 * バージョン詳細を取得する
+	 * @param productid Integer バージョンモデル
+	 * @return List<Cloud_versionModel> バージョン一覧
+	 *
+	 */
+	public Cloud_versionModel getVersioninInfo(Cloud_versionModel model) throws Exception {
+		Optional<Cloud_versionEntity> version = cloud_versionRepository.findById(model.getRowid());
+		return getCloud_versionModel(version.get());
+	}
+
+	/*
 	 * プロダクト別バージョン一覧を取得する
 	 * @param productid Integer バージョンモデル
 	 * @return List<Cloud_versionModel> バージョン一覧
@@ -71,6 +82,18 @@ public class Cloud_versionService {
 	public Cloud_versionModel registerVersion(Cloud_versionModel model) throws Exception {
 		Cloud_versionEntity insertedEntity = cloud_versionRepository.save(getEntitByModel(model));
 		return getCloud_versionModel(insertedEntity);
+
+	}
+
+	/*
+	 * バージョン更新
+	 * @param entity Cloud_versionEntity バージョンEntity
+	 * @return Cloud_versionModel 更新済みバージョン
+	 *
+	 */
+	public Cloud_versionModel updateVersion(Cloud_versionModel model) throws Exception {
+		Cloud_versionEntity updatedEntity = cloud_versionRepository.save(getEntitByModelForUpdate(model));
+		return getCloud_versionModel(updatedEntity);
 
 	}
 
@@ -155,6 +178,33 @@ public class Cloud_versionService {
 		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
+		entity.setU_uid(model.getLoginInfo().getLoginuserid());
+		entity.setU_time(systemTime);
+
+		return entity;
+
+	}
+
+	/*
+	 * ModelからEntity取得(更新用)
+	 * @param model Cloud_versionModel
+	 * @return Cloud_versionEntity
+	 *
+	 */
+	private Cloud_versionEntity getEntitByModelForUpdate(Cloud_versionModel model) throws Exception {
+
+		Optional<Cloud_versionEntity> version = cloud_versionRepository.findById(model.getRowid());
+		Cloud_versionEntity entity = version.get();
+
+		/* システム日時 */
+		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+
+		// 情報設定
+		entity.setProductid(model.getProductid());
+		entity.setVersioncode(model.getVersioncode());
+		entity.setVersionname(model.getVersionname());
+		entity.setDownloadurl(model.getDownloadurl());
+		entity.setDescription(model.getDescription());
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
 
