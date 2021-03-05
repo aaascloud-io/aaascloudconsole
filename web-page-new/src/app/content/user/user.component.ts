@@ -89,6 +89,10 @@ export class UserComponent implements OnInit {
   public singleSelectArray = selectData.singleSelectArray;
 
   pageModel = {
+    result: {
+      retcode: '',
+      message: '',
+    },
     // 一括登録のデバイス定義リスト
     addList: [],
     dataAll: [],
@@ -357,6 +361,7 @@ export class UserComponent implements OnInit {
             this.searchMyUsers();
             alert('削除成功です。');
           } else {
+            alert('ユーザー情報は削除失敗です。');
             console.log('削除失敗です。');
             this.selectedUserid = [];
             this.selected = [];
@@ -398,17 +403,25 @@ export class UserComponent implements OnInit {
     }
 
     this.httpService.put('updateUser', query).then(item => {
+      this.pageModel.result.retcode = '';
+      this.pageModel.result.message = '';
       try {
-        console.log('更新成功です。');
-        console.log(item);
-        this.ngOnInit();
-        alert('更新成功です。');
-        if (editUpdateForm.valid === true) {
-          editUpdateForm.reset();
-          this.updateModal.close(editUpdateForm.resetForm);
+        if (item.resultCode === "0000") {
+          console.log('更新成功です。');
+          console.log(item);
+          this.ngOnInit();
+          this.getResultMs(item);
+          alert('更新成功です。');
+          if (editUpdateForm.valid === true) {
+            editUpdateForm.reset();
+            this.updateModal.close(editUpdateForm.resetForm);
+          }
+          // editUpdateForm.reset();
+          // this.editModal(editUpdateForm.resetForm);
+        } else {
+          this.getResultMs(item);
+          alert('ユーザー情報は登録失敗です。');
         }
-        // editUpdateForm.reset();
-        // this.editModal(editUpdateForm.resetForm);
       } catch (e) {
         console.log('更新失敗です。');
       }
@@ -521,14 +534,16 @@ export class UserComponent implements OnInit {
 
     this.httpService.usePost('registerUser', query).then(item => {
       try {
-        // if (item.resultCode == "0000") {
-        this.ngOnInit();
-        alert('ユーザー情報は登録成功です。');
-        if (addForm.valid === true) {
-          addForm.reset();
-          this.addModal.close(addForm.resetForm);
+        if (item.body.resultCode === "0000") {
+          this.ngOnInit();
+          alert('ユーザー情報は登録成功です。');
+          if (addForm.valid === true) {
+            addForm.reset();
+            this.addModal.close(addForm.resetForm);
+          }
+        } else {
+          alert('ユーザー情報は登録失敗です。');
         }
-        // }
       } catch (e) {
         console.log('登録失敗です。');
       }
@@ -781,5 +796,11 @@ export class UserComponent implements OnInit {
     }
     // }
   }
-}
 
+  getResultMs(item) {
+    this.pageModel.result.retcode = '';
+    this.pageModel.result.message = '';
+    this.pageModel.result.retcode = item.resultCode;
+    this.pageModel.result.message = item.resultMsg;
+  }
+}
