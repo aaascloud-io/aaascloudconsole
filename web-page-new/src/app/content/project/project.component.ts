@@ -39,15 +39,23 @@ export class ProjectComponent implements OnInit {
   page = 1;
     // 默认为一页显示10条数据
   pageSize =10;
+    // 每页表格显示数据
   tableDisplayData:any;
     // 选中的单条数据
   selectedProject: any;
     // 选中的多条数据
   selected = [];
+    // 待分配的硬件列表
+  deviceList:any;
+    // 选中的 device 列表
+  selectedDevice = [];
+    // 搜索框检索值
   searchValue:any;
   sortOn: any;
   checkOn: 1;
   show = false;
+
+  
 
 
   public config: PerfectScrollbarConfigInterface = { };
@@ -122,8 +130,6 @@ export class ProjectComponent implements OnInit {
   ngOnInit() {
     // 获取登录时必须的认证数据，并存在pageModal的 loginUser 和 userInfoParame 中
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    console.log("这里是初始化获取的item数据");
-    console.log(item);
     this.pageModel.loginUser.loginuserid = item.uid;
     this.pageModel.loginUser.loginusername = item.login_id;
     this.pageModel.loginUser.loginrole = item.role;
@@ -139,8 +145,6 @@ export class ProjectComponent implements OnInit {
       "targetuserid": item.uid,
       "targetuserCompanyid": item.company,
     };
-    console.log("这里是 project 的 pageModel 的 userInfoParame 数据");
-    console.log(this.pageModel.userInfoParame);
     this.initData();
 
   }
@@ -152,19 +156,13 @@ export class ProjectComponent implements OnInit {
       "loginInfo":this.pageModel.loginInfo,
       "targetUserInfo":this.pageModel.targetUserInfo,
     };
-    console.log("这里是 initData 的 param 数据");
-    console.log(param);
     var res = await this.httpService.post("/getProjects",param);
     let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
     jsonItem.forEach(element => {
       this.rows.push(element);
     });
-    console.log("这是rows的data值");
-    console.log(this.rows);
 
     this.rows = [...this.rows];
-    console.log("这是...运算符后的data值");
-    console.log(this.rows);
     this.getTabledata();
 
     // jsonItem.productList.forEach((elem) => {
@@ -394,7 +392,6 @@ export class ProjectComponent implements OnInit {
     console.log("这是复选后的rows");
     console.log(this.rows);
     if (confirm("選択したデーターを削除しますか")) {
-      var deleteCheckedids = [];
       for (var row of this.rows) {
         if (row.isSelected) {
           this.selected.push(row);
@@ -405,24 +402,9 @@ export class ProjectComponent implements OnInit {
 
       var query = {
         "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-        },
+        "targetUserInfo":this.pageModel.targetUserInfo,
         "projectlist": this.selected,
       }
-      // this.httpService.delete('deleteProducts', query).then(item => {
-      //   try {
-      //     if (item.body.resultCode === "0000") {
-      //       this.searchMyProduct();
-      //       alert('削除成功です。');
-      //       this.productSelected = false;
-      //     } else {
-      //       console.log('削除失敗です。');
-      //     }
-      //   } catch (e) {
-      //     console.log('削除失敗です。');
-      //   }
-      // });
       this.httpService.useRpDelete('deleteProjects', query).then(item => {
         try {
           if (item.resultCode == "0000") {
@@ -437,15 +419,6 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-
-
-
-
-
-  // デバイス連携
-  deviceLink(deviceLinkModalContent,row){
-
-  }
 
   checkAll(ev){
     this.rows.forEach(x => x.isSelected = ev.target.checked)
@@ -501,13 +474,96 @@ export class ProjectComponent implements OnInit {
 // デバイス連携
   // Modal 開く
   deviceLinkModal(deviceLinkModalContent, row) {
+    this.getDeviceList();
     this.selectedProject = Object.assign({}, row);
     this.editModal = this.modal.open(deviceLinkModalContent, {
       windowClass: 'animated fadeInDown',
       size: 'lg'
     });
   }
- 
+
+  async getDeviceList(){
+    this.deviceList = [];
+    let param = {
+      "loginInfo":this.pageModel.loginInfo,
+      "targetUserInfo":this.pageModel.targetUserInfo,
+    };
+    console.log("这里是 initData 的 param 数据");
+    console.log(param);
+    var res = await this.httpService.post("/getMySelectableDevices",param);
+    let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+    jsonItem.forEach(element => {
+      this.deviceList.push(element);
+    });
+    console.log("这是deviceList的data值");
+    console.log(this.deviceList);
+
+    this.deviceList = [...this.deviceList];
+    console.log("这是...运算符后的deviceList值");
+    console.log(this.deviceList);
+  }
+
+  checkAllDevice(ev){
+    this.deviceList.forEach(x => x.isSelected = ev.target.checked)
+    // this.selectedProject = ev.target.checked;
+    console.log("这是checkall的函数内部");
+    console.log(ev);
+    console.log(this.rows);
+    console.log(this.selectedProject);
+  }
+  checkChangeDevice(ev, element) {
+    console.log("这是checkChangeDevice的函数内部");
+    console.log(ev);
+    console.log(element);
+    console.log(this.deviceList);
+    this.deviceList.forEach(function (device) {
+      if (device.deviceid === element['deviceid']) { device.isSelected = ev.target.checked }
+    });
+    console.log(this.deviceList);
+  }
+
+  projectDeviceDataUpdate(projectDeviceForm,projectid){
+    let routeif: UserInfo = this.dataFatoryService.getUserInfo();
+    if (routeif != null) {
+      if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
+        for (var item of this.deviceList) {
+          if (item.isSelected) {
+            console.log("这是标记为已选中的item");
+            console.log(item);
+            this.selectedDevice.push(item.deviceid);
+          }
+        }
+        var param = {
+          "loginInfo":this.pageModel.loginInfo,
+          "targetUserInfo":this.pageModel.targetUserInfo,
+          "userid" :this.pageModel.loginUser.loginuserid, 
+          "projectid": projectid,
+          "deviceList": this.selectedDevice,
+        };
+        console.log("这是目前的 param");
+        console.log(param);
+        this.httpService.useRpPut('updateProjectDevices', param).then(item => {
+          console.log("这是目前的 item");
+          console.log(item);
+          try {
+            if (item.resultCode == "0000") {
+    
+              this.ngOnInit();
+              alert('プロジェクト情報を改修しました');
+            if (projectDeviceForm.valid === true) {
+    
+              projectDeviceForm.reset();
+              this.editModal.close(projectDeviceForm.resetForm);
+            }
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        });
+      }
+
+    }
+  }
 
 
   

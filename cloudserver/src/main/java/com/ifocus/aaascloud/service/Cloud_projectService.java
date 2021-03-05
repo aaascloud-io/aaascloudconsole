@@ -227,48 +227,102 @@ public class Cloud_projectService {
 	 *
 	 */
 	public Integer updateProject(Cloud_projectDetailModel model) throws Exception {
-		Integer updatedProjectId = null;
 
 		////////////////////////////////////////////////////////
 		// プロジェクト更新
 		////////////////////////////////////////////////////////
 		/* 既存プロジェクト取得 */
 		Optional<Cloud_projectEntity> toBeUpdate = cloud_projectRepository.findById(model.getProjectid());
-		if (!toBeUpdate.equals(Optional.empty())) {
-			Cloud_projectEntity updateEntity = toBeUpdate.get();
-			/* 更新情報設定 */
-			this.setCloud_projectEntityFromModel(model, updateEntity);
-			Cloud_projectEntity updatedEntity = cloud_projectRepository.save(updateEntity);
+		Cloud_projectEntity updateEntity = toBeUpdate.get();
+
+		/* 更新情報設定 */
+		this.setCloud_projectEntityFromModel(model, updateEntity);
+		Cloud_projectEntity updatedEntity = cloud_projectRepository.save(updateEntity);
+
+		////////////////////////////////////////////////////////
+		// プロジェクトのデバイス更新
+		////////////////////////////////////////////////////////
+		if (model.getDeviceList() != null && !model.getDeviceList().isEmpty()) {
 
 			////////////////////////////////////////////////////////
-			// プロジェクトデバイス更新
+			// デバイスのプロジェクトIDをクリアする
 			////////////////////////////////////////////////////////
+
+			cloud_deviceService.clearProjectInfoForProjectOnly(model);
+
 			// 更新対象デバイス取得
 			List<Cloud_deviceEntity> entityList = (List<Cloud_deviceEntity>) cloud_deviceRepository.findAllById(this.getDeviceidList(model.getDeviceList()));
-			// プロジェクト＆グループ情報クリア
-			cloud_groupService.clearProjectAndGroupInfoToEntity(model.getLoginInfo(), entityList);
+			/* システム日時 */
+			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+			for (Cloud_deviceEntity entity:entityList) {
+				// プロジェクトIDを設定する
+				entity.setProjectid(model.getProjectid());
+				entity.setU_uid(model.getLoginInfo().getLoginuserid());
+				entity.setU_time(systemTime);
+			}
 			// デバイス一括更新
 			cloud_deviceRepository.saveAll(entityList);
-
-			////////////////////////////////////////////////////////
-			// グループ更新(Idあり & Alive = 1)
-			////////////////////////////////////////////////////////
-			cloud_groupService.updateGroups(model.getUpdateGroupList());
-
-			////////////////////////////////////////////////////////
-			// グループ登録(Idなし)
-			////////////////////////////////////////////////////////
-			cloud_groupService.registerGroups(model.getRegisterGroupList());
-
-			////////////////////////////////////////////////////////
-			// グループ削除(Idあり & Alive = 0)
-			////////////////////////////////////////////////////////
-			cloud_groupService.deleteGroups(model.getDeleteGroupList());
-
-			updatedProjectId = updatedEntity.getProjectid();
 		}
 
-		return updatedProjectId;
+//		////////////////////////////////////////////////////////
+//		// グループ更新(Idあり & Alive = 1)
+//		////////////////////////////////////////////////////////
+//		if (model.getUpdateGroupList() != null && !model.getUpdateGroupList().isEmpty()) {
+//			cloud_groupService.updateGroups(model.getUpdateGroupList());
+//		}
+//
+//		////////////////////////////////////////////////////////
+//		// グループ登録(Idなし)
+//		////////////////////////////////////////////////////////
+//		if (model.getRegisterGroupList() != null && !model.getRegisterGroupList().isEmpty()) {
+//			cloud_groupService.registerGroups(model.getRegisterGroupList());
+//		}
+//
+//		////////////////////////////////////////////////////////
+//		// グループ削除(Idあり & Alive = 0)
+//		////////////////////////////////////////////////////////
+//		if (model.getDeleteGroupList() != null && !model.getDeleteGroupList().isEmpty()) {
+//			cloud_groupService.deleteGroups(model.getDeleteGroupList());
+//		}
+
+		return updatedEntity.getProjectid();
+
+	}
+
+	/*
+	 * プロジェクトのデバイス更新
+	 * @param Cloud_projectDetailModel プロジェクト詳細
+	 * @return projectid Integer プロジェクトID
+	 *
+	 */
+	public void updateProjectDevices(Cloud_projectDetailModel model) throws Exception {
+
+		////////////////////////////////////////////////////////
+		// デバイスのプロジェクトIDをクリアする
+		////////////////////////////////////////////////////////
+
+		cloud_deviceService.clearProjectInfoForProjectOnly(model);
+
+		////////////////////////////////////////////////////////
+		// プロジェクトのデバイス更新
+		////////////////////////////////////////////////////////
+		if (model.getDeviceList() != null && !model.getDeviceList().isEmpty()) {
+
+			// 更新対象デバイス取得
+			List<Cloud_deviceEntity> entityList = (List<Cloud_deviceEntity>) cloud_deviceRepository.findAllById(this.getDeviceidList(model.getDeviceList()));
+			/* システム日時 */
+			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+			for (Cloud_deviceEntity entity:entityList) {
+				// プロジェクトIDを設定する
+				entity.setProjectid(model.getProjectid());
+				entity.setU_uid(model.getLoginInfo().getLoginuserid());
+				entity.setU_time(systemTime);
+			}
+			// デバイス一括更新
+			cloud_deviceRepository.saveAll(entityList);
+		}
+
+		return ;
 
 	}
 
@@ -404,7 +458,6 @@ public class Cloud_projectService {
 		updateEntity.setProjectname(model.getProjectname());
 		updateEntity.setProductid(model.getProductid());
 		updateEntity.setProjectsummary(model.getProjectsummary());
-		updateEntity.setAlive(AliveConstant.ALIVE);
 		updateEntity.setU_uid(model.getLoginInfo().getLoginuserid());
 		updateEntity.setU_time(systemTime);
 

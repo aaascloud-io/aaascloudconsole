@@ -1,119 +1,139 @@
 <div class="app-content content">
   <div class="content-wrapper">
-    <div class="content-header row mb-1 ml-1"><h4>バージョン管理</h4></div>
-    <div class=""> 
+    <div class="content-header row mb-1 ml-1">
+      <!-- <h4>プロジェクト管理</h4> -->
+    </div>
+    <div class="">
       <div class="content-body">
-        <div class="content-overlay" id='content-overlay' (click)="contentOverlay($event)"></div>
+        <div>
+          <label for="switch">条件検索：</label>
+          <input id="switch" name="switch" type="checkbox" [(ngModel)]="show" />
+        </div>
+
+        <section class="row" *ngIf="show">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">プロダクト名</label>
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="searchValue.productname">
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">バージョン名</label>
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="searchValue.versionname">
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <div class="heading-elements mt-0 pull-right" style="padding-top:20px;">
+                          <button class="btn btn-primary btn-sm gap_contact" (click)="searchProject()">
+                            <i class="d-md-none d-block feather ft-plus white"></i>
+                            <span class="d-md-block d-none">検　索</span></button>
+
+                          <button class="btn btn-warning btn-sm gap_contact" (click)="clearSearchProject()">
+                              <i class="d-md-none d-block feather ft-plus white"></i>
+                              <span class="d-md-block d-none">クリア</span></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-head">
-                <div class="card-header">
-                  <h4 class="card-title">バージョン情報一覧</h4>
-                  
-                </div>
-              </div>
               <div class="card-content">
                 <div class="card-body">
                   <!-- Task List table -->
-
-                  <!-- <div class="table-responsive">
-                    <table class="table table-hover table-xl mb-0 order-tbl_change">
+                  <div class="row mb-3">
+                    <div class="col-sm-12">
+                      <button class="btn btn-primary btn-sm gap_contact"
+                        (click)="addNewVersionModal(addNewVersion)">
+                        <i class="d-md-none d-block feather ft-plus white"></i>
+                        <span class="d-md-block d-none">新　規</span></button>
+                      <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
+                        (click)="deleteCheckedRow()">
+                        <i class="d-md-none d-block feather ft-plus white"></i>
+                        <span class="d-md-block d-none">一括削除</span></button>
+                    </div>
+                  </div>
+                  <!-- <div class="row">
+                    <div class="col-sm-12">
+                      <span class="mr-1">プロジェクト名：
+                        <input type='text'
+                          style='padding:8px;margin:15px auto;width:200px;height: calc(1.875rem + 2px);border-radius: 0.21rem;border: 1px solid #babfc7;'
+                          [(ngModel)]="searchValue" />
+                      </span>
+                      <button type="button" class="btn btn-primary btn-sm mr-1" (click)="searchProject()">検　索</button>
+                      <button type="button" class="btn btn-warning btn-sm mr-1"
+                        (click)="clearSearchProject()">クリア</button>
+                    </div>
+                  </div> -->
+                  <div class="table-responsive">
+                    <table class="table grid-breakpoints ">
                       <thead>
                         <tr>
-                          <th class="border-top-0">No</th>
-                          <th class="border-top-0">エラーコード</th>
-                          <th class="border-top-0">デバイスID</th>
-                          <th class="border-top-0">管理者</th>
-                          <th class="border-top-0">発生日時</th>
-                          <th class="border-top-0">対応ステータス</th>
-                          <th class="border-top-0">操作</th>
+                          <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAll($event)">
+                          </th>
+                          <th scope="col" class="thcolor">No.</th>
+                          <th scope="col" class="thcolor" (click)="sortData('')">RowID</th>
+                          <th scope="col" class="thcolor" (click)="sortData('')">プロダクトID</th>
+                          <th scope="col" class="thcolor" (click)="sortData('')">プロダクト名</th>
+                          <th scope="col" class="thcolor" (click)="sortData('')">バージョンコード</th>
+                          <th scope="col" class="thcolor">バージョン名</th>
+                          <th scope="col" class="thcolor">詳細</th>
+                          <th scope="col" class="thcolor">DownLoad</th>
+                          <th scope="col" class="thcolor">操作</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let item of pageModel.data;let i = index;">
-                          <td>{{i+1}}</td>
-                          <td>{{item.errcode}}</td>
-                          <td>{{item.device}}</td>
-                          <td>{{item.userid}}</td>
-                          <td>{{item.datatime | date:'yyyy/MM/dd hh:mm:ss'}}</td>
-                          <td>{{item.statusflag}}</td>
+                        <tr *ngFor="let element of PaginationData;let i = index">
                           <td>
-                            <a [routerLink]="" class="primary edit mr-1 mrless" (click)="editTableDataModal(editTableDataModalContent, item)"><i class="la la-pencil"></i></a>
+                            <input type="checkbox" [checked]="element.isSelected"
+                              (change)="checkChange($event,element)">
+                          </td>
+                          <td>{{i+1}}</td>
+                          <td>{{ element.rowid }}</td>
+                          <td>{{ element.productid}}</td>
+                          <td>{{ element.productname }}</td>
+                          <td>{{ element.versioncode }}</td>
+                          <td>{{ element.versionname }}</td>
+                          <td>{{ element.description}}</td>
+                          <td>{{ element.downloadurl}}</td>
+                          
+                          <td>
+                            <a class="primary edit mr-1"
+                              (click)="editVersionDataModal(editVersionDataModalContent, element)"><i
+                                class="la la-pencil"></i>
+                            </a>
+                            <a class="danger delete mr-1"><i class="la la-trash-o" (click)="deleteRow(element)"></i></a>
                           </td>
                         </tr>
                       </tbody>
                     </table>
-                  </div> -->
-                  <div class="row">
-                    <div class="">
-                      <button type="button" class="btn btn-primary mb-2" (click)="addNewVersionModal(addNewVersion)">バージョン新規追加</button>
-                      <!-- <button type="button" class="btn btn-info mr-2" (click)="deleteCheckedRow()">選択アップグレード</button>
-                      <button type="button" class="btn btn-success mr-2" (click)="deleteCheckedRow()">全部アップグレード</button> -->
+                    <div class="d-flex justify-content-between p-2">
+                      <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+                      </ngb-pagination>
+                      <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                        <option [ngValue]="10">10 items per page</option>
+                        <option [ngValue]="20">20 items per page</option>
+                        <option [ngValue]="50">50 items per page</option>
+                        <option [ngValue]="100">100 items per page</option>
+                      </select>
                     </div>
                   </div>
 
-                  <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
-                    [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
-                    (select)='onSelectContact($event)' fxFlex="auto" [perfectScrollbar]="config">
-
-                    <ngx-datatable-column [flexGrow]="1" [minWidth]="30" [maxWidth]="50">
-                      <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
-                        let-selectFn="selectFn">
-                        <span class="custom-control custom-checkbox">
-                          <input type="checkbox" class="custom-control-input" id="selectAll" [checked]="allRowsSelected"
-                            (change)="selectFn(!allRowsSelected)" />
-                          <label class="custom-control-label" for="selectAll"></label>
-                        </span>
-                      </ng-template>
-                      <ng-template ngx-datatable-cell-template let-value="value" let-row="row" let-rowIndex="rowIndex"
-                        let-onCheckboxChangeFn="onCheckboxChangeFn" let-isSelected="isSelected">
-                        <div class="custom-control custom-checkbox _center">
-                          <input type="checkbox" class="custom-control-input" id="select{{rowIndex}}"
-                            [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
-                          <label class="custom-control-label" for="select{{rowIndex}}"></label>
-                        </div>
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="RowID" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.rowid}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="プロダクトID" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.productid}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="バージョン名前" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.versionname}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="バージョンコード" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.versioncode}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="バージョン詳細" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.description}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="ダウンロード" [flexGrow]="1" [minWidth]="140" [cellClass]="'my-custom-cell'">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.downloadurl}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="操作" [flexGrow]="1" [minWidth]="100">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="" class="primary edit mr-1 mrless"
-                          (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
-                        </a>
-                        <a class="danger delete mr-1 mrless"><i class="la la-trash-o" (click)="deleteRow(row)"></i></a>
-                      </ng-template>
-                    </ngx-datatable-column>
-                  </ngx-datatable>
                 </div>
               </div>
             </div>
@@ -123,11 +143,10 @@
     </div>
   </div>
 </div>
-
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- バージョン修正 -->
-<ng-template #editTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+<!-- プロジェクト詳細と修正 -->
+<ng-template #editVersionDataModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="versionDataUpdate(versionEditForm,selectedVersion.rowid)" #versionEditForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">バージョン詳細</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -136,45 +155,49 @@
     </div>
     <div class="modal-body">
       <div class="form-group col-12">
-        <label >エラーコード</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.errcode" #editname="ngModel" name="errcode" id="errcode"
-          class="name form-control" placeholder="Name" disabled
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-        <!-- <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">Name is required</div>
-        </div> -->
+        <label>RowID</label>
+        <input type="text" [(ngModel)]="selectedVersion.rowid" #editname="ngModel" name="rowid"
+          id="rowid" class="name form-control" placeholder="selectedVersion.rowid" required disabled>
+      </div>
+      <div class="form-group col-12">
+        <label>プロダクトID</label>
+        <input type="text" [(ngModel)]="selectedVersion.productid" #editname="ngModel" name="productid"
+          id="productid" class="name form-control" placeholder="selectedVersion.productid" required>
       </div>
 
 
       <div class="form-group col-12">
-        <h6>プロジェクト名</h6>
-        <input type="text"  [(ngModel)]="pageModel.addProject.projectName" name="projectName" class="form-control" placeholder="">
-      </div>
-
-
-      <div class="form-group col-12">
-        <label >管理者</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.userid" disabled #editphone="ngModel" name="phone" id="phone"
-          class="phone form-control" placeholder="Phone Number" (keyup)="onFormat()" maxlength="14">
-      </div>
-
-
-      <div class="form-group col-12">
-        <label >発生日時</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.datatime" disabled #editTime="ngModel" name="time" id="time"
-          class="phone form-control" placeholder="Phone Number" (keyup)="onFormat()" maxlength="14">
+        <label>プロダクト名</label>
+        <input type="text" [(ngModel)]="selectedVersion.productname" #editemail="ngModel" name="productname"
+          id="productname" class="email form-control" placeholder="selectedVersion.productname" required>
       </div>
 
       <div class="form-group col-12">
-        <label >対応ステータス</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.statusflag" disabled #editStatus="ngModel" name="status" id="status"
-          class="phone form-control" placeholder="Phone Number" (keyup)="onFormat()" maxlength="14">
+        <label>バージョンコード</label>
+        <input type="text" [(ngModel)]="selectedVersion.versioncode" #editemail="ngModel" name="versioncode"
+          id="versioncode" class="email form-control" placeholder="selectedVersion.versioncode" required>
       </div>
-  
+      <div class="form-group col-12">
+        <label>バージョン名</label>
+        <input type="text" [(ngModel)]="selectedVersion.versionname" #editemail="ngModel" name="versionname"
+          id="versionname" class="email form-control" placeholder="selectedVersion.versionname" required>
+      </div>
+      <div class="form-group col-12">
+        <label>詳細</label>
+        <input type="text" [(ngModel)]="selectedVersion.description" #editemail="ngModel" name="description"
+          id="description" class="email form-control" placeholder="selectedVersion.description" required>
+      </div>
+      <div class="form-group col-12">
+        <label>DownLoadUrl</label>
+        <input type="text" [(ngModel)]="selectedVersion.downloadurl" #editemail="ngModel" name="downloadurl"
+          id="downloadurl" class="email form-control" placeholder="selectedVersion.downloadurl" required>
+      </div>
+
 
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
+        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>キャンセル</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
       </div>
@@ -184,7 +207,7 @@
 
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- バージョン新規追加-->
+<!-- プロジェクト新規追加 -->
 <ng-template #addNewVersion let-c="close" let-d="dismiss">
   <form (ngSubmit)="addNewVersionForm(NewVersionForm)" #NewVersionForm="ngForm">
     <div class="modal-header">
@@ -194,34 +217,41 @@
       </button>
     </div>
     <div class="modal-body">
+
       <div class="form-group col-12">
-        <label >プロダクトID</label>
-        <input type="text"  [(ngModel)]="pageModel.addVersion.productid" name="productid" class="form-control" placeholder="">
+        <h6>プロダクトID</h6>
+        <input type="text" [(ngModel)]="addVersion.productid" name="productid" class="form-control"
+          placeholder="">
+      </div>
+
+      <div class="form-group col-12">
+        <h6>バージョンコード</h6>
+        <input type="text" [(ngModel)]="addVersion.versioncode" name="versioncode" class="form-control"
+          placeholder="">
       </div>
       <div class="form-group col-12">
-        <label >バージョン名前</label>
-        <input type="text"  [(ngModel)]="pageModel.addVersion.versionname" name="productid" class="form-control" placeholder="">
+        <h6>バージョン名</h6>
+        <input type="text" [(ngModel)]="addVersion.versionname" name="versionname" class="form-control"
+          placeholder="">
       </div>
       <div class="form-group col-12">
-        <label >バージョンコード</label>
-        <input type="text"  [(ngModel)]="pageModel.addVersion.versioncode" name="productid" class="form-control" placeholder="">
+        <h6>バージョン詳細</h6>
+        <input type="text" [(ngModel)]="addVersion.description" name="description" class="form-control"
+          placeholder="">
       </div>
       <div class="form-group col-12">
-        <label >バージョン詳細</label>
-        <input type="text"  [(ngModel)]="pageModel.addVersion.description" name="productid" class="form-control" placeholder="">
+        <h6>downloadUrl</h6>
+        <input type="text" [(ngModel)]="addVersion.downloadurl" name="downloadurl" class="form-control"
+          placeholder="">
       </div>
-      <div class="form-group col-12">
-        <label >ダウンロード</label>
-        <input type="text"  [(ngModel)]="pageModel.addVersion.downloadurl" name="productid" class="form-control" placeholder="">
-      </div>
-  
+
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
+        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>キャンセル</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
       </div>
     </div>
   </form>
 </ng-template>
-

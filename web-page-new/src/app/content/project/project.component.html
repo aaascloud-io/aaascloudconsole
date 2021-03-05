@@ -105,7 +105,7 @@
                               (change)="checkChange($event,element)">
                           </td>
                           <td>{{i+1}}</td>
-                          <td >{{ element.projectid }}</td>
+                          <td>{{ element.projectid }}</td>
                           <td>{{ element.projectname}}</td>
                           <td>{{ element.productid }}</td>
                           <td>{{ element.projectsummary }}</td>
@@ -113,7 +113,7 @@
                           <td>{{ element.deviceCounts}}</td>
                           <td>
                             <a class="primary edit mr-1 mrless"
-                              (click)="deviceLinkModal(deviceLinkModalContent, row)"><i
+                              (click)="deviceLinkModal(deviceLinkModalContent, element)"><i
                                 class="la la-calendar-plus-o"></i>
                             </a>
                           </td>
@@ -235,7 +235,7 @@
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 <!-- プロジェクトのデバイス連携 -->
 <ng-template #deviceLinkModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="addNewContact(addForm)" #addForm="ngForm">
+  <form (ngSubmit)="projectDeviceDataUpdate(projectDeviceForm,selectedProject.projectid)" #projectDeviceForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">デバイス連携</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -247,63 +247,39 @@
         <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
           <thead>
             <tr>
+              <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllDevice($event)">
+              </th>
               <th scope="col">no.</th>
-              <th scope="col">projectid</th>
-              <th scope="col">groupId</th>
-              <th scope="col">deviceName</th>
+              <th scope="col">deviceid</th>
+              <th scope="col">devicename</th>
               <th scope="col">imei</th>
-              <th scope="col">iccid</th>
-              <th scope="col">sn</th>
+              <th scope="col">productname</th>
               <th scope="col">sim_iccid</th>
               <th scope="col">sim_imsi</th>
               <th scope="col">sim_tel</th>
-              <th scope="col">encryptedCommunications</th>
-              <th scope="col">encryptedKey</th>
-              <th scope="col">connectServerURL</th>
-              <th scope="col">connectServerPort</th>
-              <th scope="col">bindingFlag</th>
-              <th scope="col">fmLastestVersion</th>
-              <th scope="col">versionComfirmTime</th>
-              <th scope="col">productId</th>
-              <th scope="col">companyId</th>
-              <th scope="col">userId</th>
-              <th scope="col">lastProjectId</th>
-              <th scope="col">lastGroupId</th>
+              <th scope="col">sn</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of rows; let i = index;">
+            <tr *ngFor="let item of deviceList; let i = index;">
+              <td>
+                <input type="checkbox" [checked]="item.isSelected"
+                  (change)="checkChangeDevice($event,item)">
+              </td>
               <td data-label="no.">{{i + 1}}</td>
-              <td data-label="projectid">{{item.projectid}}</td>
-              <td data-label="groupId">{{item.groupid}}</td>
-              <td data-label="deviceName">{{item.devicename}}</td>
-              <td data-label="imei">{{item.imei}}</td>
-              <td data-label="iccid">{{item.iccid}}</td>
-              <td data-label="sn">{{item.sn}}</td>
-              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
-              <td data-label="sim_imsi">{{item.sim_imsi}}</td>
-              <td data-label="sim_tel">{{item.sim_tel}}</td>
-              <td data-label="encryptedCommunications">{{item.encryptedcommunications}}</td>
-              <td data-label="encryptedKey">{{item.encryptedkey}}</td>
-              <td data-label="connectServerURL">{{item.connectserverurl}}</td>
-              <td data-label="connectServerPort">{{item.connectserverport}}</td>
-              <td data-label="bindingFlag">{{item.bindingflag}}</td>
-              <td data-label="fmLastestVersion">{{item.fmlastestversion}}</td>
-              <td data-label="versionComfirmTime">{{item.versioncomfirmtime}}</td>
-              <td data-label="productId">{{item.productid}}</td>
-              <td data-label="companyId">{{item.companyid}}</td>
-              <!-- <td data-label="industry">{{item.industry}}</td> -->
-              <td data-label="userId">{{item.userid}}</td>
-              <td data-label="lastProjectId">{{item.lastprojectId}}</td>
-              <td data-label="lastGroupId">{{item.lastgroupid}}</td>
+              <td data-label="projectid">{{item.deviceid}}</td>
+              <td data-label="groupId">{{item.devicename}}</td>
+              <td data-label="deviceName">{{item.imei}}</td>
+              <td data-label="imei">{{item.productname}}</td>
+              <td data-label="imei">{{item.sim_iccid}}</td>
+              <td data-label="imei">{{item.sim_imsi}}</td>
+              <td data-label="imei">{{item.sim_tel}}</td>
+              <td data-label="imei">{{item.sn}}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      
-      
-      
-      
+
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">

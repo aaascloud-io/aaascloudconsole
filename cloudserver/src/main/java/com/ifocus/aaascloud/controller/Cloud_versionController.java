@@ -136,6 +136,42 @@ public class Cloud_versionController {
 	}
 
 	/**
+	 * バージョン詳細を取得する
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getVersionDetail", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> getVersionDetail(@RequestBody Cloud_versionModel model) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// バージョン詳細を取得する
+			Cloud_versionModel cloud_versionModel = cloud_versionService.getVersioninInfo(model);
+
+			if (cloud_versionModel != null) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+				response.setData(Util.getJsonString(cloud_versionModel));
+			} else {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_versionService.getVersioninInfo");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
 	 * バージョンを登録する
 	 * @param model Cloud_versionModel
 	 * @return BaseHttpResponse<String>
@@ -164,6 +200,51 @@ public class Cloud_versionController {
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0100);
 				response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_version");
+			} else {
+
+				/* 正常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0100);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + e.getMessage());
+		}
+		return response;
+	}
+
+	/**
+	 * バージョンを更新する
+	 * @param model Cloud_versionModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateVersion", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> updateVersion(@RequestBody Cloud_versionModel model) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		// OEM権限チェック
+		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "i-focusのadmin権限が必須です。");
+			return response;
+
+		}
+		try {
+			Cloud_versionModel updatedModel =  cloud_versionService.updateVersion(model);
+
+			if (updatedModel == null) {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0100);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_versionService.updateVersion");
 			} else {
 
 				/* 正常系 */

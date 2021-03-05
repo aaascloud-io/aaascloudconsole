@@ -28,72 +28,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.companyid IN :companyids ORDER BY c.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchUnderCompanyDevicesByCompanyidIn(@Param("companyids") List<Integer> companyids);
 
-//	/*****************************************************************
-//	 * 配下各社デバイス検索(デバイス管理画面用:グループ検索あり)
-//	 *
-//	 *
-//	 */
-//	@Query(value = "SELECT d.* "
-//			+ "FROM cloud_device d "
-//			+ "INNER JOIN cloud_project pj ON d.projectId = pj.projectId "
-//			+ "WHERE d.companyId IN :companyids "
-//			+ "AND pj.projectName LIKE :projectname "
-//			+ "ORDER BY d.companyId,d.imei", nativeQuery = true)
-//	public List<Cloud_deviceEntity> findByCompanyidInProject_ProjectnameLike(
-//			@Param("companyids") List<Integer> companyids,
-//			@Param("projectname") String projectName
-//		);
-//
-//	/*****************************************************************
-//	 * 配下各社デバイス検索(デバイス管理画面用:グループ検索あり)
-//	 *
-//	 *
-//	 */
-//	@Query(value = "SELECT d.* "
-//			+ "FROM cloud_device d "
-//			+ "INNER JOIN cloud_product pd ON d.productId = pd.productId "
-//			+ "INNER JOIN cloud_project pj ON d.projectId = pj.projectId "
-//			+ "INNER JOIN cloud_company com ON d.companyId = com.companyId "
-//			+ "WHERE d.companyId IN :companyids "
-//			+ "AND pd.productName LIKE :productname "
-//			+ "AND pj.projectName LIKE :projectname "
-//			+ "AND com.industry LIKE :industry "
-//			+ "ORDER BY d.companyId,d.imei", nativeQuery = true)
-//	public List<Cloud_deviceEntity> findByCompanyidInAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
-//			@Param("companyids") List<Integer> companyids,
-//			@Param("productname") String productName,
-//			@Param("projectname") String projectName,
-//			@Param("industry") String industry
-//		);
-//
-//	/*****************************************************************
-//	 * 配下各社デバイス検索(デバイス管理画面用:グループ検索あり)
-//	 *
-//	 *
-//	 */
-//	@Query(value = "SELECT d.* "
-//			+ "FROM cloud_device d "
-//			+ "INNER JOIN cloud_product pd ON d.productId = pd.productId "
-//			+ "INNER JOIN cloud_project pj ON d.projectId = pj.projectId "
-//			+ "INNER JOIN cloud_company com ON d.companyId = com.companyId "
-//			+ "WHERE d.companyId IN :companyids "
-//			+ "AND (d.IMEI LIKE :imei "
-//			+ "    OR d.ICCID LIKE :iccid "
-//			+ "    OR d.SN LIKE :sn) "
-//			+ "AND pd.productName LIKE :productname "
-//			+ "AND pj.projectName LIKE :projectname "
-//			+ "AND com.industry LIKE :industry "
-//			+ "ORDER BY d.companyId,d.imei", nativeQuery = true)
-//	public List<Cloud_deviceEntity> findByCompanyidInAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
-//			@Param("companyids") List<Integer> companyids,
-//			@Param("imei") String imei,
-//			@Param("iccid") String iccid,
-//			@Param("sn") String sn,
-//			@Param("productname") String productName,
-//			@Param("projectname") String projectName,
-//			@Param("industry") String industry
-//		);
-
 	/*
 	 * 配下各社デバイス検索(デバイス管理画面用:グループ検索あり)
 	 *
@@ -168,6 +102,14 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 */
 	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.projectid = :projectid", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchDevicesByProjectid(@Param("projectid") Integer projectid);
+
+	/*
+	 * プロジェクトのみ所属するデバイス一覧
+	 *
+	 *
+	 */
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.projectid = :projectid AND (c.groupid IS NULL OR AND c.groupid = 0) ", nativeQuery = true)
+	public List<Cloud_deviceEntity> searchProjectDevicesWithNoGroupByProjectid(@Param("projectid") Integer projectid);
 
 	/*
 	 * プロジェクトの全デバイス数
