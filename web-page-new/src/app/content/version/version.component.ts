@@ -107,8 +107,6 @@ export class VersionComponent implements OnInit {
       selectedData : {},
     }
 
-      
-
     /**
      * OnInit
      */
@@ -316,6 +314,7 @@ export class VersionComponent implements OnInit {
     });
     this.contactFlag = false;
   }
+  
     // ModalデータをAPIに更新
   /**
    * Update contact details
@@ -329,7 +328,6 @@ export class VersionComponent implements OnInit {
       var param = {
         "loginInfo":this.pageModel.loginInfo,
         "targetUserInfo":this.pageModel.targetUserInfo,
-        "username": this.pageModel.loginInfo["loginusername"],
 
         "rowid": this.selectedVersion.rowid,
         "productid":this.selectedVersion.productid,
@@ -342,29 +340,26 @@ export class VersionComponent implements OnInit {
       console.log("这是目前的 param");
       console.log(param);
 
-      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      // 暂时不能修改，等待api完成后继续
-
-      // this.httpService.useRpPut('', param).then(item => {
-      //   console.log("这是目前的 item");
-      //   console.log(item);
-      //   try {
-      //     if (item.resultCode == "0000") {
+      this.httpService.useRpPost('updateVersion', param).then(item => {
+        console.log("这是目前的 item");
+        console.log(item);
+        try {
+          if (item.resultCode == "0000") {
   
-      //       this.ngOnInit();
-      //       alert('プロジェクト情報を改修しました');
-      //     if (versionEditForm.valid === true) {
+            this.ngOnInit();
+            alert('プロジェクト情報を改修しました');
+          if (versionEditForm.valid === true) {
   
-      //       versionEditForm.reset();
-      //       this.editModal.close(versionEditForm.resetForm);
-      //     }
-      //     }
-      //   } catch (e) {
-      //     console.log(e);
-      //   }
-      // });
-      versionEditForm.reset();
-      this.editModal.close(versionEditForm.resetForm);
+            versionEditForm.reset();
+            this.editModal.close(versionEditForm.resetForm);
+          }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+      // versionEditForm.reset();
+      // this.editModal.close(versionEditForm.resetForm);
     }
   }
 

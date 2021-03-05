@@ -163,6 +163,9 @@ export class ProjectComponent implements OnInit {
     });
 
     this.rows = [...this.rows];
+    console.log("这是从api取到的数据");
+    console.log(this.rows);
+
     this.getTabledata();
 
     // jsonItem.productList.forEach((elem) => {
@@ -530,7 +533,7 @@ export class ProjectComponent implements OnInit {
           if (item.isSelected) {
             console.log("这是标记为已选中的item");
             console.log(item);
-            this.selectedDevice.push(item.deviceid);
+            this.selectedDevice.push(item);
           }
         }
         var param = {
@@ -547,8 +550,9 @@ export class ProjectComponent implements OnInit {
           console.log(item);
           try {
             if (item.resultCode == "0000") {
-    
+              
               this.ngOnInit();
+              this.selectedDevice=[];
               alert('プロジェクト情報を改修しました');
             if (projectDeviceForm.valid === true) {
     

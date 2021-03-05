@@ -259,18 +259,26 @@ public class Cloud_deviceService {
 	 */
 	public void clearProjectInfoForProjectOnly(Cloud_projectDetailModel model) throws Exception {
 
-		// デバイス一覧取得
-		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchProjectDevicesWithNoGroupByProjectid(model.getProjectid());
-		/* システム日時 */
-		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
-		for (Cloud_deviceEntity entity:list) {
-			// プロジェクト情報をクリアする
-			entity.setProjectid(null);
-			entity.setU_uid(model.getLoginInfo().getLoginuserid());
-			entity.setU_time(systemTime);
+		if (model.getDeviceList() != null && !model.getDeviceList().isEmpty()) {
+			// デバイスID一覧取得
+			List<Integer> deviceidList = new ArrayList<Integer>();
+			for (Cloud_deviceModel cloud_deviceModel:model.getDeviceList()) {
+				deviceidList.add(cloud_deviceModel.getDeviceid());
+			}
+
+			// デバイス一覧取得
+			List<Cloud_deviceEntity> list = (List<Cloud_deviceEntity>) cloud_deviceRepository.findAllById(deviceidList);
+			/* システム日時 */
+			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+			for (Cloud_deviceEntity entity:list) {
+				// プロジェクト情報をクリアする
+				entity.setProjectid(null);
+				entity.setU_uid(model.getLoginInfo().getLoginuserid());
+				entity.setU_time(systemTime);
+			}
+			// デバイス更新
+			cloud_deviceRepository.saveAll(list);
 		}
-		// デバイス更新
-		cloud_deviceRepository.saveAll(list);
 		return ;
 
 	}

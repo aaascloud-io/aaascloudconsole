@@ -290,15 +290,15 @@ public class Cloud_projectController {
 	}
 
 	/**
-	 * プロジェクトのデバイス更新
+	 * プロジェクトのデバイス追加
 	 * @param cloud_projectModel Cloud_projectModel
 	 * @return BaseHttpResponse<String>
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/updateProjectDevices", method = RequestMethod.PUT)
+	@RequestMapping(value = "/addProjectDevices", method = RequestMethod.PUT)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> updateProjectDevices(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
+	public BaseHttpResponse<String> addProjectDevices(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
@@ -307,8 +307,49 @@ public class Cloud_projectController {
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_projectDetailModel.getLoginInfo().getLoginuserid(), cloud_projectDetailModel.getTargetUserInfo().getTargetuserid())) {
 
-				// ロジェクトのデバイスを更新する
-				cloud_projectService.updateProjectDevices(cloud_projectDetailModel);
+				// ロジェクトのデバイスを追加する
+				cloud_projectService.addProjectDevices(cloud_projectDetailModel);
+
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessOK");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0101);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0101 + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
+	 * プロジェクトのデバイス削除
+	 * @param cloud_projectModel Cloud_projectModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/deleteProjectDevices", method = RequestMethod.PUT)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> deleteProjectDevices(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_projectDetailModel.getLoginInfo().getLoginuserid(), cloud_projectDetailModel.getTargetUserInfo().getTargetuserid())) {
+
+				// ロジェクトのデバイスを削除する
+				cloud_projectService.deleteProjectDevices(cloud_projectDetailModel);
 
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0000);

@@ -17,6 +17,8 @@ import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
 import com.ifocus.aaascloud.entity.Cloud_groupEntity;
 import com.ifocus.aaascloud.entity.Cloud_groupRepository;
+import com.ifocus.aaascloud.entity.Cloud_projectEntity;
+import com.ifocus.aaascloud.entity.Cloud_projectRepository;
 import com.ifocus.aaascloud.model.Cloud_groupModel;
 import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.LoginInfo;
@@ -31,6 +33,8 @@ public class Cloud_groupService {
 	private Cloud_groupRepository cloud_groupRepository ;
 	@Autowired
 	private Cloud_deviceRepository cloud_deviceRepository ;
+	@Autowired
+	private Cloud_projectRepository cloud_projectRepository ;
 
 	@Autowired
 	private Cloud_deviceService cloud_deviceService ;
@@ -45,7 +49,21 @@ public class Cloud_groupService {
 
 		List<Cloud_groupEntity> entityList = cloud_groupRepository.searchGroupsByProjectid(projectid);
 
-		return this.getModelsByEntitys(entityList);
+		return getModelsByEntitys(entityList);
+
+	}
+
+	/*
+	 * グループ検索
+	 * @param projectid Integer プロジェクトID
+	 * @return List<Cloud_groupModel> グループ一覧
+	 *
+	 */
+	public List<Cloud_groupModel> searchGroups(Cloud_groupModel model) throws Exception {
+
+		List<Cloud_groupEntity> entityList = cloud_groupRepository.searchGroupsByProjectnameAndGroupname(model.getProjectnameForSearch(), model.getGroupnameForSearch());
+
+		return getModelsByEntitys(entityList);
 
 	}
 
@@ -53,18 +71,19 @@ public class Cloud_groupService {
 	 * グループ情報取得
 	 *
 	 */
-	public Cloud_groupModel getGroupInfo(Integer groupid) throws Exception {
+	public Cloud_groupModel getGroupInfo(Cloud_groupModel cloud_groupModel) throws Exception {
 		Cloud_groupModel model = new Cloud_groupModel();
-		Optional<Cloud_groupEntity> entity = cloud_groupRepository.findById(groupid);
-		if (entity != null ) {
-			model.setGroupid(entity.get().getGroupid());
-			model.setProjectid(entity.get().getProjectid());
-			model.setGroupname(entity.get().getGroupname());
-			model.setAlive(entity.get().getAlive());
-			// デバイス数設定
-			model.setGroupDeviceCounts(cloud_deviceRepository.getGroupDeviceCountsByProjectidAndGroupid(model.getProjectid(), groupid));
-			// デバイス一覧設定
-			model.setDeviceList(cloud_deviceService.getGroupDevices(model.getProjectid(), groupid));
+		Optional<Cloud_groupEntity> entity = cloud_groupRepository.findById(cloud_groupModel.getGroupid());
+		if (!entity.isEmpty()) {
+			model = getModelByEntity(entity.get());
+//			model.setGroupid(entity.get().getGroupid());
+//			model.setProjectid(entity.get().getProjectid());
+//			model.setGroupname(entity.get().getGroupname());
+//			model.setAlive(entity.get().getAlive());
+//			// デバイス数設定
+//			model.setGroupDeviceCounts(cloud_deviceRepository.getGroupDeviceCountsByProjectidAndGroupid(entity.get().getProjectid(), cloud_groupModel.getGroupid()));
+//			// デバイス一覧設定
+//			model.setDeviceList(cloud_deviceService.getGroupDevices(entity.get().getProjectid(), cloud_groupModel.getGroupid()));
 		}
 		return model;
 
@@ -82,7 +101,7 @@ public class Cloud_groupService {
 				////////////////////////////////////////////////////////
 				// グループ登録
 				////////////////////////////////////////////////////////
-				this.registerGroup(this.getModelByEntity(model));
+				this.registerGroup(model);
 
 				////////////////////////////////////////////////////////
 				// グループデバイス更新
@@ -102,9 +121,9 @@ public class Cloud_groupService {
 	 * グループ登録
 	 *
 	 */
-	public Cloud_groupModel registerGroup(Cloud_groupEntity entity) throws Exception {
+	public Cloud_groupModel registerGroup(Cloud_groupModel cloud_groupModel) throws Exception {
 		Cloud_groupModel model = new Cloud_groupModel();
-		Cloud_groupEntity insertedEntity = cloud_groupRepository.save(entity);
+		Cloud_groupEntity insertedEntity = cloud_groupRepository.save(getEntityByModel(cloud_groupModel));
 		if (insertedEntity != null ) {
 			model.setGroupid(insertedEntity.getGroupid());
 			model.setProjectid(insertedEntity.getProjectid());
@@ -116,43 +135,43 @@ public class Cloud_groupService {
 
 	}
 
-	/*
-	 * グループ一括更新
-	 * @param groupList List<Cloud_groupModel> グループリスト
-	 *
-	 */
-	public void updateGroups(List<Cloud_groupModel> groupList) throws Exception {
-		if (groupList != null && !groupList.isEmpty()) {
-			for (Cloud_groupModel model:groupList) {
-
-				////////////////////////////////////////////////////////
-				// グループ更新
-				////////////////////////////////////////////////////////
-				Cloud_groupModel returnModel = this.updateGroup(this.getModelByEntity(model));
-
-				////////////////////////////////////////////////////////
-				// グループデバイス更新
-				////////////////////////////////////////////////////////
-
-				// 更新対象デバイス取得
-				Iterable<Cloud_deviceEntity> entityList = cloud_deviceRepository.findAllById(model.getDeviceIdList());
-				// 更新情報設定
-				this.setUpdateInfoToEntityForGroupDevice(model, entityList);
-				// グループデバイス一括更新
-				cloud_deviceRepository.saveAll(entityList);
-			}
-		}
-
-		return;
-	}
+//	/*
+//	 * グループ一括更新
+//	 * @param groupList List<Cloud_groupModel> グループリスト
+//	 *
+//	 */
+//	public void updateGroups(List<Cloud_groupModel> groupList) throws Exception {
+//		if (groupList != null && !groupList.isEmpty()) {
+//			for (Cloud_groupModel model:groupList) {
+//
+//				////////////////////////////////////////////////////////
+//				// グループ更新
+//				////////////////////////////////////////////////////////
+//				Cloud_groupModel returnModel = updateGroup(model);
+//
+//				////////////////////////////////////////////////////////
+//				// グループデバイス更新
+//				////////////////////////////////////////////////////////
+//
+//				// 更新対象デバイス取得
+//				Iterable<Cloud_deviceEntity> entityList = cloud_deviceRepository.findAllById(model.getDeviceIdList());
+//				// 更新情報設定
+//				this.setUpdateInfoToEntityForGroupDevice(model, entityList);
+//				// グループデバイス一括更新
+//				cloud_deviceRepository.saveAll(entityList);
+//			}
+//		}
+//
+//		return;
+//	}
 
 	/*
 	 * グループ更新
 	 *
 	 */
-	public Cloud_groupModel updateGroup(Cloud_groupEntity entity) throws Exception {
+	public Cloud_groupModel updateGroup(Cloud_groupModel cloud_groupModel) throws Exception {
 		Cloud_groupModel model = new Cloud_groupModel();
-		Cloud_groupEntity updatedEntity = cloud_groupRepository.save(entity);
+		Cloud_groupEntity updatedEntity = cloud_groupRepository.save(getEntityByModelForUpdate(cloud_groupModel));
 		if (updatedEntity != null ) {
 			model.setGroupid(updatedEntity.getGroupid());
 			model.setProjectid(updatedEntity.getProjectid());
@@ -177,11 +196,11 @@ public class Cloud_groupService {
 				////////////////////////////////////////////////////////
 				// グループ削除
 				////////////////////////////////////////////////////////
-				this.deleteGroup(this.getModelByEntity(model));
+				deleteGroup(model);
 
 			}
 		}
-		
+
 		return;
 	}
 
@@ -189,8 +208,8 @@ public class Cloud_groupService {
 	 * グループ削除
 	 *
 	 */
-	public void deleteGroup(Cloud_groupEntity entity) throws Exception {
-		cloud_groupRepository.deleteById(entity.getGroupid());
+	public void deleteGroup(Cloud_groupModel model) throws Exception {
+		cloud_groupRepository.deleteById(model.getGroupid());
 	}
 
 
@@ -207,6 +226,17 @@ public class Cloud_groupService {
 		model.setGroupname(entity.getGroupname());
 		model.setSummary(entity.getSummary());
 		model.setAlive(entity.getAlive());
+
+		// プロジェクト情報取得&設定
+		Optional<Cloud_projectEntity> project  = cloud_projectRepository.findById(entity.getProjectid());
+		if (!project.isEmpty()) {
+			model.setProjectname(project.get().getProjectname());
+		}
+
+		// デバイス一覧取得
+		List<Cloud_deviceEntity>  list = cloud_deviceRepository.searchDevicesByProjectidAndGroupid(entity.getProjectid(), entity.getGroupid());
+		model.setDeviceList(cloud_deviceService.getModelsByEntitys(list));
+		model.setGroupDeviceCounts(list.size());
 
 		return model;
 
@@ -246,6 +276,53 @@ public class Cloud_groupService {
 		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
+		entity.setU_uid(model.getLoginInfo().getLoginuserid());
+		entity.setU_time(systemTime);
+
+		return entity;
+
+	}
+
+	/*
+	 * ModelからEntity取得（登録用）
+	 * @param Cloud_groupModel
+	 * @return Cloud_groupEntity
+	 *
+	 */
+	public Cloud_groupEntity getEntityByModel(Cloud_groupModel model) throws Exception {
+
+		Cloud_groupEntity entity = new Cloud_groupEntity();
+
+		/* システム日時 */
+		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+		entity.setProjectid(model.getProjectid());
+		entity.setGroupname(model.getGroupname());
+		entity.setSummary(model.getSummary());
+		entity.setAlive(AliveConstant.ALIVE);
+		entity.setI_uid(model.getLoginInfo().getLoginuserid());
+		entity.setI_time(systemTime);
+		entity.setU_uid(model.getLoginInfo().getLoginuserid());
+		entity.setU_time(systemTime);
+
+		return entity;
+
+	}
+
+	/*
+	 * ModelからEntity取得（更新用）
+	 * @param Cloud_groupModel
+	 * @return Cloud_groupEntity
+	 *
+	 */
+	public Cloud_groupEntity getEntityByModelForUpdate(Cloud_groupModel model) throws Exception {
+		Optional<Cloud_groupEntity> group = cloud_groupRepository.findById(model.getGroupid());
+		Cloud_groupEntity entity = group.get();
+
+		/* システム日時 */
+		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+		entity.setProjectid(model.getProjectid());
+		entity.setGroupname(model.getGroupname());
+		entity.setSummary(model.getSummary());
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
 
@@ -321,17 +398,3 @@ public class Cloud_groupService {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
