@@ -34,24 +34,22 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 */
 	@Query(value = "SELECT d.* "
-			+ "FROM cloud_device d "
-			+ "LEFT JOIN cloud_product pd ON d.productId = pd.productId "
-			+ "LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
-			+ "LEFT JOIN cloud_company com ON d.companyId = com.companyId "
-			+ "LEFT JOIN cloud_group g ON d.groupId = g.groupId "
-			+ "WHERE d.companyId IN :companyids "
-			+ "AND (d.IMEI LIKE :imei "
-			+ "    OR d.ICCID LIKE :iccid "
+			+ " FROM cloud_device d "
+			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
+			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
+			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
+			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
+			+ " WHERE d.companyId IN :companyids "
+			+ " AND (d.IMEI LIKE :imei "
 			+ "    OR d.SN LIKE :sn) "
-			+ "AND pd.productName LIKE :productname "
-			+ "AND pj.projectName LIKE :projectname "
-			+ "AND com.industry LIKE :industry "
-			+ "AND g.groupname LIKE :groupname "
-			+ "ORDER BY d.companyId,d.imei", nativeQuery = true)
-	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
+			+ " AND pd.productName LIKE :productname "
+			+ " AND pj.projectName LIKE :projectname "
+			+ " AND com.industry LIKE :industry "
+			+ " AND g.groupname LIKE :groupname "
+			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
 			@Param("companyids") List<Integer> companyids,
 			@Param("imei") String imei,
-			@Param("iccid") String iccid,
 			@Param("sn") String sn,
 			@Param("productname") String productName,
 			@Param("projectname") String projectName,
@@ -65,22 +63,20 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 */
 	@Query(value = "SELECT d.* "
-			+ "FROM cloud_device d "
-			+ "LEFT JOIN cloud_product pd ON d.productId = pd.productId "
-			+ "LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
-			+ "LEFT JOIN cloud_company com ON d.companyId = com.companyId "
-			+ "WHERE d.companyId IN :companyids "
-			+ "AND (d.IMEI LIKE :imei "
-			+ "    OR d.ICCID LIKE :iccid "
+			+ " FROM cloud_device d "
+			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
+			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
+			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
+			+ " WHERE d.companyId IN :companyids "
+			+ " AND (d.IMEI LIKE :imei "
 			+ "    OR d.SN LIKE :sn) "
-			+ "AND pd.productName LIKE :productname "
-			+ "AND pj.projectName LIKE :projectname "
-			+ "AND com.industry LIKE :industry "
-			+ "ORDER BY d.companyId,d.imei", nativeQuery = true)
-	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
+			+ " AND pd.productName LIKE :productname "
+			+ " AND pj.projectName LIKE :projectname "
+			+ " AND com.industry LIKE :industry "
+			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
 			@Param("companyids") List<Integer> companyids,
 			@Param("imei") String imei,
-			@Param("iccid") String iccid,
 			@Param("sn") String sn,
 			@Param("productname") String productName,
 			@Param("projectname") String projectName,
