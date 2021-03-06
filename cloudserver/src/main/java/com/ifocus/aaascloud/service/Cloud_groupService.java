@@ -74,7 +74,7 @@ public class Cloud_groupService {
 	public Cloud_groupModel getGroupInfo(Cloud_groupModel cloud_groupModel) throws Exception {
 		Cloud_groupModel model = new Cloud_groupModel();
 		Optional<Cloud_groupEntity> entity = cloud_groupRepository.findById(cloud_groupModel.getGroupid());
-		if (!entity.isEmpty()) {
+		if (!entity.isPresent()) {
 			model = getModelByEntity(entity.get());
 //			model.setGroupid(entity.get().getGroupid());
 //			model.setProjectid(entity.get().getProjectid());
@@ -185,18 +185,18 @@ public class Cloud_groupService {
 
 	/*
 	 * グループ一括削除
-	 * @param groupList List<Cloud_groupModel> グループリスト
+	 * @param groupidList List<Integer> グループリスト
 	 *
 	 */
-	public void deleteGroups(List<Cloud_groupModel> groupList) throws Exception {
+	public void deleteGroups(List<Integer> groupidList) throws Exception {
 
-		if (groupList != null && !groupList.isEmpty()) {
-			for (Cloud_groupModel model:groupList) {
+		if (groupidList != null && !groupidList.isEmpty()) {
+			for (Integer groupid:groupidList) {
 
 				////////////////////////////////////////////////////////
 				// グループ削除
 				////////////////////////////////////////////////////////
-				deleteGroup(model);
+				deleteGroup(groupid);
 
 			}
 		}
@@ -208,8 +208,8 @@ public class Cloud_groupService {
 	 * グループ削除
 	 *
 	 */
-	public void deleteGroup(Cloud_groupModel model) throws Exception {
-		cloud_groupRepository.deleteById(model.getGroupid());
+	public void deleteGroup(Integer groupid) throws Exception {
+		cloud_groupRepository.deleteById(groupid);
 	}
 
 
@@ -229,7 +229,7 @@ public class Cloud_groupService {
 
 		// プロジェクト情報取得&設定
 		Optional<Cloud_projectEntity> project  = cloud_projectRepository.findById(entity.getProjectid());
-		if (!project.isEmpty()) {
+		if (!project.isPresent()) {
 			model.setProjectname(project.get().getProjectname());
 		}
 

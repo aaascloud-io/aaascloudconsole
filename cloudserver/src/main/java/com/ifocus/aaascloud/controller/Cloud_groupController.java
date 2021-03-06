@@ -238,7 +238,7 @@ public class Cloud_groupController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
-			 cloud_groupService.deleteGroup(model);
+			 cloud_groupService.deleteGroup(model.getGroupid());
 
 			/* 正常系 */
 			response.setStatus(200);
@@ -261,12 +261,12 @@ public class Cloud_groupController {
 	@RequestMapping(value = "/deleteGroups", method = RequestMethod.DELETE)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> deleteGroups(@RequestBody List<Cloud_groupModel> modelList) throws Exception {
+	public BaseHttpResponse<String> deleteGroups(@RequestBody Cloud_groupModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
-			 cloud_groupService.deleteGroups(modelList);
+			 cloud_groupService.deleteGroups(model.getGroupidList());
 
 			/* 正常系 */
 			response.setStatus(200);

@@ -273,7 +273,7 @@ export class ProductComponent implements OnInit {
             alert('削除成功です。');
             this.productSelected = false;
           } else {
-            console.log('削除失敗です。');
+            alert('削除失敗です。');
           }
         } catch (e) {
           console.log('削除失敗です。');
@@ -313,13 +313,15 @@ export class ProductComponent implements OnInit {
 
     this.httpService.put('updateProduct', query).then(item => {
       try {
-        console.log('更新成功です。');
-        console.log(item);
-        alert('更新成功です。');
-        this.searchMyProduct();
-        if (editForm.valid === true) {
-          editForm.reset();
-          this.updateModal.close(editForm.resetForm);
+        if (item.body.resultCode === "0000") {
+          console.log('更新成功です。');
+          console.log(item);
+          alert('更新成功です。');
+          this.searchMyProduct();
+          if (editForm.valid === true) {
+            editForm.reset();
+            this.updateModal.close(editForm.resetForm);
+          }
         }
       } catch (e) {
         console.log('更新失敗です。');
@@ -576,7 +578,7 @@ export class ProductComponent implements OnInit {
   }
 
   /**
- * プロダクトタイプ一覧取得
+ * ユーザー一覧取得
  */
   protected async getUnderUsers() {
     var query = {

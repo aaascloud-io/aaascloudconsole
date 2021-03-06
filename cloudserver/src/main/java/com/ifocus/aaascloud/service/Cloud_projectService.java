@@ -171,9 +171,11 @@ public class Cloud_projectService {
 			/* グループ一覧を設定 */
 			model.setGroupList(cloud_groupService.getGroups(model.getProjectid()));
 			/* デバイス数取得 */
-			model.setDeviceCounts(cloud_deviceRepository.getProjectDeviceCountsByProjectid(model.getProjectid()));
+			List<Cloud_deviceModel> list = cloud_deviceService.getProjectDevices(model.getProjectid());
+			//model.setDeviceCounts(cloud_deviceRepository.getProjectDeviceCountsByProjectid(model.getProjectid()));
+			model.setDeviceCounts(list.size());
 			/* デバイス一覧を設定 */
-			model.setDeviceList(cloud_deviceService.getProjectDevices(model.getProjectid()));
+			model.setDeviceList(list);
 		}
 
 
