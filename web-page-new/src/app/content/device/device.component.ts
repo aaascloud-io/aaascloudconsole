@@ -119,7 +119,7 @@ export class DeviceComponent implements OnInit {
       companyid: '',
       // sslSelected: {},
       sslChecked: false,
-      encryptedCommunications: '',
+      encryptedCommunications: 0,
       encryptedKey: '',
       connectserverurl: '',
       connectserverport: '',
@@ -153,9 +153,8 @@ export class DeviceComponent implements OnInit {
 
   }
 
-  @ViewChild('aForm') aForm: ElementRef;
-  @ViewChild('f') f: NgForm;
   @ViewChild('registerForm') registerForm: ElementRef;
+  @ViewChild('editForm') editForm: ElementRef;
   @ViewChild('registerDeviceForm') registerDeviceForm: NgForm;
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
   @ViewChild(PerfectScrollbarDirective) directiveRef?: PerfectScrollbarDirective;
@@ -334,15 +333,13 @@ export class DeviceComponent implements OnInit {
    * @param addDeviceForm     Add contact form
    */
   registerDeviceDetail(addDeviceForm: NgForm, registerForm: ElementRef) {
+
+    if (this.pageModel.deviceDetail.sn == '' || this.pageModel.deviceDetail.imei == '' || this.pageModel.deviceDetail.productid == '') {
+      return;
+    }
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
-      //to do ユーザー名で　ロケーションデータを取る
-      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);;
-      this.pageModel.deviceDetail.companyid = this.pageModel.deviceDetail.companySelected != null ? this.pageModel.deviceDetail.companySelected["companyid"] : '';
-      // this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslSelected["item_id"];
-      this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslChecked == false ? '0' : '1';
-
-      this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected != null ? this.pageModel.deviceDetail.productSelected["productid"] : '';
+      this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslChecked == false ? 0 : 1;
 
       var param = {
         "loginInfo": {
@@ -372,9 +369,9 @@ export class DeviceComponent implements OnInit {
             addDeviceForm.reset();
             this.addModal.close(addDeviceForm.resetForm);
           }
-        }else if(item.resultCode == "0002"){
+        } else if (item.resultCode == "0002") {
           alert('権限ないです、登録失敗しました');
-        }else {
+        } else {
           this.setFocus(item.resultCode, registerForm)
           alert(item.resultMsg);
         }
@@ -392,16 +389,18 @@ export class DeviceComponent implements OnInit {
  * 
  */
   editDeviceDetail(editDeviceForm: NgForm, deviceid) {
+
+    if(this.pageModel.deviceDetail.productSelected == null ){
+      return;
+    }
+    this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected["productid"];
+
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
-      //to do ユーザー名で　ロケーションデータを取る
-      // this.pageModel.addDeviceDetailList.push(this.pageModel.deviceObj);
-      this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected["productid"];
-
       this.pageModel.deviceDetail.deviceid = deviceid
       this.pageModel.deviceDetail.devicename = this.selectedDevice['devicename'];
       this.pageModel.deviceDetail.sn = this.selectedDevice['sn'];
-      this.pageModel.deviceDetail.productid = this.selectedDevice['productid'];
+      // this.pageModel.deviceDetail.productid = this.selectedDevice['productid'];
       this.pageModel.deviceDetail.sim_imsi = this.selectedDevice['sim_imsi'];
       this.pageModel.deviceDetail.sim_tel = this.selectedDevice['sim_tel'];
       this.pageModel.deviceDetail.sim_iccid = this.selectedDevice['sim_iccid'];
@@ -733,11 +732,10 @@ export class DeviceComponent implements OnInit {
     }
   }
 
-  lengthCheck(value,name,templateForm: ElementRef){
-    if(value.length>0 && value.length<11)
-    {
+  lengthCheck(value, name, templateForm: ElementRef) {
+    if (value.length > 0 && value.length < 11) {
       alert("Tel Numberを11桁を入力してください。");
-      this.setFocus(name,templateForm)
+      this.setFocus(name, templateForm)
     }
   }
   /**
@@ -906,6 +904,12 @@ export class DeviceComponent implements OnInit {
     // this.pageModel.sort.devicenameDown = false;
     this.pageModel.sort.companynameUp = false;
     this.pageModel.sort.companynameDown = false;
+    this.pageModel.sort.productnameUp = false;
+    this.pageModel.sort.productnameDown = false;
+    this.pageModel.sort.projectnameUp = false;
+    this.pageModel.sort.projectnameDown = false;
+    this.pageModel.sort.groupnameUp = false;
+    this.pageModel.sort.groupnameDown = false;
 
     switch (nm) {
       case 'sn':
@@ -994,42 +998,18 @@ export class DeviceComponent implements OnInit {
     }
   }
 
-  isAllChecked() {
-    // return this.PERSON.every(_ => _.deviceSelected);
-    // this.deviceSelected=true;
-
-  }
-
   /**
 * Remove overlay when open sidebar
 *
 * @param NgForm    Content overlay
 */
   cancleModel(openForm: NgForm) {
-    // const toggleIcon = document.getElementById('compose-sidebar');
-    // const toggleOverlay = document.getElementById('app-content-overlay');
-    // if (event.currentTarget.className === 'close close-icon' || 'app-content-overlay') {
-    //   this.renderer.removeClass(toggleIcon, 'show');
-    //   this.renderer.removeClass(toggleOverlay, 'show');
-    // }
-    /**
- * Add contact if valid addform value
- */
-    if (openForm.valid === true) {
-      openForm.reset();
-      if (this.addModal != null) {
-        this.addModal.close(openForm.resetForm);
-      }
-      if (this.editModal != null) {
-        this.editModal.close(openForm.resetForm);
-      }
+    openForm.reset();
+    if (this.addModal != null) {
+      this.addModal.close(openForm.resetForm);
+    }
+    if (this.editModal != null) {
+      this.editModal.close(openForm.resetForm);
     }
   }
-  counter
-  onChange(event) {
-    this.counter = this.counter + 1;
-  }
-
-
-
 }

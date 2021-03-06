@@ -9,22 +9,15 @@ import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from '../../_common/_interface/userInfo'
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
-// import { USERCODE } from '../../_common/_utils/codes-utils';
 
 class Contact {
   constructor(
-    public id: number,
-    public producttypeid: any,
-    public productid: any,
-    public productcode: any,
-    public productname: string,
-    public model: string,
-    public simflag: number,
-    public version: string,
+    public groupid: any,
+    public groupname: string,
+    public projectid: any,
+    public projectname: string,
     public summary: string,
-    public producttypename: string,
-    public createusername: string,
-    public createuserid: string
+    public devicecount: any,
   ) { }
 }
 const formInputData = require('../../../assets/data/forms/form-elements/form-inputs.json');
@@ -50,21 +43,15 @@ export class GroupComponent implements OnInit {
   placement = 'bottom-right';
   addModal = null;
   updateModal = null;
+  addDeviceModal = null;
   loadingIndicator: true;
   selected = [];
   temp = [];
   temp2 = this.rows;
   singlebasicSelected: any;
-  productSelected = false;
-  productTypes = [];
-  users = [];
+  groupSelected = false;
+  projects = [];
   show = false;
-  simFlg = false;
-
-  public basicSectionBorderColorCollapse1 = false;
-  public basicSectionBorderColorCollapse2 = false;
-  public basicSectionBorderColorCollapse3 = false;
-  public basicSectionBorderColorCollapse4 = false;
 
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
@@ -73,7 +60,8 @@ export class GroupComponent implements OnInit {
 
   pageSize: any;
   collectionSize: any;
-  productList: any;
+  groupList: any;
+  deviceList: any;
   page = 1;
   TableData: any;
   sortOn: any;
@@ -83,25 +71,14 @@ export class GroupComponent implements OnInit {
     USERCODE: null,
     addList: [],
     dataAll: [],
-    productList: [],
-    addProduct: {
-      productTypeId: null,
-      createuserid: null,
-      productcode: '',
-      productName: '',
-      model: '',
-      version: '',
-      sim: false,
+    addGroup: {
+      projectid: null,
+      groupname: '',
       summary: ''
     },
-    updataProduct: {
-      productId: 0,
-      productTypeId: 0,
-      productcode: '',
-      productName: '',
-      model: '',
-      version: '',
-      sim: 0,
+    updataGroup: {
+      projectid: null,
+      groupname: '',
       summary: ''
     },
     loginUser: {
@@ -112,9 +89,8 @@ export class GroupComponent implements OnInit {
     },
     userInfoParame: {},
     query: {
-      producttypename: '',
-      productname: '',
-      createusername: '',
+      projectname: '',
+      groupname: '',
     },
 
     devices: [],
@@ -167,9 +143,8 @@ export class GroupComponent implements OnInit {
         "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
       }
     }
-    this.getProductTypes();
-    this.getUnderUsers();
-    this.searchMyProduct();
+    this.getProjects();
+    this.searchGroups();
   }
 
   /**
@@ -180,7 +155,6 @@ export class GroupComponent implements OnInit {
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown'
-      ,size: 'lg'
     });
     this.contactFlag = true;
   }
@@ -194,10 +168,22 @@ export class GroupComponent implements OnInit {
     this.selectedContact = Object.assign({}, row);
     this.updateModal = this.modal.open(editTableDataModalContent, {
       windowClass: 'animated fadeInDown'
-      ,size: 'lg'
     });
     this.contactFlag = false;
-    this.simFlg = this.selectedContact.simflag === 1 ? true : false;
+  }
+
+  /**
+   * デバイス追加のダイアログを開ける
+   * @param deviceLinkAddModalContent 
+   * @param row 
+   */
+  deviceLinkAddModal(deviceLinkAddModalContent, row) {
+    this.getUsableDeviceList();
+    this.selectedContact = Object.assign({}, row);
+    this.addDeviceModal = this.modal.open(deviceLinkAddModalContent, {
+      windowClass: 'animated fadeInDown',
+      size: 'lg'
+    });
   }
 
   /**
@@ -227,7 +213,7 @@ export class GroupComponent implements OnInit {
   }
 
   /**
-   * Delete contact row
+   * グループデーターを削除する(単一)
    * @param row     Selected row for delete contact
    */
   deleteRow(row) {
@@ -237,13 +223,13 @@ export class GroupComponent implements OnInit {
         "targetUserInfo": {
           "targetuserid": this.pageModel.loginUser.loginuserid,
         },
-        "productid": row.productid,
+        "groupid": row.groupid,
       }
-      this.httpService.delete('deleteProduct', query).then(item => {
+      this.httpService.delete('deleteGroup', query).then(item => {
         try {
           if (item.body.resultCode === "0000") {
 
-            this.searchMyProduct();
+            this.searchGroups();
             alert('削除成功です。');
           } else {
             console.log('削除失敗です。');
@@ -256,7 +242,7 @@ export class GroupComponent implements OnInit {
   }
 
   /**
-   * 選択されたプロダクトを削除する
+   * 選択されたグループデーターを削除する
    */
   deleteCheckedRow() {
 
@@ -265,7 +251,7 @@ export class GroupComponent implements OnInit {
       var deleteCheckedids = [];
       for (var row of this.rows) {
         if (row.isSelected) {
-          deleteCheckedids.push(row.productid);
+          deleteCheckedids.push(row.groupid);
         }
       }
       var query = {
@@ -273,14 +259,14 @@ export class GroupComponent implements OnInit {
         "targetUserInfo": {
           "targetuserid": this.pageModel.loginUser.loginuserid,
         },
-        "productidlist": deleteCheckedids,
+        "groupList": deleteCheckedids,
       }
-      this.httpService.delete('deleteProducts', query).then(item => {
+      this.httpService.delete('deleteGroups', query).then(item => {
         try {
           if (item.body.resultCode === "0000") {
-            this.searchMyProduct();
+            this.searchGroups();
             alert('削除成功です。');
-            this.productSelected = false;
+            this.groupSelected = false;
           } else {
             console.log('削除失敗です。');
           }
@@ -292,14 +278,12 @@ export class GroupComponent implements OnInit {
   }
 
   /**
-   * プロダクト情報を更新する
+   * グループ情報を更新する
    *
    * @param editForm      Edit form for values check
    * @param id      Id match to the selected row Id
    */
   onUpdate(editForm: NgForm) {
-
-    this.selectedContact.simflag = this.simFlg === true ? 1 : 0;
     var query = {
       "loginInfo": {
         "loginuserid": this.pageModel.loginUser.loginuserid,
@@ -309,23 +293,18 @@ export class GroupComponent implements OnInit {
         "targetuserid": this.pageModel.loginUser.loginuserid,
       },
 
-      "productid": this.selectedContact.productid,
-      "createuserid": this.selectedContact.createuserid,
-      "producttypeid": this.selectedContact.producttypeid,
-      "productcode": this.selectedContact.productcode,
-      "productname": this.selectedContact.productname,
-      "model": this.selectedContact.model,
-      "version": this.selectedContact.version,
-      "simflag": this.selectedContact.simflag,
+      "projectid": this.selectedContact.projectid,
+      "groupid": this.selectedContact.groupid,
+      "groupname": this.selectedContact.groupname,
       "summary": this.selectedContact.summary
     }
 
-    this.httpService.put('updateProduct', query).then(item => {
+    this.httpService.usePost('updateGroup', query).then(item => {
       try {
         console.log('更新成功です。');
         console.log(item);
         alert('更新成功です。');
-        this.searchMyProduct();
+        this.searchGroups();
         if (editForm.valid === true) {
           editForm.reset();
           this.updateModal.close(editForm.resetForm);
@@ -370,51 +349,33 @@ export class GroupComponent implements OnInit {
    * @param addForm     Add contact form
    */
   addNewContact(editForm: NgForm) {
-    // if (this.contactactive === undefined) {
-    //   this.contactactive = 'away';
-    // } else {
-    //   this.contactactive = this.contactactive;
-    // }
-
-    var productTypeId = this.pageModel.addProduct.productTypeId;
-    var createuserid = this.pageModel.addProduct.createuserid;
-    var productName = this.pageModel.addProduct.productName;
+    var projectid = this.pageModel.addGroup.projectid;
+    var groupname = this.pageModel.addGroup.groupname;
     var flg = true;
 
-    if (flg && !productTypeId) {
-      confirm(`タイプを選択してください。`);
+    if (flg && !projectid) {
+      confirm(`プロジェクを指定してください。`);
       flg = false;
     }
 
-    if (flg && !createuserid) {
-      confirm(`作成者を選択してください。`);
-      flg = false;
-    }
-
-    if (flg && !productName) {
-      confirm(`会社名を入力してください。`);
+    if (flg && !groupname) {
+      confirm(`グループ名を入力してください。`);
       flg = false;
     }
 
     if (flg) {
-      var sim = this.pageModel.addProduct.sim === true ? '1' : '0';
       var query = {
-        "loginInfo": this.pageModel.loginUser,
+        "loginInfo": this.pageModel.userInfoParame,
         "targetUserInfo": {
-          "targetuserid": this.pageModel.addProduct.createuserid,
+          "targetuserid": this.pageModel.loginUser.loginuserid,
         },
 
-        "producttypeid": this.pageModel.addProduct.productTypeId,
-        "createuserid": this.pageModel.addProduct.createuserid,
-        "productcode": this.pageModel.addProduct.productcode,
-        "productname": this.pageModel.addProduct.productName,
-        "model": this.pageModel.addProduct.model,
-        "version": this.pageModel.addProduct.version,
-        "simflag": sim,
-        "summary": this.pageModel.addProduct.summary
+        "projectid": this.pageModel.addGroup.projectid,
+        "groupname": this.pageModel.addGroup.groupname,
+        "summary": this.pageModel.addGroup.summary
       }
 
-      this.httpService.useRpPost('registerProduct', query).then(item => {
+      this.httpService.useRpPost('registerGroup', query).then(item => {
         try {
           if (item.resultCode === "0000") {
             console.log('登録成功です。');
@@ -424,7 +385,7 @@ export class GroupComponent implements OnInit {
               this.addModal.close(editForm.resetForm);
             }
             alert('登録成功です。');
-            this.searchMyProduct();
+            this.searchGroups();
           }
         } catch (e) {
           console.log('登録失敗です。');
@@ -463,100 +424,48 @@ export class GroupComponent implements OnInit {
   }
 
   /**
-   * プロダクト一覧取得
-   */
-  // protected async getProductAll() {
-  //   var query = this.pageModel.userInfoParame;
-
-  //   this.httpService.usePost('getProductAll', query).then(item => {
-  //     try {
-  //       this.rows = [];
-  //       console.log(item);
-  //       var index = 1;
-  //       // this.pageModel.productList = item;
-  //       if (item != null) {
-  //         item.forEach((elem) => {
-  //           var producttypename = ""
-  //           // プロダクトタイプ名の検索
-  //           for (const productType of this.productTypes) {
-  //             if (productType.producttypeid === elem.producttypeid) {
-  //               producttypename = productType.producttypename;
-  //             }
-  //           }
-  //           this.rows.push(new Contact(
-  //             index,
-  //             elem.producttypeid,
-  //             elem.productid,
-  //             elem.productcode,
-  //             elem.productname,
-  //             elem.model,
-  //             elem.simflag,
-  //             elem.version,
-  //             elem.summary,
-  //             producttypename,
-  //             elem.createusername,
-  //           ));
-  //           index++;
-  //         });
-  //         this.rows = [...this.rows];
-  //         this.getTabledata();
-  //       }
-
-  //     } catch (e) {
-  //       console.log('ユーザー数数を検索API エラー　発生しました。');
-  //     }
-  //   });
-  // }
-
-  /**
-  * プロダクトの条件より、取得する
+  * グループの条件より、取得する
   */
-  async searchMyProduct() {
+  async searchGroups() {
 
     var query = {
       "loginInfo": this.pageModel.loginUser,
       "targetUserInfo": {
         "targetuserid": this.pageModel.loginUser.loginuserid,
       },
-      "producttypename": this.pageModel.query.producttypename,
-      "productname": this.pageModel.query.productname,
-      "createusername": this.pageModel.query.createusername,
+      "projectname": this.pageModel.query.projectname,
+      "groupname": this.pageModel.query.groupname,
 
     };
 
-    this.httpService.usePost('searchMyProduct', query).then(item => {
+    this.httpService.usePost('searchGroups', query).then(item => {
       try {
         this.rows = [];
+        console.log("グループデーターの取得：");
         console.log(item);
-        var index = 1;
-        // this.pageModel.productList = item;
-        if (item != null) {
+        if (item) {
           item.forEach((elem) => {
-            var producttypename = ""
+            console.log("グループデーターの取得：" + elem);
+            var projectname = ""
             // プロダクトタイプ名の検索
-            for (const productType of this.productTypes) {
-              if (productType.producttypeid === elem.producttypeid) {
-                producttypename = productType.producttypename;
+            for (const project of this.projects) {
+              if (project.projectid === elem.projectid) {
+                projectname = project.projectname;
               }
             }
             this.rows.push(new Contact(
-              index,
-              elem.producttypeid,
-              elem.productid,
-              elem.productcode,
-              elem.productname,
-              elem.model,
-              elem.simflag,
-              elem.version,
+              elem.groupid,
+              elem.groupname,
+              elem.projectid,
+              projectname,
               elem.summary,
-              producttypename,
-              elem.createusername,
-              elem.createuserid
+              elem.groupDeviceCounts,
             ));
-            index++;
           });
           this.rows = [...this.rows];
           this.getTabledata();
+        } else {
+          console.log("グループ取得：0件です。");
         }
 
       } catch (e) {
@@ -566,100 +475,85 @@ export class GroupComponent implements OnInit {
   }
 
   /**
-   * プロダクトタイプ一覧取得
-   */
-  protected async getProductTypes() {
-    this.httpService.useGet('getProductTypeAll').then(item => {
-      try {
-        if (item) {
-          this.productTypes = item;
-          console.log(item);
-          console.log("プロダクトタイプの取得は成功しました。");
-        } else {
-          console.log("プロダクトタイプの取得は失敗しました。");
-        }
-      } catch (e) {
-        console.log("プロダクトタイプの取得は失敗しました。");
-      }
-    });
-  }
-
-  /**
- * プロダクトタイプ一覧取得
+ * プロジェクト一覧取得
  */
-  protected async getUnderUsers() {
+  protected async getProjects() {
     var query = {
       "loginInfo": this.pageModel.loginUser,
       "targetUserInfo": {
         "targetuserid": this.pageModel.loginUser.loginuserid,
       },
     };
-    this.httpService.usePost('getUnderUsers', query).then(item => {
+    this.httpService.usePost('getProjects', query).then(item => {
       try {
         if (item) {
-          this.users = item;
+          this.projects = item;
           console.log(item);
-          console.log("すべてのユーザーの取得は成功しました。");
+          console.log("すべてのプロジェクトの取得は成功しました。");
         } else {
-          console.log("すべてのユーザーの取得は0件。");
+          console.log("すべてのプロジェクトの取得は0件。");
         }
       } catch (e) {
-        console.log("すべてのユーザーの取得は失敗しました。");
+        console.log("すべてのプロジェクトの取得は失敗しました。");
       }
+    });
+  }
+
+  protected async getUsableDeviceList() {
+    var usableDeviceList = [];
+    let param = {
+      "loginInfo": this.pageModel.userInfoParame,
+      "targetUserInfo": this.pageModel.loginUser.loginuserid,
+    };
+    this.httpService.usePost("/getMySelectableDevices", param).then(item=> {
+      try {
+        this.deviceList = item;
+
+      } catch (e) {
+        console.log();
+      } 
     });
   }
 
   sortData(nm) {
     if (this.sortOn == 1) {
-      this.productList.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.groupList.sort((b, a) => a[nm].localeCompare(b[nm]));
       this.sortOn = 2;
     } else {
-      this.productList.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.groupList.sort((a, b) => a[nm].localeCompare(b[nm]));
       this.sortOn = 1;
     }
   }
 
   checkAll(ev) {
-    this.productList.forEach(x => x.isSelected = ev.target.checked)
-    this.productSelected = ev.target.checked;
+    this.groupList.forEach(x => x.isSelected = ev.target.checked)
+    this.groupSelected = ev.target.checked;
   }
 
   checkChange(ev, selected) {
-    this.productList.forEach(function (product) {
-      if (product.productid === selected['productid']) { product.isSelected = ev.target.checked }
+    this.groupList.forEach(function (group) {
+      if (group.groupid === selected['groupid']) { group.isSelected = ev.target.checked }
     });
-
-    // this.selected.splice(0, this.selected.length);
-    // this.selected.push(...selected);
   }
 
   isAllChecked() {
-    // return this.productList.every(_ => _.productSelected);
-    // this.productSelected=true;
+
 
   }
 
   getTabledata() {
-    this.productList = this.rows;
-    this.collectionSize = this.productList.length;
-    this.productList.forEach(x => x.isSelected = false)
-    this.productList();
+    this.groupList = this.rows;
+    this.collectionSize = this.groupList.length;
+    this.groupList.forEach(x => x.isSelected = false)
+    this.groupList();
   }
 
   /**
 * Pagination table
 */
   get PaginationData() {
-    if (this.productList) {
-      // if (this.pageSize > 0) {
-      // } else {
-      //   if (this.productList.length > 100) {
-      //     this.pageSize = 20
-      //   } else {
-      //     this.pageSize = 10
-      //   }
-      // }
-      return this.productList.map((person, i) => ({ productid: i + 1, ...person }))
+    if (this.groupList) {
+      return this.groupList.map((person, i) => ({ groupid: i + 1, ...person }))
         .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
     }
   }

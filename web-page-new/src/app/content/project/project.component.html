@@ -113,8 +113,12 @@
                           <td>{{ element.deviceCounts}}</td>
                           <td>
                             <a class="primary edit mr-1 mrless"
-                              (click)="deviceLinkModal(deviceLinkModalContent, element)"><i
+                              (click)="deviceLinkAddModal(deviceLinkAddModalContent, element)" title="デバイス連携"><i
                                 class="la la-calendar-plus-o"></i>
+                            </a>
+                            <a class="danger delete mr-1 mrless"
+                              (click)="deviceLinkListModal(deviceLinkListModalContent, element)" title="連携したデバイスを削除"><i
+                                class="la la-calendar-check-o"></i>
                             </a>
                           </td>
 
@@ -233,11 +237,11 @@
 
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- プロジェクトのデバイス連携 -->
-<ng-template #deviceLinkModalContent let-c="close" let-d="dismiss">
+<!-- プロジェクトのデバイス連携追加 -->
+<ng-template #deviceLinkAddModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="projectDeviceDataUpdate(projectDeviceForm,selectedProject.projectid)" #projectDeviceForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">デバイス連携</h5>
+      <h5 class="modal-title" id="exampleModalLabel1">プロジェクトのデバイス追加</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -247,7 +251,7 @@
         <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllDevice($event)">
+              <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllUsableDevice($event)">
               </th>
               <th scope="col">no.</th>
               <th scope="col">deviceid</th>
@@ -261,10 +265,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of deviceList; let i = index;">
+            <tr *ngFor="let item of usableDeviceList; let i = index;">
               <td>
                 <input type="checkbox" [checked]="item.isSelected"
-                  (change)="checkChangeDevice($event,item)">
+                  (change)="checkChangeUsableDevice($event,item)">
               </td>
               <td data-label="no.">{{i + 1}}</td>
               <td data-label="projectid">{{item.deviceid}}</td>
@@ -284,10 +288,68 @@
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">Add
-            New</span></button>
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">追加</span></button>
       </div>
     </div>
   </form>
 </ng-template>
 
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- プロジェクトのデバイス一覧 -->
+<ng-template #deviceLinkListModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="projectLinkedDeviceDataUpdate(projectLinkedDeviceForm,selectedProject.projectid)" #projectLinkedDeviceForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel1">連携したデバイス</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="table-responsive form-group col-12">
+        <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
+          <thead>
+            <tr>
+              <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllLinkedDevice($event)">
+              </th>
+              <th scope="col">no.</th>
+              <th scope="col">deviceid</th>
+              <th scope="col">devicename</th>
+              <th scope="col">imei</th>
+              <th scope="col">productname</th>
+              <th scope="col">sim_iccid</th>
+              <th scope="col">sim_imsi</th>
+              <th scope="col">sim_tel</th>
+              <th scope="col">sn</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of linkedDeviceList; let i = index;">
+              <td>
+                <input type="checkbox" [checked]="item.isSelected"
+                  (change)="checkChangeLinkedDevice($event,item)">
+              </td>
+              <td data-label="no.">{{i + 1}}</td>
+              <td data-label="projectid">{{item.deviceid}}</td>
+              <td data-label="groupId">{{item.devicename}}</td>
+              <td data-label="deviceName">{{item.imei}}</td>
+              <td data-label="imei">{{item.productname}}</td>
+              <td data-label="imei">{{item.sim_iccid}}</td>
+              <td data-label="imei">{{item.sim_imsi}}</td>
+              <td data-label="imei">{{item.sim_tel}}</td>
+              <td data-label="imei">{{item.sn}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="submit" id="add-contact-item" class="btn btn-danger add-contact-item"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">削除</span></button>
+      </div>
+    </div>
+  </form>
+</ng-template>

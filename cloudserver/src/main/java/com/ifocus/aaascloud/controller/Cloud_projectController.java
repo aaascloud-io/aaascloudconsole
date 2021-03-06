@@ -132,7 +132,7 @@ public class Cloud_projectController {
 			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
 
 				// プロジェクト詳細を取得する
-				Cloud_projectDetailModel model = cloud_projectService.getMyProject(cloud_projectModel.getProductid());
+				Cloud_projectDetailModel model = cloud_projectService.getMyProject(cloud_projectModel.getProjectid());
 
 				ProjectDetailModel projectDetailModel = new ProjectDetailModel();
 				// 情報設定

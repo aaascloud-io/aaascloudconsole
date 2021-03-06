@@ -111,8 +111,7 @@
                 <table class="table grid-breakpoints">
                   <thead>
                     <tr>
-                      <th scope="col" class="thcolor"><input type="checkbox" [checked]="isAllChecked()"
-                          (change)="checkAll($event)">
+                      <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAll($event)">
                       </th>
                       <th scope="col" class="thcolor">No.</th>
                       <th scope="col" class="thcolor" (click)="sortData('sn')">SN<i *ngIf="pageModel.sort.snUp"
@@ -154,7 +153,6 @@
                       <td>{{ element.productname}}</td>
                       <td>{{ element.projectname}}</td>
                       <td>{{ element.groupname}}</td>
-
                       <td>
                         <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="openEditModal(editDeviceModel, element)"><i class="la la-pencil"></i>
@@ -186,7 +184,7 @@
 </div>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 <ng-template #editDeviceModel let-c="close" let-d="dismiss">
-  <form (ngSubmit)="editDeviceDetail(editDeviceForm,selectedDevice.deviceid)" #editDeviceForm="ngForm">
+  <form (ngSubmit)="editDeviceDetail(editDeviceForm,selectedDevice.deviceid)" #editDeviceForm="ngForm" #editForm>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">デバイス詳細</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -222,9 +220,16 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクト<code>＊</code></h6>
-          <ng-select [items]="productSelectArray" [searchable]="true" bindLabel="productname" placeholder="プロダクト"
-            name="product" [(ngModel)]="pageModel.deviceDetail.productSelected">
+          <ng-select [items]="productSelectArray" name="product" bindLabel="productname"  [searchable]="true"
+            [(ngModel)]="pageModel.deviceDetail.productSelected" #productngname="ngModel" required>
           </ng-select>
+          <div *ngIf="editDeviceForm.submitted && productngname.invalid" class="invalid-feedback d-block">
+            <div *ngIf="productngname.errors.required">product is required</div>
+          </div>
+          <!-- <ng-select [items]="productSelectArray" name="product" bindLabel="productname" bindValue="productid"
+          [(ngModel)]="pageModel.deviceDetail.productid" required #productngname="ngModel" bindValue="productid"
+          [ngClass]="{ 'is-invalid': registerDeviceForm.submitted && productngname.invalid }" required>
+        </ng-select> -->
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>ファームウェア・バージョン</h6>
@@ -244,7 +249,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
           <input type="text" [(ngModel)]="selectedDevice.sim_tel" name="simtel" class="phone form-control"
-            placeholder="SIMカード電話番号" (keyup)="editTelFormat()" maxlength="14">
+            placeholder="SIMカード電話番号" (focusout)="lengthCheck(selectedDevice.sim_tel,'simtel',editForm)" maxlength="11" appNumbersOnly>
         </div>
       </div>
     </div>
@@ -303,18 +308,19 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者</h6>
-          <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname" placeholder="所有者"
-            name="company" [(ngModel)]="pageModel.deviceDetail.companySelected">
+          <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname" bindValue="companyid"
+            placeholder="所有者" name="company" [(ngModel)]="pageModel.deviceDetail.companyid">
           </ng-select>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクト<code>＊</code></h6>
-          <ng-select [items]="productSelectArray" [searchable]="true" bindLabel="productname" placeholder="プロダクト"
-            name="product" [(ngModel)]="pageModel.deviceDetail.productSelected" >
+          <ng-select [items]="productSelectArray" name="product" bindLabel="productname" bindValue="productid"
+            [(ngModel)]="pageModel.deviceDetail.productid" required #productngname="ngModel" bindValue="productid"
+            [ngClass]="{ 'is-invalid': registerDeviceForm.submitted && productngname.invalid }" required>
           </ng-select>
-          <!-- <div *ngIf="registerDeviceForm.submitted && productngname.valueAccessor" class="invalid-feedback">
+          <div *ngIf="registerDeviceForm.submitted && productngname.invalid" class="invalid-feedback d-block">
             <div *ngIf="productngname.errors.required">product is required</div>
-          </div> -->
+          </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>暗号化キー</h6>
@@ -354,7 +360,8 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
           <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="simtel" class="phone form-control"
-            placeholder="フォーマット:08054080520" maxlength="11" (focusout)="lengthCheck(pageModel.deviceDetail.sim_tel,'simtel',registerForm)" appNumbersOnly >
+            placeholder="フォーマット:08054080520" maxlength="11"
+            (focusout)="lengthCheck(pageModel.deviceDetail.sim_tel,'simtel',registerForm)" appNumbersOnly>
         </div>
       </div>
     </div>
