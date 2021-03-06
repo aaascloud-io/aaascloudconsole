@@ -98,9 +98,8 @@ public class Cloud_deviceService {
 		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
 		// グループ指定なしの場合
 		if (model.getGroupForSearch() == CommonConstant.DEFAULT_MATCH_ALL ) {
-			list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
+			list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
 					underUserCompanyIdList,
-					model.getImeiForSearch(),
 					model.getImeiForSearch(),
 					model.getImeiForSearch(),
 					model.getProductnameForSearch(),
@@ -109,9 +108,8 @@ public class Cloud_deviceService {
 					);
 		// グループ指定ありの場合
 		} else {
-			list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
+			list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
 					underUserCompanyIdList,
-					model.getImeiForSearch(),
 					model.getImeiForSearch(),
 					model.getImeiForSearch(),
 					model.getProductnameForSearch(),
