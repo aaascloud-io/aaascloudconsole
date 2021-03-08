@@ -154,43 +154,51 @@
       </button>
     </div>
     <div class="modal-body">
-      <div class="form-group col-12">
-        <label>RowID</label>
-        <input type="text" [(ngModel)]="selectedVersion.rowid" #editname="ngModel" name="rowid"
-          id="rowid" class="name form-control" placeholder="selectedVersion.rowid" required disabled>
-      </div>
-      <div class="form-group col-12">
-        <label>プロダクトID</label>
-        <input type="text" [(ngModel)]="selectedVersion.productid" #editname="ngModel" name="productid"
-          id="productid" class="name form-control" placeholder="selectedVersion.productid" required>
-      </div>
-
-
-      <div class="form-group col-12">
-        <label>プロダクト名</label>
-        <input type="text" [(ngModel)]="selectedVersion.productname" #editemail="ngModel" name="productname"
-          id="productname" class="email form-control" placeholder="selectedVersion.productname" required>
+      <div class="row">
+        <div class="form-group col-lg-6 col-md-12">
+          <label>RowID<code>＊</code></label>
+          <input type="text" [(ngModel)]="selectedVersion.rowid" #editname="ngModel" name="rowid"
+            id="rowid" class="name form-control" placeholder="selectedVersion.rowid" required disabled>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <label>プロダクトID<code>＊</code></label>
+          <input type="text" [(ngModel)]="selectedVersion.productid" #editname="ngModel" name="productid"
+            id="productid" class="name form-control" placeholder="selectedVersion.productid" required>
+        </div>
       </div>
 
-      <div class="form-group col-12">
-        <label>バージョンコード</label>
-        <input type="text" [(ngModel)]="selectedVersion.versioncode" #editemail="ngModel" name="versioncode"
-          id="versioncode" class="email form-control" placeholder="selectedVersion.versioncode" required>
+      <div class="row">
+        <div class="form-group col-lg-6 col-md-12">
+          <label>プロダクト名<code>＊</code></label>
+          <input type="text" [(ngModel)]="selectedVersion.productname" #editemail="ngModel" name="productname"
+            id="productname" class="email form-control" placeholder="selectedVersion.productname" required>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <label>バージョンコード<code>＊</code></label>
+          <input type="text" [(ngModel)]="selectedVersion.versioncode" #editemail="ngModel" name="versioncode"
+            id="versioncode" class="email form-control" placeholder="selectedVersion.versioncode" required>
+        </div>
       </div>
-      <div class="form-group col-12">
-        <label>バージョン名</label>
-        <input type="text" [(ngModel)]="selectedVersion.versionname" #editemail="ngModel" name="versionname"
-          id="versionname" class="email form-control" placeholder="selectedVersion.versionname" required>
+      <div class="row">
+        <div class="form-group col-lg-6 col-md-12">
+          <label>バージョン名<code>＊</code></label>
+          <input type="text" [(ngModel)]="selectedVersion.versionname" #editemail="ngModel" name="versionname"
+            id="versionname" class="email form-control" placeholder="selectedVersion.versionname" required>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <label>DownLoadUrl<code>＊</code></label>
+          <input type="text" [(ngModel)]="selectedVersion.downloadurl" #editemail="ngModel" name="downloadurl"
+            id="downloadurl" class="email form-control" placeholder="selectedVersion.downloadurl" required>
+        </div>
       </div>
-      <div class="form-group col-12">
-        <label>詳細</label>
-        <input type="text" [(ngModel)]="selectedVersion.description" #editemail="ngModel" name="description"
-          id="description" class="email form-control" placeholder="selectedVersion.description" required>
-      </div>
-      <div class="form-group col-12">
-        <label>DownLoadUrl</label>
-        <input type="text" [(ngModel)]="selectedVersion.downloadurl" #editemail="ngModel" name="downloadurl"
-          id="downloadurl" class="email form-control" placeholder="selectedVersion.downloadurl" required>
+      <div class="row">
+        <div class="form-group col-12">
+          <label>詳細</label>
+          <!-- <input type="text" [(ngModel)]="selectedVersion.description" #editemail="ngModel" name="description"
+            id="description" class="email form-control" placeholder="selectedVersion.description" required> -->
+          <textarea id="description" rows="3" class="form-control square" name="description"
+              [(ngModel)]="selectedVersion.description" placeholder="詳細" maxlength="100"></textarea>
+        </div>
       </div>
 
 

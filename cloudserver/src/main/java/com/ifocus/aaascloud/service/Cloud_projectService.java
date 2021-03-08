@@ -197,26 +197,26 @@ public class Cloud_projectService {
 		Cloud_projectEntity insertEntity = this.getCloud_projectEntityFromModel(model);
 		Cloud_projectEntity insertedEntity = cloud_projectRepository.save(insertEntity);
 
-		// プロジェクトIDをモデルに設定する
-		model.setProductid(insertedEntity.getProductid());
-
-		// プロジェクトIDを各グループに設定する
-		this.setTakeoverInfoToGroups(model);
-
-		////////////////////////////////////////////////////////
-		// グループ登録(グループデバイス登録を含む)
-		////////////////////////////////////////////////////////
-		cloud_groupService.registerGroups(model.getGroupList());
-
-		////////////////////////////////////////////////////////
-		// プロジェクトデバイス更新
-		////////////////////////////////////////////////////////
-		// 更新対象デバイス取得
-		Iterable<Cloud_deviceEntity> entityList = cloud_deviceRepository.findAllById(this.getDeviceidList(model.getDeviceList()));
-		// 更新情報設定
-		cloud_groupService.setUpdateInfoToEntityForProjectDevice(model, entityList);
-		// グループデバイス一括更新
-		cloud_deviceRepository.saveAll(entityList);
+//		// プロジェクトIDをモデルに設定する
+//		model.setProductid(insertedEntity.getProductid());
+//
+//		// プロジェクトIDを各グループに設定する
+//		this.setTakeoverInfoToGroups(model);
+//
+//		////////////////////////////////////////////////////////
+//		// グループ登録(グループデバイス登録を含む)
+//		////////////////////////////////////////////////////////
+//		cloud_groupService.registerGroups(model.getGroupList());
+//
+//		////////////////////////////////////////////////////////
+//		// プロジェクトデバイス更新
+//		////////////////////////////////////////////////////////
+//		// 更新対象デバイス取得
+//		Iterable<Cloud_deviceEntity> entityList = cloud_deviceRepository.findAllById(this.getDeviceidList(model.getDeviceList()));
+//		// 更新情報設定
+//		cloud_groupService.setUpdateInfoToEntityForProjectDevice(model, entityList);
+//		// グループデバイス一括更新
+//		cloud_deviceRepository.saveAll(entityList);
 
 		return insertedEntity.getProjectid();
 
@@ -348,14 +348,9 @@ public class Cloud_projectService {
 	public void deleteProject(Cloud_projectModel model) throws Exception {
 
 		////////////////////////////////////////////////////////
-		// プロジェクトデバイス更新
+		// プロジェクトデバイスクリア
 		////////////////////////////////////////////////////////
-		// 更新対象デバイス取得
-		List<Cloud_deviceEntity> deviceEntityList = cloud_deviceRepository.searchDevicesByProjectid(model.getProjectid());
-		// プロジェクト＆グループ情報クリア
-		cloud_groupService.clearProjectAndGroupInfoToEntity(model.getLoginInfo(), deviceEntityList);
-		// デバイス一括更新
-		cloud_deviceRepository.saveAll(deviceEntityList);
+		cloud_deviceService.clearProjectInfoForProjectDelete(model);
 
 		////////////////////////////////////////////////////////
 		// グループ削除
