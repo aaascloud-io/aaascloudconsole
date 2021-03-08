@@ -99,25 +99,51 @@ public class Cloud_deviceService {
 		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
 		// グループ指定なしの場合
 		if (model.getGroupForSearch() == CommonConstant.DEFAULT_MATCH_ALL ) {
-			list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
-					underUserCompanyIdList,
-					model.getImeiForSearch(),
-					model.getImeiForSearch(),
-					model.getProductnameForSearch(),
-					model.getProjectnameForSearch(),
-					model.getIndustryForSearch()
-					);
+			// プロジェクト名指定なし
+			if (model.getProjectnameForSearch() == CommonConstant.DEFAULT_MATCH_ALL) {
+				list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLike(
+						underUserCompanyIdList,
+						model.getImeiForSearch(),
+						model.getImeiForSearch(),
+						model.getProductnameForSearch(),
+						model.getIndustryForSearch()
+						);
+			// プロジェクト名指定あり
+			} else {
+				list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
+						underUserCompanyIdList,
+						model.getImeiForSearch(),
+						model.getImeiForSearch(),
+						model.getProductnameForSearch(),
+						model.getProjectnameForSearch(),
+						model.getIndustryForSearch()
+						);
+			}
 		// グループ指定ありの場合
 		} else {
-			list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
-					underUserCompanyIdList,
-					model.getImeiForSearch(),
-					model.getImeiForSearch(),
-					model.getProductnameForSearch(),
-					model.getProjectnameForSearch(),
-					model.getIndustryForSearch(),
-					model.getGroupForSearch()
-					);
+			// プロジェクト名指定なし
+			if (model.getProjectnameForSearch() == CommonConstant.DEFAULT_MATCH_ALL) {
+
+				list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
+						underUserCompanyIdList,
+						model.getImeiForSearch(),
+						model.getImeiForSearch(),
+						model.getProductnameForSearch(),
+						model.getIndustryForSearch(),
+						model.getGroupForSearch()
+						);
+			// プロジェクト名指定あり
+			} else {
+				list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
+						underUserCompanyIdList,
+						model.getImeiForSearch(),
+						model.getImeiForSearch(),
+						model.getProductnameForSearch(),
+						model.getProjectnameForSearch(),
+						model.getIndustryForSearch(),
+						model.getGroupForSearch()
+						);
+			}
 		}
 		return this.getModelsByEntitys(list);
 
@@ -857,8 +883,8 @@ public class Cloud_deviceService {
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
 
 		// 情報設定
-		entity.setProjectid(CommonConstant.PROJECT_NOT_SET);
-		entity.setGroupid(CommonConstant.GROUP_NOT_SET);
+//		entity.setProjectid(CommonConstant.PROJECT_NOT_SET);
+//		entity.setGroupid(CommonConstant.GROUP_NOT_SET);
 		entity.setDevicename(model.getDevicename());
 		entity.setImei(model.getImei());
 		entity.setSn(model.getSn());
@@ -874,8 +900,8 @@ public class Cloud_deviceService {
 		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
 		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
 		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
-		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
-		entity.setLastgroupid(CommonConstant.GROUP_NOT_SET);
+//		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
+//		entity.setLastgroupid(CommonConstant.GROUP_NOT_SET);
 		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
@@ -900,15 +926,11 @@ public class Cloud_deviceService {
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
 
 		// 情報設定
-		if (model.getProjectid() == null) {
-			entity.setProjectid(CommonConstant.PROJECT_NOT_SET);
-		} else {
+		if (model.getProjectid() != null) {
 			entity.setProjectid(model.getProjectid());
 		}
 
-		if (model.getGroupid() == null) {
-			entity.setGroupid(CommonConstant.GROUP_NOT_SET);
-		} else {
+		if (model.getGroupid() != null) {
 			entity.setGroupid(model.getGroupid());
 		}
 
@@ -928,8 +950,8 @@ public class Cloud_deviceService {
 		entity.setBindingflag(model.getBindingflag());
 //		entity.setFmlastestversion(model.getFmlastestversion());
 //		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
-		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
-		entity.setLastgroupid(CommonConstant.GROUP_NOT_SET);
+//		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
+//		entity.setLastgroupid(CommonConstant.GROUP_NOT_SET);
 		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(lmodel.getLoginuserid());
 		entity.setI_time(systemTime);
