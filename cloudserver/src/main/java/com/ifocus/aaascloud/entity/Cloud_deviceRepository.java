@@ -123,6 +123,14 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	public List<Cloud_deviceEntity> searchDevicesByProjectidAndGroupid(@Param("projectid") Integer projectid, @Param("groupid") Integer groupid);
 
 	/*
+	 * グループの全デバイス一覧
+	 *
+	 *
+	 */
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.groupid = :groupid", nativeQuery = true)
+	public List<Cloud_deviceEntity> searchDevicesByGroupid(@Param("groupid") Integer groupid);
+
+	/*
 	 * グループの全デバイス数
 	 *
 	 *
