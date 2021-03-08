@@ -393,17 +393,18 @@ export class DeviceComponent implements OnInit {
     if(this.pageModel.deviceDetail.productSelected == null ){
       return;
     }
-    this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected["productid"];
 
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       this.pageModel.deviceDetail.deviceid = deviceid
       this.pageModel.deviceDetail.devicename = this.selectedDevice['devicename'];
-      this.pageModel.deviceDetail.sn = this.selectedDevice['sn'];
+      this.pageModel.deviceDetail.sim_iccid = this.selectedDevice['sim_iccid'];
+
+      // this.pageModel.deviceDetail.sn = this.selectedDevice['sn'];
       // this.pageModel.deviceDetail.productid = this.selectedDevice['productid'];
+      this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected["productid"];
       this.pageModel.deviceDetail.sim_imsi = this.selectedDevice['sim_imsi'];
       this.pageModel.deviceDetail.sim_tel = this.selectedDevice['sim_tel'];
-      this.pageModel.deviceDetail.sim_iccid = this.selectedDevice['sim_iccid'];
 
       var param = {
         "loginInfo": {
