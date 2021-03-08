@@ -65,13 +65,13 @@ export class DeviceComponent implements OnInit {
   public companySelectArray = [];
   //所有者
   public productSelectArray = [];
-  //暗号化
-  // public sslSelectArray = [
+  //バンディングフラグ
+  // public bindingFlagArray = [
   //   {
-  //     "item_id": 0, "item_text": "OFF"
+  //     "item_id": 0, "item_text": "なし"
   //   },
   //   {
-  //     "item_id": 1, "item_text": "ON"
+  //     "item_id": 1, "item_text": "済み"
   //   }
   // ]
   // sslSelected: any;
@@ -123,7 +123,8 @@ export class DeviceComponent implements OnInit {
       encryptedKey: '',
       connectserverurl: '',
       connectserverport: '',
-      bindingflag: '',
+      bindingflagChecked: false,
+      bindingflag: 0,
       fmlastestversion: '',
       versioncomfirmtime: '',
       productSelected: {},
@@ -285,7 +286,7 @@ export class DeviceComponent implements OnInit {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
-    // this.pageModel.deviceDetail;
+    this.pageModel.deviceDetail;
   }
 
   /**
@@ -340,6 +341,7 @@ export class DeviceComponent implements OnInit {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       this.pageModel.deviceDetail.encryptedCommunications = this.pageModel.deviceDetail.sslChecked == false ? 0 : 1;
+      this.pageModel.deviceDetail.bindingflag = this.pageModel.deviceDetail.bindingflagChecked == false ? 0 : 1;
 
       var param = {
         "loginInfo": {
@@ -357,23 +359,23 @@ export class DeviceComponent implements OnInit {
     }
     this.httpService.useRpPost('registerDevice', param).then(item => {
       try {
-        if (item.resultCode == "0000") {
+        if (item != null) {
+          if (item.resultCode == "0000") {
+            this.Init(null);
+            // $("#addinfo").hide();
+            // $('.modal-backdrop').remove();
+            alert('デバイス情報を登録しました');
+            if (addDeviceForm.valid === true) {
 
-          this.Init(null);
-          // $("#addinfo").hide();
-          // $('.modal-backdrop').remove();
-          alert('デバイス情報を登録しました');
-
-          if (addDeviceForm.valid === true) {
-
-            addDeviceForm.reset();
-            this.addModal.close(addDeviceForm.resetForm);
+              addDeviceForm.reset();
+              this.addModal.close(addDeviceForm.resetForm);
+            }
+          } else if (item.resultCode == "0002") {
+            alert('権限ないです、登録失敗しました');
+          } else {
+            this.setFocus(item.resultCode, registerForm)
+            alert(item.resultMsg);
           }
-        } else if (item.resultCode == "0002") {
-          alert('権限ないです、登録失敗しました');
-        } else {
-          this.setFocus(item.resultCode, registerForm)
-          alert(item.resultMsg);
         }
       } catch (e) {
         console.log(e);
@@ -390,7 +392,7 @@ export class DeviceComponent implements OnInit {
  */
   editDeviceDetail(editDeviceForm: NgForm, deviceid) {
 
-    if(this.pageModel.deviceDetail.productSelected == null ){
+    if (this.pageModel.deviceDetail.productSelected["productid"] == null) {
       return;
     }
 
@@ -631,28 +633,43 @@ export class DeviceComponent implements OnInit {
  * Delete selected contact
  */
   deleteCheckedRow() {
+
+    let index = 0;
+    const removedIndex = [];
+    const temp = [...this.pageModel.deviceList];
+
+    for (const row of temp) {
+      if (row.isSelected == true) {
+        removedIndex.push(row.deviceid);
+        index++;
+      }
+    }
+    if (index === 0) {
+      alert('デバイスを選択してください。');
+      return
+    }
     if (confirm("選択したデバイスを全削除します。よろしいですか？")) {
-      let index = 0;
-      const removedIndex = [];
-      const temp = [...this.pageModel.deviceList];
+      // let index = 0;
+      // const removedIndex = [];
+      // const temp = [...this.pageModel.deviceList];
 
-      for (const row of temp) {
-        if (row.isSelected == true) {
-          removedIndex.push(row.deviceid);
-        }
-        index++;
-      }
+      // for (const row of temp) {
+      //   if (row.isSelected == true) {
+      //     removedIndex.push(row.deviceid);
+      //   }
+      //   index++;
+      // }
 
-      for (const row of temp) {
-        for (const selectedRow of this.selected) {
-          if (row.deviceid === selectedRow.deviceid) {
-            removedIndex.push(row.deviceid);
-          }
-        }
-        index++;
-      }
+      // for (const row of temp) {
+      //   for (const selectedRow of this.selected) {
+      //     if (row.deviceid === selectedRow.deviceid) {
+      //       removedIndex.push(row.deviceid);
+      //     }
+      //   }
+      //   index++;
+      // }
 
-      this.selected = [];
+      // this.selected = [];
 
       let item: UserInfo = this.dataFatoryService.getUserInfo();
       if (item != null) {
