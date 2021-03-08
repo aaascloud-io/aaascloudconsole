@@ -220,7 +220,7 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクト<code>＊</code></h6>
-          <ng-select [items]="productSelectArray" name="product" bindLabel="productname"  [searchable]="true"
+          <ng-select [items]="productSelectArray" name="product" bindLabel="productname" [searchable]="true"
             [(ngModel)]="pageModel.deviceDetail.productSelected" #productngname="ngModel" required>
           </ng-select>
           <div *ngIf="editDeviceForm.submitted && productngname.invalid" class="invalid-feedback d-block">
@@ -249,7 +249,8 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
           <input type="text" [(ngModel)]="selectedDevice.sim_tel" name="simtel" class="phone form-control"
-            placeholder="SIMカード電話番号" (focusout)="lengthCheck(selectedDevice.sim_tel,'simtel',editForm)" maxlength="11" appNumbersOnly>
+            placeholder="SIMカード電話番号" (focusout)="lengthCheck(selectedDevice.sim_tel,'simtel',editForm)" maxlength="11"
+            appNumbersOnly>
         </div>
       </div>
     </div>
@@ -315,7 +316,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクト<code>＊</code></h6>
           <ng-select [items]="productSelectArray" name="product" bindLabel="productname" bindValue="productid"
-            [(ngModel)]="pageModel.deviceDetail.productid" required #productngname="ngModel" bindValue="productid"
+            [(ngModel)]="pageModel.deviceDetail.productid" required #productngname="ngModel" 
             [ngClass]="{ 'is-invalid': registerDeviceForm.submitted && productngname.invalid }" required>
           </ng-select>
           <div *ngIf="registerDeviceForm.submitted && productngname.invalid" class="invalid-feedback d-block">
@@ -349,8 +350,10 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>バンディング済みフラグ</h6>
-          <input type="text" class="form-control" name="bindingflag" placeholder=""
-            [(ngModel)]="pageModel.deviceDetail.bindingflag">
+          <div class="float-left">
+            <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" name="bindingflag"
+              [(ngModel)]="pageModel.deviceDetail.bindingflagChecked"></ui-switch>
+          </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカードIMSI</h6>

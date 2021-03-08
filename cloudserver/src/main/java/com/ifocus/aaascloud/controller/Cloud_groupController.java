@@ -238,7 +238,7 @@ public class Cloud_groupController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
-			 cloud_groupService.deleteGroup(model.getGroupid());
+			 cloud_groupService.deleteGroup(model.getLoginInfo(), model.getGroupid());
 
 			/* 正常系 */
 			response.setStatus(200);
@@ -266,7 +266,7 @@ public class Cloud_groupController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
-			 cloud_groupService.deleteGroups(model.getGroupidList());
+			 cloud_groupService.deleteGroups(model);
 
 			/* 正常系 */
 			response.setStatus(200);

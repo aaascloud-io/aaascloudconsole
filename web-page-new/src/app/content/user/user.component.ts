@@ -792,6 +792,7 @@ export class UserComponent implements OnInit {
       this.addModal.close(openForm.resetForm);
     }
     if (this.updateModal != null) {
+      openForm.reset();
       this.updateModal.close(openForm.resetForm);
     }
     // }

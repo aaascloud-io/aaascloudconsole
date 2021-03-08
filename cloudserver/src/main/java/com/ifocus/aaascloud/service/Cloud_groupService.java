@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
-import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
 import com.ifocus.aaascloud.entity.Cloud_groupEntity;
@@ -20,7 +19,6 @@ import com.ifocus.aaascloud.entity.Cloud_groupRepository;
 import com.ifocus.aaascloud.entity.Cloud_projectEntity;
 import com.ifocus.aaascloud.entity.Cloud_projectRepository;
 import com.ifocus.aaascloud.model.Cloud_groupModel;
-import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 
 @SpringBootApplication
@@ -185,18 +183,18 @@ public class Cloud_groupService {
 
 	/*
 	 * グループ一括削除
-	 * @param groupidList List<Integer> グループリスト
+	 * @param groupList List<Cloud_groupModel> グループリスト
 	 *
 	 */
-	public void deleteGroups(List<Integer> groupidList) throws Exception {
+	public void deleteGroups(Cloud_groupModel cloud_groupModel) throws Exception {
 
-		if (groupidList != null && !groupidList.isEmpty()) {
-			for (Integer groupid:groupidList) {
+		if (cloud_groupModel.getGroupidList() != null && !cloud_groupModel.getGroupidList().isEmpty()) {
+			for (Integer groupid:cloud_groupModel.getGroupidList()) {
 
 				////////////////////////////////////////////////////////
 				// グループ削除
 				////////////////////////////////////////////////////////
-				deleteGroup(groupid);
+				deleteGroup(cloud_groupModel.getLoginInfo(), groupid);
 
 			}
 		}
@@ -208,7 +206,11 @@ public class Cloud_groupService {
 	 * グループ削除
 	 *
 	 */
-	public void deleteGroup(Integer groupid) throws Exception {
+	public void deleteGroup(LoginInfo loginInfo, Integer groupid) throws Exception {
+
+		// デバイスのグループ情報をクリア
+		cloud_deviceService.clearGroupInfoForDelete(loginInfo, groupid);
+		// グループ削除
 		cloud_groupRepository.deleteById(groupid);
 	}
 
@@ -353,48 +355,48 @@ public class Cloud_groupService {
 
 	}
 
-	/*
-	 * 更新情報設定(プロジェクトデバイス更新用)
-	 * @param model Cloud_projectDetailModel
-	 * @param entityList Iterable<Cloud_groupEntity>
-	 *
-	 */
-	public void setUpdateInfoToEntityForProjectDevice(Cloud_projectDetailModel model, Iterable<Cloud_deviceEntity> entityList) throws Exception {
+//	/*
+//	 * 更新情報設定(プロジェクトデバイス更新用)
+//	 * @param model Cloud_projectDetailModel
+//	 * @param entityList Iterable<Cloud_groupEntity>
+//	 *
+//	 */
+//	public void setUpdateInfoToEntityForProjectDevice(Cloud_projectDetailModel model, Iterable<Cloud_deviceEntity> entityList) throws Exception {
+//
+//		/* システム日時 */
+//		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+//		entityList.forEach(entity ->{
+//			entity.setLastprojectId(entity.getProjectid());
+//			entity.setProjectid(model.getProjectid());
+//			entity.setLastgroupid(entity.getLastgroupid());
+//			entity.setGroupid(CommonConstant.GROUP_NOT_SET);
+//			entity.setU_uid(model.getLoginInfo().getLoginuserid());
+//			entity.setU_time(systemTime);
+//		});
+//
+//		return ;
+//
+//	}
 
-		/* システム日時 */
-		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
-		entityList.forEach(entity ->{
-			entity.setLastprojectId(entity.getProjectid());
-			entity.setProjectid(model.getProjectid());
-			entity.setLastgroupid(entity.getLastgroupid());
-			entity.setGroupid(CommonConstant.GROUP_NOT_SET);
-			entity.setU_uid(model.getLoginInfo().getLoginuserid());
-			entity.setU_time(systemTime);
-		});
-
-		return ;
-
-	}
-
-	/*
-	 * プロジェクト＆グループ情報クリア(プロジェクト削除用／更新準備用)
-	 * @param model Cloud_projectModel
-	 * @param entityList List<Cloud_deviceEntit>
-	 *
-	 */
-	public void clearProjectAndGroupInfoToEntity(LoginInfo loginInfo, List<Cloud_deviceEntity> entityList) throws Exception {
-
-		if (entityList != null && !entityList.isEmpty()) {
-			/* システム日時 */
-			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
-			entityList.forEach(entity ->{
-				entity.setProjectid(CommonConstant.PROJECT_NOT_SET);
-				entity.setGroupid(CommonConstant.GROUP_NOT_SET);
-				entity.setU_uid(loginInfo.getLoginuserid());
-				entity.setU_time(systemTime);
-			});
-		}
-
-	}
+//	/*
+//	 * プロジェクト＆グループ情報クリア(プロジェクト削除用／更新準備用)
+//	 * @param model Cloud_projectModel
+//	 * @param entityList List<Cloud_deviceEntit>
+//	 *
+//	 */
+//	public void clearProjectAndGroupInfoToEntity(LoginInfo loginInfo, List<Cloud_deviceEntity> entityList) throws Exception {
+//
+//		if (entityList != null && !entityList.isEmpty()) {
+//			/* システム日時 */
+//			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+//			entityList.forEach(entity ->{
+//				entity.setProjectid(CommonConstant.PROJECT_NOT_SET);
+//				entity.setGroupid(CommonConstant.GROUP_NOT_SET);
+//				entity.setU_uid(loginInfo.getLoginuserid());
+//				entity.setU_time(systemTime);
+//			});
+//		}
+//
+//	}
 
 }
