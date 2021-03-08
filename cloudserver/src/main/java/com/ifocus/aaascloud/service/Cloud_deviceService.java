@@ -773,6 +773,7 @@ public class Cloud_deviceService {
 		model.setFmlastestversion(entity.getFmlastestversion());
 		model.setVersioncomfirmtime(entity.getVersioncomfirmtime());
 		model.setCompanyid(entity.getCompanyid());
+		model.setProductid(entity.getProductid());
 
 		// 会社名
 		Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(entity.getCompanyid());
