@@ -20,6 +20,7 @@
                           <th class="col" class="thcolor">管理者</th>
                           <th class="col" class="thcolor">発生日時</th>
                           <th class="col" class="thcolor">対応ステータス</th>
+                          <th class="col" class="thcolor">対応履歴</th>
                           <th class="col" class="thcolor">操作</th>
                         </tr>
                       </thead>
@@ -30,7 +31,10 @@
                           <td>{{item.device}}</td>
                           <td>{{item.userid}}</td>
                           <td>{{item.datatime | date:'yyyy/MM/dd hh:mm:ss'}}</td>
-                          <td>{{item.statusflag}}</td>
+                          <td>{{item.statusInStr}}</td>
+                          <td>
+                            <a [routerLink]="" class="primary edit mr-1 mrless" (click)="viewErrProcessingHistoryModal(errProcessHistoryModalContent, item)"><i class="la la-pencil"></i></a>
+                          </td>
                           <td>
                             <a [routerLink]="" class="primary edit mr-1 mrless" (click)="editTableDataModal(editTableDataModalContent, item)"><i class="la la-pencil"></i></a>
                           </td>
@@ -48,52 +52,6 @@
                       </select>
                     </div>
                   </div>
-
-
-                  <!-- <ngx-datatable #table class="bootstrap row contacts-table" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
-                    [footerHeight]="50" [rowHeight]="70" [limit]="5" [selected]="selected" [selectionType]="'checkbox'"
-                    (select)='onSelectContact($event)' fxFlex="auto" [perfectScrollbar]="config">
-
-                    <ngx-datatable-column name="NO." [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.rowid}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="エラーコード" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.errcode}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="デバイスID" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.device}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="管理者" [flexGrow]="1" [minWidth]="140">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.userid}}
-                      </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column name="発生日時" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.datatime | date:'yyyy/MM/dd hh:mm:ss'}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="対応ステータス" [flexGrow]="1" [minWidth]="90" [cellClass]="'my-custom-cell'">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.statusflag}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="操作" [flexGrow]="1" [minWidth]="100">
-                      <ng-template ngx-datatable-cell-template let-row="row">
-                        <a [routerLink]="" class="primary edit mr-1 mrless"
-                          (click)="editTableDataModal(editTableDataModalContent, row)"><i class="la la-pencil"></i>
-                        </a>
-                      </ng-template>
-                    </ngx-datatable-column>
-                  </ngx-datatable> -->
-
                 </div>
               </div>
             </div>
@@ -164,3 +122,49 @@
   </form>
 </ng-template>
 
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- 処理履歴 -->
+<ng-template #errProcessHistoryModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">エラー対応履歴</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      
+      <div class="table-responsive">
+        <table class="table grid-breakpoints ">
+          <thead>
+            <tr>
+              <th scope="col" class="thcolor">No.</th>
+              <th scope="col" class="thcolor">対応時間</th>
+              <th scope="col" class="thcolor">対応前状態</th>
+              <th scope="col" class="thcolor">対応後状態</th>
+              <th scope="col" class="thcolor">メモ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let element of errResumeList;let i = index">
+              <td>{{i+1}}</td>
+              <td>{{element.i_time | date:'yyyy/MM/dd hh:mm:ss'}}</td>
+              <td>{{ element.statusflagbefore}}</td>
+              <td>{{ element.statusflagafter }}</td>
+              <td>{{ element.contents}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+      </div>
+    </div>
+  </form>
+</ng-template>

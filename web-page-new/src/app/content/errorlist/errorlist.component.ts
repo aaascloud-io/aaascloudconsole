@@ -25,6 +25,8 @@ export class ErrorlistComponent implements OnInit {
   selectedErrorItem:any;
   editModal = null;
   contactFlag: boolean;
+  // エラー処理履歴
+  errResumeList = [];
 
 
   public config: PerfectScrollbarConfigInterface = { };
@@ -69,7 +71,6 @@ export class ErrorlistComponent implements OnInit {
       "targetuserid": item.uid,
       "targetuserCompanyid": item.company,
     };
-
     this.initData();
   }
 
@@ -86,6 +87,8 @@ export class ErrorlistComponent implements OnInit {
     jsonItem.forEach(element => {
       this.rows.push(element);
     });
+    console.log("这是errorlist核心数据 rows");
+    console.log(this.rows);
     this.rows = [...this.rows];
     this.getTabledata();
   }
@@ -98,6 +101,7 @@ export class ErrorlistComponent implements OnInit {
     this.tableDisplayData.forEach(x => x.isSelected = false)
     // this.tableDisplayData = this.PaginationData();
   }
+
   /**
  * Pagination table
  */
@@ -108,6 +112,8 @@ export class ErrorlistComponent implements OnInit {
     }
   }
 
+  // エラー編集
+    // Modalを開く
   editTableDataModal(editTableDataModalContent, row) {
     // 把选中的 row 对象内的东西全部给全局变量 selectedErrorItem
     this.selectedErrorItem = Object.assign({},row);
@@ -116,6 +122,39 @@ export class ErrorlistComponent implements OnInit {
       windowClass: 'animated fadeInDown'
     });
     this.contactFlag = false;
+  }
+
+
+  // エラー処理履歴
+    // Modalを開く
+    viewErrProcessingHistoryModal(errProcessHistoryModalContent, row) {
+    // 把选中的 row 对象内的东西全部给全局变量 selectedErrorItem
+    this.selectedErrorItem = Object.assign({},row);
+    // 打开模态框
+    this.editModal = this.modal.open(errProcessHistoryModalContent, {
+      windowClass: 'animated fadeInDown',
+      size: 'lg'
+    });
+    this.contactFlag = false;
+    this.getErrResumeList(this.selectedErrorItem);
+  }
+    // エラー処理履歴データ取得
+  async getErrResumeList(selectedErrorItem){
+    var param = {
+      "loginInfo":this.pageModel.loginInfo,
+      "targetUserInfo":this.pageModel.targetUserInfo,
+      "rowid":selectedErrorItem.rowid,
+    };
+    var res = await this.httpService.post("/getErrResumeList",param);
+    let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+    this.errResumeList = [];
+    jsonItem.forEach(element => {
+      this.errResumeList.push(element);
+    });
+    this.errResumeList = [...this.errResumeList];
+    // this.getTabledata();
+    console.log("这是传入的 errResumeList ");
+    console.log(this.errResumeList);
   }
 
 

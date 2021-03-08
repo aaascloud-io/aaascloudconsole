@@ -87,19 +87,6 @@ export class ProjectComponent implements OnInit {
       addList: [],
       dataAll: [],
       productList: [],
-      
-      projectDetail: {
-        deviceCounts:'',
-        groupCounts:'',
-        productid:'',
-        projectid:'',
-        projectname:'',
-        projectsummary:'',
-        alive:'',
-        groupList:[],
-        deviceList:[],
-        userId:1,
-      },
       data:[],
       selectedData : {},
       
@@ -114,8 +101,6 @@ export class ProjectComponent implements OnInit {
         userId:'',
       },
     }
-
-      
 
     /**
      * OnInit

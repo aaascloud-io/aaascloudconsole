@@ -310,7 +310,8 @@ export class VersionComponent implements OnInit {
     console.log(this.selectedVersion);
 
     this.editModal = this.modal.open(editVersionDataModalContent, {
-      windowClass: 'animated fadeInDown'
+      windowClass: 'animated fadeInDown',
+      size: 'lg',
     });
     this.contactFlag = false;
   }
