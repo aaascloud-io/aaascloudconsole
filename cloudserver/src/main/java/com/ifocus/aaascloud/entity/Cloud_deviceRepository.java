@@ -28,7 +28,33 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	public List<Cloud_deviceEntity> searchUnderCompanyDevicesByCompanyidIn(@Param("companyids") List<Integer> companyids);
 
 	/*
-	 * 配下各社デバイス検索(デバイス管理画面用:グループ検索あり)
+	 * 配下各社デバイス検索(デバイス管理画面用:グループ条件＝あり、プロジェクト名条件＝なし)
+	 *
+	 *
+	 */
+	@Query(value = "SELECT d.* "
+			+ " FROM cloud_device d "
+			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
+			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
+			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
+			+ " WHERE d.companyId IN :companyids "
+			+ " AND (d.IMEI LIKE :imei "
+			+ "    OR d.SN LIKE :sn) "
+			+ " AND pd.productName LIKE :productname "
+			+ " AND com.industry LIKE :industry "
+			+ " AND g.groupname LIKE :groupname "
+			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
+			@Param("companyids") List<Integer> companyids,
+			@Param("imei") String imei,
+			@Param("sn") String sn,
+			@Param("productname") String productName,
+			@Param("industry") String industry,
+			@Param("groupname") String groupname
+		);
+
+	/*
+	 * 配下各社デバイス検索(デバイス管理画面用:グループ条件＝あり、プロジェクト名条件＝あり)
 	 *
 	 *
 	 */
@@ -57,7 +83,30 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 		);
 
 	/*
-	 * 配下各社デバイス検索(デバイス管理画面用:グループ検索なし)
+	 * 配下各社デバイス検索(デバイス管理画面用:グループ条件＝なし、プロジェクト名条件＝なし)
+	 *
+	 *
+	 */
+	@Query(value = "SELECT d.* "
+			+ " FROM cloud_device d "
+			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
+			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
+			+ " WHERE d.companyId IN :companyids "
+			+ " AND (d.IMEI LIKE :imei "
+			+ "    OR d.SN LIKE :sn) "
+			+ " AND pd.productName LIKE :productname "
+			+ " AND com.industry LIKE :industry "
+			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLike(
+			@Param("companyids") List<Integer> companyids,
+			@Param("imei") String imei,
+			@Param("sn") String sn,
+			@Param("productname") String productName,
+			@Param("industry") String industry
+		);
+
+	/*
+	 * 配下各社デバイス検索(デバイス管理画面用:グループ条件＝なし、プロジェクト名条件＝あり)
 	 *
 	 *
 	 */
