@@ -29,6 +29,7 @@ import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_deviceDetailModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
+import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.util.Util;
 
@@ -272,6 +273,62 @@ public class Cloud_deviceService {
 				// プロジェクト情報をクリアする
 				entity.setProjectid(null);
 				entity.setU_uid(model.getLoginInfo().getLoginuserid());
+				entity.setU_time(systemTime);
+			}
+			// デバイス更新
+			cloud_deviceRepository.saveAll(list);
+		}
+		return ;
+
+	}
+
+	/*
+	 * デバイスのプロジェクト情報をクリアする（プロジェクト削除用）
+	 * @param model Cloud_projectModel
+	 *
+	 */
+	public void clearProjectInfoForProjectDelete(Cloud_projectModel model) throws Exception {
+
+			// デバイス一覧取得
+			List<Cloud_deviceEntity> list = (List<Cloud_deviceEntity>) cloud_deviceRepository.searchDevicesByProjectid(model.getProjectid());
+			if (!list.isEmpty()) {
+				/* システム日時 */
+				Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+				for (Cloud_deviceEntity entity:list) {
+					// プロジェクト情報をクリアする
+					entity.setProjectid(null);
+					// グループ情報をクリアする
+					entity.setGroupid(null);
+					entity.setU_uid(model.getLoginInfo().getLoginuserid());
+					entity.setU_time(systemTime);
+				}
+				// デバイス更新
+				cloud_deviceRepository.saveAll(list);
+			}
+		return ;
+
+	}
+
+	/*
+	 * デバイスのグループ情報をクリアする（グループ）
+	 * @param loginInfo LoginInfo ログイン情報
+	 * @param groupid Integer 削除対象グループID
+	 *
+	 */
+	public void clearGroupInfoForDelete(LoginInfo loginInfo, Integer groupid) throws Exception {
+
+
+		// デバイス一覧取得
+		List<Cloud_deviceEntity> list = (List<Cloud_deviceEntity>) cloud_deviceRepository.searchDevicesByGroupid(groupid);
+		if (!list.isEmpty()) {
+			/* システム日時 */
+			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+			for (Cloud_deviceEntity entity:list) {
+				// プロジェクト情報をクリアする
+				entity.setProjectid(null);
+				// グループ情報をクリアする
+				entity.setGroupid(null);
+				entity.setU_uid(loginInfo.getLoginuserid());
 				entity.setU_time(systemTime);
 			}
 			// デバイス更新

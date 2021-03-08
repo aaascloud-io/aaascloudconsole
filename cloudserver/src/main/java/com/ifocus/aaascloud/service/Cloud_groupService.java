@@ -185,18 +185,18 @@ public class Cloud_groupService {
 
 	/*
 	 * グループ一括削除
-	 * @param groupidList List<Integer> グループリスト
+	 * @param groupList List<Cloud_groupModel> グループリスト
 	 *
 	 */
-	public void deleteGroups(List<Integer> groupidList) throws Exception {
+	public void deleteGroups(Cloud_groupModel cloud_groupModel) throws Exception {
 
-		if (groupidList != null && !groupidList.isEmpty()) {
-			for (Integer groupid:groupidList) {
+		if (cloud_groupModel.getGroupidList() != null && !cloud_groupModel.getGroupidList().isEmpty()) {
+			for (Integer groupid:cloud_groupModel.getGroupidList()) {
 
 				////////////////////////////////////////////////////////
 				// グループ削除
 				////////////////////////////////////////////////////////
-				deleteGroup(groupid);
+				deleteGroup(cloud_groupModel.getLoginInfo(), groupid);
 
 			}
 		}
@@ -208,7 +208,11 @@ public class Cloud_groupService {
 	 * グループ削除
 	 *
 	 */
-	public void deleteGroup(Integer groupid) throws Exception {
+	public void deleteGroup(LoginInfo loginInfo, Integer groupid) throws Exception {
+
+		// デバイスのグループ情報をクリア
+		cloud_deviceService.clearGroupInfoForDelete(loginInfo, groupid);
+		// グループ削除
 		cloud_groupRepository.deleteById(groupid);
 	}
 

@@ -348,14 +348,9 @@ public class Cloud_projectService {
 	public void deleteProject(Cloud_projectModel model) throws Exception {
 
 		////////////////////////////////////////////////////////
-		// プロジェクトデバイス更新
+		// プロジェクトデバイスクリア
 		////////////////////////////////////////////////////////
-		// 更新対象デバイス取得
-		List<Cloud_deviceEntity> deviceEntityList = cloud_deviceRepository.searchDevicesByProjectid(model.getProjectid());
-		// プロジェクト＆グループ情報クリア
-		cloud_groupService.clearProjectAndGroupInfoToEntity(model.getLoginInfo(), deviceEntityList);
-		// デバイス一括更新
-		cloud_deviceRepository.saveAll(deviceEntityList);
+		cloud_deviceService.clearProjectInfoForProjectDelete(model);
 
 		////////////////////////////////////////////////////////
 		// グループ削除
