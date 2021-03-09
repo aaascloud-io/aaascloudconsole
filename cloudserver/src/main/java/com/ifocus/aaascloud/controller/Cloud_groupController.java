@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
+import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_groupModel;
+import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_groupService;
 import com.ifocus.aaascloud.util.Util;
 
@@ -21,6 +23,8 @@ public class Cloud_groupController {
 
 	@Autowired
 	private Cloud_groupService cloud_groupService;
+	@Autowired
+	private Cloud_deviceService cloud_deviceService;
 
 	/**
 	 * グループ一覧を取得する
@@ -278,6 +282,42 @@ public class Cloud_groupController {
 			response.setResultCode(ErrorConstant.ERROR_MSG_0102);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0102 + e.getMessage());
 		}
+		return response;
+	}
+
+	/**
+	 * グループデバイス一覧を取得する
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getGroupDevices", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> getGroupDevices(@RequestBody Cloud_groupModel model) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// グループデバイス一覧を取得する
+			List<Cloud_deviceModel> list = cloud_deviceService.getGroupDevices(model.getProjectid(), model.getGroupid());
+
+			if (list != null && !list.isEmpty()) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+				response.setData(Util.getJsonString(list));
+			} else {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getGroupDevices");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
+		}
+
 		return response;
 	}
 
