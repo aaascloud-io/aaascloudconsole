@@ -3,21 +3,6 @@
     <div class="content-header row mb-1"></div>
     <div class="content-detached">
       <div class="content-body">
-        <!-- <div class="content-overlay" id='content-overlay' (click)="contentOverlay($event)"></div> -->
-        <!-- <div id="query-area">
-            <p>
-              <a class="btn btn-default" data-toggle="collapse" href="#query-collapse">
-                条件検索▼
-              </a>
-            </p>
-            <div id="query-collapse" class="collapse">
-              <div class="well">
-                <form>
-
-                </form>
-              </div>
-            </div>
-          </div> -->
         <div>
           <label for="switch">条件検索：</label>
           <input id="switch" name="switch" type="checkbox" [(ngModel)]="show" />
@@ -144,7 +129,7 @@
                       <td>
                         <input type="checkbox" [checked]="element.isSelected" (change)="checkChange($event,element)">
                       </td>
-                      <td>{{i+1}}</td>
+                      <td>{{(page-1)*pageSize+i+1}}</td>
                       <td>{{ element.sn }}</td>
                       <td>{{ element.imei}}</td>
                       <td>{{ element.sim_iccid }}</td>
@@ -326,7 +311,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>暗号化キー</h6>
           <input type="text" class="form-control" name="encryptedKey" placeholder=""
-            [(ngModel)]="pageModel.deviceDetail.encryptedKey">
+            [(ngModel)]="pageModel.deviceDetail.encryptedkey">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>暗号化通信</h6>
@@ -363,8 +348,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
           <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="simtel" class="phone form-control"
-            placeholder="フォーマット:08054080520" maxlength="11"
-            (focusout)="lengthCheck(pageModel.deviceDetail.sim_tel,'simtel',registerForm)" appNumbersOnly>
+            placeholder="フォーマット:08054080520" maxlength="11" appNumbersOnly>
         </div>
       </div>
     </div>
@@ -472,7 +456,7 @@
   </form>
 </ng-template>
 
-<ng-template #selectGroupModal let-c="close" let-d="dismiss">
+<!-- <ng-template #selectGroupModal let-c="close" let-d="dismiss">
   <form (ngSubmit)="groupSelect(groupSelectForm)" #groupSelectForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">グループ選択</h5>
@@ -490,7 +474,6 @@
     </div>
     <div class="modal-footer">
       <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(addExeclForm)">
-        <!-- <i class='ficon feather ft-x mr-25'></i> -->
         <span class="d-sm-inline d-none">取消</span>
       </button>
       <div class="form-group position-relative has-icon-left mb-0">
@@ -499,4 +482,4 @@
       </div>
     </div>
   </form>
-</ng-template>
+</ng-template> -->

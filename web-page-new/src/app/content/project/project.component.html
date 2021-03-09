@@ -236,9 +236,7 @@
 
       <div class="form-group col-12">
         <h6>プロダクト名<code>＊</code></h6>
-        <select class="form-control" id="productName" name="productName" [(ngModel)]="pageModel.addProject.productId"
-          #productname="ngModel" name="producttypeid" id="producttypeid"
-          [ngClass]="{ 'is-invalid': NewProjectForm.submitted && productname.invalid }" required>
+        <select class="form-control" id="productName" name="productName" [(ngModel)]="pageModel.addProject.productId" #productname="ngModel" name="producttypeid" id="producttypeid" [ngClass]="{ 'is-invalid': NewProjectForm.submitted && productname.invalid }" required>
           <option *ngFor="let type of productNameList; let i = index" [ngValue]="type.productid">
             {{type.productname}}
           </option>

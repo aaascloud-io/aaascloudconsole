@@ -9,7 +9,6 @@ import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
-
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
@@ -17,7 +16,6 @@ import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 })
 export class ProjectComponent implements OnInit {
 
-  
   name = 'Angular';
   selectedContact: any;
   addContact: any;
@@ -30,25 +28,26 @@ export class ProjectComponent implements OnInit {
   temp = [];
   temp2 = [];
   
-  // 需要用到的数据
-    // rows 用于存储核心数据
+  // 必用なデータ
+    // rows サーバから取ったメインデータ
   rows: any[] = [];
+    // 今メインデータ総数
   collectionSize: any;
-    // 用来表示当前的页码
+    // 今のページ
   page = 1;
-    // 默认为一页显示10条数据
+    // 1ページに展示するデータ数量
   pageSize =10;
-    // 每页表格显示数据
+    // 1ページに展示するデータ
   tableDisplayData:any;
-    // 选中的单条数据
+    // 選択されたプロダクト
   selectedProject: any;
-    // 选中的多条数据
+    // 複数選択されたプロダクト
   selected = [];
-    // 待分配的硬件列表
+    // 利用できるデバイスリスト
   usableDeviceList:any;
-    // 选中的 device 列表
+    // 複数選択されたデバイスリスト
   selectedDevice = [];
-    // 搜索框检索值
+    // 検索値
   searchValue = {
     projectname:'',
     productname:''
@@ -56,11 +55,11 @@ export class ProjectComponent implements OnInit {
   sortOn: any;
   checkOn: 1;
   show = false;
-    //已经在 project 中分配掉的 device 
+    // プロジェクトに配られたデバイスリスト
   linkedDeviceList =[];
-    // 取得所有的product types
+    // すべてのproduct typeを取る
   productTypes = [];
-    // 取得所有的 productName 列表
+    // すべてのproductName
   productNameList = [];
 
   
@@ -97,10 +96,10 @@ export class ProjectComponent implements OnInit {
       data:[],
       selectedData : {},
       
-      // 登录用数据
+      // 登録用認証データ
       loginInfo:{},
       targetUserInfo:{},
-      // 新规项目数据存储
+      // 新規項目データ
       addProject:{
         projectName:'',
         productId:'',
@@ -114,7 +113,6 @@ export class ProjectComponent implements OnInit {
      * OnInit
      */
   ngOnInit() {
-    // 获取登录时必须的认证数据，并存在 pageModal的 loginUser 和 userInfoParame 中
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     this.pageModel.loginInfo = {
         "loginuserid": item.uid,
@@ -131,7 +129,6 @@ export class ProjectComponent implements OnInit {
   }
 
   async initData(){
-    // 把服务器请求到的数据存在 rows 数组中
     this.rows = [];
     let param = {
       "loginInfo":this.pageModel.loginInfo,
@@ -143,12 +140,9 @@ export class ProjectComponent implements OnInit {
       this.rows.push(element);
     });
     this.rows = [...this.rows];
-    // 获取当前页表格内显示的值
     this.getTabledata();
     this.getProductTypes();
     this.getProductNameList();
-    console.log("这是rows的函数内部");
-    console.log(this.rows);
   }
 
 
@@ -201,7 +195,6 @@ export class ProjectComponent implements OnInit {
         NewProjectForm.reset();
         this.addModal.close(NewProjectForm.resetForm);
       }
-      console.log("这是一个测试，如果你能看到他，说明被执行了");
     }
   }
 
@@ -251,8 +244,6 @@ export class ProjectComponent implements OnInit {
       // console.log("这是 delete 的 res");
       // console.log(res);
       this.httpService.delete('deleteProject',param).then(item=>{
-        console.log("这是 delete 的 item");
-        console.log(item);
         try{
           if(item.body.resultCode == "0000"){
             this.ngOnInit();
@@ -364,7 +355,7 @@ export class ProjectComponent implements OnInit {
 
   getTabledata() {
     this.tableDisplayData = this.rows;
-    // 获取当前页码
+    // 获取总页码
     this.collectionSize = this.tableDisplayData.length;
     // 每个元素添加了 isSelected 属性
     this.tableDisplayData.forEach(x => x.isSelected = false)
@@ -407,34 +398,18 @@ export class ProjectComponent implements OnInit {
       "loginInfo":this.pageModel.loginInfo,
       "targetUserInfo":this.pageModel.targetUserInfo,
     };
-    console.log("这里是 initData 的 param 数据");
-    console.log(param);
     var res = await this.httpService.post("/getMySelectableDevices",param);
     let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
     jsonItem.forEach(element => {
       this.usableDeviceList.push(element);
     });
-    console.log("这是deviceList的data值");
-    console.log(this.usableDeviceList);
-
     this.usableDeviceList = [...this.usableDeviceList];
-    console.log("这是...运算符后的deviceList值");
-    console.log(this.usableDeviceList);
   }
 
   checkAllUsableDevice(ev){
     this.usableDeviceList.forEach(x => x.isSelected = ev.target.checked)
-    // this.selectedProject = ev.target.checked;
-    console.log("这是checkall的函数内部");
-    console.log(ev);
-    console.log(this.rows);
-    console.log(this.selectedProject);
   }
   checkChangeUsableDevice(ev, element) {
-    console.log("这是checkChangeDevice的函数内部");
-    console.log(ev);
-    console.log(element);
-    console.log(this.usableDeviceList);
     this.usableDeviceList.forEach(function (device) {
       if (device.deviceid === element['deviceid']) { device.isSelected = ev.target.checked }
     });
@@ -447,8 +422,6 @@ export class ProjectComponent implements OnInit {
       if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
         for (var item of this.usableDeviceList) {
           if (item.isSelected) {
-            console.log("这是标记为已选中的item");
-            console.log(item);
             this.selectedDevice.push(item);
           }
         }
@@ -459,11 +432,7 @@ export class ProjectComponent implements OnInit {
           "projectid": projectid,
           "deviceList": this.selectedDevice,
         };
-        console.log("这是目前的 param");
-        console.log(param);
         this.httpService.useRpPut('addProjectDevices', param).then(item => {
-          console.log("这是目前的 item");
-          console.log(item);
           try {
             if (item.resultCode == "0000") {
               this.selectedDevice=[];
@@ -527,8 +496,6 @@ export class ProjectComponent implements OnInit {
       if (confirm("選択したデバイスをプロジェクトから削除しますか")) {
         for (var item of this.linkedDeviceList) {
           if (item.isSelected) {
-            console.log("这是标记为已选中的item");
-            console.log(item);
             this.selectedDevice.push(item);
           }
         }
@@ -605,223 +572,4 @@ export class ProjectComponent implements OnInit {
     viewProjectLinkedDeviceForm.reset();
     this.editModal.close(viewProjectLinkedDeviceForm.resetForm);
   }
-
-  // デバイス検索（本地検索）、機能廃棄、API検索に交換
-    // 用法：
-        // 在搜索框中监测按键抬起  (keyup)='updateFilter($event)'
-  /**
-   * Search contact from contact table
-   *
-   * @param event     Convert value uppercase to lowercase;
-   */
-  // updateFilter(event) {
-  //   const val = event.target.value;
-  //   this.rows = [...this.temp2];
-  //   this.temp = [...this.rows];
-  //   const temp = this.rows.filter(function (d) {
-  //     return d.projectname.toLowerCase().indexOf(val) !== -1 || !val;
-  //   });
-  //   this.rows = temp;
-  //   this.table.offset = 0;
-  // }
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////
-// 以下为垃圾代码
-  /**
-   * Overlay add/remove fuction in responsive
-   *
-   * @param event     Overlay click event
-   */
-  // contentOverlay(event) {
-  //   const toggleIcon = document.getElementById('sidebar-left');
-  //   const toggle = document.getElementById('content-overlay');
-  //   if (event.currentTarget.className === 'content-overlay show') {
-  //     this._renderer.removeClass(toggleIcon, 'show');
-  //     this._renderer.removeClass(toggle, 'show');
-  //   }
-  // }
-
-  /**
-   * Set the phone number format
-   */
-  // onFormat() {
-  //   if (this.contactFlag === true) {
-  //     this.value = this.contactPhone;
-  //   } else if (this.contactFlag === false) {
-  //     this.value = this.selectedContact['phone'];
-  //   }
-
-  //   let country, city, number;
-
-  //   switch (this.value.length) {
-  //     case 6:
-  //       country = 1;
-  //       city = this.value.slice(0, 3);
-  //       number = this.value.slice(3);
-  //       break;
-
-  //     case 7:
-  //       country = this.value[0];
-  //       city = this.value.slice(1, 4);
-  //       number = this.value.slice(4);
-  //       break;
-
-  //     case 8:
-  //       country = this.value.slice(0, 3);
-  //       city = this.value.slice(3, 5);
-  //       number = this.value.slice(5);
-  //       break;
-
-  //     default:
-  //       return this.value;
-  //   }
-  //   if (country === 1) {
-  //     country = '';
-  //   }
-
-  //   number = number.slice(0, 3) + '-' + number.slice(3);
-
-  //   const no = '(' + city + ')' + '-' + number;
-  //   if (this.contactFlag === true) {
-  //     this.contactPhone = no;
-  //   } else if (this.contactFlag === false) {
-  //     this.selectedContact['phone'] = no;
-  //   }
-  // }
-
-  /**
-   * Sidebar open/close in responsive
-   *
-   * @param event     Sidebar open/close
-   */
-  // sidebar(event) {
-  //   const toggleIcon = document.getElementById('sidebar-left');
-  //   const toggle = document.getElementById('content-overlay');
-  //   if (event.currentTarget.className === 'sidebar-toggle d-block d-lg-none') {
-  //     this._renderer.addClass(toggleIcon, 'show');
-  //     this._renderer.addClass(toggle, 'show');
-  //   }
-  // }
-
-  /**
-   * New contact add to the table
-   *
-   * @param addForm     Add contact form
-   */
-  // addNewContact(addForm: NgForm) {
-  //   if (this.contactImage == null) {
-  //     this.contactImage = '../../../assets/images/portrait/small/default.png';
-  //   } else {
-  //     this.contactImage = this.contactImage;
-  //   }
-
-  //   if (this.contactactive === undefined) {
-  //     this.contactactive = 'away';
-  //   } else {
-  //     this.contactactive = this.contactactive;
-  //   }
-
-  //   if (addForm.valid === true) {
-  //     this.rows.push(
-  //       new Contact(
-  //         this.rows.length + 1,
-  //         this.contactName,
-  //         this.contactEmail,
-  //         this.contactPhone,
-  //         this.contactImage,
-  //         this.contactFavorite,
-  //         this.contactactive
-  //       )
-  //     );
-  //     this.rows = [...this.rows];
-  //     addForm.reset();
-  //     this.addModal.close(addForm.resetForm);
-  //   }
-  // }
-
-  /**
-   * favorite set when add contact
-   *
-   * @param event     favorite set on click event
-   */
-  // addFavoriteImage(event) {
-  //   if (event.target.checked === true) {
-  //     this.contactFavorite = true;
-  //   } else {
-  //     this.contactFavorite = false;
-  //   }
-  // }
-
-   /**
-   * Contact changed to favorite or non-favorite
-   *
-   * @param row     Row of the favorite contact
-   */
-  // favoriteChange(row) {
-  //   if (row.isFavorite) {
-  //     row.isFavorite = row.isFavorite ? false : true;
-  //   } else {
-  //     row.isFavorite = true;
-  //   }
-  // }
-
-    /**
-   * Update contact details
-   *
-   * @param editForm      Edit form for values check
-   * @param id      Id match to the selected row Id
-   */
-  // onUpdate(editForm: NgForm, id) {
-  //   for (const row of this.rows) {
-  //     if (row.id === id && editForm.valid === true) {
-  //       row.name = this.selectedContact['name'];
-  //       row.email = this.selectedContact['email'];
-  //       row.phone = this.selectedContact['phone'];
-  //       this.editModal.close(editForm.resetForm);
-  //       break;
-  //     }
-  //   }
-  // }
-
-  /**
-   * Add new contact
-   *
-   * @param addNewProjectModal      Id of the add contact modal;
-   */
-  // addTableDataModal(addTableDataModalContent) {
-  //   this.addModal = this.modal.open(addTableDataModalContent, {
-  //     windowClass: 'animated fadeInDown'
-  //   });
-  //   this.contactFlag = true;
-  // }
-
-   /**
-   * Selected contact
-   *
-   * @param selected      Selected contact;
-   */
-  // onSelectContact({ selected }) {
-  //   this.selected.splice(0, this.selected.length);
-  //   this.selected.push(...selected);
-  // }
-
-   /**
-   * Choose contact image
-   *
-   * @param event     Select contact image;
-   */
-  // preview(event) {
-  //   const reader = new FileReader();
-  //   reader.onload = (e: any) => {
-  //     this.contactImage = e.target.result;
-  //   };
-  //   reader.readAsDataURL(event.target.files[0]);
-  // }
-
-
-
 }

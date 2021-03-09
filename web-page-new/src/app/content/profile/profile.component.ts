@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup,Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpService } from 'src/app/_services/HttpService';
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
@@ -27,8 +27,8 @@ export class ProfileComponent implements OnInit {
     private formBuilder: FormBuilder,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
-    private alertService:AlertService,
-    private authService:AuthService,
+    private alertService: AlertService,
+    private authService: AuthService,
     private router: Router,
   ) { }
 
@@ -59,10 +59,12 @@ export class ProfileComponent implements OnInit {
   async tryRegister() {
     this.submitted = true;
     if (this.profileForm.invalid) {
+      this.submitted = false;
       return;
     }
     if (this.profileForm.value.newpassword != this.profileForm.value.confirmpassword) {
-      this.pageModel.pwdDifferent = true;
+      alert('New Password Different');
+      this.submitted = false;
       return;
     }
     try {

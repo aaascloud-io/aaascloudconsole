@@ -152,7 +152,7 @@
       <div class="row">
         <div class="form-group col-lg-6 col-md-12">
           <label>プロダクト名<code>＊</code></label>
-              <select class="form-control" id="productname" name="productname" [(ngModel)]="selectedVersion.productid" #porductname="ngModel" [ngClass]="{ 'is-invalid': versionEditForm.submitted && porductname.invalid }" required>
+              <select class="form-control" id="productname" name="productname" [(ngModel)]="selectedVersion.productid" #porductname="ngModel" [ngClass]="{ 'is-invalid': versionEditForm.submitted && porductname.invalid }" required disabled>
               <option *ngFor="let type of productNameList; let i = index" [ngValue]="type.productid">
               {{type.productname}}
               </option>
@@ -192,22 +192,7 @@
           </div>
         </div>
       </div>
-      <!-- <div class="row">
-        <div class="form-group col-lg-6 col-md-12">
-          <label>バージョン名<code>＊</code></label>
-          <input type="text" [(ngModel)]="selectedVersion.versionname" #versionName="ngModel" name="versionName"　id="versionName" class="email form-control" placeholder="selectedVersion.versionname" [ngClass]="{ 'is-invalid': versionEditForm.submitted && versionName.invalid }" required>
-          <div *ngIf="versionEditForm.submitted && versionName.invalid" class="invalid-feedback">
-            <div *ngIf="versionName.errors.required">バージョンコードを入力してください。</div>
-          </div>
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <label>DownLoadUrl<code>＊</code></label>
-          <input type="text" [(ngModel)]="selectedVersion.downloadurl" #downloadUrl="ngModel" name="downloadUrl" id="downloadUrl" class="email form-control" placeholder="selectedVersion.downloadurl" [ngClass]="{ 'is-invalid': versionEditForm.submitted && downloadUrl.invalid }" required>
-          <div *ngIf="versionEditForm.submitted && downloadUrl.invalid" class="invalid-feedback">
-            <div *ngIf="downloadUrl.errors.required">ダウンロードURLを入力してください。</div>
-          </div>
-        </div>
-      </div> -->
+
       <div class="row">
         <div class="form-group col-12">
           <label>詳細</label>

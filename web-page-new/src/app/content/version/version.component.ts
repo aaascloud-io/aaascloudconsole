@@ -31,21 +31,21 @@ export class VersionComponent implements OnInit {
   temp = [];
   temp2 = [];
   
-  // 需要用到的数据
-    // rows 用于存储核心数据
+  // 必用なデータ
+    // rows サーバから取った画面のメインデータ
   rows: any[] = [];
   collectionSize: any;
-    // 用来表示当前的页码
+    // 今のページ
   page = 1;
-    // 默认为一页显示10条数据
+    // 1ページに展示するデータ数量
   pageSize =10;
-    // 每页表格显示数据
+    // 1ページに展示するデータ
   tableDisplayData:any;
-    // 选中的单条数据
+    // 選択されたプロダクト
   selectedVersion: any;
-    // 选中的多条数据
+    // 複数選択されたプロダクト
   selected = [];
-    // 搜索框检索值
+    // 検索値
   searchValue = {
     productname:'',
     versionname:''
@@ -53,9 +53,9 @@ export class VersionComponent implements OnInit {
   sortOn: any;
   checkOn: 1;
   show = false;
-  // 新规 version 数据
+  // 新規バージョンのデータ
   addVersion = {};
-  // product name 列表
+  // すべてのproductName
   productNameList = [];
 
   
@@ -141,8 +141,6 @@ export class VersionComponent implements OnInit {
       this.rows.push(element);
     });
     this.rows = [...this.rows];
-    console.log("从api 获取的 rows 值");
-    console.log(this.rows);
     this.getTabledata();
     this.getProductNameList();
   }
@@ -195,8 +193,6 @@ export class VersionComponent implements OnInit {
         "downloadurl": this.addVersion['downloadurl'],
         "description": this.addVersion['description'],
       }
-      console.log("这是param");
-      console.log(param);
       this.httpService.useRpPost('registerVersion',param).then(item=>{
         console.log("这是item");
         console.log(item);
@@ -219,8 +215,6 @@ export class VersionComponent implements OnInit {
 
   // 検索機能
   searchProject(){
-    console.log("这是搜索条件");
-    console.log(this.searchValue);
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       var param = {
@@ -229,25 +223,13 @@ export class VersionComponent implements OnInit {
         "productname": this.searchValue.productname,
         "versionname": this.searchValue.versionname,
       };
-      console.log("这是目前的 param");
-      console.log(param);
-
       this.httpService.useRpPost('searchVersions',param).then(item=>{
-        console.log("这是 searchProject 的 item");
-        console.log(item);
         let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
-        console.log("这是jsonItem的值");
-        console.log(jsonItem);
         this.rows = [];
         jsonItem.forEach(element => {
           this.rows.push(element);
         });
-        console.log("这是rows的data值");
-        console.log(this.rows);
-
         this.rows = [...this.rows];
-        console.log("这是...运算符后的data值");
-        console.log(this.rows);
         this.getTabledata();
       });
     }
@@ -259,8 +241,6 @@ export class VersionComponent implements OnInit {
       productname:'',
       versionname:''
     };
-    console.log("清除搜索条件");
-    console.log(this.searchValue);
     this.ngOnInit();
   }
 
@@ -271,8 +251,6 @@ export class VersionComponent implements OnInit {
    */
   deleteRow(row) {
     let index = 0;
-    console.log("这是 delete 里面的 row");
-    console.log(row);
     if (confirm(row.versionname + "を削除します。よろしいですか？")){
       let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     if (routeif != null) {
@@ -282,11 +260,6 @@ export class VersionComponent implements OnInit {
         "rowid":row.rowid,
       };
     }
-      console.log("这是 delete 的 param");
-      console.log(param);
-      // var res = await this.httpService.post("/deleteProject",param);
-      // console.log("这是 delete 的 res");
-      // console.log(res);
       this.httpService.delete('deleteVersion',param).then(item=>{
         console.log("这是 delete 的 item");
         console.log(item);
@@ -303,36 +276,11 @@ export class VersionComponent implements OnInit {
     }
   }
 
-  /**
-   * Edit selected contact row.
-   *
-   * @param editTableDataModalContent     Id of the edit contact model.
-   * @param row     The row which needs to be edited.
-   */
-  // editTableDataModal(editTableDataModalContent, row) {
-  //   console.log("模态框导入row");
-  //   console.log(row);
-  //   this.pageModel.selectedData = Object.assign({},row)
-  //   console.log("模态框导入selectedData");
-  //   console.log(this.pageModel.selectedData);
-
-    
-  //   this.editModal = this.modal.open(editTableDataModalContent, {
-  //     windowClass: 'animated fadeInDown'
-  //   });
-  //   this.contactFlag = false;
-  // }
-
-
   // プロジェクト詳細と修正
     // // Modal を開く
   editVersionDataModal(editVersionDataModalContent, row) {
     // this.selectedContact = Object.assign({}, row);
     this.selectedVersion = Object.assign({},row);
-
-    console.log("这是 edit 功能内的 selectedVersion 值");
-    console.log(this.selectedVersion);
-
     this.editModal = this.modal.open(editVersionDataModalContent, {
       windowClass: 'animated fadeInDown',
       size: 'lg',
@@ -380,12 +328,7 @@ export class VersionComponent implements OnInit {
         "description":this.selectedVersion.description,
         "downloadurl":this.selectedVersion.downloadurl,
       };
-      console.log("这是目前的 param");
-      console.log(param);
-
       this.httpService.useRpPost('updateVersion', param).then(item => {
-        console.log("这是目前的 item");
-        console.log(item);
         try {
           if (item.resultCode == "0000") {
   
@@ -411,27 +354,18 @@ export class VersionComponent implements OnInit {
    * Delete selected contact
    */
   deleteCheckedRow() {
-    console.log("这是复选后的rows");
-    console.log(this.rows);
     if (confirm("選択したデーターを削除しますか")) {
       for (var row of this.rows) {
         if (row.isSelected) {
           this.selected.push(row.rowid);
         }
       }
-      console.log("这是复选后的selected");
-      console.log(this.selected);
-
       var query = {
         "loginInfo":this.pageModel.loginInfo,
         "targetUserInfo":this.pageModel.targetUserInfo,
         "rowidlist": this.selected,
       }
-      console.log("这是复选后的query");
-      console.log(query);
       this.httpService.useRpDelete('deleteVersions', query).then(item => {
-        console.log('这是item');
-        console.log(item);
         try {
           if (item.resultCode == "0000") {
             this.searchValue = {
@@ -452,17 +386,8 @@ export class VersionComponent implements OnInit {
 
   checkAll(ev){
     this.rows.forEach(x => x.isSelected = ev.target.checked)
-    // this.selectedProject = ev.target.checked;
-    console.log("这是checkall的函数内部");
-    console.log(ev);
-    console.log(this.rows);
-    console.log(this.selectedVersion);
   }
   checkChange(ev, element) {
-    console.log("这是checkChange的函数内部");
-    console.log(ev);
-    console.log(element);
-    console.log(this.rows);
     this.rows.forEach(function (version) {
       if (version.rowid === element['rowid']) { version.isSelected = ev.target.checked }
     });
@@ -470,7 +395,6 @@ export class VersionComponent implements OnInit {
   }
 
   isAllChecked() {
-
   }
 
   getTabledata() {
@@ -519,230 +443,6 @@ export class VersionComponent implements OnInit {
         this.productNameList.push(element);
         this.productNameList = [...this.productNameList];
       });
-      console.log("getProductNameList");
-      console.log(this.productNameList);
     }
   }
-
-
-
-
-  // デバイス検索（本地検索）、機能廃棄、API検索に交換
-    // 用法：
-        // 在搜索框中监测按键抬起  (keyup)='updateFilter($event)'
-  /**
-   * Search contact from contact table
-   *
-   * @param event     Convert value uppercase to lowercase;
-   */
-  // updateFilter(event) {
-  //   const val = event.target.value;
-  //   this.rows = [...this.temp2];
-  //   this.temp = [...this.rows];
-  //   const temp = this.rows.filter(function (d) {
-  //     return d.projectname.toLowerCase().indexOf(val) !== -1 || !val;
-  //   });
-  //   this.rows = temp;
-  //   this.table.offset = 0;
-  // }
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////
-// 以下为垃圾代码
-  /**
-   * Overlay add/remove fuction in responsive
-   *
-   * @param event     Overlay click event
-   */
-  // contentOverlay(event) {
-  //   const toggleIcon = document.getElementById('sidebar-left');
-  //   const toggle = document.getElementById('content-overlay');
-  //   if (event.currentTarget.className === 'content-overlay show') {
-  //     this._renderer.removeClass(toggleIcon, 'show');
-  //     this._renderer.removeClass(toggle, 'show');
-  //   }
-  // }
-
-  /**
-   * Set the phone number format
-   */
-  // onFormat() {
-  //   if (this.contactFlag === true) {
-  //     this.value = this.contactPhone;
-  //   } else if (this.contactFlag === false) {
-  //     this.value = this.selectedContact['phone'];
-  //   }
-
-  //   let country, city, number;
-
-  //   switch (this.value.length) {
-  //     case 6:
-  //       country = 1;
-  //       city = this.value.slice(0, 3);
-  //       number = this.value.slice(3);
-  //       break;
-
-  //     case 7:
-  //       country = this.value[0];
-  //       city = this.value.slice(1, 4);
-  //       number = this.value.slice(4);
-  //       break;
-
-  //     case 8:
-  //       country = this.value.slice(0, 3);
-  //       city = this.value.slice(3, 5);
-  //       number = this.value.slice(5);
-  //       break;
-
-  //     default:
-  //       return this.value;
-  //   }
-  //   if (country === 1) {
-  //     country = '';
-  //   }
-
-  //   number = number.slice(0, 3) + '-' + number.slice(3);
-
-  //   const no = '(' + city + ')' + '-' + number;
-  //   if (this.contactFlag === true) {
-  //     this.contactPhone = no;
-  //   } else if (this.contactFlag === false) {
-  //     this.selectedContact['phone'] = no;
-  //   }
-  // }
-
-  /**
-   * Sidebar open/close in responsive
-   *
-   * @param event     Sidebar open/close
-   */
-  // sidebar(event) {
-  //   const toggleIcon = document.getElementById('sidebar-left');
-  //   const toggle = document.getElementById('content-overlay');
-  //   if (event.currentTarget.className === 'sidebar-toggle d-block d-lg-none') {
-  //     this._renderer.addClass(toggleIcon, 'show');
-  //     this._renderer.addClass(toggle, 'show');
-  //   }
-  // }
-
-  /**
-   * New contact add to the table
-   *
-   * @param addForm     Add contact form
-   */
-  // addNewContact(addForm: NgForm) {
-  //   if (this.contactImage == null) {
-  //     this.contactImage = '../../../assets/images/portrait/small/default.png';
-  //   } else {
-  //     this.contactImage = this.contactImage;
-  //   }
-
-  //   if (this.contactactive === undefined) {
-  //     this.contactactive = 'away';
-  //   } else {
-  //     this.contactactive = this.contactactive;
-  //   }
-
-  //   if (addForm.valid === true) {
-  //     this.rows.push(
-  //       new Contact(
-  //         this.rows.length + 1,
-  //         this.contactName,
-  //         this.contactEmail,
-  //         this.contactPhone,
-  //         this.contactImage,
-  //         this.contactFavorite,
-  //         this.contactactive
-  //       )
-  //     );
-  //     this.rows = [...this.rows];
-  //     addForm.reset();
-  //     this.addModal.close(addForm.resetForm);
-  //   }
-  // }
-
-  /**
-   * favorite set when add contact
-   *
-   * @param event     favorite set on click event
-   */
-  // addFavoriteImage(event) {
-  //   if (event.target.checked === true) {
-  //     this.contactFavorite = true;
-  //   } else {
-  //     this.contactFavorite = false;
-  //   }
-  // }
-
-   /**
-   * Contact changed to favorite or non-favorite
-   *
-   * @param row     Row of the favorite contact
-   */
-  // favoriteChange(row) {
-  //   if (row.isFavorite) {
-  //     row.isFavorite = row.isFavorite ? false : true;
-  //   } else {
-  //     row.isFavorite = true;
-  //   }
-  // }
-
-    /**
-   * Update contact details
-   *
-   * @param editForm      Edit form for values check
-   * @param id      Id match to the selected row Id
-   */
-  // onUpdate(editForm: NgForm, id) {
-  //   for (const row of this.rows) {
-  //     if (row.id === id && editForm.valid === true) {
-  //       row.name = this.selectedContact['name'];
-  //       row.email = this.selectedContact['email'];
-  //       row.phone = this.selectedContact['phone'];
-  //       this.editModal.close(editForm.resetForm);
-  //       break;
-  //     }
-  //   }
-  // }
-
-  /**
-   * Add new contact
-   *
-   * @param addNewProjectModal      Id of the add contact modal;
-   */
-  // addTableDataModal(addTableDataModalContent) {
-  //   this.addModal = this.modal.open(addTableDataModalContent, {
-  //     windowClass: 'animated fadeInDown'
-  //   });
-  //   this.contactFlag = true;
-  // }
-
-   /**
-   * Selected contact
-   *
-   * @param selected      Selected contact;
-   */
-  // onSelectContact({ selected }) {
-  //   this.selected.splice(0, this.selected.length);
-  //   this.selected.push(...selected);
-  // }
-
-   /**
-   * Choose contact image
-   *
-   * @param event     Select contact image;
-   */
-  // preview(event) {
-  //   const reader = new FileReader();
-  //   reader.onload = (e: any) => {
-  //     this.contactImage = e.target.result;
-  //   };
-  //   reader.readAsDataURL(event.target.files[0]);
-  // }
-
-
-
 }
