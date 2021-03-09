@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.ifocus.aaascloud.model.AccessUserModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
@@ -169,9 +171,16 @@ public class Util {
 	 * @return String オブジェクトのJSON形式
 	 */
 	public static String getJsonString(Object src) {
-		Gson gson  = new Gson ();
-		return gson.toJson(src);
-
+//		Gson gson  = new Gson ();
+//		return gson.toJson(src);
+		String json="";
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			 json = objectMapper.writeValueAsString(src);
+			System.out.println(json);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return json;
 	}
-
 }

@@ -139,6 +139,10 @@ public class Cloud_errresumeService {
 		model.setContents(entity.getContents());
 		model.setI_uid(entity.getI_uid());
 		model.setI_time(entity.getI_time());
+
+		// 画面表示用項目設定
+		model.setStatusInStr();
+
 		return model;
 
 	}

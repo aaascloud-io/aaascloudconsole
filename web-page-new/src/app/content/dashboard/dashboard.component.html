@@ -136,9 +136,9 @@
                     <tbody>
                       <tr class="text-truncate" *ngFor="let item of pageModel.userList;let i = index;">
                         <td class="text-truncate">{{i+1}}</td>
-                        <td class="text-truncate">{{item.username}}  </td>
-                        <td class="text-truncate">{{item.lastName}}  </td>
-                        <td class="text-truncate">{{item.firstName}}  </td>
+                        <td class="text-truncate">{{item.username}} </td>
+                        <td class="text-truncate">{{item.lastName}} </td>
+                        <td class="text-truncate">{{item.firstName}} </td>
                       </tr>
                     </tbody>
                   </table>
@@ -149,7 +149,7 @@
         </div>
         <!-- プロダクト一覧 -->
         <div class="col-xl-7 col-lg-12" *blockUI="'newOrders'; message: 'Loading'">
-          <m-card >
+          <m-card>
             <ng-container mCardHeaderTitle>
               プロダクト一覧
             </ng-container>
@@ -169,10 +169,10 @@
                     <tbody>
                       <tr class="text-truncate" *ngFor="let item of pageModel.products;let i = index;">
                         <td class="text-truncate">{{i+1}}</td>
-                        <td class="text-truncate">{{item.productid}}  </td>
-                        <td class="text-truncate">{{item.productname}}  </td>
-                        <td class="text-truncate">{{item.model}}  </td>
-                        <td class="text-truncate">{{item.productid}}  </td>
+                        <td class="text-truncate">{{item.productid}} </td>
+                        <td class="text-truncate">{{item.productname}} </td>
+                        <td class="text-truncate">{{item.model}} </td>
+                        <td class="text-truncate">{{item.productid}} </td>
                       </tr>
                     </tbody>
                   </table>
@@ -212,11 +212,11 @@
                   <tbody>
                     <tr class="text-truncate" *ngFor="let item of pageModel.errlogList;let i = index;">
                       <td class="text-truncate">{{i+1}}</td>
-                      <td class="text-truncate">{{item.errcode}}  </td>
-                      <td class="text-truncate">{{item.device}}  </td>
-                      <td class="text-truncate">{{item.username}}  </td>
-                      <td class="text-truncate">{{item.datatime}}  </td>
-                      <td class="text-truncate">{{item.statusflag}}  </td>
+                      <td class="text-truncate">{{item.errcode}} </td>
+                      <td class="text-truncate">{{item.device}} </td>
+                      <td class="text-truncate">{{item.username}} </td>
+                      <td class="text-truncate">{{item.datatime}} </td>
+                      <td class="text-truncate">{{item.statusInStr}} </td>
                     </tr>
                   </tbody>
                 </table>

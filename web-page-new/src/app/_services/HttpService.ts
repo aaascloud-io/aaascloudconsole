@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { Logger } from 'src/app/_common/_utils/logger';
 import { tap } from 'rxjs/operators';
 import { AlertService } from '../_services/alert.service';
+import { UserInfo } from 'src/app/_common/_interface/UserInfo';
 
 @Injectable()
 export class HttpService {
@@ -218,6 +219,24 @@ export class HttpService {
             this.clearLogin();
         }
         return false;
+    }
+
+    getLoginUser(): UserInfo {
+        //todo
+        // if (this.tokenVerify()) {
+
+        // }
+
+        // token valid, check user
+        if (this.dataFatoryService.getUserInfo() != null) {
+            // user valid
+            let routeif: UserInfo = this.dataFatoryService.getUserInfo();
+            return routeif;
+        } else {
+            // this.alertService.danger("ユーザー情報取得失敗です。管理員までご確認をお願いします。");
+            this.clearLogin();
+        }
+        return null;
     }
 
     tokenVerify(): boolean {

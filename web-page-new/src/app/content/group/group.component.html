@@ -84,7 +84,10 @@
                       <td>{{i+1}}</td>
                       <td>{{ element.groupname }}</td>
                       <td>{{ element.projectname}}</td>
-                      <td>{{ element.devicecount }}</td>
+                      <td>
+                        <a class="primary edit mr-1 mrless"
+                          (click)="groupDeviceInfo(groupDeviceInfoModal, element)">{{element.devicecount}}</a>
+                      </td>
                       <td>{{ element.summary }}</td>
                       <td>
                         <a class="primary edit mr-1 mrless"
@@ -219,7 +222,7 @@
 </ng-template>
 
 <ng-template #deviceLinkAddModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="groupDeviceDataUpdate(groupDeviceForm,deviceAddSelected.groupid)" #groupDeviceForm="ngForm">
+  <form (ngSubmit)="groupDeviceDataUpdate(groupDeviceForm)" #groupDeviceForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">グループのデバイス追加</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -231,7 +234,7 @@
         <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllUsableDevice($event)">
+              <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAllUsableDevice($event)">
               </th>
               <th scope="col">no.</th>
               <th scope="col">デバイス名</th>
@@ -251,11 +254,11 @@
               <td data-label="no.">{{i + 1}}</td>
               <td data-label="groupId">{{item.devicename}}</td>
               <td data-label="deviceName">{{item.imei}}</td>
-              <td data-label="imei">{{item.productname}}</td>
-              <td data-label="imei">{{item.sim_iccid}}</td>
-              <td data-label="imei">{{item.sim_imsi}}</td>
-              <td data-label="imei">{{item.sim_tel}}</td>
-              <td data-label="imei">{{item.sn}}</td>
+              <td data-label="productname">{{item.productname}}</td>
+              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
+              <td data-label="sim_imsi">{{item.sim_imsi}}</td>
+              <td data-label="sim_tel">{{item.sim_tel}}</td>
+              <td data-label="sn">{{item.sn}}</td>
             </tr>
           </tbody>
         </table>
@@ -263,6 +266,11 @@
 
     </div>
     <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(groupDeviceForm)">
+          <span class="d-sm-inline d-none">取消</span>
+        </button>
+      </div>
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">追加</span></button>
@@ -272,7 +280,7 @@
 </ng-template>
 
 <ng-template #deviceLinkDeleteModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="groupLinkedDeviceDataUpdate(groupLinkedDeviceForm,selectedDevice.groupid)" #groupLinkedDeviceForm="ngForm">
+  <form (ngSubmit)="groupLinkedDeviceDataUpdate(groupLinkedDeviceForm)" #groupLinkedDeviceForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">連携したデバイス</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -284,7 +292,7 @@
         <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllLinkedDevice($event)">
+              <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAllGroupDevice($event)">
               </th>
               <th scope="col">no.</th>
               <th scope="col">デバイス名</th>
@@ -297,28 +305,80 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of deviceList; let i = index;">
+            <tr *ngFor="let item of groupDeviceList; let i = index;">
               <td>
-                <input type="checkbox" [checked]="item.isSelected" (change)="checkChangeLinkedDevice($event,item)">
+                <input type="checkbox" [checked]="item.isSelected" (change)="checkChangeGroupDevice($event,item)">
               </td>
               <td data-label="no.">{{i + 1}}</td>
               <td data-label="groupId">{{item.devicename}}</td>
               <td data-label="deviceName">{{item.imei}}</td>
-              <td data-label="imei">{{item.productname}}</td>
-              <td data-label="imei">{{item.sim_iccid}}</td>
-              <td data-label="imei">{{item.sim_imsi}}</td>
-              <td data-label="imei">{{item.sim_tel}}</td>
-              <td data-label="imei">{{item.sn}}</td>
+              <td data-label="productname">{{item.productname}}</td>
+              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
+              <td data-label="sim_imsi">{{item.sim_imsi}}</td>
+              <td data-label="sim_tel">{{item.sim_tel}}</td>
+              <td data-label="sn">{{item.sn}}</td>
             </tr>
           </tbody>
         </table>
       </div>
-
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
+        <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(groupLinkedDeviceForm)">
+          <span class="d-sm-inline d-none">取消</span>
+        </button>
+      </div>
+      <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="add-contact-item" class="btn btn-danger add-contact-item"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">削除</span></button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #groupDeviceInfoModal let-c="close" let-d="dismiss">
+  <form (ngSubmit)="getGroupDeviceInfo(groupDeviceInfoForm)" #groupDeviceInfoForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel1">デバイス情報</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="table-responsive form-group col-12">
+        <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
+          <thead>
+            <tr>
+              <th scope="col">no.</th>
+              <th scope="col">デバイス名</th>
+              <th scope="col">IMEI</th>
+              <th scope="col">プロダクト名</th>
+              <th scope="col">ICCID</th>
+              <th scope="col">IMSI</th>
+              <th scope="col">SIMカード電話番号</th>
+              <th scope="col">SN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of groupDeviceList; let i = index;">
+              <td data-label="no.">{{i + 1}}</td>
+              <td data-label="groupId">{{item.devicename}}</td>
+              <td data-label="deviceName">{{item.imei}}</td>
+              <td data-label="productname">{{item.productname}}</td>
+              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
+              <td data-label="sim_imsi">{{item.sim_imsi}}</td>
+              <td data-label="sim_tel">{{item.sim_tel}}</td>
+              <td data-label="sn">{{item.sn}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(groupDeviceInfoForm)">
+          <span class="d-sm-inline d-none">取消</span>
+        </button>
       </div>
     </div>
   </form>

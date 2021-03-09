@@ -9,6 +9,8 @@ import { ChartApiService } from '../../_services/chart.api';
 import { TableApiService } from '../../_services/table-api.service';
 import { Router } from '@angular/router';
 import { HttpService } from 'src/app/_services/HttpService';
+import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
+import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 
 export interface Chart {
   type: ChartType;
@@ -53,7 +55,9 @@ export class DashboardComponent implements OnInit {
   Weekgraph = false;
   Monthgraph = false;
 
-  constructor(private chartApiservice: ChartApiService,
+  constructor(
+    private dataFatoryService: DataFatoryService,
+    private chartApiservice: ChartApiService,
     private httpService: HttpService,
     private tableApiservice: TableApiService,
     private route: Router) { }
@@ -411,6 +415,13 @@ export class DashboardComponent implements OnInit {
       this.datatableData = Response;
       this.getTabledata();
       });
+
+      let item: UserInfo = this.dataFatoryService.getUserInfo();
+      if (item != null) {
+        var param = {
+            "username": item.uid
+        }
+      }
       this.httpService.usePost('/getDashboardInfo', { "username":"ifocus" }).then(item => {
         try {
     
