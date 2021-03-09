@@ -151,6 +151,69 @@ public class Cloud_deviceService {
 	}
 
 	/*
+	 * 配下ユーザのデバイス検索
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceModel> デバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getUnderUserDevicesByConditions(Cloud_deviceModel model, List<Integer> userids) throws Exception {
+
+
+		// 全社のデバイス一覧取得
+		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
+		// グループ指定なしの場合
+		if (model.getGroupForSearch() == CommonConstant.DEFAULT_MATCH_ALL ) {
+			// プロジェクト名指定なし
+			if (model.getProjectnameForSearch() == CommonConstant.DEFAULT_MATCH_ALL) {
+				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLike(
+						userids,
+						model.getImeiForSearch(),
+						model.getImeiForSearch(),
+						model.getProductnameForSearch(),
+						model.getIndustryForSearch()
+						);
+			// プロジェクト名指定あり
+			} else {
+				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
+						userids,
+						model.getImeiForSearch(),
+						model.getImeiForSearch(),
+						model.getProductnameForSearch(),
+						model.getProjectnameForSearch(),
+						model.getIndustryForSearch()
+						);
+			}
+		// グループ指定ありの場合
+		} else {
+			// プロジェクト名指定なし
+			if (model.getProjectnameForSearch() == CommonConstant.DEFAULT_MATCH_ALL) {
+
+				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
+						userids,
+						model.getImeiForSearch(),
+						model.getImeiForSearch(),
+						model.getProductnameForSearch(),
+						model.getIndustryForSearch(),
+						model.getGroupForSearch()
+						);
+			// プロジェクト名指定あり
+			} else {
+				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
+						userids,
+						model.getImeiForSearch(),
+						model.getImeiForSearch(),
+						model.getProductnameForSearch(),
+						model.getProjectnameForSearch(),
+						model.getIndustryForSearch(),
+						model.getGroupForSearch()
+						);
+			}
+		}
+		return getModelsByEntitys(list);
+
+	}
+
+	/*
 	 * 全社のデバイス一覧取得
 	 * @param model Cloud_deviceModel デバイス情報
 	 * @return List<Cloud_deviceModel> デバイス一覧
@@ -163,6 +226,20 @@ public class Cloud_deviceService {
 
 		// 全社のデバイス一覧取得
 		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchAllDevicesByCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
+		return this.getModelsByEntitys(list);
+
+	}
+
+	/*
+	 * 配下ユーザのデバイス一覧取得
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceModel> デバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getUnderUserDevices(Cloud_deviceModel model, List<Integer> userids) throws Exception {
+
+		// 配下ユーザのデバイス一覧取得
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchUnderUserDevicesByUseridIn(userids);
 		return this.getModelsByEntitys(list);
 
 	}
@@ -248,8 +325,6 @@ public class Cloud_deviceService {
 	 *
 	 */
 	public Integer registerDevices(Cloud_deviceModel model) throws Exception {
-
-		// DB存在チェック実施
 
 		// 会社IDを設定する
 		this.setCompanyIDToModel(model);
@@ -953,7 +1028,7 @@ public class Cloud_deviceService {
 	 * @return Cloud_deviceDetailModel
 	 *
 	 */
-	private Cloud_deviceEntity getEntitByDetailModel(Cloud_deviceDetailModel model,LoginInfo lmodel) throws Exception {
+	private Cloud_deviceEntity getEntitByDetailModel(Cloud_deviceDetailModel model,LoginInfo loginInfo) throws Exception {
 
 		Cloud_deviceEntity entity = new Cloud_deviceEntity();
 
@@ -977,7 +1052,14 @@ public class Cloud_deviceService {
 		entity.setSim_tel(model.getSim_tel());
 		entity.setProductid(model.getProductid());
 		entity.setCompanyid(model.getCompanyid());
-		entity.setUserid(model.getUserid());
+
+		// ユーザID設定
+		if (model.getUserid() != null) {
+			entity.setUserid(model.getUserid());
+		} else {
+			entity.setUserid(loginInfo.getLoginuserid());
+		}
+
 		entity.setEncryptedcommunications(model.getEncryptedcommunications());
 		entity.setEncryptedkey(model.getEncryptedkey());
 		entity.setConnectserverurl(model.getConnectserverurl());
@@ -988,9 +1070,9 @@ public class Cloud_deviceService {
 //		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
 //		entity.setLastgroupid(CommonConstant.GROUP_NOT_SET);
 		entity.setAlive(AliveConstant.ALIVE);
-		entity.setI_uid(lmodel.getLoginuserid());
+		entity.setI_uid(loginInfo.getLoginuserid());
 		entity.setI_time(systemTime);
-		entity.setU_uid(lmodel.getLoginuserid());
+		entity.setU_uid(loginInfo.getLoginuserid());
 		entity.setU_time(systemTime);
 
 		return entity;
@@ -1034,6 +1116,9 @@ public class Cloud_deviceService {
 //		entity.setLastprojectId(model.getLastprojectId());
 //		entity.setLastgroupid(model.getLastgroupid());
 //		entity.setAlive(model.getAlive());
+
+		// ユーザIDを設定
+		entity.setUserid(model.getUserid());
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
 
