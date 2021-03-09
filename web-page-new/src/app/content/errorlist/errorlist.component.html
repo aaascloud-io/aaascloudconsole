@@ -15,8 +15,8 @@
                       <thead>
                         <tr>
                           <th class="col" class="thcolor">No</th>
-                          <th class="col" class="thcolor">エラーコード</th>
-                          <th class="col" class="thcolor">デバイスID</th>
+                          <th class="col" class="thcolor" (click)="sortData('errcode')">エラーコード</th>
+                          <th class="col" class="thcolor" (click)="sortData('device')">デバイスID</th>
                           <th class="col" class="thcolor">管理者</th>
                           <th class="col" class="thcolor">発生日時</th>
                           <th class="col" class="thcolor">対応ステータス</th>
@@ -33,10 +33,10 @@
                           <td>{{item.datatime | date:'yyyy/MM/dd hh:mm:ss'}}</td>
                           <td>{{item.statusInStr}}</td>
                           <td>
-                            <a [routerLink]="" class="primary edit mr-1 mrless" (click)="viewErrProcessingHistoryModal(errProcessHistoryModalContent, item)"><i class="la la-pencil"></i></a>
+                            <a class="primary edit mr-1 mrless" (click)="viewErrProcessingHistoryModal(errProcessHistoryModalContent, item)"><i class="la la-calendar-check-o"></i></a>
                           </td>
                           <td>
-                            <a [routerLink]="" class="primary edit mr-1 mrless" (click)="editTableDataModal(editTableDataModalContent, item)"><i class="la la-pencil"></i></a>
+                            <a class="primary edit mr-1 mrless" (click)="processErrDataModal(processErrDataModalContent, item)"><i class="la la-pencil"></i></a>
                           </td>
                         </tr>
                       </tbody>
@@ -62,61 +62,38 @@
     
   </div>
 </div>
-<!-- ////////////////////////////////////////////////////////////////////////////-->
 
-<ng-template #editTableDataModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- エラー処理 -->
+<ng-template #processErrDataModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="processErrDataUpdate(processErrDataUpdateForm,selectedErrorItem)" #processErrDataUpdateForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">エラー詳細</h5>
+      <h5 class="modal-title" id="exampleModalLabel">エラー対応</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
-      <div class="form-group col-12">
-        <label >エラーコード</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.errcode" #editname="ngModel" name="errcode" id="errcode"
-          class="name form-control" placeholder="Name" disabled
-          [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-        <!-- <div *ngIf="editForm.submitted && editname.invalid" class="invalid-feedback">
-          <div *ngIf="editname.errors.required">Name is required</div>
-        </div> -->
-      </div>
-
 
       <div class="form-group col-12">
-        <label >デバイスID</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.device" disabled #editemail="ngModel" name="email" id="email"
-          class="email form-control" 
-          [ngClass]="{ 'is-invalid':editForm.submitted && editemail.invalid }" required email>
-      </div>
-
-
-      <div class="form-group col-12">
-        <label >管理者</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.userid" disabled #editphone="ngModel" name="phone" id="phone"
-          class="phone form-control" placeholder="Phone Number" (keyup)="onFormat()" maxlength="14">
-      </div>
-
-
-      <div class="form-group col-12">
-        <label >発生日時</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.datatime" disabled #editTime="ngModel" name="time" id="time"
-          class="phone form-control" placeholder="Phone Number" (keyup)="onFormat()" maxlength="14">
+        <label >対応メモ<code>＊</code></label>
+        <textarea id="contents" rows="4" class="form-control square" name="contents"
+          [(ngModel)]="selectedErrorItem.contents" maxlength="100"></textarea>
       </div>
 
       <div class="form-group col-12">
-        <label >対応ステータス</label>
-        <input type="text" [(ngModel)]="selectedErrorItem.statusflag" disabled #editStatus="ngModel" name="status" id="status"
-          class="phone form-control" placeholder="Phone Number" (keyup)="onFormat()" maxlength="14">
+        <label >対応状態</label>
+        <select class="form-control" id="productName" name="productName" [(ngModel)]="selectedErrorItem.doneFlag" #productname="ngModel" name="producttypeid" id="producttypeid">
+          <option value = 0>対応中</option>
+          <option value = 1>対応済み</option>
+        </select>
       </div>
-  
-
+      
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
       </div>
     </div>
   </form>
@@ -124,9 +101,9 @@
 
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- 処理履歴 -->
+<!-- エラー処理履歴 -->
 <ng-template #errProcessHistoryModalContent let-c="close" let-d="dismiss">
-  <form (ngSubmit)="onUpdate(editForm,selectedContact.id)" #editForm="ngForm">
+  <form (ngSubmit)="closeErrProcessingHistoryModal(errProcessHistory,selectedErrorItem)" #errProcessHistory="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">エラー対応履歴</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -157,13 +134,11 @@
           </tbody>
         </table>
       </div>
-  
-
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">確認</span></button>
       </div>
     </div>
   </form>
