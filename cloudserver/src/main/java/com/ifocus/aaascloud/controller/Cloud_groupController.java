@@ -16,11 +16,14 @@ import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_groupModel;
 import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_groupService;
+import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.Util;
 
 @Controller
 public class Cloud_groupController {
 
+	@Autowired
+	private Cloud_userService cloud_userService;
 	@Autowired
 	private Cloud_groupService cloud_groupService;
 	@Autowired
@@ -316,6 +319,88 @@ public class Cloud_groupController {
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
+	 * グループのデバイス追加
+	 * @param cloud_projectModel Cloud_projectModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/addGroupDevices", method = RequestMethod.PUT)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> addGroupDevices(@RequestBody Cloud_groupModel cloud_groupModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_groupModel.getLoginInfo().getLoginuserid(), cloud_groupModel.getTargetUserInfo().getTargetuserid())) {
+
+				// ロジェクトのデバイスを追加する
+				cloud_groupService.addGroupDevices(cloud_groupModel);
+
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessOK");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0101);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0101 + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
+	 * グループのデバイス削除
+	 * @param cloud_projectModel Cloud_projectModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/deleteGroupDevices", method = RequestMethod.PUT)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> deleteGroupDevices(@RequestBody Cloud_groupModel cloud_groupModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_groupModel.getLoginInfo().getLoginuserid(), cloud_groupModel.getTargetUserInfo().getTargetuserid())) {
+
+				// グループのデバイスを削除する
+				cloud_groupService.deleteGroupDevices(cloud_groupModel);
+
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessOK");
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0101);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0101 + e.getMessage());
 		}
 
 		return response;
