@@ -133,7 +133,7 @@ export class DeviceComponent implements OnInit {
       }
       this.getDropdownList(param);
 
-      this.httpService.usePost('/getCompanyDevices', param).then(item => {
+      this.httpService.usePost('/getUnderUserDevices', param).then(item => {
         try {
           if (item != null) {
             this.pageModel.deviceList = item;
@@ -170,7 +170,7 @@ export class DeviceComponent implements OnInit {
         "companyid": this.pageModel.query.companyid,
         "industry": this.pageModel.query.industry,
       }
-      this.httpService.usePost('/searchCompanyDevices', param).then(item => {
+      this.httpService.usePost('/searchUnderUserDevices', param).then(item => {
         try {
           if (item != null) {
             this.pageModel.deviceList = item;
