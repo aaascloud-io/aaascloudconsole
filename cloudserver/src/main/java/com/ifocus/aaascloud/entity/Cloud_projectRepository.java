@@ -2,8 +2,7 @@ package com.ifocus.aaascloud.entity;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -15,8 +14,7 @@ public interface  Cloud_projectRepository extends CrudRepository<Cloud_projectEn
 	 *
 	 *
 	 */
-	@Query("SELECT c FROM cloud_project c WHERE c.userid = :userid ORDER BY c.projectname")
-	@Autowired
+	@Query(value = "SELECT c FROM cloud_project c WHERE c.userid = :userid ORDER BY c.projectname", nativeQuery = true)
 	public List<Cloud_projectEntity> searchByUserid(@Param("userid") Integer userid);
 
 	/*
@@ -24,20 +22,20 @@ public interface  Cloud_projectRepository extends CrudRepository<Cloud_projectEn
 	 *
 	 *
 	 */
-	@Query("SELECT c.* FROM cloud_project c "
-			+ "WHERE c.userid = :userid "
-			+ "AND c.projectname LIKE :projectname "
-			+ "ORDER BY c.projectname")
-	@Autowired
-	public List<Cloud_projectEntity> searchByUseridAndProjectnameLike(@Param("userid") Integer userid, @Param("projectname") String projectname);
+	@Query(value = "SELECT c.* FROM cloud_project c "
+			+ " INNER JOIN cloud_product d ON c.productid = d.productid "
+			+ " WHERE c.userid = :userid "
+			+ " AND c.projectname LIKE :projectname "
+			+ " AND d.productname LIKE :productname "
+			+ " ORDER BY c.projectname", nativeQuery = true)
+	public List<Cloud_projectEntity> searchByUseridAndProjectnameLikeAndProductnameLike(@Param("userid") Integer userid, @Param("projectname") String projectname, @Param("productname") String productname);
 
 	/*
 	 * プロジェクト一覧（プロジェクト数取得用）
 	 *
 	 *
 	 */
-	@Query("SELECT c FROM cloud_project c WHERE c.userid IN :userids")
-	@Autowired
+	@Query(value = "SELECT c FROM cloud_project c WHERE c.userid IN :userids", nativeQuery = true)
 	public List<Cloud_projectEntity> searchByUseridIn(@Param("userid") List<Integer> userids);
 
 }
