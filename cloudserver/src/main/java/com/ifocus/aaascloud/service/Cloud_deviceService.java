@@ -28,6 +28,7 @@ import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_deviceDetailModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
+import com.ifocus.aaascloud.model.Cloud_groupModel;
 import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.LoginInfo;
@@ -298,6 +299,39 @@ public class Cloud_deviceService {
 			for (Cloud_deviceEntity entity:list) {
 				// プロジェクト情報をクリアする
 				entity.setProjectid(null);
+				entity.setU_uid(model.getLoginInfo().getLoginuserid());
+				entity.setU_time(systemTime);
+			}
+			// デバイス更新
+			cloud_deviceRepository.saveAll(list);
+		}
+		return ;
+
+	}
+
+	/*
+	 * デバイスのグループ情報をクリアする（グループ）
+	 * @param model Cloud_groupModel
+	 *
+	 */
+	public void clearGroupInfoForGroupOnly(Cloud_groupModel model) throws Exception {
+
+		if (model.getDeviceList() != null && !model.getDeviceList().isEmpty()) {
+			// デバイスID一覧取得
+			List<Integer> deviceidList = new ArrayList<Integer>();
+			for (Cloud_deviceModel cloud_deviceModel:model.getDeviceList()) {
+				deviceidList.add(cloud_deviceModel.getDeviceid());
+			}
+
+			// デバイス一覧取得
+			List<Cloud_deviceEntity> list = (List<Cloud_deviceEntity>) cloud_deviceRepository.findAllById(deviceidList);
+			/* システム日時 */
+			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+			for (Cloud_deviceEntity entity:list) {
+				// プロジェクト情報をクリアする
+				entity.setProjectid(null);
+				// グループ情報をクリアする
+				entity.setGroupid(null);
 				entity.setU_uid(model.getLoginInfo().getLoginuserid());
 				entity.setU_time(systemTime);
 			}
