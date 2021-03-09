@@ -14,7 +14,7 @@ public interface  Cloud_projectRepository extends CrudRepository<Cloud_projectEn
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c FROM cloud_project c WHERE c.userid = :userid ORDER BY c.projectname", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_project c WHERE c.userid = :userid ORDER BY c.projectname", nativeQuery = true)
 	public List<Cloud_projectEntity> searchByUserid(@Param("userid") Integer userid);
 
 	/*
@@ -33,9 +33,8 @@ public interface  Cloud_projectRepository extends CrudRepository<Cloud_projectEn
 	/*
 	 * プロジェクト一覧（プロジェクト数取得用）
 	 *
-	 *
 	 */
-	@Query(value = "SELECT c FROM cloud_project c WHERE c.userid IN :userids", nativeQuery = true)
-	public List<Cloud_projectEntity> searchByUseridIn(@Param("userid") List<Integer> userids);
+	@Query(value = "SELECT c.* FROM cloud_project c WHERE c.userid IN :userid", nativeQuery = true)
+	public List<Cloud_projectEntity> searchByUseridIn(@Param("userid") List<Integer> userid);
 
 }
