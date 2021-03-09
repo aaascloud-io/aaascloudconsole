@@ -39,7 +39,7 @@ public class Cloud_producttypeService {
 	 *
 	 */
 	public List<Cloud_producttypeEntity> getProductAll() throws Exception {
-		List<Cloud_producttypeEntity> returnList = new ArrayList();
+		List<Cloud_producttypeEntity> returnList = new ArrayList<Cloud_producttypeEntity>();
 		Iterable<Cloud_producttypeEntity> list = cloud_producttypeRepository.findAll();
 		list.forEach(s -> returnList.add(s));
 		return returnList;
@@ -53,7 +53,7 @@ public class Cloud_producttypeService {
 	 *
 	 */
 	public List<Cloud_producttypeModel> getModelsByEntitys(List<Cloud_producttypeEntity> entityList) throws Exception {
-		List<Cloud_producttypeModel> modelList = new ArrayList();
+		List<Cloud_producttypeModel> modelList = new ArrayList<Cloud_producttypeModel>();
 		for (Cloud_producttypeEntity entity:entityList) {
 			modelList.add(getModelByEntity(entity));
 		}

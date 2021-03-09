@@ -115,7 +115,7 @@ public class Cloud_errresumeService {
 	 *
 	 */
 	private List<Cloud_errresumeModel> getModelsByEntitys(List<Cloud_errresumeEntity> entityList) throws Exception {
-		List<Cloud_errresumeModel> modelList = new ArrayList();
+		List<Cloud_errresumeModel> modelList = new ArrayList<Cloud_errresumeModel>();
 		for (Cloud_errresumeEntity entity:entityList) {
 			modelList.add(getCloud_errresumeModel(entity));
 		}
