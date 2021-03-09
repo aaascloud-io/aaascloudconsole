@@ -40,4 +40,17 @@ public class Cloud_projectModel {
 		}
 	}
 
+	/*
+	 * productname情報検索条件取得
+	 *
+	 */
+	public String getProductnameForSearch() {
+
+		if (this.productname == null) {
+			return CommonConstant.DEFAULT_MATCH_ALL;
+		} else {
+			return "%" + this.productname.trim() + "%";
+		}
+	}
+
 }

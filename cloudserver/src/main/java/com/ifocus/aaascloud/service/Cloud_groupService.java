@@ -18,6 +18,7 @@ import com.ifocus.aaascloud.entity.Cloud_groupEntity;
 import com.ifocus.aaascloud.entity.Cloud_groupRepository;
 import com.ifocus.aaascloud.entity.Cloud_projectEntity;
 import com.ifocus.aaascloud.entity.Cloud_projectRepository;
+import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_groupModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 
@@ -214,6 +215,55 @@ public class Cloud_groupService {
 		cloud_groupRepository.deleteById(groupid);
 	}
 
+	/*
+	 * グループのデバイス追加
+	 * @param model Cloud_groupModel グループ
+	 *
+	 */
+	public void addGroupDevices(Cloud_groupModel model) throws Exception {
+
+		////////////////////////////////////////////////////////
+		// グループのデバイス更新
+		////////////////////////////////////////////////////////
+		if (model.getDeviceList() != null && !model.getDeviceList().isEmpty()) {
+
+			// 更新対象デバイス取得
+			List<Cloud_deviceEntity> entityList = (List<Cloud_deviceEntity>) cloud_deviceRepository.findAllById(getDeviceidList(model.getDeviceList()));
+			/* システム日時 */
+			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+			for (Cloud_deviceEntity entity:entityList) {
+				// プロジェクトIDを設定する
+				entity.setProjectid(model.getProjectid());
+				// グループIDを設定する
+				entity.setGroupid(model.getGroupid());
+				entity.setU_uid(model.getLoginInfo().getLoginuserid());
+				entity.setU_time(systemTime);
+			}
+			// デバイス一括更新
+			cloud_deviceRepository.saveAll(entityList);
+		}
+
+		return ;
+
+	}
+
+	/*
+	 * グループのデバイス削除
+	 * @param model Cloud_groupModel グループ
+	 *
+	 */
+	public void deleteGroupDevices(Cloud_groupModel model) throws Exception {
+
+		////////////////////////////////////////////////////////
+		// グループのデバイス削除
+		////////////////////////////////////////////////////////
+
+		cloud_deviceService.clearGroupInfoForGroupOnly(model);
+
+		return ;
+
+	}
+
 
 	/*
 	 * EntityからModel取得
@@ -352,6 +402,27 @@ public class Cloud_groupService {
 		});
 
 		return ;
+
+	}
+
+	/*
+	 * デバイスIDリスト取得
+	 *
+	 * @param deviceList List<Cloud_deviceModel>
+	 * @return List<Integer>
+	 *
+	 */
+	private List<Integer> getDeviceidList(List<Cloud_deviceModel> deviceList) throws Exception {
+
+		List<Integer> deviceidList = new ArrayList<Integer>();
+		if (deviceList != null && deviceList.size() > 0) {
+			deviceList.forEach(
+					s ->{
+						deviceidList.add(s.getDeviceid());
+					}
+			);
+		}
+		return deviceidList;
 
 	}
 
