@@ -272,7 +272,7 @@ public class Cloud_userController {
 
 		if (null != loginuserid && null != targetuserid) {
 
-			List<Cloud_userModel> list = new ArrayList();
+			List<Cloud_userModel> list = new ArrayList<Cloud_userModel>();
 			if (loginuserid.equals(targetuserid)) {
 				try {
 					list = cloud_userService.getSonUsers(targetuserid);
@@ -305,7 +305,7 @@ public class Cloud_userController {
 			}
 
 			String responseData = new String();
-			List<JSONObject> returnList = new ArrayList();
+			List<JSONObject> returnList = new ArrayList<JSONObject>();
 			for (Cloud_userModel model : list) {
 				if (returnList.isEmpty()) {
 					responseData = responseData + "[";
