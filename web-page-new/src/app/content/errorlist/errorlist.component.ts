@@ -27,6 +27,7 @@ export class ErrorlistComponent implements OnInit {
   contactFlag: boolean;
   // エラー処理履歴
   errResumeList = [];
+  sortOn: any;
 
 
   public config: PerfectScrollbarConfigInterface = { };
@@ -76,6 +77,7 @@ export class ErrorlistComponent implements OnInit {
 
   // errorlist データ取得
   async initData(){
+    this.rows = [];
     var param = {
       "loginInfo":this.pageModel.loginInfo,
       "targetUserInfo":this.pageModel.targetUserInfo,
@@ -87,10 +89,10 @@ export class ErrorlistComponent implements OnInit {
     jsonItem.forEach(element => {
       this.rows.push(element);
     });
-    console.log("这是errorlist核心数据 rows");
-    console.log(this.rows);
     this.rows = [...this.rows];
     this.getTabledata();
+    console.log("rows 数据");
+    console.log(this.rows);
   }
 
   getTabledata() {
@@ -112,22 +114,9 @@ export class ErrorlistComponent implements OnInit {
     }
   }
 
-  // エラー編集
-    // Modalを開く
-  editTableDataModal(editTableDataModalContent, row) {
-    // 把选中的 row 对象内的东西全部给全局变量 selectedErrorItem
-    this.selectedErrorItem = Object.assign({},row);
-    // 打开模态框
-    this.editModal = this.modal.open(editTableDataModalContent, {
-      windowClass: 'animated fadeInDown'
-    });
-    this.contactFlag = false;
-  }
-
-
   // エラー処理履歴
     // Modalを開く
-    viewErrProcessingHistoryModal(errProcessHistoryModalContent, row) {
+  viewErrProcessingHistoryModal(errProcessHistoryModalContent, row) {
     // 把选中的 row 对象内的东西全部给全局变量 selectedErrorItem
     this.selectedErrorItem = Object.assign({},row);
     // 打开模态框
@@ -152,187 +141,69 @@ export class ErrorlistComponent implements OnInit {
       this.errResumeList.push(element);
     });
     this.errResumeList = [...this.errResumeList];
-    // this.getTabledata();
-    console.log("这是传入的 errResumeList ");
-    console.log(this.errResumeList);
+  } 
+    // Modal を閉める
+  closeErrProcessingHistoryModal(errProcessHistory, row){
+    errProcessHistory.reset();
+    this.editModal.close(errProcessHistory.resetForm);
   }
 
+  // エラー編集
+    // Modalを開く
+  processErrDataModal(processErrDataModalContent, row) {
+    // 把选中的 row 对象内的东西全部给全局变量 selectedErrorItem
+    this.selectedErrorItem = Object.assign({},row);
+    this.selectedErrorItem["contents"] = "";
+    this.selectedErrorItem["errlogid"] = this.selectedErrorItem["rowid"];
+    console.log("这是selectedErrorItem");
+    console.log(this.selectedErrorItem);
+    // 打开模态框
+    this.editModal = this.modal.open(processErrDataModalContent, {
+      windowClass: 'animated fadeInDown'
+    });
+    this.contactFlag = false;
+  }
 
+  processErrDataUpdate(processErrDataUpdateForm,projectid){
+    let routeif: UserInfo = this.dataFatoryService.getUserInfo();
+    if (routeif != null) {
+      if (confirm("対応情報を提出しますか")) {
+        var param = {
+          "loginInfo":this.pageModel.loginInfo,
+          "targetUserInfo":this.pageModel.targetUserInfo,
+          
+          "errlogid": this.selectedErrorItem.errlogid,
+          "contents":this.selectedErrorItem.contents,
+          "doneFlag": this.selectedErrorItem.doneFlag,
+        };
+        this.httpService.useRpPost('registerErrresume', param).then(item => {
+          try {
+            if (item.resultCode == "0000") {
+              this.selectedErrorItem={};
+              alert('対応情報を提出しました');
+              if (processErrDataUpdateForm.valid === true) {
+                processErrDataUpdateForm.reset();
+                this.editModal.close(processErrDataUpdateForm.resetForm);
+              }
+            }
+            this.ngOnInit();
+          } catch (e) {
+            console.log(e);
+            this.ngOnInit();
+          };
+        });
+      }
+    }
+    this.ngOnInit();
+  }
 
-
-  /**
-   * Add new contact
-   *
-   * @param addTableDataModalContent      Id of the add contact modal;
-   */
-  // addTableDataModal(addTableDataModalContent) {
-  //   this.addModal = this.modal.open(addTableDataModalContent, {
-  //     windowClass: 'animated fadeInDown'
-  //   });
-  //   this.contactFlag = true;
-  // }
-
-  /**
-   * Edit selected contact row.
-   *
-   * @param editTableDataModalContent     Id of the edit contact model.
-   * @param row     The row which needs to be edited.
-   */
-  // editTableDataModal(editTableDataModalContent, row) {
-  //   console.log("模态框导入row");
-  //   console.log(row);
-  //   this.pageModel.selectedData = Object.assign({},row)
-  //   console.log("模态框导入selectedData");
-  //   console.log(this.pageModel.selectedData);
-  //   this.editModal = this.modal.open(editTableDataModalContent, {
-  //     windowClass: 'animated fadeInDown'
-  //   });
-  //   this.contactFlag = false;
-  // }
-
-  /**
-   * Selected contact
-   *
-   * @param selected      Selected contact;
-   */
-  // onSelectContact({ selected }) {
-  //   this.selected.splice(0, this.selected.length);
-  //   this.selected.push(...selected);
-  // }
-
-  /**
-   * Search contact from contact table
-   *
-   * @param event     Convert value uppercase to lowercase;
-   */
-  // updateFilter(event) {
-  //   const val = event.target.value.toLowerCase();
-  //   this.rows = [...this.temp2];
-  //   this.temp = [...this.rows];
-  //   const temp = this.rows.filter(function (d) {
-  //     return d.name.toLowerCase().indexOf(val) !== -1 || !val;
-  //   });
-  //   this.rows = temp;
-  //   this.table.offset = 0;
-  // }
-
-  /**
-   * Delete contact row
-   * @param row     Selected row for delete contact
-   */
-  // deleteRow(row) {
-  //   let index = 0;
-  //   const temp = [...this.rows];
-  //   for (const tempRow of temp) {
-  //     if (tempRow.id === row.id) {
-  //       temp.splice(index, 1);
-  //       break;
-  //     }
-  //     index++;
-  //   }
-  //   this.rows = temp;
-  // }
-
-  /**
-   * Update contact details
-   *
-   * @param editForm      Edit form for values check
-   * @param id      Id match to the selected row Id
-   */
-  // onUpdate(editForm: NgForm, id) {
-  //   for (const row of this.rows) {
-  //     if (row.id === id && editForm.valid === true) {
-  //       row.name = this.selectedContact['name'];
-  //       row.email = this.selectedContact['email'];
-  //       row.phone = this.selectedContact['phone'];
-  //       this.editModal.close(editForm.resetForm);
-  //       break;
-  //     }
-  //   }
-  // }
-
-  /**
-   * Delete selected contact
-   */
-  // deleteCheckedRow() {
-  //   let index = 0;
-  //   const removedIndex = [];
-  //   const temp = [...this.rows];
-  //   for (const row of temp) {
-  //     for (const selectedRow of this.selected) {
-  //       if (row.id === selectedRow.id) {
-  //         removedIndex.push(index);
-  //       }
-  //     }
-  //     index++;
-  //   }
-  //   for (let i = removedIndex.length - 1; i >= 0; i--) {
-  //     temp.splice(removedIndex[i], 1);
-  //   }
-  //   this.rows = temp;
-  //   this.selected = [];
-  // }
-
-  /**
-   * New contact add to the table
-   *
-   * @param addForm     Add contact form
-   */
-  // addNewContact(addForm: NgForm) {
-  //   if (this.contactImage == null) {
-  //     this.contactImage = '../../../assets/images/portrait/small/default.png';
-  //   } else {
-  //     this.contactImage = this.contactImage;
-  //   }
-
-  //   if (this.contactactive === undefined) {
-  //     this.contactactive = 'away';
-  //   } else {
-  //     this.contactactive = this.contactactive;
-  //   }
-  //   if (addForm.valid === true) {
-  //     this.rows.push(
-  //       new Contact(
-  //         this.rows.length + 1,
-  //         this.contactName,
-  //         this.contactEmail,
-  //         this.contactPhone,
-  //         this.contactImage,
-  //         this.contactFavorite,
-  //         this.contactactive
-  //       )
-  //     );
-  //     this.rows = [...this.rows];
-  //     addForm.reset();
-  //     this.addModal.close(addForm.resetForm);
-  //   }
-  // }
-
-  /**
-   * Sidebar open/close in responsive
-   *
-   * @param event     Sidebar open/close
-   */
-  // sidebar(event) {
-  //   const toggleIcon = document.getElementById('sidebar-left');
-  //   const toggle = document.getElementById('content-overlay');
-  //   if (event.currentTarget.className === 'sidebar-toggle d-block d-lg-none') {
-  //     this._renderer.addClass(toggleIcon, 'show');
-  //     this._renderer.addClass(toggle, 'show');
-  //   }
-  // }
-
-  /**
-   * Overlay add/remove fuction in responsive
-   *
-   * @param event     Overlay click event
-   */
-  // contentOverlay(event) {
-  //   const toggleIcon = document.getElementById('sidebar-left');
-  //   const toggle = document.getElementById('content-overlay');
-  //   if (event.currentTarget.className === 'content-overlay show') {
-  //     this._renderer.removeClass(toggleIcon, 'show');
-  //     this._renderer.removeClass(toggle, 'show');
-  //   }
-  // }
+  sortData(nm) {
+    if (this.sortOn == 1) {
+      this.rows.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.sortOn = 2;
+    } else {
+      this.rows.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.sortOn = 1;
+    }
+  }
 }
