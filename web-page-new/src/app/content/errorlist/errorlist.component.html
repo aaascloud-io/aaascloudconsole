@@ -88,7 +88,7 @@
           <option value = 1>対応済み</option>
         </select>
       </div>
-      
+
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
@@ -127,8 +127,8 @@
             <tr *ngFor="let element of errResumeList;let i = index">
               <td>{{i+1}}</td>
               <td>{{element.i_time | date:'yyyy/MM/dd hh:mm:ss'}}</td>
-              <td>{{ element.statusflagbefore}}</td>
-              <td>{{ element.statusflagafter }}</td>
+              <td>{{ element.statusflagbeforeInStr}}</td>
+              <td>{{ element.statusflagafterInStr }}</td>
               <td>{{ element.contents}}</td>
             </tr>
           </tbody>
