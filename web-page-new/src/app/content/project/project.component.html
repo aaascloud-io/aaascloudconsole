@@ -19,11 +19,15 @@
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">プロジェクト名</label>
-                        <!-- <input type='text'
-                          style='padding:8px;margin:15px auto;width:200px;height: calc(1.875rem + 2px);border-radius: 0.21rem;border: 1px solid #babfc7;'
-                          [(ngModel)]="searchValue" /> -->
                         <input type="text" class="form-control" id="" placeholder=""
-                          [(ngModel)]="searchValue">
+                          [(ngModel)]="searchValue.projectname">
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">プロダクト名</label>
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="searchValue.productname">
                       </div>
                     </div>
                     <div class="col-md-12">
@@ -104,7 +108,7 @@
                               (change)="checkChange($event,element)">
                           </td>
                           <td>{{i+1}}</td>
-                          <td>{{ element.projectname}}</td>
+                          <td>{{ element.projectname }}</td>
                           <td>{{ element.productname }}</td>
                           <td>{{ element.projectsummary }}</td>
                           <td>{{ element.groupCounts}}</td>
@@ -244,7 +248,7 @@
         </div>
       </div>
       <div class="form-group col-12">
-        <h6>プロジェクト詳細<code>＊</code></h6>
+        <h6>プロジェクト詳細</h6>
         <!-- <input type="text" [(ngModel)]="pageModel.addProject.projectSummary" name="projectSummary" class="form-control"
           placeholder="" required> -->
         <textarea id="projectSummary" rows="4" class="form-control square" name="projectSummary"
@@ -254,7 +258,7 @@
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
-        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>キャンセル</button>
+        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
       </div>
