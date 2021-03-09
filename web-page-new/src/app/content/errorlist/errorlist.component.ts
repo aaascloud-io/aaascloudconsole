@@ -141,6 +141,8 @@ export class ErrorlistComponent implements OnInit {
       this.errResumeList.push(element);
     });
     this.errResumeList = [...this.errResumeList];
+    console.log("这是取到的 errResumeList 的值");
+    console.log(this.errResumeList);
   } 
     // Modal を閉める
   closeErrProcessingHistoryModal(errProcessHistory, row){
