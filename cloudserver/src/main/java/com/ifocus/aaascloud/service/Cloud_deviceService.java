@@ -1048,13 +1048,18 @@ public class Cloud_deviceService {
 		entity.setSim_imsi(model.getSim_imsi());
 		entity.setSim_tel(model.getSim_tel());
 		entity.setProductid(model.getProductid());
-		entity.setCompanyid(model.getCompanyid());
 
 		// ユーザID設定
 		if (model.getUserid() != null) {
 			entity.setUserid(model.getUserid());
 		} else {
 			entity.setUserid(loginInfo.getLoginuserid());
+		}
+
+		// 会社ID設定
+		Optional<Cloud_userEntity> user = cloud_userRepository.findById(entity.getUserid());
+		if (user.isPresent()) {
+			entity.setCompanyid(user.get().getCompanyid());
 		}
 
 		entity.setEncryptedcommunications(model.getEncryptedcommunications());
