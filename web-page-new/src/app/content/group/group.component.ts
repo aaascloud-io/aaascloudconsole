@@ -496,12 +496,36 @@ export class GroupComponent implements OnInit {
 
   sortData(nm) {
     if (this.sortOn == 1) {
-      this.groupList.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.groupList.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.groupList.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.groupList.sort(this.alphabetically(true, nm));
       this.sortOn = 1;
     }
+  }
+
+  alphabetically(ascending, nm) {
+    return function (a, b) {
+      // equal items sort equally
+      if (a[nm] === b[nm]) {
+        return 0;
+      }
+      // nulls sort after anything else
+      else if (a[nm] === null) {
+        return 1;
+      }
+      else if (b[nm] === null) {
+        return -1;
+      }
+      // otherwise, if we're ascending, lowest sorts first
+      else if (ascending) {
+        return a[nm] < b[nm] ? -1 : 1;
+      }
+      // if descending, highest sorts first
+      else {
+        return a[nm] < b[nm] ? 1 : -1;
+      }
+    };
   }
 
   checkAll(ev) {
@@ -522,7 +546,7 @@ export class GroupComponent implements OnInit {
     this.groupList = this.rows;
     this.collectionSize = this.groupList.length;
     this.groupList.forEach(x => x.isSelected = false)
-    this.groupList();
+    this.PaginationData;
   }
 
   /**
@@ -767,7 +791,7 @@ export class GroupComponent implements OnInit {
 
   /*=======================グループのデバイス詳細↓================================*/
   /**
- * デバイス削除のダイアログを開ける
+ * デバイス詳細のダイアログを開ける
  * @param deviceLinkDeleteModalContent 
  * @param row 
  */
