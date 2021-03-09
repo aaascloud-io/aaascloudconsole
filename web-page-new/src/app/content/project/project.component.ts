@@ -49,7 +49,10 @@ export class ProjectComponent implements OnInit {
     // 选中的 device 列表
   selectedDevice = [];
     // 搜索框检索值
-  searchValue:any;
+  searchValue = {
+    projectname:'',
+    productname:''
+  };
   sortOn: any;
   checkOn: 1;
   show = false;
@@ -209,7 +212,8 @@ export class ProjectComponent implements OnInit {
       var param = {
         "loginInfo":this.pageModel.loginInfo,
         "targetUserInfo":this.pageModel.targetUserInfo,
-        "projectname": this.searchValue,
+        "projectname": this.searchValue.projectname,
+        "productname":this.searchValue.productname,
       };
       this.httpService.useRpPost('searchProjects',param).then(item=>{
         let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
@@ -225,7 +229,10 @@ export class ProjectComponent implements OnInit {
 
   // 検索条件クリア
   clearSearchProject(){
-    this.searchValue = "";
+    this.searchValue = {
+      projectname:'',
+      productname:''
+    };
     this.ngOnInit();
   }
 
@@ -324,7 +331,10 @@ export class ProjectComponent implements OnInit {
       this.httpService.useRpDelete('deleteProjects', query).then(item => {
         try {
           if (item.resultCode == "0000") {
-            this.searchValue = "";
+            this.searchValue = {
+              projectname:'',
+              productname:''
+            };;
             this.selected=[];
             this.ngOnInit();
             alert('選択したプロジェクトを削除しました');

@@ -87,11 +87,9 @@
                           <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAll($event)">
                           </th>
                           <th scope="col" class="thcolor">No.</th>
-                          <th scope="col" class="thcolor" (click)="sortData('')">RowID</th>
-                          <th scope="col" class="thcolor" (click)="sortData('')">プロダクトID</th>
-                          <th scope="col" class="thcolor" (click)="sortData('')">プロダクト名</th>
-                          <th scope="col" class="thcolor" (click)="sortData('')">バージョンコード</th>
-                          <th scope="col" class="thcolor">バージョン名</th>
+                          <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト名</th>
+                          <th scope="col" class="thcolor" (click)="sortData('versioncode')">バージョンコード</th>
+                          <th scope="col" class="thcolor" (click)="sortData('versionname')">バージョン名</th>
                           <th scope="col" class="thcolor">詳細</th>
                           <th scope="col" class="thcolor">DownLoad</th>
                           <th scope="col" class="thcolor">操作</th>
@@ -104,8 +102,6 @@
                               (change)="checkChange($event,element)">
                           </td>
                           <td>{{i+1}}</td>
-                          <td>{{ element.rowid }}</td>
-                          <td>{{ element.productid}}</td>
                           <td>{{ element.productname }}</td>
                           <td>{{ element.versioncode }}</td>
                           <td>{{ element.versionname }}</td>
@@ -133,7 +129,6 @@
                       </select>
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -144,7 +139,7 @@
   </div>
 </div>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- プロジェクト詳細と修正 -->
+<!-- バージョン詳細と修正 -->
 <ng-template #editVersionDataModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="versionDataUpdate(versionEditForm,selectedVersion.rowid)" #versionEditForm="ngForm">
     <div class="modal-header">
@@ -156,46 +151,66 @@
     <div class="modal-body">
       <div class="row">
         <div class="form-group col-lg-6 col-md-12">
-          <label>RowID<code>＊</code></label>
-          <input type="text" [(ngModel)]="selectedVersion.rowid" #editname="ngModel" name="rowid"
-            id="rowid" class="name form-control" placeholder="selectedVersion.rowid" required disabled>
+          <label>プロダクト名<code>＊</code></label>
+              <select class="form-control" id="productname" name="productname" [(ngModel)]="selectedVersion.productid" #porductname="ngModel" [ngClass]="{ 'is-invalid': versionEditForm.submitted && porductname.invalid }" required>
+              <option *ngFor="let type of productNameList; let i = index" [ngValue]="type.productid">
+              {{type.productname}}
+              </option>
+          </select>
+          <div *ngIf="versionEditForm.submitted && porductname.invalid" class="invalid-feedback">
+            <div *ngIf="porductname.errors.required">プロダクト名を選択してください。</div>
+          </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
-          <label>プロダクトID<code>＊</code></label>
-          <input type="text" [(ngModel)]="selectedVersion.productid" #editname="ngModel" name="productid"
-            id="productid" class="name form-control" placeholder="selectedVersion.productid" required>
+          <label>バージョンコード<code>＊</code></label>
+          <input type="text" [(ngModel)]="selectedVersion.versioncode" #versionCode="ngModel" name="versionCode"
+          id="versionCode" class="form-control" [ngClass]="{ 'is-invalid': versionEditForm.submitted && versionCode.invalid }" required>
+          <div *ngIf="versionEditForm.submitted && versionCode.invalid" class="invalid-feedback">
+              <div *ngIf="versionCode.errors.required">バージョンコードを入力してください。</div>
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="form-group col-lg-6 col-md-12">
-          <label>プロダクト名<code>＊</code></label>
-          <input type="text" [(ngModel)]="selectedVersion.productname" #editemail="ngModel" name="productname"
-            id="productname" class="email form-control" placeholder="selectedVersion.productname" required>
+          <h6>バージョン名<code>＊</code></h6>
+          <input type="text" [(ngModel)]="selectedVersion.versionname" #versionName="ngModel" name="versionName"
+          id="versionName" class="form-control"
+            placeholder="" [ngClass]="{ 'is-invalid': versionEditForm.submitted && versionName.invalid }" required>
+          <div *ngIf="versionEditForm.submitted && versionName.invalid" class="invalid-feedback">
+              <div *ngIf="versionName.errors.required">バージョン名を入力してください。</div>
+          </div>
         </div>
+  
         <div class="form-group col-lg-6 col-md-12">
-          <label>バージョンコード<code>＊</code></label>
-          <input type="text" [(ngModel)]="selectedVersion.versioncode" #editemail="ngModel" name="versioncode"
-            id="versioncode" class="email form-control" placeholder="selectedVersion.versioncode" required>
+          <h6>downloadUrl<code>＊</code></h6>
+          <input type="text" [(ngModel)]="selectedVersion.downloadurl" #downloadUrl="ngModel" name="downloadUrl"
+          id="downloadUrl" class="form-control"
+            placeholder="" [ngClass]="{ 'is-invalid': versionEditForm.submitted && downloadUrl.invalid }" required>
+          <div *ngIf="versionEditForm.submitted && downloadUrl.invalid" class="invalid-feedback">
+              <div *ngIf="downloadUrl.errors.required">ダウンロードURLを入力してください。</div>
+          </div>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="form-group col-lg-6 col-md-12">
           <label>バージョン名<code>＊</code></label>
-          <input type="text" [(ngModel)]="selectedVersion.versionname" #editemail="ngModel" name="versionname"
-            id="versionname" class="email form-control" placeholder="selectedVersion.versionname" required>
+          <input type="text" [(ngModel)]="selectedVersion.versionname" #versionName="ngModel" name="versionName"　id="versionName" class="email form-control" placeholder="selectedVersion.versionname" [ngClass]="{ 'is-invalid': versionEditForm.submitted && versionName.invalid }" required>
+          <div *ngIf="versionEditForm.submitted && versionName.invalid" class="invalid-feedback">
+            <div *ngIf="versionName.errors.required">バージョンコードを入力してください。</div>
+          </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <label>DownLoadUrl<code>＊</code></label>
-          <input type="text" [(ngModel)]="selectedVersion.downloadurl" #editemail="ngModel" name="downloadurl"
-            id="downloadurl" class="email form-control" placeholder="selectedVersion.downloadurl" required>
+          <input type="text" [(ngModel)]="selectedVersion.downloadurl" #downloadUrl="ngModel" name="downloadUrl" id="downloadUrl" class="email form-control" placeholder="selectedVersion.downloadurl" [ngClass]="{ 'is-invalid': versionEditForm.submitted && downloadUrl.invalid }" required>
+          <div *ngIf="versionEditForm.submitted && downloadUrl.invalid" class="invalid-feedback">
+            <div *ngIf="downloadUrl.errors.required">ダウンロードURLを入力してください。</div>
+          </div>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="form-group col-12">
           <label>詳細</label>
-          <!-- <input type="text" [(ngModel)]="selectedVersion.description" #editemail="ngModel" name="description"
-            id="description" class="email form-control" placeholder="selectedVersion.description" required> -->
           <textarea id="description" rows="3" class="form-control square" name="description"
               [(ngModel)]="selectedVersion.description" placeholder="詳細" maxlength="100"></textarea>
         </div>
@@ -205,9 +220,9 @@
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
-        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>キャンセル</button>
+        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
       </div>
     </div>
   </form>
@@ -215,7 +230,7 @@
 
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- プロジェクト新規追加 -->
+<!-- バージョン新規追加 -->
 <ng-template #addNewVersion let-c="close" let-d="dismiss">
   <form (ngSubmit)="addNewVersionForm(NewVersionForm)" #NewVersionForm="ngForm">
     <div class="modal-header">
@@ -225,38 +240,66 @@
       </button>
     </div>
     <div class="modal-body">
-
-      <div class="form-group col-12">
-        <h6>プロダクトID <code>＊</code></h6>
-        <input type="text" [(ngModel)]="addVersion.productid" name="productid" class="form-control"
-          placeholder="">
+      <div class="row">
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>プロダクト名 <code>＊</code></h6>
+          <select class="form-control" id="productName" name="productName" [(ngModel)]="addVersion.productid"
+            #porductname="ngModel" name="porductname" id="porductname"
+            [ngClass]="{ 'is-invalid': NewVersionForm.submitted && porductname.invalid }" required>
+            <option *ngFor="let type of productNameList; let i = index" [ngValue]="type.productid">
+              {{type.productname}}
+            </option>
+          </select>
+          <div *ngIf="NewVersionForm.submitted && porductname.invalid" class="invalid-feedback">
+            <div *ngIf="porductname.errors.required">プロダクト名を選択してください。</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>バージョンコード<code>＊</code></h6>
+          <input type="text" [(ngModel)]="addVersion.versioncode" #versionCode="ngModel" name="versionCode"
+          id="versionCode" class="form-control"
+            placeholder="" [ngClass]="{ 'is-invalid': NewVersionForm.submitted && versionCode.invalid }" required>
+          <div *ngIf="NewVersionForm.submitted && versionCode.invalid" class="invalid-feedback">
+              <div *ngIf="versionCode.errors.required">バージョンコードを入力してください。</div>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group col-12">
-        <h6>バージョンコード<code>＊</code></h6>
-        <input type="text" [(ngModel)]="addVersion.versioncode" name="versioncode" class="form-control"
-          placeholder="">
-      </div>
-      <div class="form-group col-12">
-        <h6>バージョン名<code>＊</code></h6>
-        <input type="text" [(ngModel)]="addVersion.versionname" name="versionname" class="form-control"
-          placeholder="">
-      </div>
-      <div class="form-group col-12">
-        <h6>バージョン詳細<code>＊</code></h6>
-        <input type="text" [(ngModel)]="addVersion.description" name="description" class="form-control"
-          placeholder="">
-      </div>
-      <div class="form-group col-12">
-        <h6>downloadUrl<code>＊</code></h6>
-        <input type="text" [(ngModel)]="addVersion.downloadurl" name="downloadurl" class="form-control"
-          placeholder="">
+      <div class="row">
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>バージョン名<code>＊</code></h6>
+          <input type="text" [(ngModel)]="addVersion.versionname" #versionName="ngModel" name="versionName"
+          id="versionName" class="form-control"
+            placeholder="" [ngClass]="{ 'is-invalid': NewVersionForm.submitted && versionName.invalid }" required>
+          <div *ngIf="NewVersionForm.submitted && versionName.invalid" class="invalid-feedback">
+              <div *ngIf="versionName.errors.required">バージョン名を入力してください。</div>
+          </div>
+        </div>
+  
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>downloadUrl<code>＊</code></h6>
+          <input type="text" [(ngModel)]="addVersion.downloadurl" #downloadUrl="ngModel" name="downloadUrl"
+          id="downloadUrl" class="form-control"
+            placeholder="" [ngClass]="{ 'is-invalid': NewVersionForm.submitted && downloadUrl.invalid }" required>
+          <div *ngIf="NewVersionForm.submitted && downloadUrl.invalid" class="invalid-feedback">
+              <div *ngIf="downloadUrl.errors.required">ダウンロードURLを入力してください。</div>
+          </div>
+        </div>
       </div>
 
+      <div class="row">
+        <div class="form-group col-12">
+          <h6>バージョン詳細<code>＊</code></h6>
+          <textarea id="description" rows="4" class="form-control square" name="description" #description="ngModel" [(ngModel)]="addVersion.description" placeholder="詳細" maxlength="100" [ngClass]="{ 'is-invalid': NewVersionForm.submitted && description.invalid }" required></textarea>
+          <div *ngIf="NewVersionForm.submitted && description.invalid" class="invalid-feedback">
+            <div *ngIf="description.errors.required">バージョン詳細を入力してください。</div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
-        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>キャンセル</button>
+        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
       </div>

@@ -54,8 +54,9 @@ export class VersionComponent implements OnInit {
   checkOn: 1;
   show = false;
   // 新规 version 数据
-  addVersion = {
-  };
+  addVersion = {};
+  // product name 列表
+  productNameList = [];
 
   
   public config: PerfectScrollbarConfigInterface = { };
@@ -143,6 +144,7 @@ export class VersionComponent implements OnInit {
     console.log("从api 获取的 rows 值");
     console.log(this.rows);
     this.getTabledata();
+    this.getProductNameList();
   }
 
 
@@ -150,14 +152,38 @@ export class VersionComponent implements OnInit {
     // Modal を開く
   addNewVersionModal(addNewVersion){
     this.addModal = this.modal.open(addNewVersion, {
-      windowClass: 'animated fadeInDown'
+      windowClass: 'animated fadeInDown',
+      size: 'lg'
     });
     this.contactFlag = true;
   }
     // ModalデータをAPIに更新
   addNewVersionForm(NewVersionForm:NgForm){
+    var flg = true;
+    if (flg && !this.addVersion['productid']) {
+      confirm(`プロダクト名を選択してください。`);
+      flg = false;
+    }
+
+    if (flg && !this.addVersion['versioncode']) {
+      confirm(`バージョンコードを入力してください。`);
+      flg = false;
+    }
+    if (flg && !this.addVersion['versionname']) {
+      confirm(`バージョン名を入力してください。`);
+      flg = false;
+    }
+    if (flg && !this.addVersion['downloadurl']) {
+      confirm(`ダウンロードURLを入力してください。`);
+      flg = false;
+    }
+    if (flg && !this.addVersion['description']) {
+      confirm(`バージョン詳細を入力してください。`);
+      flg = false;
+    }
+
     let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    if (routeif != null) {
+    if (routeif != null && flg) {
       var param = {
         // 登録データ
         "loginInfo":this.pageModel.loginInfo,
@@ -166,31 +192,29 @@ export class VersionComponent implements OnInit {
         "productid": this.addVersion['productid'],
         "versioncode": this.addVersion['versioncode'],
         "versionname": this.addVersion['versionname'],
-        "description": this.addVersion['description'],
         "downloadurl": this.addVersion['downloadurl'],
+        "description": this.addVersion['description'],
       }
-    }
-    console.log("这是 addNewProjectForm 的 param");
-    console.log(param);
-    this.httpService.useRpPost('registerVersion',param).then(item=>{
-      console.log("这是 addNewProjectForm 的 item");
-      console.log(item);
-      try{
-        if(item.resultCode == "0000"){
-          this.addVersion={},
-          this.ngOnInit();
-          alert("プロジェクトを登録しました。");
+      console.log("这是param");
+      console.log(param);
+      this.httpService.useRpPost('registerVersion',param).then(item=>{
+        console.log("这是item");
+        console.log(item);
+        try{
+          if(item.resultCode == "0000"){
+            this.addVersion={},
+            this.ngOnInit();
+            alert("プロジェクトを登録しました。");
+          }
+        }catch(e){
+          alert(e);
         }
-      }catch(e){
-        alert(e);
+      });
+      if (NewVersionForm.valid === true) {
+        NewVersionForm.reset();
+        this.addModal.close(NewVersionForm.resetForm);
       }
-    });
-
-    if (NewVersionForm.valid === true) {
-
-      NewVersionForm.reset();
-      this.addModal.close(NewVersionForm.resetForm);
-    }
+    } 
   }
 
   // 検索機能
@@ -324,15 +348,33 @@ export class VersionComponent implements OnInit {
    * @param projectid      Id match to the selected row Id
    */
   versionDataUpdate(versionEditForm: NgForm, rowid) {
+    var flg = true;
+    if (flg && !this.selectedVersion['productid']) {
+      confirm(`プロダクト名を選択してください。`);
+      flg = false;
+    }
+
+    if (flg && !this.selectedVersion['versioncode']) {
+      confirm(`バージョンコードを入力してください。`);
+      flg = false;
+    }
+    if (flg && !this.selectedVersion['versionname']) {
+      confirm(`バージョン名を入力してください。`);
+      flg = false;
+    }
+    if (flg && !this.selectedVersion['downloadurl']) {
+      confirm(`ダウンロードURLを入力してください。`);
+      flg = false;
+    }
+
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
-    if (routeif != null) {
+    if (routeif != null && flg) {
       var param = {
         "loginInfo":this.pageModel.loginInfo,
         "targetUserInfo":this.pageModel.targetUserInfo,
 
         "rowid": this.selectedVersion.rowid,
         "productid":this.selectedVersion.productid,
-        "productname":this.selectedVersion.productname,
         "versioncode":this.selectedVersion.versioncode,
         "versionname":this.selectedVersion.versionname,
         "description":this.selectedVersion.description,
@@ -456,6 +498,29 @@ export class VersionComponent implements OnInit {
     } else {
       this.rows.sort((a, b) => a[nm].localeCompare(b[nm]));
       this.sortOn = 1;
+    }
+  }
+
+  /**
+   * プロダクト名覧取得
+   */
+  protected async getProductNameList() {
+    this.productNameList = [];
+    let routeif: UserInfo = this.dataFatoryService.getUserInfo();
+    if (routeif != null) {
+      var param = {
+        "loginInfo":this.pageModel.loginInfo,
+        "targetUserInfo":this.pageModel.targetUserInfo,
+        "projectname": this.searchValue,
+      };
+      var res = await this.httpService.post("/searchMyProduct",param);
+      let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+      jsonItem.forEach(element => {
+        this.productNameList.push(element);
+        this.productNameList = [...this.productNameList];
+      });
+      console.log("getProductNameList");
+      console.log(this.productNameList);
     }
   }
 
