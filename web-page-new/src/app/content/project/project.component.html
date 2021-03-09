@@ -19,11 +19,15 @@
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">プロジェクト名</label>
-                        <!-- <input type='text'
-                          style='padding:8px;margin:15px auto;width:200px;height: calc(1.875rem + 2px);border-radius: 0.21rem;border: 1px solid #babfc7;'
-                          [(ngModel)]="searchValue" /> -->
                         <input type="text" class="form-control" id="" placeholder=""
-                          [(ngModel)]="searchValue">
+                          [(ngModel)]="searchValue.projectname">
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-12">
+                      <div class="form-group">
+                        <label for="">プロダクト名</label>
+                        <input type="text" class="form-control" id="" placeholder=""
+                          [(ngModel)]="searchValue.productname">
                       </div>
                     </div>
                     <div class="col-md-12">
@@ -88,9 +92,8 @@
                           <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAll($event)">
                           </th>
                           <th scope="col" class="thcolor">No.</th>
-                          <th scope="col" class="thcolor" (click)="sortData('projectid')">プロジェクトID</th>
                           <th scope="col" class="thcolor" (click)="sortData('projectname')">プロジェクト名</th>
-                          <th scope="col" class="thcolor" (click)="sortData('productid')">プロダクトID</th>
+                          <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト名</th>
                           <th scope="col" class="thcolor" (click)="sortData('projectsummary')">プロジェクト詳細</th>
                           <th scope="col" class="thcolor">デバイスグループ数</th>
                           <th scope="col" class="thcolor">デバイス数</th>
@@ -105,19 +108,20 @@
                               (change)="checkChange($event,element)">
                           </td>
                           <td>{{i+1}}</td>
-                          <td>{{ element.projectid }}</td>
-                          <td>{{ element.projectname}}</td>
-                          <td>{{ element.productid }}</td>
+                          <td>{{ element.projectname }}</td>
+                          <td>{{ element.productname }}</td>
                           <td>{{ element.projectsummary }}</td>
                           <td>{{ element.groupCounts}}</td>
-                          <td>{{ element.deviceCounts}}</td>
+                          <td>
+                            <a class="primary edit mr-1 mrless" (click)="deviceLinkListModal(deviceLinkListModalContent, element)">{{ element.deviceCounts}}</a>
+                          </td>
                           <td>
                             <a class="primary edit mr-1 mrless"
                               (click)="deviceLinkAddModal(deviceLinkAddModalContent, element)" title="デバイス連携"><i
                                 class="la la-calendar-plus-o"></i>
                             </a>
                             <a class="danger delete mr-1 mrless"
-                              (click)="deviceLinkListModal(deviceLinkListModalContent, element)" title="連携したデバイスを削除"><i
+                              (click)="deviceLinkListModal(deviceLinkDeleteModalContent, element)" title="連携したデバイスを削除"><i
                                 class="la la-calendar-check-o"></i>
                             </a>
                           </td>
@@ -164,31 +168,45 @@
       </button>
     </div>
     <div class="modal-body">
-      <div class="form-group col-12">
-        <label>プロジェクトID<code>＊</code></label>
-        <input type="text" [(ngModel)]="selectedProject.projectid" #editname="ngModel" name="projectrowid"
-          id="projectrowid" class="name form-control" placeholder="selectedProject.projectid" required disabled>
-      </div>
+
       <div class="form-group col-12">
         <label>プロジェクト名<code>＊</code></label>
-        <input type="text" [(ngModel)]="selectedProject.projectname" #editname="ngModel" name="projectname"
-          id="projectname" class="name form-control" placeholder="selectedProject.projectnameame" required>
+        <input type="text" [(ngModel)]="selectedProject.projectname" #projectname="ngModel" name="projectname"
+          id="projectname" class="name form-control"  [ngClass]="{ 'is-invalid': projectEditForm.submitted && projectname.invalid }" required>
+        <div *ngIf="projectEditForm.submitted && projectname.invalid" class="invalid-feedback">
+            <div *ngIf="projectname.errors.required">プロジェクト名を入力してください。</div>
+        </div>
       </div>
 
+      <div class="form-group col-12">
+        <h6>プロダクト名<code>＊</code></h6>
+        <select class="form-control" id="productName" name="productName" [(ngModel)]="selectedProject.productid"
+          #porductname="ngModel" name="producttypeid" id="producttypeid"
+          [ngClass]="{ 'is-invalid': projectEditForm.submitted && porductname.invalid }" required>
+          <option *ngFor="let type of productNameList; let i = index" [ngValue]="type.productid">
+            {{type.productname}}
+          </option>
+        </select>
+        <div *ngIf="projectEditForm.submitted && porductname.invalid" class="invalid-feedback">
+          <div *ngIf="porductname.errors.required">プロダクト名を選択してください。</div>
+        </div>
+      </div>
 
       <div class="form-group col-12">
-        <label>プロジェクト詳細<code>＊</code></label>
-        <input type="text" [(ngModel)]="selectedProject.projectsummary" #editemail="ngModel" name="projectsummary"
-          id="projectsummary" class="email form-control" placeholder="selectedProject.projectsummary" required>
+        <label>プロジェクト詳細</label>
+        <!-- <input type="text" [(ngModel)]="selectedProject.projectsummary" #editemail="ngModel" name="projectsummary"
+          id="projectsummary" class="email form-control" placeholder="selectedProject.projectsummary" required> -->
+        <textarea id="projectsummary" rows="4" class="form-control square" name="projectsummary"
+              [(ngModel)]="selectedProject.projectsummary" placeholder="詳細" maxlength="100"></textarea>
       </div>
 
 
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
-        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>キャンセル</button>
+        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">対応完了</span></button>
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
       </div>
     </div>
   </form>
@@ -209,24 +227,38 @@
 
       <div class="form-group col-12">
         <h6>プロジェクト名<code>＊</code></h6>
-        <input type="text" [(ngModel)]="pageModel.addProject.projectName" name="projectName" class="form-control"
-          placeholder="" required>
+        <input type="text" [(ngModel)]="pageModel.addProject.projectName" #projectname="ngModel" name="projectName" class="form-control"
+          placeholder="" required [ngClass]="{ 'is-invalid': NewProjectForm.submitted && projectname.invalid }" required>
+        <div *ngIf="NewProjectForm.submitted && projectname.invalid" class="invalid-feedback">
+          <div *ngIf="projectname.errors.required">プロジェクト名を入力してください。</div>
+        </div>
+      </div>
+
+      <div class="form-group col-12">
+        <h6>プロダクト名<code>＊</code></h6>
+        <select class="form-control" id="productName" name="productName" [(ngModel)]="pageModel.addProject.productId"
+          #productname="ngModel" name="producttypeid" id="producttypeid"
+          [ngClass]="{ 'is-invalid': NewProjectForm.submitted && productname.invalid }" required>
+          <option *ngFor="let type of productNameList; let i = index" [ngValue]="type.productid">
+            {{type.productname}}
+          </option>
+        </select>
+        <div *ngIf="NewProjectForm.submitted && productname.invalid" class="invalid-feedback">
+          <div *ngIf="productname.errors.required">プロダクト名を選択してください。</div>
+        </div>
       </div>
       <div class="form-group col-12">
-        <h6>プロダクトID<code>＊</code></h6>
-        <input type="text" [(ngModel)]="pageModel.addProject.productId" name="productId" class="form-control"
-          placeholder="" required>
-      </div>
-      <div class="form-group col-12">
-        <h6>プロジェクト詳細<code>＊</code></h6>
-        <input type="text" [(ngModel)]="pageModel.addProject.projectSummary" name="projectSummary" class="form-control"
-          placeholder="" required>
+        <h6>プロジェクト詳細</h6>
+        <!-- <input type="text" [(ngModel)]="pageModel.addProject.projectSummary" name="projectSummary" class="form-control"
+          placeholder="" required> -->
+        <textarea id="projectSummary" rows="4" class="form-control square" name="projectSummary"
+          [(ngModel)]="pageModel.addProject.projectSummary" placeholder="詳細" maxlength="100"></textarea>
       </div>
 
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
-        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>キャンセル</button>
+        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
       </div>
@@ -254,14 +286,13 @@
               <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllUsableDevice($event)">
               </th>
               <th scope="col">no.</th>
-              <th scope="col">deviceid</th>
-              <th scope="col">devicename</th>
+              <th scope="col">デバイス名</th>
               <th scope="col">imei</th>
-              <th scope="col">productname</th>
+              <th scope="col">プロダクト名</th>
               <th scope="col">sim_iccid</th>
               <th scope="col">sim_imsi</th>
               <th scope="col">sim_tel</th>
-              <th scope="col">sn</th>
+              <th scope="col">sn番号</th>
             </tr>
           </thead>
           <tbody>
@@ -271,7 +302,6 @@
                   (change)="checkChangeUsableDevice($event,item)">
               </td>
               <td data-label="no.">{{i + 1}}</td>
-              <td data-label="projectid">{{item.deviceid}}</td>
               <td data-label="groupId">{{item.devicename}}</td>
               <td data-label="deviceName">{{item.imei}}</td>
               <td data-label="imei">{{item.productname}}</td>
@@ -297,8 +327,8 @@
 
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- プロジェクトのデバイス一覧 -->
-<ng-template #deviceLinkListModalContent let-c="close" let-d="dismiss">
+<!-- プロジェクトのデバイス削除 -->
+<ng-template #deviceLinkDeleteModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="projectLinkedDeviceDataUpdate(projectLinkedDeviceForm,selectedProject.projectid)" #projectLinkedDeviceForm="ngForm">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">連携したデバイス</h5>
@@ -314,14 +344,13 @@
               <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllLinkedDevice($event)">
               </th>
               <th scope="col">no.</th>
-              <th scope="col">deviceid</th>
-              <th scope="col">devicename</th>
+              <th scope="col">デバイス名</th>
               <th scope="col">imei</th>
-              <th scope="col">productname</th>
+              <th scope="col">プロダクト名</th>
               <th scope="col">sim_iccid</th>
               <th scope="col">sim_imsi</th>
               <th scope="col">sim_tel</th>
-              <th scope="col">sn</th>
+              <th scope="col">sn番号</th>
             </tr>
           </thead>
           <tbody>
@@ -331,7 +360,6 @@
                   (change)="checkChangeLinkedDevice($event,item)">
               </td>
               <td data-label="no.">{{i + 1}}</td>
-              <td data-label="projectid">{{item.deviceid}}</td>
               <td data-label="groupId">{{item.devicename}}</td>
               <td data-label="deviceName">{{item.imei}}</td>
               <td data-label="imei">{{item.productname}}</td>
@@ -349,6 +377,57 @@
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="add-contact-item" class="btn btn-danger add-contact-item"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">削除</span></button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- プロジェクトのデバイス一覧 -->
+<ng-template #deviceLinkListModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="viewProjectLinkedDevice(viewProjectLinkedDeviceForm)" #viewProjectLinkedDeviceForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel1">連携したデバイス</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="table-responsive form-group col-12">
+        <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
+          <thead>
+            <tr>
+              <th scope="col">no.</th>
+              <th scope="col">デバイス名</th>
+              <th scope="col">imei</th>
+              <th scope="col">プロダクト名</th>
+              <th scope="col">sim_iccid</th>
+              <th scope="col">sim_imsi</th>
+              <th scope="col">sim_tel</th>
+              <th scope="col">sn番号</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of linkedDeviceList; let i = index;">
+              <td data-label="no.">{{i + 1}}</td>
+              <td data-label="groupId">{{item.devicename}}</td>
+              <td data-label="deviceName">{{item.imei}}</td>
+              <td data-label="imei">{{item.productname}}</td>
+              <td data-label="imei">{{item.sim_iccid}}</td>
+              <td data-label="imei">{{item.sim_imsi}}</td>
+              <td data-label="imei">{{item.sim_tel}}</td>
+              <td data-label="imei">{{item.sn}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">確認</span></button>
       </div>
     </div>
   </form>

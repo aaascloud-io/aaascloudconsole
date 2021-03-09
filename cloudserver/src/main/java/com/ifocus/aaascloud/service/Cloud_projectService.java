@@ -84,7 +84,10 @@ public class Cloud_projectService {
 	 */
 	public List<Cloud_projectModel> searchMyProjects(Cloud_projectModel cloud_projectModel) throws Exception {
 		List<Cloud_projectModel> returnList = new ArrayList<Cloud_projectModel>();
-		Iterable<Cloud_projectEntity> list = cloud_projectRepository.searchByUseridAndProjectnameLike(cloud_projectModel.getTargetUserInfo().getTargetuserid(),cloud_projectModel.getProjectnameForSearch());
+		Iterable<Cloud_projectEntity> list = cloud_projectRepository.searchByUseridAndProjectnameLikeAndProductnameLike(
+				cloud_projectModel.getTargetUserInfo().getTargetuserid(),
+				cloud_projectModel.getProjectnameForSearch(),
+				cloud_projectModel.getProductnameForSearch());
 		list.forEach(s -> {
 			Cloud_projectModel model = new Cloud_projectModel();
 			model.setProjectid(s.getProjectid());

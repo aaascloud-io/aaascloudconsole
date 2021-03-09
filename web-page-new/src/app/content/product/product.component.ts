@@ -250,15 +250,20 @@ export class ProductComponent implements OnInit {
    * 選択されたプロダクトを削除する
    */
   deleteCheckedRow() {
-
-    if (confirm("選択したデーターを削除しますか")) {
-
       var deleteCheckedids = [];
+      var flg = false;
       for (var row of this.rows) {
         if (row.isSelected) {
           deleteCheckedids.push(row.productid);
+          flg = true;
+          console.log(flg);
         }
       }
+      if (!flg) {
+        alert("プロダクトを選択してください");
+        return
+      }
+      if (confirm("選択したデーターを削除しますか")) {
       var query = {
         "loginInfo": this.pageModel.loginUser,
         "targetUserInfo": {

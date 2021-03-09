@@ -38,12 +38,15 @@ export class GroupComponent implements OnInit {
   contactactive: string;
   rows: any[] = [];
   selectedContact: any;
+  groupDeviceSelected: any;
   contactFlag: boolean;
   addContact: any;
   placement = 'bottom-right';
   addModal = null;
   updateModal = null;
   addDeviceModal = null;
+  deleteDeviceModal = null;
+  deviceInfoModal = null;
   loadingIndicator: true;
   selected = [];
   temp = [];
@@ -61,7 +64,9 @@ export class GroupComponent implements OnInit {
   pageSize: any;
   collectionSize: any;
   groupList: any;
-  deviceList: any;
+  // deviceList: any;
+  addDeviceList: any;
+  groupDeviceList: any;
   page = 1;
   TableData: any;
   sortOn: any;
@@ -173,20 +178,6 @@ export class GroupComponent implements OnInit {
   }
 
   /**
-   * デバイス追加のダイアログを開ける
-   * @param deviceLinkAddModalContent 
-   * @param row 
-   */
-  deviceLinkAddModal(deviceLinkAddModalContent, row) {
-    this.getUsableDeviceList();
-    this.selectedContact = Object.assign({}, row);
-    this.addDeviceModal = this.modal.open(deviceLinkAddModalContent, {
-      windowClass: 'animated fadeInDown',
-      size: 'lg'
-    });
-  }
-
-  /**
    * Selected contact
    *
    * @param selected      Selected contact;
@@ -242,24 +233,28 @@ export class GroupComponent implements OnInit {
   }
 
   /**
-   * 選択されたグループデーターを削除する
+   * 選択されたグループデーターを削除する（複数）
    */
   deleteCheckedRow() {
-
-    if (confirm("選択したデーターを削除しますか")) {
-
-      var deleteCheckedids = [];
-      for (var row of this.rows) {
-        if (row.isSelected) {
-          deleteCheckedids.push(row.groupid);
-        }
+    var deleteCheckedids = [];
+    var flg = false;
+    for (var row of this.rows) {
+      if (row.isSelected) {
+        deleteCheckedids.push(row.groupid);
+        flg = true;
       }
+    }
+    if (!flg) {
+      alert("プロダクトを選択してください");
+      return
+    }
+    if (confirm("選択したデーターを削除しますか")) {
       var query = {
         "loginInfo": this.pageModel.loginUser,
         "targetUserInfo": {
           "targetuserid": this.pageModel.loginUser.loginuserid,
         },
-        "groupList": deleteCheckedids,
+        "groupidList": deleteCheckedids,
       }
       this.httpService.delete('deleteGroups', query).then(item => {
         try {
@@ -442,10 +437,10 @@ export class GroupComponent implements OnInit {
       try {
         this.rows = [];
         console.log("グループデーターの取得：");
-        console.log(item);
+        console.log(JSON.stringify(item));
         if (item) {
           item.forEach((elem) => {
-            console.log("グループデーターの取得：" + elem);
+            console.log(elem);
             var projectname = ""
             // プロダクトタイプ名の検索
             for (const project of this.projects) {
@@ -499,22 +494,6 @@ export class GroupComponent implements OnInit {
     });
   }
 
-  protected async getUsableDeviceList() {
-    var usableDeviceList = [];
-    let param = {
-      "loginInfo": this.pageModel.userInfoParame,
-      "targetUserInfo": this.pageModel.loginUser.loginuserid,
-    };
-    this.httpService.usePost("/getMySelectableDevices", param).then(item=> {
-      try {
-        this.deviceList = item;
-
-      } catch (e) {
-        console.log();
-      } 
-    });
-  }
-
   sortData(nm) {
     if (this.sortOn == 1) {
       this.groupList.sort((b, a) => a[nm].localeCompare(b[nm]));
@@ -537,8 +516,6 @@ export class GroupComponent implements OnInit {
   }
 
   isAllChecked() {
-
-
   }
 
   getTabledata() {
@@ -563,15 +540,249 @@ export class GroupComponent implements OnInit {
    * 
    */
   cancleModel(openForm: NgForm) {
-    // if (openForm.valid === true) {
-    // openForm.reset();
+
+    // 新規ダイアログを閉じる
     if (this.addModal != null) {
       openForm.reset();
       this.addModal.close(openForm.resetForm);
     }
+    // 編集ダイアログを閉じる
     if (this.updateModal != null) {
       this.updateModal.close(openForm.resetForm);
     }
+    // デバイス追加ダイアログを閉じる
+    if (this.addDeviceModal != null) {
+      this.addDeviceModal.close(openForm.resetForm);
+    }
+    // デバイス削除ダイアログを閉じる
+    if (this.deleteDeviceModal != null) {
+      this.deleteDeviceModal.close(openForm.resetForm);
+    }
+    // デバイス詳細ダイアログを閉じる
+    if (this.deviceInfoModal != null) {
+      this.deviceInfoModal.close(openForm.resetForm);
+    }
+
     // }
+  }
+
+  /*=======================グループのデバイス追加連携↓================================*/
+  /**
+ * デバイス追加のダイアログを開ける
+ * @param deviceLinkAddModalContent 
+ * @param row 
+ */
+  deviceLinkAddModal(deviceLinkAddModalContent, row) {
+    this.getUsableDeviceList();
+    this.groupDeviceSelected = Object.assign({}, row);
+    this.addDeviceModal = this.modal.open(deviceLinkAddModalContent, {
+      windowClass: 'animated fadeInDown',
+      size: 'lg'
+    });
+  }
+
+  /**
+   * グループのデバイス一覧（追加）
+   */
+  protected async getUsableDeviceList() {
+    var query = {
+      "loginInfo": this.pageModel.loginUser,
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginuserid,
+        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
+      },
+    };
+    this.httpService.usePost("/getMySelectableDevices", query).then(item => {
+      try {
+        this.addDeviceList = item;
+        console.log("デバイス連携一覧取得");
+        console.log(JSON.stringify(item));
+
+      } catch (e) {
+        console.log();
+      }
+    });
+  }
+
+  checkAllUsableDevice(ev) {
+    this.addDeviceList.forEach(x => x.isSelected = ev.target.checked)
+  }
+
+  checkChangeUsableDevice(ev, element) {
+    this.addDeviceList.forEach(function (device) {
+      if (device.deviceid === element['deviceid']) { device.isSelected = ev.target.checked }
+    });
+  }
+
+  /**
+   * グループにデバイスを追加する
+   */
+  groupDeviceDataUpdate(groupDeviceForm) {
+
+    var deleteCheckedids = [];
+    var flg = false;
+    var selectedDevice = [];
+    for (var item of this.addDeviceList) {
+      if (item.isSelected) {
+        selectedDevice.push(item);
+        flg = true;
+      }
+    }
+    if (!flg) {
+      alert("プロダクトを選択してください");
+      return
+    }
+    if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
+
+      var query = {
+        "loginInfo": this.pageModel.loginUser,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.loginUser.loginuserid,
+          "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
+        },
+        "groupid": this.groupDeviceSelected.groupid,
+        "projectid": this.groupDeviceSelected.projectid,
+        "deviceList": selectedDevice,
+      };
+
+      this.httpService.useRpPut('addGroupDevices', query).then(item => {
+        try {
+          if (item.resultCode == "0000") {
+            alert('選択したデバイスを追加しました。');
+            if (groupDeviceForm.valid === true) {
+              groupDeviceForm.reset();
+              this.addDeviceModal.close(groupDeviceForm.resetForm);
+            }
+          }
+          this.ngOnInit();
+        } catch (e) {
+          console.log(e);
+          this.ngOnInit();
+        };
+      });
+    }
+
+    this.ngOnInit();
+  }
+
+  /*=======================グループのデバイス削除連携↓================================*/
+  /**
+ * デバイス削除のダイアログを開ける
+ * @param deviceLinkDeleteModalContent 
+ * @param row 
+ */
+  deviceLinkdeletModal(deviceLinkDeleteModalContent, row) {
+    this.getMyGroupDeviceList(row);
+    this.groupDeviceSelected = Object.assign({}, row);
+    this.deleteDeviceModal = this.modal.open(deviceLinkDeleteModalContent, {
+      windowClass: 'animated fadeInDown',
+      size: 'lg'
+    });
+  }
+
+  /**
+   * グループのデバイス一覧（削除）
+   */
+  protected async getMyGroupDeviceList(row) {
+    var query = {
+      "loginInfo": this.pageModel.loginUser,
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginuserid,
+        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
+      },
+      "groupid": row.groupid,
+      "projectid": row.projectid,
+    };
+    this.httpService.usePost("/getGroupDevices", query).then(item => {
+      try {
+        this.groupDeviceList = item;
+        console.log("デバイス削除連携一覧取得");
+        console.log(JSON.stringify(item));
+
+      } catch (e) {
+        console.log();
+      }
+    });
+  }
+
+  checkAllGroupDevice(ev) {
+    this.groupDeviceList.forEach(x => x.isSelected = ev.target.checked)
+  }
+
+  checkChangeGroupDevice(ev, element) {
+    this.groupDeviceList.forEach(function (device) {
+      if (device.deviceid === element['deviceid']) { device.isSelected = ev.target.checked }
+    });
+  }
+
+  /**
+   * グループのデバイスを削除する
+   */
+  groupLinkedDeviceDataUpdate(groupDeviceForm) {
+
+    var flg = false;
+    var selectedDevice = [];
+    for (var item of this.groupDeviceList) {
+      if (item.isSelected) {
+        selectedDevice.push(item);
+        flg = true;
+      }
+    }
+    if (!flg) {
+      alert("デバイスを選択してください");
+      return
+    }
+    if (confirm("選択したデバイスをグループに追加しますか")) {
+
+      var query = {
+        "loginInfo": this.pageModel.loginUser,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.loginUser.loginuserid,
+          "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
+        },
+        "groupid": this.groupDeviceSelected.groupid,
+        "projectid": this.groupDeviceSelected.projectid,
+        "deviceList": selectedDevice,
+      };
+
+      this.httpService.useRpPut('deleteGroupDevices', query).then(item => {
+        try {
+          if (item.resultCode == "0000") {
+            alert('選択したデバイスを削除しました。');
+            if (groupDeviceForm.valid === true) {
+              groupDeviceForm.reset();
+              this.deleteDeviceModal.close(groupDeviceForm.resetForm);
+            }
+          }
+          this.ngOnInit();
+        } catch (e) {
+          console.log(e);
+          this.ngOnInit();
+        };
+      });
+    }
+
+    this.ngOnInit();
+  }
+
+  /*=======================グループのデバイス詳細↓================================*/
+  /**
+ * デバイス削除のダイアログを開ける
+ * @param deviceLinkDeleteModalContent 
+ * @param row 
+ */
+  groupDeviceInfo(groupDeviceInfoModal, row) {
+    this.getMyGroupDeviceList(row);
+    this.groupDeviceSelected = Object.assign({}, row);
+    this.deviceInfoModal = this.modal.open(groupDeviceInfoModal, {
+      windowClass: 'animated fadeInDown',
+      size: 'lg'
+    });
+  }
+
+  getGroupDeviceInfo(openForm: NgForm) {
+    if (this.deviceInfoModal != null) {
+      this.deviceInfoModal.close(openForm.resetForm);
+    }
   }
 }

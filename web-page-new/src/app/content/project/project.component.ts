@@ -49,12 +49,19 @@ export class ProjectComponent implements OnInit {
     // 选中的 device 列表
   selectedDevice = [];
     // 搜索框检索值
-  searchValue:any;
+  searchValue = {
+    projectname:'',
+    productname:''
+  };
   sortOn: any;
   checkOn: 1;
   show = false;
     //已经在 project 中分配掉的 device 
   linkedDeviceList =[];
+    // 取得所有的product types
+  productTypes = [];
+    // 取得所有的 productName 列表
+  productNameList = [];
 
   
 
@@ -97,6 +104,7 @@ export class ProjectComponent implements OnInit {
       addProject:{
         projectName:'',
         productId:'',
+        productname:'',
         projectSummary:'',
         userId:'',
       },
@@ -130,7 +138,6 @@ export class ProjectComponent implements OnInit {
       "targetUserInfo":this.pageModel.targetUserInfo,
     };
     var res = await this.httpService.post("/getProjects",param);
-
     let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
     jsonItem.forEach(element => {
       this.rows.push(element);
@@ -138,6 +145,10 @@ export class ProjectComponent implements OnInit {
     this.rows = [...this.rows];
     // 获取当前页表格内显示的值
     this.getTabledata();
+    this.getProductTypes();
+    this.getProductNameList();
+    console.log("这是rows的函数内部");
+    console.log(this.rows);
   }
 
 
@@ -150,8 +161,19 @@ export class ProjectComponent implements OnInit {
   }
     // ModalデータをAPIに更新
   addNewProjectForm(NewProjectForm:NgForm){
+    var flg = true;
+    if (flg && !this.pageModel.addProject.projectName) {
+      confirm(`プロジェクト名を入力してください。`);
+      flg = false;
+    }
+
+    if (flg && !this.pageModel.addProject.productId) {
+      confirm(`プロダクト名を選択してください。`);
+      flg = false;
+    }
+
     let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    if (routeif != null) {
+    if (routeif != null && flg) {
       var param = {
         // 登録データ
         "loginInfo":this.pageModel.loginInfo,
@@ -162,6 +184,7 @@ export class ProjectComponent implements OnInit {
         "projectsummary":this.pageModel.addProject.projectSummary,
       }
       this.httpService.useRpPost('registerProject',param).then(item=>{
+        console.log(item);
         try{
           if(item.resultCode == "0000"){
             this.pageModel.addProject.projectName = '';
@@ -178,7 +201,7 @@ export class ProjectComponent implements OnInit {
         NewProjectForm.reset();
         this.addModal.close(NewProjectForm.resetForm);
       }
-      console.log("这是一个测试，能看到我说明被执行了");
+      console.log("这是一个测试，如果你能看到他，说明被执行了");
     }
   }
 
@@ -189,7 +212,8 @@ export class ProjectComponent implements OnInit {
       var param = {
         "loginInfo":this.pageModel.loginInfo,
         "targetUserInfo":this.pageModel.targetUserInfo,
-        "projectname": this.searchValue,
+        "projectname": this.searchValue.projectname,
+        "productname":this.searchValue.productname,
       };
       this.httpService.useRpPost('searchProjects',param).then(item=>{
         let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
@@ -205,7 +229,10 @@ export class ProjectComponent implements OnInit {
 
   // 検索条件クリア
   clearSearchProject(){
-    this.searchValue = "";
+    this.searchValue = {
+      projectname:'',
+      productname:''
+    };
     this.ngOnInit();
   }
 
@@ -249,8 +276,19 @@ export class ProjectComponent implements OnInit {
   }
     // ModalデータをAPIに更新
   projectDataUpdate(projectEditForm: NgForm, projectid) {
+    var flg = true;
+    if (flg && !this.selectedProject.projectname) {
+      confirm(`プロジェクト名を入力してください。`);
+      flg = false;
+    }
+
+    if (flg && !this.selectedProject.productid) {
+      confirm(`プロダクト名を選択してください。`);
+      flg = false;
+    }
+
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
-    if (routeif != null) {
+    if (routeif != null　&& flg) {
       var param = {
         "loginInfo":this.pageModel.loginInfo,
         "targetUserInfo":this.pageModel.targetUserInfo,
@@ -293,7 +331,10 @@ export class ProjectComponent implements OnInit {
       this.httpService.useRpDelete('deleteProjects', query).then(item => {
         try {
           if (item.resultCode == "0000") {
-            this.searchValue = "";
+            this.searchValue = {
+              projectname:'',
+              productname:''
+            };;
             this.selected=[];
             this.ngOnInit();
             alert('選択したプロジェクトを削除しました');
@@ -443,17 +484,16 @@ export class ProjectComponent implements OnInit {
     this.ngOnInit();
   }
 
-  // project　連携　DeviceList　一覧
+  // project　連携した　DeviceList　一覧
     // Modal 開く
-  deviceLinkListModal(deviceLinkListModalContent, row) {
+  deviceLinkListModal(deviceLinkDeleteModalContent, row) {
     this.getLinkedDeviceList(row.projectid);
     this.selectedProject = Object.assign({}, row);
-    this.editModal = this.modal.open(deviceLinkListModalContent, {
+    this.editModal = this.modal.open(deviceLinkDeleteModalContent, {
       windowClass: 'animated fadeInDown',
       size: 'lg'
     });
   }
-
   async getLinkedDeviceList(projectid){
     this.linkedDeviceList = [];
     let param = {
@@ -462,35 +502,19 @@ export class ProjectComponent implements OnInit {
       "userid":this.pageModel.loginInfo["loginuserid"],
       "projectid": projectid,
     };
-    console.log("这里是 initData 的 param 数据");
-    console.log(param);
     var res = await this.httpService.post("/getProject",param);
-    console.log("这里是请求到的 res 数据");
-    console.log(res);
     var jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-    console.log("jsonItem");
-    console.log(jsonItem);
     jsonItem.deviceList.forEach(element => {
       this.linkedDeviceList.push(element);
     });
-    console.log("这是deviceList的data值");
-    console.log(this.linkedDeviceList);
     this.linkedDeviceList = [...this.linkedDeviceList];
   }
 
   checkAllLinkedDevice(ev){
     this.linkedDeviceList.forEach(x => x.isSelected = ev.target.checked)
     // this.selectedProject = ev.target.checked;
-    console.log("这是checkall的函数内部");
-    console.log(ev);
-    console.log(this.rows);
-    console.log(this.linkedDeviceList);
   }
   checkChangeLinkedDevice(ev, element) {
-    console.log("这是checkChangeLinkedDevice的函数内部");
-    console.log(ev);
-    console.log(element);
-    console.log(this.linkedDeviceList);
     this.linkedDeviceList.forEach(function (device) {
       if (device.deviceid === element['deviceid']) { device.isSelected = ev.target.checked }
     });
@@ -515,11 +539,7 @@ export class ProjectComponent implements OnInit {
           "projectid": projectid,
           "deviceList": this.selectedDevice,
         };
-        console.log("这是目前的 param");
-        console.log(param);
         this.httpService.useRpPut('deleteProjectDevices', param).then(item => {
-          console.log("这是目前的 item");
-          console.log(item);
           try {
             if (item.resultCode == "0000") {
               this.selectedDevice=[];
@@ -531,12 +551,59 @@ export class ProjectComponent implements OnInit {
             }
           } catch (e) {
             console.log(e);
-            
           }
         });
       }
     }
     this.ngOnInit();
+  }
+
+
+  /**
+   * プロダクトタイプ一覧取得
+   */
+  protected async getProductTypes() {
+    this.httpService.useGet('getProductTypeAll').then(item => {
+      try {
+        if (item) {
+          this.productTypes = item;
+          console.log(item);
+          console.log("プロダクトタイプの取得は成功しました。");
+        } else {
+          console.log("プロダクトタイプの取得は失敗しました。");
+        }
+      } catch (e) {
+        console.log("プロダクトタイプの取得は失敗しました。");
+      }
+    });
+  }
+
+  /**
+   * プロダクト名覧取得
+   */
+  protected async getProductNameList() {
+    this.productNameList = [];
+    let routeif: UserInfo = this.dataFatoryService.getUserInfo();
+    if (routeif != null) {
+      var param = {
+        "loginInfo":this.pageModel.loginInfo,
+        "targetUserInfo":this.pageModel.targetUserInfo,
+        "projectname": this.searchValue,
+      };
+      var res = await this.httpService.post("/searchMyProduct",param);
+      let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+      jsonItem.forEach(element => {
+        this.productNameList.push(element);
+        this.productNameList = [...this.productNameList];
+      });
+      console.log("getProductNameList");
+      console.log(this.productNameList);
+    }
+  }
+
+  viewProjectLinkedDevice(viewProjectLinkedDeviceForm){
+    viewProjectLinkedDeviceForm.reset();
+    this.editModal.close(viewProjectLinkedDeviceForm.resetForm);
   }
 
   // デバイス検索（本地検索）、機能廃棄、API検索に交換

@@ -334,14 +334,19 @@ export class UserComponent implements OnInit {
    * 複数のユーザーを削除する
    */
   deleteCheckedRow() {
-    if (confirm("削除してもよろしいでしょうか")) {
-
-      // 
+      var flg = false;
       for (var selecteUser of this.userList) {
         if (selecteUser.isSelected) {
           this.selectedUserid.push({ "userid": selecteUser.userid });
+          flg = true;
         }
       }
+      if (!flg) {
+        alert("プロダクトを選択してください");
+        return
+      }
+
+      if (confirm("削除してもよろしいでしょうか")) {
       // 削除パラメータの作成
       var query = {
         "loginInfo": this.pageModel.userInfoParame.loginInfo,
@@ -532,7 +537,7 @@ export class UserComponent implements OnInit {
    */
   registerUser(query, addForm: NgForm) {
 
-    this.httpService.usePost('registerUser', query).then(item => {
+    this.httpService.useRpPost('registerUser', query).then(item => {
       try {
         if (item.body.resultCode === "0000") {
           this.ngOnInit();
