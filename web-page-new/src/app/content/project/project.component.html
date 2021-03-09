@@ -107,7 +107,7 @@
                             <input type="checkbox" [checked]="element.isSelected"
                               (change)="checkChange($event,element)">
                           </td>
-                          <td>{{i+1}}</td>
+                          <td>{{(page-1)*pageSize+i+1}}</td>
                           <td>{{ element.projectname }}</td>
                           <td>{{ element.productname }}</td>
                           <td>{{ element.projectsummary }}</td>
@@ -224,7 +224,6 @@
       </button>
     </div>
     <div class="modal-body">
-
       <div class="form-group col-12">
         <h6>プロジェクト名<code>＊</code></h6>
         <input type="text" [(ngModel)]="pageModel.addProject.projectName" #projectname="ngModel" name="projectName" class="form-control"
