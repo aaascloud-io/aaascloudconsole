@@ -36,10 +36,10 @@
                           <button class="btn btn-primary btn-sm gap_contact" (click)="searchProject()">
                             <i class="d-md-none d-block feather ft-plus white"></i>
                             <span class="d-md-block d-none">検　索</span></button>
-
-                          <button class="btn btn-warning btn-sm gap_contact" (click)="clearSearchProject()">
+                          <!-- クリアボタン -->
+                          <!-- <button class="btn btn-warning btn-sm gap_contact" (click)="clearSearchProject()">
                               <i class="d-md-none d-block feather ft-plus white"></i>
-                              <span class="d-md-block d-none">クリア</span></button>
+                              <span class="d-md-block d-none">クリア</span></button> -->
                         </div>
                       </div>
                     </div>
@@ -92,11 +92,23 @@
                           <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAll($event)">
                           </th>
                           <th scope="col" class="thcolor">No.</th>
-                          <th scope="col" class="thcolor" (click)="sortData('projectname')">プロジェクト名</th>
-                          <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト名</th>
-                          <th scope="col" class="thcolor" (click)="sortData('projectsummary')">プロジェクト詳細</th>
-                          <th scope="col" class="thcolor">デバイスグループ数</th>
-                          <th scope="col" class="thcolor">デバイス数</th>
+                          <th scope="col" class="thcolor" (click)="sortData('projectname')">プロジェクト名
+                            <i *ngIf="valueSortFlg.projectNameUp" class="la la-sort-up"></i>
+                            <i *ngIf="valueSortFlg.projectNameDown" class="la la-sort-down"></i>
+                          </th>
+                          <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト名
+                            <i *ngIf="valueSortFlg.productNameUp" class="la la-sort-up"></i>
+                            <i *ngIf="valueSortFlg.productNameDown" class="la la-sort-down"></i>
+                          </th>
+                          <th scope="col" class="thcolor" >プロジェクト詳細</th>
+                          <th scope="col" class="thcolor"(click)="sortData('groupCounts')">デバイスグループ数
+                            <i *ngIf="valueSortFlg.groupCountsUp" class="la la-sort-up"></i>
+                            <i *ngIf="valueSortFlg.groupCountsDown" class="la la-sort-down"></i>
+                          </th>
+                          <th scope="col" class="thcolor"(click)="sortData('deviceCounts')">デバイス数
+                            <i *ngIf="valueSortFlg.deviceCountsUp" class="la la-sort-up"></i>
+                            <i *ngIf="valueSortFlg.deviceCountsDown" class="la la-sort-down"></i>
+                          </th>
                           <th scope="col" class="thcolor">デバイス連携</th>
                           <th scope="col" class="thcolor">操作</th>
                         </tr>
@@ -172,7 +184,7 @@
       <div class="form-group col-12">
         <label>プロジェクト名<code>＊</code></label>
         <input type="text" [(ngModel)]="selectedProject.projectname" #projectname="ngModel" name="projectname"
-          id="projectname" class="name form-control"  [ngClass]="{ 'is-invalid': projectEditForm.submitted && projectname.invalid }" required>
+          id="projectname" class="name form-control"  [ngClass]="{ 'is-invalid': projectEditForm.submitted && projectname.invalid }" required maxlength="50">
         <div *ngIf="projectEditForm.submitted && projectname.invalid" class="invalid-feedback">
             <div *ngIf="projectname.errors.required">プロジェクト名を入力してください。</div>
         </div>
@@ -182,7 +194,7 @@
         <h6>プロダクト名<code>＊</code></h6>
         <select class="form-control" id="productName" name="productName" [(ngModel)]="selectedProject.productid"
           #porductname="ngModel" name="producttypeid" id="producttypeid"
-          [ngClass]="{ 'is-invalid': projectEditForm.submitted && porductname.invalid }" required>
+          [ngClass]="{ 'is-invalid': projectEditForm.submitted && porductname.invalid }" required maxlength="50">
           <option *ngFor="let type of productNameList; let i = index" [ngValue]="type.productid">
             {{type.productname}}
           </option>
@@ -204,7 +216,7 @@
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
-        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
+        <button type="button" class="btn btn-secondary　mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
       </div>
@@ -227,7 +239,7 @@
       <div class="form-group col-12">
         <h6>プロジェクト名<code>＊</code></h6>
         <input type="text" [(ngModel)]="pageModel.addProject.projectName" #projectname="ngModel" name="projectName" class="form-control"
-          placeholder="" required [ngClass]="{ 'is-invalid': NewProjectForm.submitted && projectname.invalid }" required>
+          placeholder="" required [ngClass]="{ 'is-invalid': NewProjectForm.submitted && projectname.invalid }" required maxlength="50">
         <div *ngIf="NewProjectForm.submitted && projectname.invalid" class="invalid-feedback">
           <div *ngIf="projectname.errors.required">プロジェクト名を入力してください。</div>
         </div>
@@ -235,7 +247,7 @@
 
       <div class="form-group col-12">
         <h6>プロダクト名<code>＊</code></h6>
-        <select class="form-control" id="productName" name="productName" [(ngModel)]="pageModel.addProject.productId" #productname="ngModel" name="producttypeid" id="producttypeid" [ngClass]="{ 'is-invalid': NewProjectForm.submitted && productname.invalid }" required>
+        <select class="form-control" id="productName" name="productName" [(ngModel)]="pageModel.addProject.productId" #productname="ngModel" name="producttypeid" id="producttypeid" [ngClass]="{ 'is-invalid': NewProjectForm.submitted && productname.invalid }" required maxlength="50">
           <option *ngFor="let type of productNameList; let i = index" [ngValue]="type.productid">
             {{type.productname}}
           </option>
@@ -255,7 +267,7 @@
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
-        <button type="button" class="btn grey btn-light mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
+        <button type="button" class="btn btn-secondary  mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
       </div>
@@ -282,14 +294,12 @@
             <tr>
               <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllUsableDevice($event)">
               </th>
-              <th scope="col">no.</th>
+              <th scope="col">NO.</th>
+              <th scope="col">SN</th>
+              <th scope="col">IMEI</th>
+              <th scope="col">ICCID</th>
               <th scope="col">デバイス名</th>
-              <th scope="col">imei</th>
-              <th scope="col">プロダクト名</th>
-              <th scope="col">sim_iccid</th>
-              <th scope="col">sim_imsi</th>
-              <th scope="col">sim_tel</th>
-              <th scope="col">sn番号</th>
+              <th scope="col">プロダクト名</th>        
             </tr>
           </thead>
           <tbody>
@@ -299,13 +309,11 @@
                   (change)="checkChangeUsableDevice($event,item)">
               </td>
               <td data-label="no.">{{i + 1}}</td>
-              <td data-label="groupId">{{item.devicename}}</td>
-              <td data-label="deviceName">{{item.imei}}</td>
-              <td data-label="imei">{{item.productname}}</td>
-              <td data-label="imei">{{item.sim_iccid}}</td>
-              <td data-label="imei">{{item.sim_imsi}}</td>
-              <td data-label="imei">{{item.sim_tel}}</td>
               <td data-label="imei">{{item.sn}}</td>
+              <td data-label="deviceName">{{item.imei}}</td>
+              <td data-label="imei">{{item.sim_iccid}}</td>
+              <td data-label="groupId">{{item.devicename}}</td>
+              <td data-label="imei">{{item.productname}}</td>   
             </tr>
           </tbody>
         </table>
@@ -314,6 +322,7 @@
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
+        <button type="button" class="btn btn-secondary　mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
         <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">追加</span></button>
       </div>
@@ -340,14 +349,12 @@
             <tr>
               <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllLinkedDevice($event)">
               </th>
-              <th scope="col">no.</th>
+              <th scope="col">NO.</th>
+              <th scope="col">SN</th>
+              <th scope="col">IMEI</th>
+              <th scope="col">ICCID</th>
               <th scope="col">デバイス名</th>
-              <th scope="col">imei</th>
-              <th scope="col">プロダクト名</th>
-              <th scope="col">sim_iccid</th>
-              <th scope="col">sim_imsi</th>
-              <th scope="col">sim_tel</th>
-              <th scope="col">sn番号</th>
+              <th scope="col">プロダクト名</th> 
             </tr>
           </thead>
           <tbody>
@@ -356,14 +363,14 @@
                 <input type="checkbox" [checked]="item.isSelected"
                   (change)="checkChangeLinkedDevice($event,item)">
               </td>
+
               <td data-label="no.">{{i + 1}}</td>
-              <td data-label="groupId">{{item.devicename}}</td>
-              <td data-label="deviceName">{{item.imei}}</td>
-              <td data-label="imei">{{item.productname}}</td>
-              <td data-label="imei">{{item.sim_iccid}}</td>
-              <td data-label="imei">{{item.sim_imsi}}</td>
-              <td data-label="imei">{{item.sim_tel}}</td>
               <td data-label="imei">{{item.sn}}</td>
+              <td data-label="deviceName">{{item.imei}}</td>
+              <td data-label="imei">{{item.sim_iccid}}</td>
+              <td data-label="groupId">{{item.devicename}}</td>
+              <td data-label="imei">{{item.productname}}</td>   
+              
             </tr>
           </tbody>
         </table>
@@ -372,6 +379,7 @@
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
+        <button type="button" class="btn btn-secondary　mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
         <button type="submit" id="add-contact-item" class="btn btn-danger add-contact-item"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">削除</span></button>
       </div>
@@ -396,25 +404,27 @@
           <thead>
             <tr>
               <th scope="col">no.</th>
+              <th scope="col">sn番号</th>
               <th scope="col">デバイス名</th>
               <th scope="col">imei</th>
               <th scope="col">プロダクト名</th>
-              <th scope="col">sim_iccid</th>
+              <th scope="col">ICCID</th>
               <th scope="col">sim_imsi</th>
               <th scope="col">sim_tel</th>
-              <th scope="col">sn番号</th>
+              
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of linkedDeviceList; let i = index;">
               <td data-label="no.">{{i + 1}}</td>
+              <td data-label="imei">{{item.sn}}</td>
               <td data-label="groupId">{{item.devicename}}</td>
               <td data-label="deviceName">{{item.imei}}</td>
               <td data-label="imei">{{item.productname}}</td>
               <td data-label="imei">{{item.sim_iccid}}</td>
               <td data-label="imei">{{item.sim_imsi}}</td>
               <td data-label="imei">{{item.sim_tel}}</td>
-              <td data-label="imei">{{item.sn}}</td>
+              
             </tr>
           </tbody>
         </table>

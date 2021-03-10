@@ -58,6 +58,15 @@ export class VersionComponent implements OnInit {
   // すべてのproductName
   productNameList = [];
 
+  valueSortFlg = {
+    productNameUp : false,
+    productNameDown : false,
+    versionCodeUp : false,
+    versionCodeDown : false,
+    versionNameUp : false,
+    versionNameDown : false,
+  };
+
   
   public config: PerfectScrollbarConfigInterface = { };
 
@@ -143,6 +152,8 @@ export class VersionComponent implements OnInit {
     this.rows = [...this.rows];
     this.getTabledata();
     this.getProductNameList();
+    console.log("rows");
+    console.log(this.rows);
   }
 
 
@@ -169,14 +180,6 @@ export class VersionComponent implements OnInit {
     }
     if (flg && !this.addVersion['versionname']) {
       confirm(`バージョン名を入力してください。`);
-      flg = false;
-    }
-    if (flg && !this.addVersion['downloadurl']) {
-      confirm(`ダウンロードURLを入力してください。`);
-      flg = false;
-    }
-    if (flg && !this.addVersion['description']) {
-      confirm(`バージョン詳細を入力してください。`);
       flg = false;
     }
 
@@ -310,10 +313,6 @@ export class VersionComponent implements OnInit {
       confirm(`バージョン名を入力してください。`);
       flg = false;
     }
-    if (flg && !this.selectedVersion['downloadurl']) {
-      confirm(`ダウンロードURLを入力してください。`);
-      flg = false;
-    }
 
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null && flg) {
@@ -335,13 +334,13 @@ export class VersionComponent implements OnInit {
             this.ngOnInit();
             alert('プロジェクト情報を改修しました');
           if (versionEditForm.valid === true) {
-  
             versionEditForm.reset();
             this.editModal.close(versionEditForm.resetForm);
           }
           }
         } catch (e) {
           console.log(e);
+          alert(e);
         }
       });
       // versionEditForm.reset();
@@ -378,6 +377,7 @@ export class VersionComponent implements OnInit {
           }
         } catch (e) {
           console.log(e);
+          alert(e);
         }
       });
     }
@@ -417,12 +417,65 @@ export class VersionComponent implements OnInit {
 
   sortData(nm) {
     if (this.sortOn == 1) {
-      this.rows.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.rows.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.rows.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.rows.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
     }
+    this.valueSortFlg.productNameUp = false;
+    this.valueSortFlg.productNameDown = false;
+    this.valueSortFlg.versionCodeUp = false;
+    this.valueSortFlg.versionCodeDown = false;
+    this.valueSortFlg.versionNameUp = false;
+    this.valueSortFlg.versionNameDown = false;
+    switch (nm) {
+      case 'productname':
+        if (this.sortOn == 1) {
+          this.valueSortFlg.productNameUp = true
+        } else {
+          this.valueSortFlg.productNameDown = true
+        }
+        break;
+      case 'versioncode':
+        if (this.sortOn == 1) {
+          this.valueSortFlg.versionCodeUp = true
+        } else {
+          this.valueSortFlg.versionCodeDown = true
+        }
+        break;
+      case 'versionname':
+        if (this.sortOn == 1) {
+          this.valueSortFlg.versionNameUp = true
+        } else {
+          this.valueSortFlg.versionNameDown = true
+        }
+        break;
+    }
+  }
+
+  alphabetically(ascending, nm) {
+    return function (a, b) {
+      // equal items sort equally
+      if (a[nm] === b[nm]) {
+        return 0;
+      }
+      // nulls sort after anything else
+      else if (a[nm] === null) {
+        return 1;
+      }
+      else if (b[nm] === null) {
+        return -1;
+      }
+      // otherwise, if we're ascending, lowest sorts first
+      else if (ascending) {
+        return a[nm] < b[nm] ? -1 : 1;
+      }
+      // if descending, highest sorts first
+      else {
+        return a[nm] < b[nm] ? 1 : -1;
+      }
+    };
   }
 
   /**
