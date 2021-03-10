@@ -71,14 +71,14 @@ export class LoginComponent implements OnInit {
   async tryLogin() {
     this.submitted = true;
 
-    if (this.f.checkcode.value !== this.checkcodeList) {
-      this.alertService.error('確認コードが異なります。');
-      this.resetCheckCode();
+    // stop here if form is invalid
+    if (this.loginForm.invalid) {
       return;
     }
 
-    // stop here if form is invalid
-    if (this.loginForm.invalid) {
+    if (this.f.checkcode.value !== this.checkcodeList) {
+      this.alertService.error('確認コードが異なります。');
+      this.resetCheckCode();
       return;
     }
 
@@ -98,7 +98,7 @@ export class LoginComponent implements OnInit {
       ///自身の情報取得
       // var res = await this.userService.getMyInfo().toPromise();
 
-      var param ={ "username":　this.f.email.value };
+      var param = { "username": this.f.email.value };
       var resUser = await this.httpService.usePost('/login', param).then(item => {
         try {
           if (item != null) {
@@ -112,12 +112,12 @@ export class LoginComponent implements OnInit {
               returnUrl = this.returnUrl;
             }
             this.router.navigate([returnUrl]);
-          }else{
+          } else {
             this.alertService.error("ユーザーを検索API エラー　発生しました。");
           }
         } catch (e) {
           console.log('ユーザーを検索API エラー　発生しました。');
-          throw(e);
+          throw (e);
         }
       })
       // this.router.navigate(["/main/page/dashboard"]);

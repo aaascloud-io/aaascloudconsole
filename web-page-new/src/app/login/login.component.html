@@ -10,52 +10,49 @@
                         <div class="card border-grey border-lighten-3 px-1 py-1 m-0">
                             <div class="card-header border-0">
                                 <div class="card-title text-center">
-                                    <img src="assets/custom/images/logo.png" alt="branding logo">
+                                    <img src="assets/custom/images/logo.png" alt="branding logo" width="70%" height="70%">
                                 </div>
-                                <h6 class="card-subtitle text-muted text-center font-small-3 pt-2">
-                                    <span>i-focus</span></h6>
                             </div>
                             <div class="card-content">
                                 <!-- <app-social-signin></app-social-signin> -->
                                 <p class="card-subtitle text-muted text-center font-small-3 mx-2 my-1">
-                                    <span>AAASCloudConsole</span></p>
-
+                                    <span>AAASCloud管理コンソール</span></p>
                                 <div class="card-body">
                                     <form class="form-horizontal" [formGroup]="loginForm" (ngSubmit)="tryLogin()">
                                         <fieldset class="form-group position-relative has-icon-left">
                                             <input type="text" formControlName="email" class="form-control"
                                                 [ngClass]="{ 'is-invalid': submitted && f.email.errors }" id="user-name"
-                                                placeholder="Your Username" required>
+                                                placeholder="ユーザー名" required>
                                             <div class="form-control-position">
                                                 <i class="la la-user"></i>
                                             </div>
                                             <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                                                <div *ngIf="f.email.errors.required">Username is required</div>
+                                                <div *ngIf="f.email.errors.required">ユーザー名を入力してください</div>
                                             </div>
                                         </fieldset>
                                         <fieldset class="form-group position-relative has-icon-left">
-                                            <input type="password" placeholder="Enter Password"
+                                            <input type="password" placeholder="パスワード"
                                                 formControlName="password" class="form-control"
                                                 [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
                                             <div class="form-control-position">
                                                 <i class="la la-key"></i>
                                             </div>
                                             <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                                                <div *ngIf="f.password.errors.required">Password is required</div>
+                                                <div *ngIf="f.password.errors.required">パスワードを入力してください</div>
                                             </div>
 
                                         </fieldset>
                                         <fieldset class="form-group position-relative has-icon-left">
                                             <input type="text" formControlName="checkcode" class="form-control"
                                                 [ngClass]="{ 'is-invalid': submitted && f.checkcode.errors }"
-                                                placeholder="Check Code" required>
+                                                placeholder="チェックコード" required>
                                             <div class="form-control-position">
                                                 <!-- <i class="la la-expeditedssl"></i> -->
                                                 <!-- <i class="la la-shield"></i> -->
                                                 <i class="la la-lock"></i>
                                             </div>
                                             <div *ngIf="submitted && f.checkcode.errors" class="invalid-feedback">
-                                                <div *ngIf="f.checkcode.errors.required">Check Code is required</div>
+                                                <div *ngIf="f.checkcode.errors.required">チェックコードを入力してください</div>
                                             </div>
                                         </fieldset>
                                         <fieldset class="form-group position-relative has-icon-left">
@@ -65,7 +62,7 @@
                                         </fieldset>
                                         <button type="submit" class="btn btn-outline-info btn-block">
                                             <i class="fa fa-refresh fa-spin" *ngIf="submitted"></i>
-                                            <i class="feather ft-unlock" *ngIf="!submitted"></i> Login
+                                            <i class="feather ft-unlock" *ngIf="!submitted"></i> ログイン
                                         </button>
                                     </form>
                                 </div>

@@ -34,8 +34,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.profileForm = this.formBuilder.group({
-      // email: ['', Validators.required],
-      username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       newpassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmpassword: ['', [Validators.required, Validators.minLength(6)],]
@@ -66,18 +64,14 @@ export class ProfileComponent implements OnInit {
       return;
     }
     try {
-      ///認証
-      await this.httpService.accessToken(
-        this.f.username.value,
-        this.f.password.value
-      );
-      // ///権限チェック
-      // await this.userService.authorized().toPromise();
-      ///自身の情報取得
-      // var res = await this.userService.getMyInfo().toPromise();
-
+      //権限取得
       let item: UserInfo = this.dataFatoryService.getUserInfo();
       if (item != null) {
+      ///認証
+      await this.httpService.accessToken(
+        item.login_id,
+        this.f.password.value
+      );
         var param = {
           "loginInfo": {
             "loginuserid": item.uid,
@@ -89,26 +83,30 @@ export class ProfileComponent implements OnInit {
             "targetuserid": item.uid,
             "targetuserCompanyid": item.company
           },
-          "username": this.f.username.value,
+          "username": item.login_id,
           "password": this.f.newpassword.value
         }
-      }
-
-      var resUser = await this.httpService.useRpPost('/updateProfile', param).then(item => {
-        try {
-          if (item != null) {
-            this.ngOnInit();
-            // $("#addinfo").hide();
-            // $('.modal-backdrop').remove();
-            alert('パスワードを変更しました');
-            this.logout();
+        var resUser = await this.httpService.useRpPost('/updateProfile', param).then(item => {
+          try {
+            if (item != null) {
+              if(item.resultCode==="0000"){
+                this.ngOnInit();
+                // $("#addinfo").hide();
+                // $('.modal-backdrop').remove();
+                alert('パスワードを変更しました');
+                this.logout();
+              }else if(item.resultCode==="0006"){
+                alert('アクセス権限取得エラー');
+              }else{
+                alert('パスワードを変更APIエラー発生しました');
+              }
+            }
+          } catch (e) {
+            console.log('パスワードを変更APIエラー発生しました');
           }
+        })
 
-        } catch (e) {
-          console.log('パスワードを変更APIエラー発生しました');
-        }
-      })
-
+      }
       // this.router.navigate(["/main/page/dashboard"]);
     } catch (err) {
       // this.handleError('操作失敗', err);
