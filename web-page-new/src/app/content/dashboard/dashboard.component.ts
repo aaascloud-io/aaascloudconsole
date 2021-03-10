@@ -419,10 +419,10 @@ export class DashboardComponent implements OnInit {
       let item: UserInfo = this.dataFatoryService.getUserInfo();
       if (item != null) {
         var param = {
-            "username": item.uid
+            "username": item.login_id
         }
       }
-      this.httpService.usePost('/getDashboardInfo', { "username":"ifocus" }).then(item => {
+      this.httpService.usePost('/getDashboardInfo', param).then(item => {
         try {
     
             if(item!= null){

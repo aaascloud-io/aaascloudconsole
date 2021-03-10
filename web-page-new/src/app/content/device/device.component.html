@@ -43,7 +43,7 @@
                     </div>
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
-                        <label for="">所有者</label>
+                        <label for="">会社名</label>
                         <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname"
                           [(ngModel)]="pageModel.query.conpanySelected">
                         </ng-select>
@@ -109,7 +109,7 @@
                           *ngIf="pageModel.sort.iccidUp" class="la la-sort-up"></i><i *ngIf="pageModel.sort.iccidDown"
                           class="la la-sort-down"></i></th>
                       <th scope="col" class="thcolor">状態</th>
-                      <th scope="col" class="thcolor" (click)="sortData('companyname')">所有者<i
+                      <th scope="col" class="thcolor" (click)="sortData('companyname')">会社名<i
                           *ngIf="pageModel.sort.companynameUp" class="la la-sort-up"></i><i
                           *ngIf="pageModel.sort.companynameDown" class="la la-sort-down"></i></th>
                       <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト<i
@@ -179,14 +179,14 @@
     <div class="modal-body">
       <div class="row">
         <div class="form-group col-lg-6 col-md-12">
-          <h6>デバイス名</h6>
-          <input type="text" [(ngModel)]="selectedDevice.devicename" name="devicename" class="form-control"
-            placeholder="" maxlength="50">
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
           <h6>SN<code>＊</code></h6>
           <input type="text" [(ngModel)]="selectedDevice.sn" name="sn" id="contact-phone"
             class="contact-phone form-control" placeholder="SN" readonly="readonly" maxlength="20">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>デバイス名</h6>
+          <input type="text" [(ngModel)]="selectedDevice.devicename" name="devicename" class="form-control"
+            placeholder="" maxlength="50">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>IMEI<code>＊</code></h6>
@@ -198,33 +198,32 @@
           <input type="text" [(ngModel)]="selectedDevice.sim_iccid" name="sim_iccid" class="contact-email form-control"
             placeholder="ICCID" maxlength="20">
         </div>
-        <div class="form-group col-lg-6 col-md-12">
+        <!-- <div class="form-group col-lg-6 col-md-12">
           <h6>所有者</h6>
           <input type="text" [(ngModel)]="selectedDevice.companyname" name="companyid" class="form-control"
             placeholder="" readonly="readonly">
+        </div> -->
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>所有者<code>＊</code></h6>
+          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="username" 
+            name="underUsers" [(ngModel)]="SelectedDeviceDetail" #underUsersngname="ngModel" required>
+          </ng-select>
+          <div *ngIf="editDeviceForm.submitted && underUsersngname.invalid" class="invalid-feedback d-block">
+            <div *ngIf="underUsersngname.errors.required">所有者を選択してください</div>
+          </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクト<code>＊</code></h6>
           <ng-select [items]="productSelectArray" name="product" bindLabel="productname" [searchable]="true"
-            [(ngModel)]="pageModel.deviceDetail.productSelected" #productngname="ngModel" required>
+            [(ngModel)]="SelectedDeviceDetail" #productngname="ngModel" required>
           </ng-select>
           <div *ngIf="editDeviceForm.submitted && productngname.invalid" class="invalid-feedback d-block">
-            <div *ngIf="productngname.errors.required">product is required</div>
+            <div *ngIf="productngname.errors.required">プロダクトを選択してください</div>
           </div>
           <!-- <ng-select [items]="productSelectArray" name="product" bindLabel="productname" bindValue="productid"
           [(ngModel)]="pageModel.deviceDetail.productid" required #productngname="ngModel" bindValue="productid"
           [ngClass]="{ 'is-invalid': registerDeviceForm.submitted && productngname.invalid }" required>
         </ng-select> -->
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>ファームウェア・バージョン</h6>
-          <input type="text" [(ngModel)]="selectedDevice.fmlastestversion" name="fmlastestversion" class="form-control"
-            placeholder="" readonly="readonly">
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>ファームウェア・バージョンの最新の確認時刻</h6>
-          <input type="text" [(ngModel)]="selectedDevice.versioncomfirmtime" name="versioncomfirmtime"
-            class="form-control" placeholder="" readonly="readonly">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカードIMSI</h6>
@@ -236,6 +235,48 @@
           <input type="text" [(ngModel)]="selectedDevice.sim_tel" name="sim_tel" class="phone form-control"
             placeholder="SIMカード電話番号" (focusout)="lengthCheck(selectedDevice.sim_tel,'simtel',editForm)" maxlength="11"
             appNumbersOnly>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>暗号化キー</h6>
+          <input type="text" class="form-control" name="encryptedKey" placeholder=""
+            [(ngModel)]="selectedDevice.encryptedkey">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>暗号化通信</h6>
+          <!-- <ng-select [items]="sslSelectArray" [searchable]="true" bindLabel="item_text" placeholder="暗号化通信" name="ssl"
+            [(ngModel)]="pageModel.deviceDetail.sslSelected">
+          </ng-select> -->
+          <div class="float-left">
+            <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" name="ssl"
+              [(ngModel)]="selectedDevice.sslChecked"></ui-switch>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>接続サーバーアドレス</h6>
+          <input type="text" class="form-control" name="connectserverurl" placeholder="" maxlength="50"
+            [(ngModel)]="selectedDevice.connectserverurl">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>接続サーバーポート番号</h6>
+          <input type="text" class="form-control" name="connectserverport" placeholder="" maxlength="4"
+            [(ngModel)]="selectedDevice.connectserverport">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>バンディング済みフラグ</h6>
+          <div class="float-left">
+            <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" name="bindingflag"
+              [(ngModel)]="selectedDevice.bindingflagChecked"></ui-switch>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>ファームウェア・バージョン</h6>
+          <input type="text" [(ngModel)]="selectedDevice.fmlastestversion" name="fmlastestversion" class="form-control"
+            placeholder="" readonly="readonly">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>ファームウェア・バージョンの最新の確認時刻</h6>
+          <input type="text" [(ngModel)]="selectedDevice.versioncomfirmtime" name="versioncomfirmtime"
+            class="form-control" placeholder="" readonly="readonly">
         </div>
       </div>
     </div>
@@ -275,7 +316,7 @@
             maxlength="20" class="contact-phone form-control" placeholder="SN"
             [ngClass]="{ 'is-invalid': registerDeviceForm.submitted && snname.invalid }" required>
           <div *ngIf="registerDeviceForm.submitted && snname.invalid" class="invalid-feedback">
-            <div *ngIf="snname.errors.required">sn is required</div>
+            <div *ngIf="snname.errors.required">SNを入力してください</div>
           </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
@@ -284,7 +325,7 @@
             maxlength="20" placeholder="IMEI" #imeiname="ngModel"
             [ngClass]="{ 'is-invalid': registerDeviceForm.submitted && imeiname.invalid }" required>
           <div *ngIf="registerDeviceForm.submitted && imeiname.invalid" class="invalid-feedback">
-            <div *ngIf="imeiname.errors.required">imei is required</div>
+            <div *ngIf="imeiname.errors.required">IMEIを入力してください</div>
           </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
@@ -293,20 +334,33 @@
             class="contact-email form-control" maxlength="20" placeholder="ICCID">
         </div>
         <div class="form-group col-lg-6 col-md-12">
-          <h6>所有者</h6>
-          <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname" bindValue="companyid"
-            placeholder="所有者" name="company" [(ngModel)]="pageModel.deviceDetail.companyid">
+          <h6>所有者<code>＊</code></h6>
+          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="username" bindValue="userid"
+             name="username" [(ngModel)]="pageModel.deviceDetail.userid" #underusersname="ngModel" required>
           </ng-select>
+          <div *ngIf="registerDeviceForm.submitted && underusersname.invalid" class="invalid-feedback d-block">
+            <div *ngIf="underusersname.errors.required">所有者を入力してください</div>
+          </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクト<code>＊</code></h6>
           <ng-select [items]="productSelectArray" name="product" bindLabel="productname" bindValue="productid"
-            [(ngModel)]="pageModel.deviceDetail.productid" required #productngname="ngModel" 
+            [(ngModel)]="pageModel.deviceDetail.productid" #productngname="ngModel" 
             [ngClass]="{ 'is-invalid': registerDeviceForm.submitted && productngname.invalid }" required>
           </ng-select>
           <div *ngIf="registerDeviceForm.submitted && productngname.invalid" class="invalid-feedback d-block">
-            <div *ngIf="productngname.errors.required">product is required</div>
+            <div *ngIf="productngname.errors.required">プロダクトを入力してください</div>
           </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>SIMカードIMSI</h6>
+          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_imsi" name="sim_imsi" class="form-control"
+            maxlength="50" placeholder="">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>SIMカード電話番号</h6>
+          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="sim_tel" class="phone form-control"
+            placeholder="フォーマット:08054080520" maxlength="11" appNumbersOnly>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>暗号化キー</h6>
@@ -340,16 +394,7 @@
               [(ngModel)]="pageModel.deviceDetail.bindingflagChecked"></ui-switch>
           </div>
         </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>SIMカードIMSI</h6>
-          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_imsi" name="sim_imsi" class="form-control"
-            maxlength="50" placeholder="">
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>SIMカード電話番号</h6>
-          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="sim_tel" class="phone form-control"
-            placeholder="フォーマット:08054080520" maxlength="11" appNumbersOnly>
-        </div>
+
       </div>
     </div>
     <div class="modal-footer">
@@ -389,27 +434,27 @@
       <table id="list-table" class="table table-hover table-bordered" cellspacing="0" name="devicestable">
         <thead>
           <tr>
-            <th scope="col">no.</th>
-            <th scope="col">projectid</th>
-            <th scope="col">groupId</th>
-            <th scope="col">deviceName</th>
-            <th scope="col">imei</th>
-            <th scope="col">iccid</th>
-            <th scope="col">sn</th>
-            <th scope="col">sim_imsi</th>
-            <th scope="col">sim_tel</th>
-            <th scope="col">encryptedCommunications</th>
-            <th scope="col">encryptedKey</th>
-            <th scope="col">connectServerURL</th>
-            <th scope="col">connectServerPort</th>
-            <th scope="col">bindingFlag</th>
-            <th scope="col">fmLastestVersion</th>
-            <th scope="col">versionComfirmTime</th>
-            <th scope="col">productId</th>
-            <th scope="col">companyId</th>
-            <th scope="col">userId</th>
-            <th scope="col">lastProjectId</th>
-            <th scope="col">lastGroupId</th>
+            <th scope="col">No.</th>
+            <th scope="col">プロジェクトID</th>
+            <th scope="col">グループID</th>
+            <th scope="col">デバイス名</th>
+            <th scope="col">SN</th>
+            <th scope="col">IMEI</th>
+            <th scope="col">SIMカードICCID</th>
+            <th scope="col">SIMカードIMSI</th>
+            <th scope="col">SIMカード電話番号</th>
+            <th scope="col">暗号化通信</th>
+            <th scope="col">暗号化キー</th>
+            <th scope="col">接続サーバアドレス</th>
+            <th scope="col">接続サーバポート番号</th>
+            <th scope="col">バンディング済みフラグ</th>
+            <th scope="col">ファームウェア・最新バージョン</th>
+            <th scope="col">ファームウェア・最新バージョン確認時刻</th>
+            <th scope="col">プロダクトID</th>
+            <th scope="col">会社ID</th>
+            <th scope="col">ユーザーID</th>
+            <th scope="col">元プロジェクトID</th>
+            <th scope="col">元グループID</th>
           </tr>
         </thead>
         <tbody>
@@ -418,9 +463,9 @@
             <td data-label="projectid">{{item.projectid}}</td>
             <td data-label="groupId">{{item.groupid}}</td>
             <td data-label="deviceName">{{item.devicename}}</td>
+            <td data-label="sn">{{item.sn}}</td>
             <td data-label="imei">{{item.imei}}</td>
             <td data-label="iccid">{{item.sim_iccid}}</td>
-            <td data-label="sn">{{item.sn}}</td>
             <td data-label="sim_imsi">{{item.sim_imsi}}</td>
             <td data-label="sim_tel">{{item.sim_tel}}</td>
             <td data-label="encryptedCommunications">{{item.encryptedcommunications}}</td>
@@ -432,7 +477,6 @@
             <td data-label="versionComfirmTime">{{item.versioncomfirmtime}}</td>
             <td data-label="productId">{{item.productid}}</td>
             <td data-label="companyId">{{item.companyid}}</td>
-            <!-- <td data-label="industry">{{item.industry}}</td> -->
             <td data-label="userId">{{item.userid}}</td>
             <td data-label="lastProjectId">{{item.lastprojectId}}</td>
             <td data-label="lastGroupId">{{item.lastgroupid}}</td>

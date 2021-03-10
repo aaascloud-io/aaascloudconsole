@@ -23,6 +23,8 @@ export class DeviceComponent implements OnInit {
   deviceSelected = false;
   public companySelectArray = [];
   public productSelectArray = [];
+  public underUsersSelectArray = [];
+
   selectedDevice: any;
   //page用
   pageSize: any;
@@ -30,6 +32,7 @@ export class DeviceComponent implements OnInit {
   page = 1;
   TableData: any;
   sortOn: any;
+  SelectedDeviceDetail: {};
 
   public pageModel = {
     //Loginユーザー情報
@@ -69,11 +72,11 @@ export class DeviceComponent implements OnInit {
       bindingflag: 0,
       fmlastestversion: '',
       versioncomfirmtime: '',
-      productSelected: {},
       productid: '',
       sim_imsi: '',
       sim_tel: '',
-      sim_iccid: ''
+      sim_iccid: '',
+      userid:''
     },
     sort: {
       snUp: false,
@@ -216,7 +219,19 @@ export class DeviceComponent implements OnInit {
       } catch (e) {
         console.log('プロダクト一覧を取得API エラー　発生しました。');
       }
-    })
+    });
+
+    this.httpService.usePost('/searchUnderUsers', param).then(item => {
+      try {
+        if (item != null) {
+          this.underUsersSelectArray = item;
+        }
+      } catch (e) {
+        console.log('プロダクト一覧を取得API エラー　発生しました。');
+      }
+    });
+
+    
   }
 
   /**
@@ -262,11 +277,13 @@ export class DeviceComponent implements OnInit {
    */
   openEditModal(editDeviceModel, row) {
     this.selectedDevice = Object.assign({}, row);
+    this.selectedDevice.sslChecked =  this.selectedDevice["encryptedcommunications"] == 0 ? false : true;
+    this.selectedDevice.bindingflagChecked =  this.selectedDevice["bindingflag"] == 0 ? false : true;
     this.editModal = this.modal.open(editDeviceModel, {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
-    this.pageModel.deviceDetail.productSelected = row;
+    this.SelectedDeviceDetail= row;
   }
 
   /**
@@ -347,7 +364,8 @@ export class DeviceComponent implements OnInit {
  * 
  */
   editDeviceDetail(editDeviceForm: NgForm, deviceid,editForm: ElementRef) {
-    if (this.pageModel.deviceDetail.productSelected["productid"] == null) {
+    
+    if (this.SelectedDeviceDetail["productid"] == null) {
       return;
     }
     let routeif: UserInfo = this.httpService.getLoginUser();
@@ -355,7 +373,7 @@ export class DeviceComponent implements OnInit {
       this.pageModel.deviceDetail.deviceid = deviceid
       this.pageModel.deviceDetail.devicename = this.selectedDevice['devicename'];
       this.pageModel.deviceDetail.sim_iccid = this.selectedDevice['sim_iccid'];
-      this.pageModel.deviceDetail.productid = this.pageModel.deviceDetail.productSelected["productid"];
+      this.pageModel.deviceDetail.productid = this.SelectedDeviceDetail["productid"];
       this.pageModel.deviceDetail.sim_imsi = this.selectedDevice['sim_imsi'];
       this.pageModel.deviceDetail.sim_tel = this.selectedDevice['sim_tel'];
       var param = {
