@@ -111,6 +111,22 @@ export class ProductComponent implements OnInit {
       productname: '',
       createusername: '',
     },
+    sort: {
+      producttypenameUp: false,
+      producttypenameDown: false,
+      productcodeUp: false,
+      productcodeDown: false,
+      productnameUp: false,
+      productnameDown: false,
+      modelUp: false,
+      modelDown: false,
+      simflagUp: false,
+      simflagDown: false,
+      versionUp: false,
+      versionDown: false,
+      createusernameUp: false,
+      createusernameDown: false,
+    }
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -318,7 +334,7 @@ export class ProductComponent implements OnInit {
 
     this.httpService.put('updateProduct', query).then(item => {
       try {
-        if (item.body.resultCode === "0000") {
+        if (item.resultCode === "0000") {
           console.log('更新成功です。');
           console.log(item);
           alert('更新成功です。');
@@ -386,7 +402,7 @@ export class ProductComponent implements OnInit {
     }
 
     if (flg && !createuserid) {
-      confirm(`作成者を選択してください。`);
+      confirm(`利用者を選択してください。`);
       flg = false;
     }
 
@@ -568,8 +584,84 @@ export class ProductComponent implements OnInit {
       this.productList.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.productList.sort(this.alphabetically(true, nm));
+      this.productList.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
+    }
+
+    this.pageModel.sort.producttypenameUp = false;
+    this.pageModel.sort.producttypenameDown = false;
+    this.pageModel.sort.productcodeUp = false;
+    this.pageModel.sort.productcodeDown = false;
+    this.pageModel.sort.productnameUp = false;
+    this.pageModel.sort.productnameDown = false;
+
+    this.pageModel.sort.modelUp = false;
+    this.pageModel.sort.modelDown = false;
+
+    this.pageModel.sort.simflagUp = false;
+    this.pageModel.sort.simflagDown = false;
+    this.pageModel.sort.versionUp = false;
+    this.pageModel.sort.versionDown = false;
+    this.pageModel.sort.createusernameUp = false;
+    this.pageModel.sort.createusernameDown = false;
+
+    switch (nm) {
+      case 'producttypename':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.producttypenameUp = true
+        } else {
+          this.pageModel.sort.producttypenameDown = true
+        }
+        break;
+      case 'productcode':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.productcodeUp = true
+        } else {
+          this.pageModel.sort.productcodeDown = true
+        }
+        break;
+      case 'productname':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.productnameUp = true
+        } else {
+          this.pageModel.sort.productnameDown = true
+        }
+        break;
+      case 'model':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.modelUp = true
+        } else {
+          this.pageModel.sort.modelDown = true
+        }
+        break;
+      case 'simflag':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.simflagUp = true
+        } else {
+          this.pageModel.sort.simflagDown = true
+        }
+        break;
+      case 'version':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.versionUp = true
+        } else {
+          this.pageModel.sort.versionDown = true
+        }
+        break;
+      case 'createusername':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.createusernameUp = true
+        } else {
+          this.pageModel.sort.createusernameDown = true
+        }
+        break;
+      case 'createusername':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.createusernameUp = true
+        } else {
+          this.pageModel.sort.createusernameDown = true
+        }
+        break;
     }
   }
 

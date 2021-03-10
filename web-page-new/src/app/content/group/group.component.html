@@ -68,8 +68,14 @@
                           (change)="checkAll($event)">
                       </th>
                       <th scope="col" class="thcolor">No.</th>
-                      <th scope="col" class="thcolor" (click)="sortData('groupname')">グループ名</th>
-                      <th scope="col" class="thcolor" (click)="sortData('projectname')">所属プロジェクト名</th>
+                      <th scope="col" class="thcolor" (click)="sortData('groupname')">グループ名
+                        <i *ngIf="pageModel.sort.groupnameUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.groupnameDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" (click)="sortData('projectname')">所属プロジェクト名
+                        <i *ngIf="pageModel.sort.projectnameUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.projectnameDown"class="la la-sort-down"></i>
+                      </th>
                       <th scope="col" class="thcolor">デバイス数</th>
                       <th scope="col" class="thcolor">グループ説明</th>
                       <th scope="col" class="thcolor">デバイス連携</th>
@@ -237,13 +243,11 @@
               <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAllUsableDevice($event)">
               </th>
               <th scope="col">no.</th>
-              <th scope="col">デバイス名</th>
-              <th scope="col">IMEI</th>
-              <th scope="col">プロダクト名</th>
-              <th scope="col">ICCID</th>
-              <th scope="col">IMSI</th>
-              <th scope="col">SIMカード電話番号</th>
               <th scope="col">SN</th>
+              <th scope="col">IMEI</th>
+              <th scope="col">ICCID</th>
+              <th scope="col">デバイス名</th>
+              <th scope="col">プロダクト名</th>
             </tr>
           </thead>
           <tbody>
@@ -252,13 +256,11 @@
                 <input type="checkbox" [checked]="item.isSelected" (change)="checkChangeUsableDevice($event,item)">
               </td>
               <td data-label="no.">{{i + 1}}</td>
-              <td data-label="groupId">{{item.devicename}}</td>
-              <td data-label="deviceName">{{item.imei}}</td>
-              <td data-label="productname">{{item.productname}}</td>
-              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
-              <td data-label="sim_imsi">{{item.sim_imsi}}</td>
-              <td data-label="sim_tel">{{item.sim_tel}}</td>
               <td data-label="sn">{{item.sn}}</td>
+              <td data-label="deviceName">{{item.imei}}</td>
+              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
+              <td data-label="groupId">{{item.devicename}}</td>
+              <td data-label="productname">{{item.productname}}</td>
             </tr>
           </tbody>
         </table>
@@ -295,13 +297,11 @@
               <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAllGroupDevice($event)">
               </th>
               <th scope="col">no.</th>
-              <th scope="col">デバイス名</th>
-              <th scope="col">IMEI</th>
-              <th scope="col">プロダクト名</th>
-              <th scope="col">ICCID</th>
-              <th scope="col">IMSI</th>
-              <th scope="col">SIMカード電話番号</th>
               <th scope="col">SN</th>
+              <th scope="col">IMEI</th>
+              <th scope="col">ICCID</th>
+              <th scope="col">デバイス名</th>
+              <th scope="col">プロダクト名</th>
             </tr>
           </thead>
           <tbody>
@@ -310,13 +310,11 @@
                 <input type="checkbox" [checked]="item.isSelected" (change)="checkChangeGroupDevice($event,item)">
               </td>
               <td data-label="no.">{{i + 1}}</td>
-              <td data-label="groupId">{{item.devicename}}</td>
-              <td data-label="deviceName">{{item.imei}}</td>
-              <td data-label="productname">{{item.productname}}</td>
-              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
-              <td data-label="sim_imsi">{{item.sim_imsi}}</td>
-              <td data-label="sim_tel">{{item.sim_tel}}</td>
               <td data-label="sn">{{item.sn}}</td>
+              <td data-label="deviceName">{{item.imei}}</td>
+              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
+              <td data-label="groupId">{{item.devicename}}</td>
+              <td data-label="productname">{{item.productname}}</td>
             </tr>
           </tbody>
         </table>
@@ -350,25 +348,21 @@
           <thead>
             <tr>
               <th scope="col">no.</th>
-              <th scope="col">デバイス名</th>
-              <th scope="col">IMEI</th>
-              <th scope="col">プロダクト名</th>
-              <th scope="col">ICCID</th>
-              <th scope="col">IMSI</th>
-              <th scope="col">SIMカード電話番号</th>
               <th scope="col">SN</th>
+              <th scope="col">IMEI</th>
+              <th scope="col">ICCID</th>
+              <th scope="col">デバイス名</th>
+              <th scope="col">プロダクト名</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of groupDeviceList; let i = index;">
               <td data-label="no.">{{i + 1}}</td>
-              <td data-label="groupId">{{item.devicename}}</td>
-              <td data-label="deviceName">{{item.imei}}</td>
-              <td data-label="productname">{{item.productname}}</td>
-              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
-              <td data-label="sim_imsi">{{item.sim_imsi}}</td>
-              <td data-label="sim_tel">{{item.sim_tel}}</td>
               <td data-label="sn">{{item.sn}}</td>
+              <td data-label="deviceName">{{item.imei}}</td>
+              <td data-label="sim_iccid">{{item.sim_iccid}}</td>
+              <td data-label="groupId">{{item.devicename}}</td>
+              <td data-label="productname">{{item.productname}}</td>
             </tr>
           </tbody>
         </table>

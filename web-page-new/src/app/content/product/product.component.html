@@ -29,7 +29,7 @@
                     </div>
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
-                        <label for="">作成者</label>
+                        <label for="">利用者</label>
                         <input type="text" class="form-control" id="" placeholder=""
                           [(ngModel)]="pageModel.query.createusername">
                       </div>
@@ -75,13 +75,34 @@
                           (change)="checkAll($event)">
                       </th>
                       <th scope="col" class="thcolor">No.</th>
-                      <th scope="col" class="thcolor" (click)="sortData('producttypename')">タイプ</th>
-                      <th scope="col" class="thcolor" (click)="sortData('productcode')">プロダクトコード</th>
-                      <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト名</th>
-                      <th scope="col" class="thcolor" (click)="sortData('model')">型番</th>
-                      <th scope="col" class="thcolor" (click)="sortData('simflag')">SIMカード</th>
-                      <th scope="col" class="thcolor" (click)="sortData('version')">バージョン</th>
-                      <th scope="col" class="thcolor" (click)="sortData('createusername')">作成者</th>
+                      <th scope="col" class="thcolor" (click)="sortData('producttypename')">タイプ
+                        <i *ngIf="pageModel.sort.producttypenameUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.producttypenameDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" (click)="sortData('productcode')">プロダクトコード
+                        <i *ngIf="pageModel.sort.productcodeUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.productcodeDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト名
+                        <i *ngIf="pageModel.sort.productnameUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.productnameDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" (click)="sortData('model')">型番
+                        <i *ngIf="pageModel.sort.modelUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.modelDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" (click)="sortData('simflag')">SIMカード
+                        <i *ngIf="pageModel.sort.simflagUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.simflagDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" (click)="sortData('version')">バージョン
+                        <i *ngIf="pageModel.sort.versionUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.versionDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" (click)="sortData('createusername')">利用者
+                        <i *ngIf="pageModel.sort.createusernameUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.createusernameDown"class="la la-sort-down"></i>
+                      </th>
                       <th scope="col" class="thcolor">操作</th>
                     </tr>
                   </thead>
@@ -154,7 +175,7 @@
           </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
-          <h6>作成者</h6>
+          <h6>利用者</h6>
           <input type="text" [(ngModel)]="selectedContact.createusername" #editmodel="ngModel" name="createusername"
             id="createusername" class="name form-control" placeholder="プロダクトコード" maxlength="10" disabled>
         </div>
@@ -232,7 +253,7 @@
           </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
-          <h6>作成者<code>＊</code></h6>
+          <h6>利用者<code>＊</code></h6>
           <select class="form-control" id="createuserid" name="createuserid"
             [(ngModel)]="pageModel.addProduct.createuserid" #edituserid="ngModel"
             [ngClass]="{ 'is-invalid': addForm.submitted && edituserid.invalid }" required>
@@ -241,7 +262,7 @@
             </option>
           </select>
           <div *ngIf="addForm.submitted && edituserid.invalid" class="invalid-feedback">
-            <div *ngIf="edituserid.errors.required">作成者を選択してください。</div>
+            <div *ngIf="edituserid.errors.required">利用者を選択してください。</div>
           </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">

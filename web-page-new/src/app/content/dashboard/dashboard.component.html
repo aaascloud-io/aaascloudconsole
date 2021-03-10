@@ -5,14 +5,14 @@
     <div class="content-body">
       <!-- Dashboard statistic -->
       <div class="row">
-        <div class="titlewidth">
+        <div class="col-xl-2 col-md-4 col-12">
           <div class="card pull-up">
             <div class="card-content">
               <div class="card-body card_padding">
                 <div class="media d-flex">
                   <div class="media-body text-left">
                     <h3 class="purple">{{pageModel.userLength}}</h3>
-                    <h6>ユーザー数</h6>
+                    <h6>ユーザー　　</h6>
                   </div>
                   <div>
                     <i class="fa fa-users purple font-large-2 float-right"></i>
@@ -25,7 +25,7 @@
             </div>
           </div>
         </div>
-        <div class="titlewidth">
+        <div class="col-xl-2 col-md-4 col-12">
 
           <div class="card pull-up">
             <div class="card-content">
@@ -33,7 +33,7 @@
                 <div class="media d-flex">
                   <div class="media-body text-left">
                     <h3 class="success">{{pageModel.projectLength}}</h3>
-                    <h6>プロジェクト数</h6>
+                    <h6>プロジェクト</h6>
                   </div>
                   <div>
                     <i class="fa fa-file-text success font-large-2 float-right"></i>
@@ -46,28 +46,28 @@
             </div>
           </div>
         </div>
-        <div class="titlewidth">
+        <div class="col-xl-2 col-md-4 col-12">
 
           <div class="card pull-up">
             <div class="card-content">
               <div class="card-body card_padding">
                 <div class="media d-flex">
                   <div class="media-body text-left">
-                    <h3 class="red">{{pageModel.productLength}}</h3>
-                    <h6>プロダクト</h6>
+                    <h3 class="primary">{{pageModel.productLength}}</h3>
+                    <h6>プロダクト　　</h6>
                   </div>
                   <div>
-                    <i class="fa feather ft-edit red font-large-2 float-right"></i>
+                    <i class="fa feather ft-edit primary font-large-2 float-right"></i>
                   </div>
                 </div>
                 <div class="mb-0 mt-1">
-                  <ngb-progressbar height="7px" width="100%" type="gradient-x-red" [value]="80"></ngb-progressbar>
+                  <ngb-progressbar height="7px" width="100%" type="gradient-x-primary" [value]="80"></ngb-progressbar>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="titlewidth">
+        <div class="col-xl-2 col-md-4 col-12">
           <div class="card pull-up">
             <div class="card-content">
               <div class="card-body card_padding">
@@ -76,7 +76,7 @@
                     <!-- <code style="font-size: 5px;float: left;color: #5bc0de; ">オンライン</code> -->
                     <!-- <code style="font-size: 5px;float: right;color: #5bc0de; ">事前定義総数</code> -->
                     <h3 class="info">{{pageModel.deviceOnlLength}}/{{pageModel.deciveLength}}</h3>
-                    <h6>IoTデバイス数</h6>
+                    <h6>デバイス</h6>
                   </div>
                   <div>
                     <i class="fa fa-hdd-o info font-large-2 float-right" style="padding-left: 10px"></i>
@@ -90,18 +90,38 @@
             </div>
           </div>
         </div>
-        <div class="titlewidth">
+        <div class="col-xl-2 col-md-4 col-12">
 
           <div class="card pull-up">
             <div class="card-content">
               <div class="card-body card_padding">
                 <div class="media d-flex">
                   <div class="media-body text-left">
-                    <h3 class="warning">{{pageModel.errlogLength}}</h3>
-                    <h6>エラー</h6>
+                    <h3 class="danger">{{pageModel.errlogLength}}</h3>
+                    <h6>エラー　　　　</h6>
                   </div>
                   <div>
-                    <i class="fa fa-bug warning font-large-2 float-right"></i>
+                    <i class="fa fa-bug danger font-large-2 float-right"></i>
+                  </div>
+                </div>
+                <div class="mb-0 mt-1">
+                  <ngb-progressbar height="7px" width="100%" type="gradient-x-danger" [value]="85"></ngb-progressbar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-2 col-md-4 col-12">
+          <div class="card pull-up">
+            <div class="card-content">
+              <div class="card-body card_padding">
+                <div class="media d-flex">
+                  <div class="media-body text-left">
+                    <h3 class="warning">{{pageModel.errlogLength}}</h3>
+                    <h6>通知　　　　</h6>
+                  </div>
+                  <div>
+                    <i class="fa fa-bell warning font-large-2 float-right"></i>
                   </div>
                 </div>
                 <div class="mb-0 mt-1">
@@ -162,7 +182,6 @@
                         <th class="border-top-0">No.</th>
                         <th class="border-top-0">プロダクトID</th>
                         <th class="border-top-0">プロダクト名</th>
-                        <th class="border-top-0">住所</th>
                         <th class="border-top-0">概要</th>
                       </tr>
                     </thead>
@@ -171,8 +190,7 @@
                         <td class="text-truncate">{{i+1}}</td>
                         <td class="text-truncate">{{item.productid}} </td>
                         <td class="text-truncate">{{item.productname}} </td>
-                        <td class="text-truncate">{{item.model}} </td>
-                        <td class="text-truncate">{{item.productid}} </td>
+                        <td class="text-truncate">{{item.summary}} </td>
                       </tr>
                     </tbody>
                   </table>
