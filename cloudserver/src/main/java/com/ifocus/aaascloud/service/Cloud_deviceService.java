@@ -761,7 +761,7 @@ public class Cloud_deviceService {
 	/*
 	 * SIM_IMSIリスト取得
 	 */
-	private List<String> getSim_imsiList(Cloud_deviceModel model) throws Exception {
+	public List<String> getSim_imsiList(Cloud_deviceModel model) throws Exception {
 
 		List<String> list = new ArrayList<String>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
@@ -778,7 +778,7 @@ public class Cloud_deviceService {
 	/*
 	 * SIM_ICCIDリスト取得
 	 */
-	private List<String> getSim_iccidList(Cloud_deviceModel model) throws Exception {
+	public List<String> getSim_iccidList(Cloud_deviceModel model) throws Exception {
 
 		List<String> list = new ArrayList<String>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
@@ -795,7 +795,7 @@ public class Cloud_deviceService {
 	/*
 	 * SIM_TELリスト取得
 	 */
-	private List<String> getSim_telList(Cloud_deviceModel model) throws Exception {
+	public List<String> getSim_telList(Cloud_deviceModel model) throws Exception {
 
 		List<String> list = new ArrayList<String>();
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
