@@ -101,6 +101,13 @@ export class GroupComponent implements OnInit {
     devices: [],
     groups: [],
     projects: [],
+
+    sort: {
+      groupnameUp: false,
+      groupnameDown: false,
+      projectnameUp: false,
+      projectnameDown: false
+    }
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -500,8 +507,30 @@ export class GroupComponent implements OnInit {
       this.groupList.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.groupList.sort(this.alphabetically(true, nm));
+      this.groupList.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
+    }
+
+    this.pageModel.sort.projectnameUp = false;
+    this.pageModel.sort.projectnameDown = false;
+    this.pageModel.sort.groupnameUp = false;
+    this.pageModel.sort.groupnameDown = false;
+
+    switch (nm) {
+      case 'projectname':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.projectnameUp = true
+        } else {
+          this.pageModel.sort.projectnameDown = true
+        }
+        break;
+      case 'groupname':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.groupnameUp = true
+        } else {
+          this.pageModel.sort.groupnameDown = true
+        }
+        break;
     }
   }
 
