@@ -906,7 +906,7 @@ public class Cloud_deviceService {
 
 		// ユーザフルネーム
 		if (entity.getUserid() != null) {
-			Optional<Cloud_userEntity>  user = cloud_userRepository.findById(null);
+			Optional<Cloud_userEntity>  user = cloud_userRepository.findById(entity.getUserid());
 			if (user.isPresent()) {
 				model.setUserfullname(user.get().getLastname() + " " + user.get().getFirstname());
 			}
