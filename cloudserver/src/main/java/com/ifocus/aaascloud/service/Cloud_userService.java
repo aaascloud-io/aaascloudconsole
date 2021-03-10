@@ -422,6 +422,9 @@ public class Cloud_userService {
 		model.setRole(entity.getRole());
 		model.setUpperuserid(entity.getUpperuserid());
 
+		// fullname設定
+		model.setFullName(model.getLastName() + " " + model.getFirstName());
+
 		return model;
 
 	}

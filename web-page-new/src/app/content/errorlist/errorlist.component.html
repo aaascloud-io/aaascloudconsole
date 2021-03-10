@@ -15,10 +15,19 @@
                       <thead>
                         <tr>
                           <th class="col" class="thcolor">No</th>
-                          <th class="col" class="thcolor" (click)="sortData('errcode')">エラーコード</th>
-                          <th class="col" class="thcolor" (click)="sortData('device')">デバイスID</th>
+                          <th class="col" class="thcolor" (click)="sortData('errcode')">エラーコード
+                            <i *ngIf="valueSortFlg.errCodeUp" class="la la-sort-up"></i>
+                            <i *ngIf="valueSortFlg.errCodeDown" class="la la-sort-down"></i>
+                          </th>
+                          <th class="col" class="thcolor" (click)="sortData('device')">デバイスID
+                            <i *ngIf="valueSortFlg.deviceUp" class="la la-sort-up"></i>
+                            <i *ngIf="valueSortFlg.deviceDown" class="la la-sort-down"></i>
+                          </th>
                           <th class="col" class="thcolor">管理者</th>
-                          <th class="col" class="thcolor">発生日時</th>
+                          <th class="col" class="thcolor" (click)="sortData('datatime')">発生日時
+                            <i *ngIf="valueSortFlg.datatimeUp" class="la la-sort-up"></i>
+                            <i *ngIf="valueSortFlg.datatimeDown" class="la la-sort-down"></i>
+                          </th>
                           <th class="col" class="thcolor">対応ステータス</th>
                           <th class="col" class="thcolor">対応履歴</th>
                           <th class="col" class="thcolor">操作</th>
@@ -29,7 +38,7 @@
                           <td>{{(page-1)*pageSize+i+1}}</td>
                           <td>{{item.errcode}}</td>
                           <td>{{item.device}}</td>
-                          <td>{{item.userid}}</td>
+                          <td>{{item.username}}</td>
                           <td>{{item.datatime | date:'yyyy/MM/dd hh:mm:ss'}}</td>
                           <td>{{item.statusInStr}}</td>
                           <td>
@@ -78,7 +87,7 @@
       <div class="form-group col-12">
         <label >対応メモ<code>＊</code></label>
         <textarea id="contents" rows="4" class="form-control square" name="contents"
-          [(ngModel)]="selectedErrorItem.contents" maxlength="100"></textarea>
+          [(ngModel)]="selectedErrorItem.contents" maxlength="500"></textarea>
       </div>
 
       <div class="form-group col-12">
@@ -92,6 +101,7 @@
     </div>
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
+        <button type="button" class="btn btn-secondary mr-1" (click)="d('Close modal')" ngbAutofocus>取消</button>
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
       </div>

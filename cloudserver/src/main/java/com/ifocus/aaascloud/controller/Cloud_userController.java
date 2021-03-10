@@ -170,6 +170,8 @@ public class Cloud_userController {
 			if (loginuserid.equals(targetuserid)) {
 				try {
 					List<Integer> userids = accessService.getAccessUsers(targetuserid);
+					// 自分自身を除外
+					userids.remove(targetuserid);
 					list = cloud_userService.searchUnderUsers(userids, cloud_userModel);
 				} catch (Exception e) {
 					/* 異常系 */
@@ -392,9 +394,21 @@ public class Cloud_userController {
 		} else {
 			// KeyCloakからユーザ情報取得＆設定
 			UserModel usermodel = cloud_userService.getUserModelFromUsername(cloud_userModel.getUsername());
-			cloud_userModel.setLastName(usermodel.getLastName());
-			cloud_userModel.setFirstName(usermodel.getFirstName());
-			cloud_userModel.setEmail(usermodel.getEmail());
+			if (usermodel.getLastName().isEmpty()) {
+				cloud_userModel.setLastName("");
+			} else {
+				cloud_userModel.setLastName(usermodel.getLastName());
+			}
+			if (usermodel.getFirstName().isEmpty()) {
+				cloud_userModel.setFirstName("");
+			} else {
+				cloud_userModel.setFirstName(usermodel.getFirstName());
+			}
+			if (usermodel.getEmail().isEmpty()) {
+				cloud_userModel.setEmail("");
+			} else {
+				cloud_userModel.setEmail(usermodel.getEmail());
+			}
 		}
 
 		try {

@@ -61,6 +61,16 @@ export class ProjectComponent implements OnInit {
   productTypes = [];
     // すべてのproductName
   productNameList = [];
+  valueSortFlg = {
+    projectNameUp : false,
+    projectNameDown : false,
+    productNameUp : false,
+    productNameDown : false,
+    deviceCountsUp : false,
+    deviceCountsDown : false,
+    groupCountsUp : false,
+    groupCountsDown : false,
+  };
 
   
 
@@ -113,6 +123,23 @@ export class ProjectComponent implements OnInit {
      * OnInit
      */
   ngOnInit() {
+    // this.rows = [];
+    // this.tableDisplayData = [];
+    // this.selectedProject = {};
+    // this.selected=[];
+    // this.usableDeviceList =[];
+    // this.selectedDevice = [];
+    // this.searchValue = {
+    //   projectname:'',
+    //   productname:''
+    // };
+    // this.linkedDeviceList =[];
+    // this.productTypes = [];
+    // this.productNameList = [];
+
+
+
+
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     this.pageModel.loginInfo = {
         "loginuserid": item.uid,
@@ -125,7 +152,7 @@ export class ProjectComponent implements OnInit {
       "targetuserCompanyid": item.company,
     };
     this.initData();
-
+    this.rows = [...this.rows];
   }
 
   async initData(){
@@ -139,10 +166,12 @@ export class ProjectComponent implements OnInit {
     jsonItem.forEach(element => {
       this.rows.push(element);
     });
-    this.rows = [...this.rows];
     this.getTabledata();
     this.getProductTypes();
     this.getProductNameList();
+    console.log("rows 数据");
+    console.log(this.rows);
+    this.rows = [...this.rows];
   }
 
 
@@ -178,7 +207,6 @@ export class ProjectComponent implements OnInit {
         "projectsummary":this.pageModel.addProject.projectSummary,
       }
       this.httpService.useRpPost('registerProject',param).then(item=>{
-        console.log(item);
         try{
           if(item.resultCode == "0000"){
             this.pageModel.addProject.projectName = '';
@@ -301,6 +329,7 @@ export class ProjectComponent implements OnInit {
           }
         } catch (e) {
           console.log(e);
+          alert(e);
         }
       });
     }
@@ -332,6 +361,7 @@ export class ProjectComponent implements OnInit {
           }
         } catch (e) {
           console.log(e);
+          alert(e);
         }
       });
     }
@@ -346,7 +376,6 @@ export class ProjectComponent implements OnInit {
     this.rows.forEach(function (project) {
       if (project.projectid === element['projectid']) { project.isSelected = ev.target.checked }
     });
-    console.log(this.rows);
   }
 
   isAllChecked() {
@@ -360,6 +389,7 @@ export class ProjectComponent implements OnInit {
     // 每个元素添加了 isSelected 属性
     this.tableDisplayData.forEach(x => x.isSelected = false)
     // this.tableDisplayData = this.PaginationData();
+    this.PaginationData;
   }
   /**
  * Pagination table
@@ -373,12 +403,74 @@ export class ProjectComponent implements OnInit {
 
   sortData(nm) {
     if (this.sortOn == 1) {
-      this.rows.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.rows.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.rows.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.rows.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
     }
+    this.valueSortFlg.projectNameUp = false;
+    this.valueSortFlg.projectNameDown = false;
+    this.valueSortFlg.productNameUp = false;
+    this.valueSortFlg.productNameDown = false;
+    this.valueSortFlg.deviceCountsUp = false;
+    this.valueSortFlg.deviceCountsDown = false;
+    this.valueSortFlg.groupCountsUp = false;
+    this.valueSortFlg.groupCountsDown = false;
+    switch (nm) {
+      case 'projectname':
+        if (this.sortOn == 1) {
+          this.valueSortFlg.projectNameUp = true
+        } else {
+          this.valueSortFlg.projectNameDown = true
+        }
+        break;
+      case 'productname':
+        if (this.sortOn == 1) {
+          this.valueSortFlg.productNameUp = true
+        } else {
+          this.valueSortFlg.productNameDown = true
+        }
+        break;
+      case 'deviceCounts':
+        if (this.sortOn == 1) {
+          this.valueSortFlg.deviceCountsUp = true
+        } else {
+          this.valueSortFlg.deviceCountsDown = true
+        }
+        break;
+      case 'groupCounts':
+        if (this.sortOn == 1) {
+          this.valueSortFlg.groupCountsUp = true
+        } else {
+          this.valueSortFlg.groupCountsDown = true
+        }
+        break;
+    }
+  }
+
+  alphabetically(ascending, nm) {
+    return function (a, b) {
+      // equal items sort equally
+      if (a[nm] === b[nm]) {
+        return 0;
+      }
+      // nulls sort after anything else
+      else if (a[nm] === null) {
+        return 1;
+      }
+      else if (b[nm] === null) {
+        return -1;
+      }
+      // otherwise, if we're ascending, lowest sorts first
+      else if (ascending) {
+        return a[nm] < b[nm] ? -1 : 1;
+      }
+      // if descending, highest sorts first
+      else {
+        return a[nm] < b[nm] ? 1 : -1;
+      }
+    };
   }
 
 // デバイス連携追加
@@ -413,7 +505,6 @@ export class ProjectComponent implements OnInit {
     this.usableDeviceList.forEach(function (device) {
       if (device.deviceid === element['deviceid']) { device.isSelected = ev.target.checked }
     });
-    console.log(this.usableDeviceList);
   }
 
   projectDeviceDataUpdate(projectDeviceForm,projectid){
@@ -428,14 +519,13 @@ export class ProjectComponent implements OnInit {
         var param = {
           "loginInfo":this.pageModel.loginInfo,
           "targetUserInfo":this.pageModel.targetUserInfo,
-          "userid" :this.pageModel.loginInfo['loginuserid'], 
           "projectid": projectid,
           "deviceList": this.selectedDevice,
         };
         this.httpService.useRpPut('addProjectDevices', param).then(item => {
           try {
             if (item.resultCode == "0000") {
-              this.selectedDevice=[];
+              // this.selectedDevice=[];
               alert('プロジェクト情報を改修しました');
               if (projectDeviceForm.valid === true) {
                 projectDeviceForm.reset();
@@ -445,12 +535,12 @@ export class ProjectComponent implements OnInit {
             this.ngOnInit();
           } catch (e) {
             console.log(e);
+            alert(e);
             this.ngOnInit();
           };
         });
       }
     }
-    this.ngOnInit();
   }
 
   // project　連携した　DeviceList　一覧
@@ -487,7 +577,6 @@ export class ProjectComponent implements OnInit {
     this.linkedDeviceList.forEach(function (device) {
       if (device.deviceid === element['deviceid']) { device.isSelected = ev.target.checked }
     });
-    console.log(this.linkedDeviceList);
   }
 
   projectLinkedDeviceDataUpdate(projectLinkedDeviceForm,projectid){
@@ -516,13 +605,15 @@ export class ProjectComponent implements OnInit {
                 this.editModal.close(projectLinkedDeviceForm.resetForm);
               }
             }
+            this.ngOnInit();
           } catch (e) {
             console.log(e);
+            alert(e);
+            this.ngOnInit();
           }
         });
       }
     }
-    this.ngOnInit();
   }
 
 
@@ -538,9 +629,11 @@ export class ProjectComponent implements OnInit {
           console.log("プロダクトタイプの取得は成功しました。");
         } else {
           console.log("プロダクトタイプの取得は失敗しました。");
+          alert("プロダクトタイプの取得は失敗しました。");
         }
       } catch (e) {
         console.log("プロダクトタイプの取得は失敗しました。");
+        alert(e);
       }
     });
   }
@@ -563,8 +656,6 @@ export class ProjectComponent implements OnInit {
         this.productNameList.push(element);
         this.productNameList = [...this.productNameList];
       });
-      console.log("getProductNameList");
-      console.log(this.productNameList);
     }
   }
 
