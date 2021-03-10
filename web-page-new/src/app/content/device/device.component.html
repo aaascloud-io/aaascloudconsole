@@ -206,7 +206,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者<code>＊</code></h6>
           <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="userfullname" 
-            name="underUsers" [(ngModel)]="SelectedDeviceDetail" #underUsersngname="ngModel" required>
+            name="underUsers" [(ngModel)]="editUserSelected" #underUsersngname="ngModel" required>
           </ng-select>
           <div *ngIf="editDeviceForm.submitted && underUsersngname.invalid" class="invalid-feedback d-block">
             <div *ngIf="underUsersngname.errors.required">所有者を選択してください</div>
@@ -215,7 +215,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクト<code>＊</code></h6>
           <ng-select [items]="productSelectArray" name="product" bindLabel="productname" [searchable]="true"
-            [(ngModel)]="SelectedDeviceDetail" #productngname="ngModel" required>
+            [(ngModel)]="editProductSelected" #productngname="ngModel" required>
           </ng-select>
           <div *ngIf="editDeviceForm.submitted && productngname.invalid" class="invalid-feedback d-block">
             <div *ngIf="productngname.errors.required">プロダクトを選択してください</div>
@@ -335,7 +335,7 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者<code>＊</code></h6>
-          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="username" bindValue="userid"
+          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="userfullname" bindValue="userid"
              name="username" [(ngModel)]="pageModel.deviceDetail.userid" #underusersname="ngModel" required>
           </ng-select>
           <div *ngIf="registerDeviceForm.submitted && underusersname.invalid" class="invalid-feedback d-block">

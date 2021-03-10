@@ -32,7 +32,9 @@ export class DeviceComponent implements OnInit {
   page = 1;
   TableData: any;
   sortOn: any;
-  SelectedDeviceDetail: {};
+  editProductSelected: {};
+  editUserSelected: {};
+
 
   public pageModel = {
     //Loginユーザー情報
@@ -283,7 +285,9 @@ export class DeviceComponent implements OnInit {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
-    this.SelectedDeviceDetail= row;
+    this.editProductSelected= row;
+    this.editUserSelected= row;
+
   }
 
   /**
@@ -364,8 +368,11 @@ export class DeviceComponent implements OnInit {
  * 
  */
   editDeviceDetail(editDeviceForm: NgForm, deviceid,editForm: ElementRef) {
-    
-    if (this.SelectedDeviceDetail["productid"] == null) {
+
+    if (this.editProductSelected["productid"] == null) {
+      return;
+    }
+    if (this.editUserSelected["userid"] == null) {
       return;
     }
     let routeif: UserInfo = this.httpService.getLoginUser();
@@ -373,9 +380,17 @@ export class DeviceComponent implements OnInit {
       this.pageModel.deviceDetail.deviceid = deviceid
       this.pageModel.deviceDetail.devicename = this.selectedDevice['devicename'];
       this.pageModel.deviceDetail.sim_iccid = this.selectedDevice['sim_iccid'];
-      this.pageModel.deviceDetail.productid = this.SelectedDeviceDetail["productid"];
+      this.pageModel.deviceDetail.productid = this.editProductSelected["productid"];
       this.pageModel.deviceDetail.sim_imsi = this.selectedDevice['sim_imsi'];
       this.pageModel.deviceDetail.sim_tel = this.selectedDevice['sim_tel'];
+      this.pageModel.deviceDetail.userid = this.editUserSelected['userid'];
+      this.pageModel.deviceDetail.encryptedkey = this.selectedDevice['encryptedkey'];
+      this.pageModel.deviceDetail.encryptedcommunications = this.selectedDevice['sslChecked'] == false ? 0 : 1;
+      this.pageModel.deviceDetail.connectserverurl = this.selectedDevice['connectserverurl'];
+      this.pageModel.deviceDetail.connectserverport = this.selectedDevice['connectserverport'];
+      this.pageModel.deviceDetail.bindingflag = this.selectedDevice['bindingflagChecked'] == false ? 0 : 1;
+      this.pageModel.deviceDetail.fmlastestversion = this.selectedDevice['fmlastestversion'];
+      this.pageModel.deviceDetail.versioncomfirmtime = this.selectedDevice['versioncomfirmtime'];
       var param = {
         "loginInfo": {
           "loginuserid": routeif.uid,

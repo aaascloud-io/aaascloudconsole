@@ -1115,13 +1115,13 @@ public class Cloud_deviceService {
 		entity.setProductid(model.getDeviceDetail().getProductid());
 		entity.setSim_imsi(model.getDeviceDetail().getSim_imsi());
 		entity.setSim_tel(model.getDeviceDetail().getSim_tel());
-//		entity.setEncryptedcommunications(model.getEncryptedcommunications());
-//		entity.setEncryptedkey(model.getEncryptedkey());
-//		entity.setConnectserverurl(model.getConnectserverurl());
-//		entity.setConnectserverport(model.getConnectserverport());
-//		entity.setBindingflag(model.getBindingflag());
-//		entity.setFmlastestversion(model.getFmlastestversion());
-//		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
+		entity.setEncryptedcommunications(model.getDeviceDetail().getEncryptedcommunications());
+		entity.setEncryptedkey(model.getDeviceDetail().getEncryptedkey());
+		entity.setConnectserverurl(model.getDeviceDetail().getConnectserverurl());
+		entity.setConnectserverport(model.getDeviceDetail().getConnectserverport());
+		entity.setBindingflag(model.getDeviceDetail().getBindingflag());
+		entity.setFmlastestversion(model.getDeviceDetail().getFmlastestversion());
+		entity.setVersioncomfirmtime(model.getDeviceDetail().getVersioncomfirmtime());
 //		entity.setCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
 //		entity.setUserid(model.getTargetUserInfo().getTargetuserid());
 //		entity.setLastprojectId(model.getLastprojectId());
@@ -1129,8 +1129,8 @@ public class Cloud_deviceService {
 //		entity.setAlive(model.getAlive());
 
 		// ユーザIDを設定
-		if (model.getUserid() != null) {
-			entity.setUserid(model.getUserid());
+		if (model.getDeviceDetail().getUserid() != null) {
+			entity.setUserid(model.getDeviceDetail().getUserid());
 		}
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
