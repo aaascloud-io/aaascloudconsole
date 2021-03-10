@@ -170,6 +170,8 @@ public class Cloud_userController {
 			if (loginuserid.equals(targetuserid)) {
 				try {
 					List<Integer> userids = accessService.getAccessUsers(targetuserid);
+					// 自分自身を除外
+					userids.remove(targetuserid);
 					list = cloud_userService.searchUnderUsers(userids, cloud_userModel);
 				} catch (Exception e) {
 					/* 異常系 */
