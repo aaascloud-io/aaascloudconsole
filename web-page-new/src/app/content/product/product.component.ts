@@ -461,52 +461,6 @@ export class ProductComponent implements OnInit {
   }
 
   /**
-   * プロダクト一覧取得
-   */
-  // protected async getProductAll() {
-  //   var query = this.pageModel.userInfoParame;
-
-  //   this.httpService.usePost('getProductAll', query).then(item => {
-  //     try {
-  //       this.rows = [];
-  //       console.log(item);
-  //       var index = 1;
-  //       // this.pageModel.productList = item;
-  //       if (item != null) {
-  //         item.forEach((elem) => {
-  //           var producttypename = ""
-  //           // プロダクトタイプ名の検索
-  //           for (const productType of this.productTypes) {
-  //             if (productType.producttypeid === elem.producttypeid) {
-  //               producttypename = productType.producttypename;
-  //             }
-  //           }
-  //           this.rows.push(new Contact(
-  //             index,
-  //             elem.producttypeid,
-  //             elem.productid,
-  //             elem.productcode,
-  //             elem.productname,
-  //             elem.model,
-  //             elem.simflag,
-  //             elem.version,
-  //             elem.summary,
-  //             producttypename,
-  //             elem.createusername,
-  //           ));
-  //           index++;
-  //         });
-  //         this.rows = [...this.rows];
-  //         this.getTabledata();
-  //       }
-
-  //     } catch (e) {
-  //       console.log('ユーザー数数を検索API エラー　発生しました。');
-  //     }
-  //   });
-  // }
-
-  /**
   * プロダクトの条件より、取得する
   */
   async searchMyProduct() {
@@ -609,12 +563,36 @@ export class ProductComponent implements OnInit {
 
   sortData(nm) {
     if (this.sortOn == 1) {
-      this.productList.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.productList.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.productList.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.productList.sort(this.alphabetically(true, nm));
       this.sortOn = 1;
     }
+  }
+
+  alphabetically(ascending, nm) {
+    return function (a, b) {
+      // equal items sort equally
+      if (a[nm] === b[nm]) {
+        return 0;
+      }
+      // nulls sort after anything else
+      else if (a[nm] === null) {
+        return 1;
+      }
+      else if (b[nm] === null) {
+        return -1;
+      }
+      // otherwise, if we're ascending, lowest sorts first
+      else if (ascending) {
+        return a[nm] < b[nm] ? -1 : 1;
+      }
+      // if descending, highest sorts first
+      else {
+        return a[nm] < b[nm] ? 1 : -1;
+      }
+    };
   }
 
   checkAll(ev) {
@@ -641,7 +619,7 @@ export class ProductComponent implements OnInit {
     this.productList = this.rows;
     this.collectionSize = this.productList.length;
     this.productList.forEach(x => x.isSelected = false)
-    this.productList();
+    this.PaginationData;
   }
 
   /**
@@ -649,21 +627,13 @@ export class ProductComponent implements OnInit {
 */
   get PaginationData() {
     if (this.productList) {
-      // if (this.pageSize > 0) {
-      // } else {
-      //   if (this.productList.length > 100) {
-      //     this.pageSize = 20
-      //   } else {
-      //     this.pageSize = 10
-      //   }
-      // }
       return this.productList.map((person, i) => ({ productid: i + 1, ...person }))
         .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
     }
   }
 
   /**
-   * 取消ボタンを押下 
+   * 取消ボタンを押下
    * 
    */
   cancleModel(openForm: NgForm) {

@@ -425,10 +425,10 @@ export class UserComponent implements OnInit {
           // this.editModal(editUpdateForm.resetForm);
         } else {
           this.getResultMs(item);
-          alert('ユーザー情報は登録失敗です。');
+          alert('ユーザー情報は更新失敗です。');
         }
       } catch (e) {
-        console.log('更新失敗です。');
+        alert('ユーザー情報は更新失敗です。');
       }
     });
   }
@@ -539,15 +539,15 @@ export class UserComponent implements OnInit {
 
     this.httpService.useRpPost('registerUser', query).then(item => {
       try {
-        if (item.body.resultCode === "0000") {
+        if (item.resultCode === "0000") {
           this.ngOnInit();
           alert('ユーザー情報は登録成功です。');
           if (addForm.valid === true) {
             addForm.reset();
             this.addModal.close(addForm.resetForm);
           }
-        } else {
-          alert('ユーザー情報は登録失敗です。');
+        } else if (item.resultCode === "0013") {
+          alert('管理者を追加するには、上位会社に依頼してください。');
         }
       } catch (e) {
         console.log('登録失敗です。');
@@ -743,12 +743,36 @@ export class UserComponent implements OnInit {
 
   sortData(nm) {
     if (this.sortOn == 1) {
-      this.userList.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.userList.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.userList.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.userList.sort(this.alphabetically(true, nm));
       this.sortOn = 1;
     }
+  }
+
+  alphabetically(ascending, nm) {
+    return function (a, b) {
+      // equal items sort equally
+      if (a[nm] === b[nm]) {
+        return 0;
+      }
+      // nulls sort after anything else
+      else if (a[nm] === null) {
+        return 1;
+      }
+      else if (b[nm] === null) {
+        return -1;
+      }
+      // otherwise, if we're ascending, lowest sorts first
+      else if (ascending) {
+        return a[nm] < b[nm] ? -1 : 1;
+      }
+      // if descending, highest sorts first
+      else {
+        return a[nm] < b[nm] ? 1 : -1;
+      }
+    };
   }
 
   checkAll(ev) {

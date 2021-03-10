@@ -90,7 +90,7 @@
                       <td>
                         <input type="checkbox" [checked]="element.isSelected" (change)="checkChange($event,element)">
                       </td>
-                      <td>{{i+1}}</td>
+                      <td>{{(page-1)*pageSize+i+1}}</td>
                       <td>{{ element.producttypename }}</td>
                       <td>{{ element.productcode}}</td>
                       <td>{{ element.productname }}</td>
