@@ -62,10 +62,16 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-12">
-                    <button class="btn btn-primary btn-sm gap_contact"
+                    <ng-container *ngIf="pageModel.loginUser.loginrole === 1">
+                      <button class="btn btn-primary btn-sm gap_contact"
+                      (click)="addSelfTableDataModal(addSelfTableDataModalContent)">
+                      <i class="d-md-none d-block feather ft-plus white"></i>
+                      <span class="d-md-block d-none">本社使用者新規</span></button>
+                    </ng-container>
+                    <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
                       (click)="addTableDataModal(addTableDataModalContent)">
                       <i class="d-md-none d-block feather ft-plus white"></i>
-                      <span class="d-md-block d-none">新　規</span></button>
+                      <span class="d-md-block d-none">他社新規</span></button>
                     <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
                       (click)="deleteCheckedRow()">
                       <i class="d-md-none d-block feather ft-plus white"></i>
@@ -81,13 +87,25 @@
                           (change)="checkAll($event)">
                       </th>
                       <th scope="col" class="thcolor">No.</th>
-                      <th scope="col" class="thcolor" (click)="sortData('companyName')">会社名</th>
-                      <th scope="col" class="thcolor" (click)="sortData('name')">ユーザー姓名</th>
-                      <th scope="col" class="thcolor" (click)="sortData('email')">メール</th>
-                      <th scope="col" class="thcolor" (click)="sortData('username')">ログインID</th>
-                      <th scope="col" class="thcolor" (click)="sortData('address')">住所</th>
-                      <th scope="col" class="thcolor" (click)="sortData('userCount')">ユーザー数</th>
-                      <th scope="col" class="thcolor" (click)="sortData('devicecount')">デバイス数</th>
+                      <th scope="col" class="thcolor" (click)="sortData('companyName')">会社名
+                        <i *ngIf="pageModel.sort.companyNameUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.companyNameDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" (click)="sortData('name')">ユーザー姓名
+                        <i *ngIf="pageModel.sort.nameUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.nameDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" >メール</th>
+                      <th scope="col" class="thcolor" (click)="sortData('username')">ログインID
+                        <i *ngIf="pageModel.sort.usernameUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.usernameDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor" (click)="sortData('address')">住所
+                        <i *ngIf="pageModel.sort.addressUp" class="la la-sort-up"></i>
+                        <i *ngIf="pageModel.sort.addressDown"class="la la-sort-down"></i>
+                      </th>
+                      <th scope="col" class="thcolor">ユーザー数</th>
+                      <th scope="col" class="thcolor">デバイス数</th>
                       <th scope="col" class="thcolor">操作</th>
                     </tr>
                   </thead>
@@ -412,6 +430,41 @@
             </ngb-tabset>
           </ul>
         </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #addSelfTableDataModalContent let-c="close" let-d="dismiss">
+  <form #addMyForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">自社使用者新規</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group col-lg-12">
+          <h6>ユーザー名<code>＊</code></h6>
+          <input type="text" [(ngModel)]="pageModel.adduserInfo.username" #editname="ngModel" name="username"
+            id="username" class="name form-control" placeholder="半角英数で入力してください"
+            [ngClass]="{ 'is-invalid': addMyForm.submitted && editname.invalid }" required>
+          <div *ngIf="addMyForm.submitted && editname.invalid" class="invalid-feedback">
+            <div *ngIf="editname.errors.required">ユーザー名を入力してください</div>
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(addMyForm)">
+          <!-- <i class='ficon feather ft-x mr-25'></i> -->
+          <span class="d-sm-inline d-none">取消</span>
+        </button>
+      </div>
+      <div class="form-group position-relative has-icon-right mb-0">
+        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
+          data-dismiss="modal" data-dismiss="modal"><span class="d-none d-lg-block"
+            (click)="addMyUser(addMyForm)" aria-label="Close">登録</span></button>
       </div>
     </div>
   </form>
