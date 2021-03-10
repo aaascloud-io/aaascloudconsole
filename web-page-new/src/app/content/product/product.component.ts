@@ -171,7 +171,7 @@ export class ProductComponent implements OnInit {
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown'
-      ,size: 'lg'
+      , size: 'lg'
     });
     this.contactFlag = true;
   }
@@ -185,7 +185,7 @@ export class ProductComponent implements OnInit {
     this.selectedContact = Object.assign({}, row);
     this.updateModal = this.modal.open(editTableDataModalContent, {
       windowClass: 'animated fadeInDown'
-      ,size: 'lg'
+      , size: 'lg'
     });
     this.contactFlag = false;
     this.simFlg = this.selectedContact.simflag === 1 ? true : false;
@@ -250,20 +250,20 @@ export class ProductComponent implements OnInit {
    * 選択されたプロダクトを削除する
    */
   deleteCheckedRow() {
-      var deleteCheckedids = [];
-      var flg = false;
-      for (var row of this.rows) {
-        if (row.isSelected) {
-          deleteCheckedids.push(row.productid);
-          flg = true;
-          console.log(flg);
-        }
+    var deleteCheckedids = [];
+    var flg = false;
+    for (var row of this.rows) {
+      if (row.isSelected) {
+        deleteCheckedids.push(row.productid);
+        flg = true;
+        console.log(flg);
       }
-      if (!flg) {
-        alert("プロダクトを選択してください");
-        return
-      }
-      if (confirm("選択したデーターを削除しますか")) {
+    }
+    if (!flg) {
+      alert("プロダクトを選択してください");
+      return
+    }
+    if (confirm("選択したデーターを削除しますか")) {
       var query = {
         "loginInfo": this.pageModel.loginUser,
         "targetUserInfo": {
@@ -327,9 +327,10 @@ export class ProductComponent implements OnInit {
             editForm.reset();
             this.updateModal.close(editForm.resetForm);
           }
+        } else {
+          alert('更新失敗です。');
         }
       } catch (e) {
-        console.log('更新失敗です。');
         alert('更新失敗です。');
       }
     });
@@ -423,9 +424,10 @@ export class ProductComponent implements OnInit {
             }
             alert('登録成功です。');
             this.searchMyProduct();
+          } else {
+            alert('登録失敗です。');
           }
         } catch (e) {
-          console.log('登録失敗です。');
           alert('登録失敗です。');
         }
       });
@@ -573,23 +575,15 @@ export class ProductComponent implements OnInit {
 
   alphabetically(ascending, nm) {
     return function (a, b) {
-      // equal items sort equally
       if (a[nm] === b[nm]) {
         return 0;
-      }
-      // nulls sort after anything else
-      else if (a[nm] === null) {
+      } else if (a[nm] === null) {
         return 1;
-      }
-      else if (b[nm] === null) {
+      } else if (b[nm] === null) {
         return -1;
-      }
-      // otherwise, if we're ascending, lowest sorts first
-      else if (ascending) {
+      } else if (ascending) {
         return a[nm] < b[nm] ? -1 : 1;
-      }
-      // if descending, highest sorts first
-      else {
+      } else {
         return a[nm] < b[nm] ? 1 : -1;
       }
     };
@@ -604,9 +598,6 @@ export class ProductComponent implements OnInit {
     this.productList.forEach(function (product) {
       if (product.productid === selected['productid']) { product.isSelected = ev.target.checked }
     });
-
-    // this.selected.splice(0, this.selected.length);
-    // this.selected.push(...selected);
   }
 
   isAllChecked() {

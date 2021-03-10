@@ -548,6 +548,8 @@ export class UserComponent implements OnInit {
           }
         } else if (item.resultCode === "0013") {
           alert('管理者を追加するには、上位会社に依頼してください。');
+        } else {
+          alert('登録失敗です。');
         }
       } catch (e) {
         console.log('登録失敗です。');
@@ -753,23 +755,15 @@ export class UserComponent implements OnInit {
 
   alphabetically(ascending, nm) {
     return function (a, b) {
-      // equal items sort equally
       if (a[nm] === b[nm]) {
         return 0;
-      }
-      // nulls sort after anything else
-      else if (a[nm] === null) {
+      } else if (a[nm] === null) {
         return 1;
-      }
-      else if (b[nm] === null) {
+      } else if (b[nm] === null) {
         return -1;
-      }
-      // otherwise, if we're ascending, lowest sorts first
-      else if (ascending) {
+      } else if (ascending) {
         return a[nm] < b[nm] ? -1 : 1;
-      }
-      // if descending, highest sorts first
-      else {
+      } else {
         return a[nm] < b[nm] ? 1 : -1;
       }
     };
