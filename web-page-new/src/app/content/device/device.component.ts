@@ -92,11 +92,15 @@ export class DeviceComponent implements OnInit {
       projectnameDown: false,
       groupnameUp: false,
       groupnameDown: false,
+    },
+    checkColumn:{
+      imei:false,
     }
   }
 
   @ViewChild('registerForm') registerForm: ElementRef;
   @ViewChild('editForm') editForm: ElementRef;
+  @ViewChild('registerdevicesForm') registerdevicesForm: ElementRef;
   @ViewChild('registerDeviceForm') registerDeviceForm: NgForm;
   @Output() closeModalEvent = new EventEmitter<boolean>();
 
@@ -323,6 +327,9 @@ export class DeviceComponent implements OnInit {
           console.log(e);
         }
       });
+    }else{
+      addDeviceForm.reset();
+      this.addModal.close(addDeviceForm.resetForm);
     }
   }
 
@@ -333,7 +340,7 @@ export class DeviceComponent implements OnInit {
  * @param deviceid      Id match to the selected row Id
  * 
  */
-  editDeviceDetail(editDeviceForm: NgForm, deviceid) {
+  editDeviceDetail(editDeviceForm: NgForm, deviceid,editForm: ElementRef) {
     if (this.pageModel.deviceDetail.productSelected["productid"] == null) {
       return;
     }
@@ -380,11 +387,17 @@ export class DeviceComponent implements OnInit {
             alert('権限なし');
           }else if(item.resultCode == "0101"){
             alert('更新失敗しました。');
+          } else {
+            this.setFocus(item.resultCode, editForm)
+            alert(item.resultMsg);
           }
         } catch (e) {
           console.log(e);
         }
       });
+    }else{
+      editDeviceForm.reset();
+      this.editModal.close(editDeviceForm.resetForm);
     }
   }
 
@@ -393,7 +406,7 @@ export class DeviceComponent implements OnInit {
  *
  * @param addExeclForm     Add contact form
  */
-  registerDevices(addExeclForm: NgForm) {
+  registerDevices(addExeclForm: NgForm,registerdevicesForm:ElementRef) {
     let routeif: UserInfo = this.httpService.getLoginUser();
     if (routeif != null) {
       var param = {
@@ -427,6 +440,11 @@ export class DeviceComponent implements OnInit {
           }
         }else if(item.resultCode == "0002"){
           alert('権限なし');
+        }else if(item.resultCode == "0007"){
+          alert(item.resultMsg+"重複チェックエラー発生しました、エラーデータを参考して添付ファイルを修正ください。");
+          // this.pageModel.checkColumn[item.resultMsg] = true;
+          this.pageModel.addDeviceDetailList=JSON.parse(item.data);
+          // this.setUnavailable("deviceSubmit", registerdevicesForm)
         }
       } catch (e) {
         console.log(e);
@@ -567,13 +585,11 @@ export class DeviceComponent implements OnInit {
       reader.onerror = (event) => {
         // obj.alert.danger("ファイル読み込み失敗しました");
         this.alertService.error("ファイル読み込み失敗しました");
-
       }
       ///読み込み実施
       reader.readAsBinaryString(file);
     }
   }
-
 
   getTabledata() {
     this.collectionSize = this.pageModel.deviceList.length;
@@ -723,6 +739,19 @@ export class DeviceComponent implements OnInit {
       }
     }
   }
+
+  // setUnavailable(name, templateForm: ElementRef) {
+  //   const ctrls = Object.keys(templateForm);
+  //   for (let key = 0; key < ctrls.length; key++) {
+  //     var keystr = key.toString();
+  //     if (keystr == ctrls[key]) {
+  //       if (templateForm[key].name == name) {
+  //         const control = templateForm[key];
+  //         control.ariaDisabled=true;
+  //       }
+  //     }
+  //   }
+  // }
 
   /**
 * Remove overlay when open sidebar
