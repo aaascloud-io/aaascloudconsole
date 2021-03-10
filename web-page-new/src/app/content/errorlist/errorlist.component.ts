@@ -29,6 +29,15 @@ export class ErrorlistComponent implements OnInit {
   errResumeList = [];
   sortOn: any;
 
+  valueSortFlg = {
+    errCodeUp : false,
+    errCodeDown : false,
+    deviceUp : false,
+    deviceDown : false,
+    datatimeUp : false,
+    datatimeDown : false,
+  };
+
 
   public config: PerfectScrollbarConfigInterface = { };
 
@@ -191,6 +200,7 @@ export class ErrorlistComponent implements OnInit {
             this.ngOnInit();
           } catch (e) {
             console.log(e);
+            alert(e);
             this.ngOnInit();
           };
         });
@@ -201,11 +211,66 @@ export class ErrorlistComponent implements OnInit {
 
   sortData(nm) {
     if (this.sortOn == 1) {
-      this.rows.sort((b, a) => a[nm].localeCompare(b[nm]));
+      this.rows.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.rows.sort((a, b) => a[nm].localeCompare(b[nm]));
+      this.rows.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
     }
+
+    this.valueSortFlg.errCodeUp = false;
+    this.valueSortFlg.errCodeDown = false;
+    this.valueSortFlg.deviceUp = false;
+    this.valueSortFlg.deviceDown = false;
+    this.valueSortFlg.datatimeUp = false;
+    this.valueSortFlg.datatimeDown = false;
+
+    switch (nm) {
+      case 'errcode':
+        if (this.sortOn == 1) {
+          this.valueSortFlg.errCodeUp = true
+        } else {
+          this.valueSortFlg.errCodeDown = true
+        }
+        break;
+      case 'device':
+        if (this.sortOn == 1) {
+          this.valueSortFlg.deviceUp = true
+        } else {
+          this.valueSortFlg.deviceDown = true
+        }
+        break;
+      case 'datatime':
+        if (this.sortOn == 1) {
+          this.valueSortFlg.datatimeUp = true
+        } else {
+          this.valueSortFlg.datatimeDown = true
+        }
+        break;
+    }
+  }
+
+  alphabetically(ascending, nm) {
+    return function (a, b) {
+      // equal items sort equally
+      if (a[nm] === b[nm]) {
+        return 0;
+      }
+      // nulls sort after anything else
+      else if (a[nm] === null) {
+        return 1;
+      }
+      else if (b[nm] === null) {
+        return -1;
+      }
+      // otherwise, if we're ascending, lowest sorts first
+      else if (ascending) {
+        return a[nm] < b[nm] ? -1 : 1;
+      }
+      // if descending, highest sorts first
+      else {
+        return a[nm] < b[nm] ? 1 : -1;
+      }
+    };
   }
 }
