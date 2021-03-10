@@ -12,7 +12,7 @@
                 <div class="media d-flex">
                   <div class="media-body text-left">
                     <h3 class="purple">{{pageModel.userLength}}</h3>
-                    <h6>ユーザー数</h6>
+                    <h6>ユーザー数　　</h6>
                   </div>
                   <div>
                     <i class="fa fa-users purple font-large-2 float-right"></i>
@@ -54,7 +54,7 @@
                 <div class="media d-flex">
                   <div class="media-body text-left">
                     <h3 class="red">{{pageModel.productLength}}</h3>
-                    <h6>プロダクト</h6>
+                    <h6>プロダクト　　</h6>
                   </div>
                   <div>
                     <i class="fa feather ft-edit red font-large-2 float-right"></i>
@@ -98,7 +98,7 @@
                 <div class="media d-flex">
                   <div class="media-body text-left">
                     <h3 class="warning">{{pageModel.errlogLength}}</h3>
-                    <h6>エラー</h6>
+                    <h6>エラー　　　　</h6>
                   </div>
                   <div>
                     <i class="fa fa-bug warning font-large-2 float-right"></i>
@@ -162,7 +162,6 @@
                         <th class="border-top-0">No.</th>
                         <th class="border-top-0">プロダクトID</th>
                         <th class="border-top-0">プロダクト名</th>
-                        <th class="border-top-0">住所</th>
                         <th class="border-top-0">概要</th>
                       </tr>
                     </thead>
@@ -171,8 +170,7 @@
                         <td class="text-truncate">{{i+1}}</td>
                         <td class="text-truncate">{{item.productid}} </td>
                         <td class="text-truncate">{{item.productname}} </td>
-                        <td class="text-truncate">{{item.model}} </td>
-                        <td class="text-truncate">{{item.productid}} </td>
+                        <td class="text-truncate">{{item.summary}} </td>
                       </tr>
                     </tbody>
                   </table>

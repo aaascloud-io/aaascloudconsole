@@ -59,12 +59,10 @@ export class ProfileComponent implements OnInit {
   async tryRegister() {
     this.submitted = true;
     if (this.profileForm.invalid) {
-      this.submitted = false;
       return;
     }
     if (this.profileForm.value.newpassword != this.profileForm.value.confirmpassword) {
       alert('New Password Different');
-      this.submitted = false;
       return;
     }
     try {
