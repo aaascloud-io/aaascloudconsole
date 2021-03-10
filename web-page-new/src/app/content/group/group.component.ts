@@ -101,6 +101,13 @@ export class GroupComponent implements OnInit {
     devices: [],
     groups: [],
     projects: [],
+
+    sort: {
+      groupnameUp: false,
+      groupnameDown: false,
+      projectnameUp: false,
+      projectnameDown: false
+    }
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -381,9 +388,10 @@ export class GroupComponent implements OnInit {
             }
             alert('登録成功です。');
             this.searchGroups();
+          } else {
+            alert('登録失敗です。');
           }
         } catch (e) {
-          console.log('登録失敗です。');
           alert('登録失敗です。');
         }
       });
@@ -499,30 +507,44 @@ export class GroupComponent implements OnInit {
       this.groupList.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.groupList.sort(this.alphabetically(true, nm));
+      this.groupList.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
+    }
+
+    this.pageModel.sort.projectnameUp = false;
+    this.pageModel.sort.projectnameDown = false;
+    this.pageModel.sort.groupnameUp = false;
+    this.pageModel.sort.groupnameDown = false;
+
+    switch (nm) {
+      case 'projectname':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.projectnameUp = true
+        } else {
+          this.pageModel.sort.projectnameDown = true
+        }
+        break;
+      case 'groupname':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.groupnameUp = true
+        } else {
+          this.pageModel.sort.groupnameDown = true
+        }
+        break;
     }
   }
 
   alphabetically(ascending, nm) {
     return function (a, b) {
-      // equal items sort equally
       if (a[nm] === b[nm]) {
         return 0;
-      }
-      // nulls sort after anything else
-      else if (a[nm] === null) {
+      } else if (a[nm] === null) {
         return 1;
-      }
-      else if (b[nm] === null) {
+      } else if (b[nm] === null) {
         return -1;
-      }
-      // otherwise, if we're ascending, lowest sorts first
-      else if (ascending) {
+      } else if (ascending) {
         return a[nm] < b[nm] ? -1 : 1;
-      }
-      // if descending, highest sorts first
-      else {
+      } else {
         return a[nm] < b[nm] ? 1 : -1;
       }
     };

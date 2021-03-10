@@ -153,6 +153,12 @@ export class DeviceComponent implements OnInit {
   }
 
   serachDevices() {
+    //sortクリア
+    for (var prop in this.pageModel.sort) {
+      if (this.pageModel.sort.hasOwnProperty(prop)) {
+        this.pageModel.sort[prop] = false;
+      }
+    }
     this.pageModel.query.companyid = this.pageModel.query.conpanySelected !== null ? this.pageModel.query.conpanySelected["companyid"] : '';
     let item: UserInfo = this.httpService.getLoginUser();
     if (item != null) {

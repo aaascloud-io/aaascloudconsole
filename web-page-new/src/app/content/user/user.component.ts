@@ -73,6 +73,7 @@ export class UserComponent implements OnInit {
   placement = 'bottom-right';
   imagepathdefault: any;
   addModal = null;
+  addMyModal = null;
   updateModal = null;
   value: any;
   loadingIndicator: true;
@@ -97,6 +98,11 @@ export class UserComponent implements OnInit {
     addList: [],
     dataAll: [],
     // userList: [],
+    addMyuserInfo: {
+      username: '',
+      role: '使用者'
+    },
+
     adduserInfo: {
       username: '',
       role: null,
@@ -159,6 +165,16 @@ export class UserComponent implements OnInit {
       userid: null,
       name: '',
     },
+    sort: {
+      companyNameUp: false,
+      companyNameDown: false,
+      nameUp: false,
+      nameDown: false,
+      usernameUp: false,
+      usernameDown: false,
+      addressUp: false,
+      addressDown: false,
+    }
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -218,6 +234,18 @@ export class UserComponent implements OnInit {
  *
  * @param addTableDataModalContent      Id of the add contact modal;
  */
+  addSelfTableDataModal(addSelfTableDataModalContent) {
+    this.addMyModal = this.modal.open(addSelfTableDataModalContent, {
+      windowClass: 'animated fadeInDown'
+    });
+    this.contactFlag = true;
+  }
+
+  /**
+ * AddMy new contact
+ *
+ * @param addTableDataModalContent      Id of the add contact modal;
+ */
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown'
@@ -225,6 +253,7 @@ export class UserComponent implements OnInit {
     });
     this.contactFlag = true;
   }
+
   /**
      * Edit selected contact row.
      *
@@ -334,19 +363,19 @@ export class UserComponent implements OnInit {
    * 複数のユーザーを削除する
    */
   deleteCheckedRow() {
-      var flg = false;
-      for (var selecteUser of this.userList) {
-        if (selecteUser.isSelected) {
-          this.selectedUserid.push({ "userid": selecteUser.userid });
-          flg = true;
-        }
+    var flg = false;
+    for (var selecteUser of this.userList) {
+      if (selecteUser.isSelected) {
+        this.selectedUserid.push({ "userid": selecteUser.userid });
+        flg = true;
       }
-      if (!flg) {
-        alert("プロダクトを選択してください");
-        return
-      }
+    }
+    if (!flg) {
+      alert("プロダクトを選択してください");
+      return
+    }
 
-      if (confirm("削除してもよろしいでしょうか")) {
+    if (confirm("削除してもよろしいでしょうか")) {
       // 削除パラメータの作成
       var query = {
         "loginInfo": this.pageModel.userInfoParame.loginInfo,
@@ -548,6 +577,34 @@ export class UserComponent implements OnInit {
           }
         } else if (item.resultCode === "0013") {
           alert('管理者を追加するには、上位会社に依頼してください。');
+        } else {
+          alert('登録失敗です。');
+        }
+      } catch (e) {
+        console.log('登録失敗です。');
+      }
+    });
+  }
+
+  /**
+   * ユーザー登録
+   * @param query
+   */
+  addMyUser(query, addForm: NgForm) {
+
+    this.httpService.useRpPost('registerUser', query).then(item => {
+      try {
+        if (item.resultCode === "0000") {
+          this.ngOnInit();
+          alert('ユーザー情報は登録成功です。');
+          if (addForm.valid === true) {
+            addForm.reset();
+            this.addModal.close(addForm.resetForm);
+          }
+        } else if (item.resultCode === "0013") {
+          alert('管理者を追加するには、上位会社に依頼してください。');
+        } else {
+          alert('登録失敗です。');
         }
       } catch (e) {
         console.log('登録失敗です。');
@@ -746,30 +803,61 @@ export class UserComponent implements OnInit {
       this.userList.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.userList.sort(this.alphabetically(true, nm));
+      this.userList.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
+    }
+    this.pageModel.sort.usernameUp = false;
+    this.pageModel.sort.usernameDown = false;
+    this.pageModel.sort.companyNameUp = false;
+    this.pageModel.sort.companyNameDown = false;
+    this.pageModel.sort.addressUp = false;
+    this.pageModel.sort.addressDown = false;
+    this.pageModel.sort.nameUp = false;
+    this.pageModel.sort.nameDown = false;
+
+    switch (nm) {
+      case 'username':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.usernameUp = true
+        } else {
+          this.pageModel.sort.usernameDown = true
+        }
+        break;
+      case 'companyName':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.companyNameUp = true
+        } else {
+          this.pageModel.sort.companyNameDown = true
+        }
+        break;
+      case 'address':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.addressUp = true
+        } else {
+          this.pageModel.sort.addressDown = true
+        }
+        break;
+      case 'name':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.nameUp = true
+        } else {
+          this.pageModel.sort.nameDown = true
+        }
+        break;
     }
   }
 
   alphabetically(ascending, nm) {
     return function (a, b) {
-      // equal items sort equally
       if (a[nm] === b[nm]) {
         return 0;
-      }
-      // nulls sort after anything else
-      else if (a[nm] === null) {
+      } else if (a[nm] === null) {
         return 1;
-      }
-      else if (b[nm] === null) {
+      } else if (b[nm] === null) {
         return -1;
-      }
-      // otherwise, if we're ascending, lowest sorts first
-      else if (ascending) {
+      } else if (ascending) {
         return a[nm] < b[nm] ? -1 : 1;
-      }
-      // if descending, highest sorts first
-      else {
+      } else {
         return a[nm] < b[nm] ? 1 : -1;
       }
     };
@@ -823,6 +911,11 @@ export class UserComponent implements OnInit {
     if (this.updateModal != null) {
       openForm.reset();
       this.updateModal.close(openForm.resetForm);
+    }
+
+    if (this.addMyModal != null) {
+      openForm.reset();
+      this.addMyModal.close(openForm.resetForm);
     }
     // }
   }

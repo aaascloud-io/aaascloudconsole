@@ -111,6 +111,22 @@ export class ProductComponent implements OnInit {
       productname: '',
       createusername: '',
     },
+    sort: {
+      producttypenameUp: false,
+      producttypenameDown: false,
+      productcodeUp: false,
+      productcodeDown: false,
+      productnameUp: false,
+      productnameDown: false,
+      modelUp: false,
+      modelDown: false,
+      simflagUp: false,
+      simflagDown: false,
+      versionUp: false,
+      versionDown: false,
+      createusernameUp: false,
+      createusernameDown: false,
+    }
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -171,7 +187,7 @@ export class ProductComponent implements OnInit {
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown'
-      ,size: 'lg'
+      , size: 'lg'
     });
     this.contactFlag = true;
   }
@@ -185,7 +201,7 @@ export class ProductComponent implements OnInit {
     this.selectedContact = Object.assign({}, row);
     this.updateModal = this.modal.open(editTableDataModalContent, {
       windowClass: 'animated fadeInDown'
-      ,size: 'lg'
+      , size: 'lg'
     });
     this.contactFlag = false;
     this.simFlg = this.selectedContact.simflag === 1 ? true : false;
@@ -250,20 +266,20 @@ export class ProductComponent implements OnInit {
    * 選択されたプロダクトを削除する
    */
   deleteCheckedRow() {
-      var deleteCheckedids = [];
-      var flg = false;
-      for (var row of this.rows) {
-        if (row.isSelected) {
-          deleteCheckedids.push(row.productid);
-          flg = true;
-          console.log(flg);
-        }
+    var deleteCheckedids = [];
+    var flg = false;
+    for (var row of this.rows) {
+      if (row.isSelected) {
+        deleteCheckedids.push(row.productid);
+        flg = true;
+        console.log(flg);
       }
-      if (!flg) {
-        alert("プロダクトを選択してください");
-        return
-      }
-      if (confirm("選択したデーターを削除しますか")) {
+    }
+    if (!flg) {
+      alert("プロダクトを選択してください");
+      return
+    }
+    if (confirm("選択したデーターを削除しますか")) {
       var query = {
         "loginInfo": this.pageModel.loginUser,
         "targetUserInfo": {
@@ -318,7 +334,7 @@ export class ProductComponent implements OnInit {
 
     this.httpService.put('updateProduct', query).then(item => {
       try {
-        if (item.body.resultCode === "0000") {
+        if (item.resultCode === "0000") {
           console.log('更新成功です。');
           console.log(item);
           alert('更新成功です。');
@@ -327,9 +343,10 @@ export class ProductComponent implements OnInit {
             editForm.reset();
             this.updateModal.close(editForm.resetForm);
           }
+        } else {
+          alert('更新失敗です。');
         }
       } catch (e) {
-        console.log('更新失敗です。');
         alert('更新失敗です。');
       }
     });
@@ -385,7 +402,7 @@ export class ProductComponent implements OnInit {
     }
 
     if (flg && !createuserid) {
-      confirm(`作成者を選択してください。`);
+      confirm(`利用者を選択してください。`);
       flg = false;
     }
 
@@ -423,9 +440,10 @@ export class ProductComponent implements OnInit {
             }
             alert('登録成功です。');
             this.searchMyProduct();
+          } else {
+            alert('登録失敗です。');
           }
         } catch (e) {
-          console.log('登録失敗です。');
           alert('登録失敗です。');
         }
       });
@@ -566,30 +584,98 @@ export class ProductComponent implements OnInit {
       this.productList.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
     } else {
-      this.productList.sort(this.alphabetically(true, nm));
+      this.productList.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
+    }
+
+    this.pageModel.sort.producttypenameUp = false;
+    this.pageModel.sort.producttypenameDown = false;
+    this.pageModel.sort.productcodeUp = false;
+    this.pageModel.sort.productcodeDown = false;
+    this.pageModel.sort.productnameUp = false;
+    this.pageModel.sort.productnameDown = false;
+
+    this.pageModel.sort.modelUp = false;
+    this.pageModel.sort.modelDown = false;
+
+    this.pageModel.sort.simflagUp = false;
+    this.pageModel.sort.simflagDown = false;
+    this.pageModel.sort.versionUp = false;
+    this.pageModel.sort.versionDown = false;
+    this.pageModel.sort.createusernameUp = false;
+    this.pageModel.sort.createusernameDown = false;
+
+    switch (nm) {
+      case 'producttypename':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.producttypenameUp = true
+        } else {
+          this.pageModel.sort.producttypenameDown = true
+        }
+        break;
+      case 'productcode':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.productcodeUp = true
+        } else {
+          this.pageModel.sort.productcodeDown = true
+        }
+        break;
+      case 'productname':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.productnameUp = true
+        } else {
+          this.pageModel.sort.productnameDown = true
+        }
+        break;
+      case 'model':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.modelUp = true
+        } else {
+          this.pageModel.sort.modelDown = true
+        }
+        break;
+      case 'simflag':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.simflagUp = true
+        } else {
+          this.pageModel.sort.simflagDown = true
+        }
+        break;
+      case 'version':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.versionUp = true
+        } else {
+          this.pageModel.sort.versionDown = true
+        }
+        break;
+      case 'createusername':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.createusernameUp = true
+        } else {
+          this.pageModel.sort.createusernameDown = true
+        }
+        break;
+      case 'createusername':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.createusernameUp = true
+        } else {
+          this.pageModel.sort.createusernameDown = true
+        }
+        break;
     }
   }
 
   alphabetically(ascending, nm) {
     return function (a, b) {
-      // equal items sort equally
       if (a[nm] === b[nm]) {
         return 0;
-      }
-      // nulls sort after anything else
-      else if (a[nm] === null) {
+      } else if (a[nm] === null) {
         return 1;
-      }
-      else if (b[nm] === null) {
+      } else if (b[nm] === null) {
         return -1;
-      }
-      // otherwise, if we're ascending, lowest sorts first
-      else if (ascending) {
+      } else if (ascending) {
         return a[nm] < b[nm] ? -1 : 1;
-      }
-      // if descending, highest sorts first
-      else {
+      } else {
         return a[nm] < b[nm] ? 1 : -1;
       }
     };
@@ -604,9 +690,6 @@ export class ProductComponent implements OnInit {
     this.productList.forEach(function (product) {
       if (product.productid === selected['productid']) { product.isSelected = ev.target.checked }
     });
-
-    // this.selected.splice(0, this.selected.length);
-    // this.selected.push(...selected);
   }
 
   isAllChecked() {

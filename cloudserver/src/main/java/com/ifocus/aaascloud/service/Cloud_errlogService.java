@@ -68,7 +68,7 @@ public class Cloud_errlogService {
 
 		// ユーザー名
 		Optional<Cloud_userEntity> user = cloud_userRepository.findById(entity.getUserid());
-		if (user != null) {
+		if (user.isPresent()) {
 			model.setUsername(user.get().getUsername());
 		}
 
