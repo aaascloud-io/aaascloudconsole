@@ -37,6 +37,7 @@ public class Cloud_deviceModel {
 	private Integer companyid;
 	private String companyname;
 	private Integer userid;
+	private String userfullname;
 	private Integer lastprojectId;
 	private Integer lastgroupid;
 	private Integer alive;
