@@ -629,7 +629,7 @@ public class Cloud_deviceController {
 					response.setStatus(200);
 					response.setCount(imeiErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkImeiExistedInDB");
+					response.setResultMsg(ErrorConstant.ERROR_CODE_IMEI);
 					response.setData(Util.getJsonString(imeiErrorList));
 					return response;
 				}
@@ -642,7 +642,7 @@ public class Cloud_deviceController {
 					response.setStatus(200);
 					response.setCount(snErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSnExistedInDB");
+					response.setResultMsg(ErrorConstant.ERROR_CODE_SN);
 					response.setData(Util.getJsonString(snErrorList));
 					return response;
 				}
@@ -655,7 +655,7 @@ public class Cloud_deviceController {
 					response.setStatus(200);
 					response.setCount(sim_imsiErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_imsiExistedInDB");
+					response.setResultMsg(ErrorConstant.ERROR_CODE_SIMIMSI);
 					response.setData(Util.getJsonString(sim_imsiErrorList));
 					return response;
 				}
@@ -668,7 +668,7 @@ public class Cloud_deviceController {
 					response.setStatus(200);
 					response.setCount(sim_iccidErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_iccidExistedInDB");
+					response.setResultMsg(ErrorConstant.ERROR_CODE_SIMICCID);
 					response.setData(Util.getJsonString(sim_iccidErrorList));
 					return response;
 				}
@@ -681,7 +681,7 @@ public class Cloud_deviceController {
 					response.setStatus(200);
 					response.setCount(sim_telErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_telExistedInDB");
+					response.setResultMsg(ErrorConstant.ERROR_CODE_SIMTEL);
 					response.setData(Util.getJsonString(sim_telErrorList));
 					return response;
 				}
