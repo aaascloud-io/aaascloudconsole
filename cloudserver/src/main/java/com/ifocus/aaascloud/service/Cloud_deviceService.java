@@ -883,26 +883,35 @@ public class Cloud_deviceService {
 
 		// 会社名
 		Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(entity.getCompanyid());
-		if (!company.isEmpty()) {	model.setCompanyname(company.get().getCompanyname());}
+		if (company.isPresent()) {	model.setCompanyname(company.get().getCompanyname());}
 
 		// プロダクト名
 		if (entity.getProductid() != null) {
 			Optional<Cloud_productEntity> product = cloud_productRepository.findById(entity.getProductid());
-			if (!product.isEmpty()) {	model.setProductname(product.get().getProductname());}
+			if (product.isPresent()) {	model.setProductname(product.get().getProductname());}
 		}
 		// プロジェクト名
 		if (entity.getProjectid() != null) {
 			Optional<Cloud_projectEntity> project = cloud_projectRepository.findById(entity.getProjectid());
-			if (!project.isEmpty()) {	model.setProjectname(project.get().getProjectname());}
+			if (project.isPresent()) {	model.setProjectname(project.get().getProjectname());}
 
 		}
 		// グループ名
 		if (entity.getGroupid() != null) {
 			Optional<Cloud_groupEntity> group = cloud_groupRepository.findById(entity.getGroupid());
-			if (!group.isEmpty()) {		model.setGroupname(group.get().getGroupname());	}
+			if (group.isPresent()) {		model.setGroupname(group.get().getGroupname());	}
 		}
 
 		model.setUserid(entity.getUserid());
+
+		// ユーザフルネーム
+		if (entity.getUserid() != null) {
+			Optional<Cloud_userEntity>  user = cloud_userRepository.findById(null);
+			if (user.isPresent()) {
+				model.setUserfullname(user.get().getLastname() + " " + user.get().getFirstname());
+			}
+		}
+
 		model.setLastprojectId(entity.getLastprojectId());
 		model.setLastgroupid(entity.getLastgroupid());
 		model.setAlive(entity.getAlive());
@@ -1120,7 +1129,9 @@ public class Cloud_deviceService {
 //		entity.setAlive(model.getAlive());
 
 		// ユーザIDを設定
-		entity.setUserid(model.getUserid());
+		if (model.getUserid() != null) {
+			entity.setUserid(model.getUserid());
+		}
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
 
