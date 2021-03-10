@@ -205,7 +205,7 @@
         </div> -->
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者<code>＊</code></h6>
-          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="username" 
+          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="userfullname" 
             name="underUsers" [(ngModel)]="SelectedDeviceDetail" #underUsersngname="ngModel" required>
           </ng-select>
           <div *ngIf="editDeviceForm.submitted && underUsersngname.invalid" class="invalid-feedback d-block">

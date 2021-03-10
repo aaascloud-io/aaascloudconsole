@@ -221,7 +221,7 @@ export class DeviceComponent implements OnInit {
       }
     });
 
-    this.httpService.usePost('/searchUnderUsers', param).then(item => {
+    this.httpService.usePost('/getUnderUsers', param).then(item => {
       try {
         if (item != null) {
           this.underUsersSelectArray = item;
