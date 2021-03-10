@@ -849,10 +849,12 @@ public class Cloud_deviceController {
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
 
 				// 更新前デバイス取得
-				Cloud_deviceDetailModel oldDevice = cloud_deviceService.getDeviceDetail(cloud_deviceModel.getDeviceid());
-				// 更新後Sim_imsiリスト取得
-				List<String> newSim_imsi = cloud_deviceService.getSim_imsiList(cloud_deviceModel);
-				if (oldDevice.getSim_imsi() != null && !oldDevice.getSim_imsi().equals(newSim_imsi.get(0))) {
+				Cloud_deviceDetailModel oldDevice = cloud_deviceService.getDeviceDetail(cloud_deviceModel.getDeviceDetail().getDeviceid());
+				// チェック準備
+				cloud_deviceModel.addDeviceDetailToDeviceDetailList();
+
+				if (cloud_deviceModel.getDeviceDetail().getSim_imsi() != null && !cloud_deviceModel.getDeviceDetail().getSim_imsi().equals(oldDevice.getSim_imsi())) {
+
 
 					// SIM_IMSI存在チェックを行う
 					List<Cloud_deviceDetailModel> sim_imsiErrorList = cloud_deviceService.checkSim_imsiExistedInDB(cloud_deviceModel);
@@ -868,9 +870,7 @@ public class Cloud_deviceController {
 					}
 				}
 
-				// 更新後SIM_ICCIDリスト取得
-				List<String> newSim_iccid = cloud_deviceService.getSim_iccidList(cloud_deviceModel);
-				if (oldDevice.getSim_iccid() != null && !oldDevice.getSim_iccid().equals(newSim_iccid.get(0))) {
+				if (cloud_deviceModel.getDeviceDetail().getSim_iccid() != null && !cloud_deviceModel.getDeviceDetail().getSim_iccid().equals(oldDevice.getSim_iccid())) {
 
 					// SIM_ICCID存在チェックを行う
 					List<Cloud_deviceDetailModel> sim_iccidErrorList = cloud_deviceService.checkSim_iccidExistedInDB(cloud_deviceModel);
@@ -885,9 +885,7 @@ public class Cloud_deviceController {
 						return response;
 					}
 				}
-				// 更新後SIM_TELリスト取得
-				List<String> newSim_tel = cloud_deviceService.getSim_telList(cloud_deviceModel);
-				if (oldDevice.getSim_tel() != null && !oldDevice.getSim_tel().equals(newSim_tel.get(0))) {
+				if (cloud_deviceModel.getDeviceDetail().getSim_tel() != null && !cloud_deviceModel.getDeviceDetail().getSim_tel().equals(oldDevice.getSim_tel())) {
 
 					// SIM_TEL存在チェックを行う
 					List<Cloud_deviceDetailModel> sim_telErrorList = cloud_deviceService.checkSim_telExistedInDB(cloud_deviceModel);
