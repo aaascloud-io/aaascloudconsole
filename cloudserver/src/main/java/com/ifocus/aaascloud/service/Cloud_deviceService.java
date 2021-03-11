@@ -99,7 +99,7 @@ public class Cloud_deviceService {
 		// 全社のデバイス一覧取得
 		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
 		// グループ指定なしの場合
-		if (CommonConstant.DEFAULT_MATCH_ALL.equals(model.getGroupForSearch())) {
+		if (CommonConstant.DEFAULT_MATCH_ALL.equals(model.getGroupnameForSearch())) {
 			// プロジェクト名指定なし
 			if (CommonConstant.DEFAULT_MATCH_ALL.equals(model.getProjectnameForSearch())) {
 				list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLike(
@@ -130,7 +130,7 @@ public class Cloud_deviceService {
 						model.getImeiForSearch(),
 						model.getProductnameForSearch(),
 						model.getIndustryForSearch(),
-						model.getGroupForSearch()
+						model.getGroupnameForSearch()
 						);
 			// プロジェクト名指定あり
 			} else {
@@ -141,7 +141,7 @@ public class Cloud_deviceService {
 						model.getProductnameForSearch(),
 						model.getProjectnameForSearch(),
 						model.getIndustryForSearch(),
-						model.getGroupForSearch()
+						model.getGroupnameForSearch()
 						);
 			}
 		}
@@ -160,9 +160,9 @@ public class Cloud_deviceService {
 		// 全社のデバイス一覧取得
 		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
 		// グループ指定なしの場合
-		if (CommonConstant.DEFAULT_MATCH_ALL.equals(model.getGroupForSearch())) {
+		if (model.getGroupname() == null || model.getGroupname().isEmpty()) {
 			// プロジェクト名指定なし
-			if (CommonConstant.DEFAULT_MATCH_ALL.equals(model.getProjectnameForSearch())) {
+			if (model.getProjectname() == null || model.getProjectname().isEmpty()) {
 				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLike(
 						userids,
 						model.getImeiForSearch(),
@@ -184,14 +184,14 @@ public class Cloud_deviceService {
 		// グループ指定ありの場合
 		} else {
 			// プロジェクト名指定なし
-			if (CommonConstant.DEFAULT_MATCH_ALL.equals(model.getProjectnameForSearch())) {
+			if (model.getProjectname() == null || model.getProjectname().isEmpty()) {
 				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
 						userids,
 						model.getImeiForSearch(),
 						model.getImeiForSearch(),
 						model.getProductnameForSearch(),
 						model.getIndustryForSearch(),
-						model.getGroupForSearch()
+						model.getGroupnameForSearch()
 						);
 			// プロジェクト名指定あり
 			} else {
@@ -202,7 +202,7 @@ public class Cloud_deviceService {
 						model.getProductnameForSearch(),
 						model.getProjectnameForSearch(),
 						model.getIndustryForSearch(),
-						model.getGroupForSearch()
+						model.getGroupnameForSearch()
 						);
 			}
 		}

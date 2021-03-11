@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
-                        <div class="heading-elements mt-0 pull-right" style="padding-top:20px;">
+                        <div class="heading-elements mt-0 pull-right" style="padding-top:30px;">
                           <button class="btn btn-primary btn-sm gap_contact" (click)="serachDevices()">
                             <i class="d-md-none d-block feather ft-plus white"></i>
                             <span class="d-md-block d-none">検　索</span></button>
@@ -101,6 +101,8 @@
                       <th scope="col" class="thcolor">No.</th>
                       <th scope="col" class="thcolor" (click)="sortData('sn')">SN<i *ngIf="pageModel.sort.snUp"
                           class="la la-sort-up"></i><i *ngIf="pageModel.sort.snDown" class="la la-sort-down"></i></th>
+                          <th scope="col" class="thcolor" (click)="sortData('devicename')">デバイス名<i *ngIf="pageModel.sort.devicenameUp"
+                            class="la la-sort-up"></i><i *ngIf="pageModel.sort.devicenameDown" class="la la-sort-down"></i></th>
                       <th scope="col" class="thcolor" (click)="sortData('imei')">IMEI
                         <i *ngIf="pageModel.sort.imeiUp" class="la la-sort-up"></i><i *ngIf="pageModel.sort.imeiDown"
                           class="la la-sort-down"></i>
@@ -108,7 +110,7 @@
                       <th scope="col" class="thcolor" (click)="sortData('sim_iccid')">ICCID<i
                           *ngIf="pageModel.sort.iccidUp" class="la la-sort-up"></i><i *ngIf="pageModel.sort.iccidDown"
                           class="la la-sort-down"></i></th>
-                      <th scope="col" class="thcolor">状態</th>
+                      <!-- <th scope="col" class="thcolor">状態</th> -->
                       <th scope="col" class="thcolor" (click)="sortData('companyname')">会社名<i
                           *ngIf="pageModel.sort.companynameUp" class="la la-sort-up"></i><i
                           *ngIf="pageModel.sort.companynameDown" class="la la-sort-down"></i></th>
@@ -131,9 +133,10 @@
                       </td>
                       <td>{{(page-1)*pageSize+i+1}}</td>
                       <td>{{ element.sn }}</td>
+                      <td>{{ element.devicename }}</td>
                       <td>{{ element.imei}}</td>
                       <td>{{ element.sim_iccid }}</td>
-                      <td>設計中</td>
+                      <!-- <td>設計中todo</td> -->
                       <td>{{ element.companyname}}</td>
                       <td>{{ element.productname}}</td>
                       <td>{{ element.projectname}}</td>
@@ -191,12 +194,12 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>IMEI<code>＊</code></h6>
           <input type="text" [(ngModel)]="selectedDevice.imei" name="imei" class="contact-name form-control"
-            placeholder="IMEI" readonly="readonly">
+            placeholder="IMEI" maxlength="20" readonly="readonly">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>ICCID</h6>
           <input type="text" [(ngModel)]="selectedDevice.sim_iccid" name="sim_iccid" class="contact-email form-control"
-            placeholder="ICCID" maxlength="20">
+            placeholder="SIMカードICCID" maxlength="20">
         </div>
         <!-- <div class="form-group col-lg-6 col-md-12">
           <h6>所有者</h6>
@@ -228,12 +231,12 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカードIMSI</h6>
           <input type="text" [(ngModel)]="selectedDevice.sim_imsi" name="sim_imsi" class="form-control" placeholder=""
-            maxlength="20">
+            maxlength="20" placeholder="SIMカードIMSI">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
           <input type="text" [(ngModel)]="selectedDevice.sim_tel" name="sim_tel" class="phone form-control"
-            placeholder="SIMカード電話番号" (focusout)="lengthCheck(selectedDevice.sim_tel,'simtel',editForm)" maxlength="11"
+          placeholder="フォーマット:xxxxxxxxxxx" (focusout)="lengthCheck(selectedDevice.sim_tel,'simtel',editForm)" maxlength="11"
             appNumbersOnly>
         </div>
         <div class="form-group col-lg-6 col-md-12">
@@ -331,7 +334,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>ICCID</h6>
           <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_iccid" name="sim_iccid"
-            class="contact-email form-control" maxlength="20" placeholder="ICCID">
+            class="contact-email form-control" maxlength="20" placeholder="SIMカードICCID">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者<code>＊</code></h6>
@@ -355,12 +358,12 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカードIMSI</h6>
           <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_imsi" name="sim_imsi" class="form-control"
-            maxlength="50" placeholder="">
+            maxlength="20" placeholder="SIMカードIMSI" >
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
           <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="sim_tel" class="phone form-control"
-            placeholder="フォーマット:08054080520" maxlength="11" appNumbersOnly>
+            placeholder="フォーマット:xxxxxxxxxxx" maxlength="11" appNumbersOnly>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>暗号化キー</h6>

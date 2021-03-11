@@ -170,7 +170,7 @@ public class Util {
 	 * @param src Object 任意のJavaオブジェクト
 	 * @return String オブジェクトのJSON形式
 	 */
-	public static String getJsonString(Object src) {
+	public static String getJsonStringForSearch(Object src) {
 //		Gson gson  = new Gson ();
 //		return gson.toJson(src);
 		String json="";
@@ -182,5 +182,15 @@ public class Util {
 			e.printStackTrace();
 		}
 		return json;
+	}
+
+	/**
+	 * モデルからSN取得
+	 * @param src Object 任意のJavaオブジェクト
+	 * @return String オブジェクトのJSON形式
+	 */
+	public static String getJsonString(Object src) {
+		Gson gson  = new Gson ();
+		return gson.toJson(src);
 	}
 }

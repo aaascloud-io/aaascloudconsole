@@ -19,12 +19,14 @@ import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
+import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.ReturnModel;
 import com.ifocus.aaascloud.model.UserModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
+import com.ifocus.aaascloud.service.Cloud_deviceService;
 
 import net.sf.json.JSONObject;
 
@@ -41,6 +43,8 @@ public class Cloud_userController {
 	private Cloud_companyService cloud_companyService;
 	@Autowired
 	private Cloud_userRepository cloud_userRepository;
+	@Autowired
+	private Cloud_deviceService cloud_deviceService;
 
 	/**
 	 * 配下ユーザ一覧を取得する
@@ -223,7 +227,7 @@ public class Cloud_userController {
 				resJasonObj.put("role", model.getRole());
 				resJasonObj.put("upperuserid", model.getUpperuserid());
 				resJasonObj.put("companyName", model.getCompanyname());
-				resJasonObj.put("devicecount", model.getDevicecount());
+//				resJasonObj.put("devicecount", model.getDevicecount());
 
 
 				// アクセス権限ユーザ一覧を取得する
@@ -233,6 +237,11 @@ public class Cloud_userController {
 
 				// プロジェクト一覧を取得する
 				List<Cloud_projectModel> projectList = cloud_projectService.getMyUnderProjects(underUserList);
+				
+				// デバイス一覧を取得する
+				List<Cloud_deviceModel> deviceList = cloud_deviceService.getUnderUserDevices(null, underUserList);
+				resJasonObj.put("deviceCount", deviceList.size());
+				
 				// 配下プロジェクト数
 				resJasonObj.put("projectCount", projectList.size());
 
