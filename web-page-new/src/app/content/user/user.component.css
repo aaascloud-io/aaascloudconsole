@@ -385,3 +385,13 @@
   text-align: center;
   color:#000000;font-weight:bold;
 }
+
+.modal-footer-R {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #626e82;
+  border-bottom-right-radius: 0.35rem;
+  border-bottom-left-radius: 0.35rem;
+}
