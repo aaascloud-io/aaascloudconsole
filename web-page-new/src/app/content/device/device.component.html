@@ -44,8 +44,8 @@
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">会社名</label>
-                        <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname"
-                          [(ngModel)]="pageModel.query.conpanySelected">
+                        <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname" bindValue="companyid" 
+                          [(ngModel)]="pageModel.query.companyid">
                         </ng-select>
                       </div>
                     </div>
@@ -96,9 +96,9 @@
                 <table class="table grid-breakpoints">
                   <thead>
                     <tr>
-                      <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAll($event)">
+                      <th scope="col"  class="thcolor"><input type="checkbox" (change)="checkAll($event)">
                       </th>
-                      <th scope="col" class="thcolor">No.</th>
+                      <th scope="col" style="width: 30%" class="thcolor">No.</th>
                       <th scope="col" class="thcolor" (click)="sortData('sn')">SN<i *ngIf="pageModel.sort.snUp"
                           class="la la-sort-up"></i><i *ngIf="pageModel.sort.snDown" class="la la-sort-down"></i></th>
                           <th scope="col" class="thcolor" (click)="sortData('devicename')">デバイス名<i *ngIf="pageModel.sort.devicenameUp"

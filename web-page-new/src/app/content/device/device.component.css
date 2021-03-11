@@ -377,7 +377,6 @@
 .thcolor{
   background-color: #6b6f82 !important;
   color:aliceblue; 
-  width: 10%;
 }
 
 
@@ -394,5 +393,5 @@ ng-select.required.ng-invalid.ng-untouched .ng-select-container {
 }
 
 :host ::ng-deep .table .th .td{
-  width: 100;
+  width: 100px;
 }
