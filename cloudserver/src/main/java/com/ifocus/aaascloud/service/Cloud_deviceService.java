@@ -266,7 +266,7 @@ public class Cloud_deviceService {
 	 */
 	public List<Cloud_deviceModel> getProjectDevices(Integer projectid) throws Exception {
 
-		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchDevicesByProjectidAndGroupid(projectid,0);
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchProjectDevicesWithNoGroupByProjectid(projectid);
 		return this.getModelsByEntitys(list);
 
 	}
