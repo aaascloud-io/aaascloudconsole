@@ -121,6 +121,7 @@ export class VersionComponent implements OnInit {
      * OnInit
      */
   ngOnInit() {
+    this.variableReset();
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     this.pageModel.loginInfo = {
         "loginuserid": item.uid,
@@ -497,5 +498,18 @@ export class VersionComponent implements OnInit {
         this.productNameList = [...this.productNameList];
       });
     }
+  }
+
+  variableReset(){
+    this.rows = [];
+    this.tableDisplayData = [];
+    this.selectedVersion = {};
+    this.selected=[];
+    this.searchValue = {
+      productname:'',
+      versionname:''
+    };
+    this.addVersion = {};
+    this.productNameList = [];
   }
 }
