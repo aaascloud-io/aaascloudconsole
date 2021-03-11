@@ -89,7 +89,9 @@ public class DashboardController {
 				dashboardModel.setProjectCount(projectList.size());
 
 				// プロダクト一覧を取得する
-				List<Cloud_productModel> productList = cloud_productService.getMyUnderProducts(list);
+				// List<Cloud_productModel> productList = cloud_productService.getMyUnderProducts(list);
+				List<Cloud_productModel> productList = cloud_productService.searchMyProductList(list);
+
 				// プロダクト一覧を設定する
 				dashboardModel.setProductList(productList);
 				// プロダクト数を設定する
