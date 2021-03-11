@@ -136,7 +136,7 @@ export class ProjectComponent implements OnInit {
       "targetuserCompanyid": item.company,
     };
     this.initData();
-    this.rows = [...this.rows];
+
   }
 
   async initData(){
@@ -150,12 +150,12 @@ export class ProjectComponent implements OnInit {
     jsonItem.forEach(element => {
       this.rows.push(element);
     });
+    this.rows = [...this.rows];
     this.getTabledata();
     this.getProductTypes();
     this.getProductNameList();
     console.log("rows 数据");
     console.log(this.rows);
-    this.rows = [...this.rows];
   }
 
 
@@ -198,6 +198,10 @@ export class ProjectComponent implements OnInit {
             this.pageModel.addProject.projectSummary = '';
             this.ngOnInit();
             alert("プロジェクトを登録しました。");
+          }else{
+            console.log('登録失敗、ご確認してください。');
+            console.log(item);
+            alert('登録失敗、ご確認してください。');
           }
         }catch(e){
           alert(e);
@@ -260,6 +264,10 @@ export class ProjectComponent implements OnInit {
           if(item.body.resultCode == "0000"){
             this.ngOnInit();
             alert("プロジェクトを削除しました。");
+          }else{
+            console.log('削除失敗、ご確認してください。');
+            console.log(item);
+            alert('削除失敗、ご確認してください。');
           }
         }catch(e){
           alert(e);
@@ -310,6 +318,10 @@ export class ProjectComponent implements OnInit {
               this.editModal.close(projectEditForm.resetForm);
             }
             this.selectedProject={};
+          }else{
+            console.log('改修失敗、ご確認してください。');
+            console.log(item);
+            alert('改修失敗、ご確認してください。');
           }
         } catch (e) {
           console.log(e);
@@ -321,44 +333,41 @@ export class ProjectComponent implements OnInit {
 
   // 選択したプロジェクトを複数削除
   deleteCheckedRow() {
-    if (confirm("選択したデーターを削除しますか")) {
-      for (var row of this.rows) {
-        if (row.isSelected) {
-          this.selected.push(row);
-        }
+    for (var row of this.rows) {
+      if (row.isSelected) {
+        this.selected.push(row);
       }
-      if(this.selected.length > 0){
-        var query = {
-          "loginInfo": this.pageModel.loginInfo,
-          "targetUserInfo":this.pageModel.targetUserInfo,
-          "projectlist": this.selected,
-        }
-        console.log("这是删除操作传入的参数");
-        console.log(query);
-        this.httpService.useRpDelete('deleteProjects', query).then(item => {
-          console.log("这是删除操作得到的参数");
-          console.log(item);
-          try {
-            if (item.resultCode == "0000") {
-              this.searchValue = {
-                projectname:'',
-                productname:''
-              };;
-              this.selected=[];
-              this.ngOnInit();
-              alert('選択したプロジェクトを削除しました');
-            }else{
-              alert(item);
-              this.ngOnInit();
-            }
-          } catch (e) {
-            console.log(e);
-            alert(e);
+    }
+    if(this.selected.length > 0){
+      if (confirm("選択したデーターを削除しますか")) {
+          var query = {
+            "loginInfo": this.pageModel.loginInfo,
+            "targetUserInfo":this.pageModel.targetUserInfo,
+            "projectlist": this.selected,
           }
-        });
-      }else{
-        alert("プロジェクトを選択してください。");
+          this.httpService.useRpDelete('deleteProjects', query).then(item => {
+            try {
+              if (item.resultCode == "0000") {
+                this.searchValue = {
+                  projectname:'',
+                  productname:''
+                };;
+                this.selected=[];
+                this.ngOnInit();
+                alert('選択したプロジェクトを削除しました');
+              }else{
+                console.log('削除失敗、ご確認してください。');
+                console.log(item);
+                alert('削除失敗、ご確認してください。');
+              }
+            } catch (e) {
+              console.log(e);
+              alert(e);
+            }
+          });
       }
+    }else{
+      alert("プロジェクトを選択してください。");
     }
   }
 
@@ -384,7 +393,7 @@ export class ProjectComponent implements OnInit {
     // 每个元素添加了 isSelected 属性
     this.tableDisplayData.forEach(x => x.isSelected = false)
     // this.tableDisplayData = this.PaginationData();
-    this.PaginationData;
+    // this.PaginationData;
   }
   /**
  * Pagination table
@@ -397,6 +406,9 @@ export class ProjectComponent implements OnInit {
   }
 
   sortData(nm) {
+    console.log("这是排序前的rows");
+    console.log(this.rows);
+    console.log(nm);
     if (this.sortOn == 1) {
       this.rows.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
@@ -404,6 +416,8 @@ export class ProjectComponent implements OnInit {
       this.rows.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
     }
+    console.log("这是排序后的rows");
+    console.log(this.rows);
     this.valueSortFlg.projectNameUp = false;
     this.valueSortFlg.projectNameDown = false;
     this.valueSortFlg.productNameUp = false;
@@ -505,15 +519,15 @@ export class ProjectComponent implements OnInit {
   projectDeviceDataUpdate(projectDeviceForm,projectid){
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
-      if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
-        for (var item of this.usableDeviceList) {
-          if (item.isSelected) {
-            this.selectedDevice.push(item);
-          }
+      for (var item of this.usableDeviceList) {
+        if (item.isSelected) {
+          this.selectedDevice.push(item);
         }
-        console.log("这是 this.selectedDevice");
-        console.log(this.selectedDevice);
-        if(this.selectedDevice.length > 0){
+      }
+      if(this.selectedDevice.length > 0){
+        if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
+          console.log("这是 this.selectedDevice");
+          console.log(this.selectedDevice);
           var param = {
             "loginInfo":this.pageModel.loginInfo,
             "targetUserInfo":this.pageModel.targetUserInfo,
@@ -529,6 +543,10 @@ export class ProjectComponent implements OnInit {
                   projectDeviceForm.reset();
                   this.editModal.close(projectDeviceForm.resetForm);
                 }
+              }else{
+                console.log('更新失敗、ご確認してください。');
+                console.log(item);
+                alert('更新失敗、ご確認してください。');
               }
               this.ngOnInit();
             } catch (e) {
@@ -537,9 +555,9 @@ export class ProjectComponent implements OnInit {
               this.ngOnInit();
             };
           });
-        }else{
-          alert("デバイスを選択してください。");
         }
+      }else{
+        alert("デバイスを選択してください。");
       }
     }
   }
@@ -583,13 +601,13 @@ export class ProjectComponent implements OnInit {
   projectLinkedDeviceDataUpdate(projectLinkedDeviceForm,projectid){
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
-      if (confirm("選択したデバイスをプロジェクトから削除しますか")) {
-        for (var item of this.linkedDeviceList) {
-          if (item.isSelected) {
-            this.selectedDevice.push(item);
-          }
+      for (var item of this.linkedDeviceList) {
+        if (item.isSelected) {
+          this.selectedDevice.push(item);
         }
-        if(this.selectedDevice.length >0){
+      }
+      if(this.selectedDevice.length >0){
+        if (confirm("選択したデバイスをプロジェクトから削除しますか")) {
           var param = {
             "loginInfo":this.pageModel.loginInfo,
             "targetUserInfo":this.pageModel.targetUserInfo,
@@ -606,6 +624,10 @@ export class ProjectComponent implements OnInit {
                   projectLinkedDeviceForm.reset();
                   this.editModal.close(projectLinkedDeviceForm.resetForm);
                 }
+              }else{
+                console.log('削除失敗、ご確認してください。');
+                console.log(item);
+                alert('削除失敗、ご確認してください。');
               }
               this.ngOnInit();
             } catch (e) {
@@ -614,9 +636,9 @@ export class ProjectComponent implements OnInit {
               this.ngOnInit();
             }
           });
-        }else{
-          alert("デバイスを選択してください。");
         }
+      }else{
+        alert("デバイスを選択してください。");
       }
     }
   }
