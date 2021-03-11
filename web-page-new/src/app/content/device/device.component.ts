@@ -34,6 +34,7 @@ export class DeviceComponent implements OnInit {
   sortOn: any;
   editProductSelected: {};
   editUserSelected: {};
+editClickFlg=false;
 
 
   public pageModel = {
@@ -80,6 +81,28 @@ export class DeviceComponent implements OnInit {
       sim_iccid: '',
       userid:''
     },
+    deviceDetailEdit: {
+      deviceid: '',
+      devicename: '',
+      imei: '',
+      sn: '',
+      companySelected: {},
+      companyid: '',
+      sslChecked: false,
+      encryptedcommunications: 0,
+      encryptedkey: '',
+      connectserverurl: '',
+      connectserverport: '',
+      bindingflagChecked: false,
+      bindingflag: 0,
+      fmlastestversion: '',
+      versioncomfirmtime: '',
+      productid: '',
+      sim_imsi: '',
+      sim_tel: '',
+      sim_iccid: '',
+      userid:''
+    },
     sort: {
       snUp: false,
       snDown: false,
@@ -87,8 +110,8 @@ export class DeviceComponent implements OnInit {
       imeiDown: false,
       iccidUp: false,
       iccidDown: false,
-      // devicenameUp: false,
-      // devicenameDown: false,
+      devicenameUp: false,
+      devicenameDown: false,
       companynameUp: false,
       companynameDown: false,
       productnameUp: false,
@@ -287,7 +310,6 @@ export class DeviceComponent implements OnInit {
     });
     this.editProductSelected= row;
     this.editUserSelected= row;
-
   }
 
   /**
@@ -377,20 +399,20 @@ export class DeviceComponent implements OnInit {
     }
     let routeif: UserInfo = this.httpService.getLoginUser();
     if (routeif != null) {
-      this.pageModel.deviceDetail.deviceid = deviceid
-      this.pageModel.deviceDetail.devicename = this.selectedDevice['devicename'];
-      this.pageModel.deviceDetail.sim_iccid = this.selectedDevice['sim_iccid'];
-      this.pageModel.deviceDetail.productid = this.editProductSelected["productid"];
-      this.pageModel.deviceDetail.sim_imsi = this.selectedDevice['sim_imsi'];
-      this.pageModel.deviceDetail.sim_tel = this.selectedDevice['sim_tel'];
-      this.pageModel.deviceDetail.userid = this.editUserSelected['userid'];
-      this.pageModel.deviceDetail.encryptedkey = this.selectedDevice['encryptedkey'];
-      this.pageModel.deviceDetail.encryptedcommunications = this.selectedDevice['sslChecked'] == false ? 0 : 1;
-      this.pageModel.deviceDetail.connectserverurl = this.selectedDevice['connectserverurl'];
-      this.pageModel.deviceDetail.connectserverport = this.selectedDevice['connectserverport'];
-      this.pageModel.deviceDetail.bindingflag = this.selectedDevice['bindingflagChecked'] == false ? 0 : 1;
-      this.pageModel.deviceDetail.fmlastestversion = this.selectedDevice['fmlastestversion'];
-      this.pageModel.deviceDetail.versioncomfirmtime = this.selectedDevice['versioncomfirmtime'];
+      this.pageModel.deviceDetailEdit.deviceid = deviceid
+      this.pageModel.deviceDetailEdit.devicename = this.selectedDevice['devicename'];
+      this.pageModel.deviceDetailEdit.sim_iccid = this.selectedDevice['sim_iccid'];
+      this.pageModel.deviceDetailEdit.productid = this.editProductSelected["productid"];
+      this.pageModel.deviceDetailEdit.sim_imsi = this.selectedDevice['sim_imsi'];
+      this.pageModel.deviceDetailEdit.sim_tel = this.selectedDevice['sim_tel'];
+      this.pageModel.deviceDetailEdit.userid = this.editUserSelected['userid'];
+      this.pageModel.deviceDetailEdit.encryptedkey = this.selectedDevice['encryptedkey'];
+      this.pageModel.deviceDetailEdit.encryptedcommunications = this.selectedDevice['sslChecked'] == false ? 0 : 1;
+      this.pageModel.deviceDetailEdit.connectserverurl = this.selectedDevice['connectserverurl'];
+      this.pageModel.deviceDetailEdit.connectserverport = this.selectedDevice['connectserverport'];
+      this.pageModel.deviceDetailEdit.bindingflag = this.selectedDevice['bindingflagChecked'] == false ? 0 : 1;
+      this.pageModel.deviceDetailEdit.fmlastestversion = this.selectedDevice['fmlastestversion'];
+      this.pageModel.deviceDetailEdit.versioncomfirmtime = this.selectedDevice['versioncomfirmtime'];
       var param = {
         "loginInfo": {
           "loginuserid": routeif.uid,
@@ -402,7 +424,7 @@ export class DeviceComponent implements OnInit {
           "targetuserid": routeif.uid,
           "targetuserCompanyid": routeif.company
         },
-        "deviceDetail": this.pageModel.deviceDetail
+        "deviceDetail": this.pageModel.deviceDetailEdit
       }
       this.httpService.useRpPut('updateDevice', param).then(item => {
         try {
@@ -417,9 +439,9 @@ export class DeviceComponent implements OnInit {
               this.editModal.close(editDeviceForm.resetForm);
             }
             //deviceDetailクリア
-            for (var prop in this.pageModel.deviceDetail) {
-              if (this.pageModel.deviceDetail.hasOwnProperty(prop)) {
-                this.pageModel.deviceDetail[prop] = '';
+            for (var prop in this.pageModel.deviceDetailEdit) {
+              if (this.pageModel.deviceDetailEdit.hasOwnProperty(prop)) {
+                this.pageModel.deviceDetailEdit[prop] = '';
               }
             }
           }else if(item.resultCode == "0002"){
@@ -659,8 +681,8 @@ export class DeviceComponent implements OnInit {
     this.pageModel.sort.imeiDown = false;
     this.pageModel.sort.iccidUp = false;
     this.pageModel.sort.iccidDown = false;
-    // this.pageModel.sort.devicenameUp = false;
-    // this.pageModel.sort.devicenameDown = false;
+    this.pageModel.sort.devicenameUp = false;
+    this.pageModel.sort.devicenameDown = false;
     this.pageModel.sort.companynameUp = false;
     this.pageModel.sort.companynameDown = false;
     this.pageModel.sort.productnameUp = false;
@@ -692,13 +714,13 @@ export class DeviceComponent implements OnInit {
           this.pageModel.sort.iccidDown = true
         }
         break;
-      // case 'devicename':
-      //   if (this.sortOn == 1) {
-      //     this.pageModel.sort.devicenameUp = true
-      //   } else {
-      //     this.pageModel.sort.devicenameDown = true
-      //   }
-      //   break;
+      case 'devicename':
+        if (this.sortOn == 1) {
+          this.pageModel.sort.devicenameUp = true
+        } else {
+          this.pageModel.sort.devicenameDown = true
+        }
+        break;
       case 'companyname':
         if (this.sortOn == 1) {
           this.pageModel.sort.companynameUp = true
