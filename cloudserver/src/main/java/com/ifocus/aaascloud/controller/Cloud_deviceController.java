@@ -153,7 +153,7 @@ public class Cloud_deviceController {
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 			response.setCount(list.size());
-			response.setData(Util.getJsonString(list));
+			response.setData(Util.getJsonStringForSearch(list));
 		} else {
 			/* 異常系 */
 			response.setStatus(200);
@@ -220,7 +220,7 @@ public class Cloud_deviceController {
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 			response.setCount(list.size());
-			response.setData(Util.getJsonString(list));
+			response.setData(Util.getJsonStringForSearch(list));
 		} else {
 			/* 異常系 */
 			response.setStatus(200);
@@ -284,7 +284,7 @@ public class Cloud_deviceController {
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 			response.setCount(list.size());
-			response.setData(Util.getJsonString(list));
+			response.setData(Util.getJsonStringForSearch(list));
 		} else {
 			/* 異常系 */
 			response.setStatus(200);
