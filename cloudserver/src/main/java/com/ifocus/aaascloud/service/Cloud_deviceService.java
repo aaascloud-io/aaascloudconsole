@@ -160,9 +160,9 @@ public class Cloud_deviceService {
 		// 全社のデバイス一覧取得
 		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
 		// グループ指定なしの場合
-		if (model.getGroupname().isEmpty()) {
+		if (model.getGroupname() == null || model.getGroupname().isEmpty()) {
 			// プロジェクト名指定なし
-			if (model.getProjectname().isEmpty()) {
+			if (model.getProjectname() == null || model.getProjectname().isEmpty()) {
 				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLike(
 						userids,
 						model.getImeiForSearch(),
@@ -184,7 +184,7 @@ public class Cloud_deviceService {
 		// グループ指定ありの場合
 		} else {
 			// プロジェクト名指定なし
-			if (model.getProjectname().isEmpty()) {
+			if (model.getProjectname() == null || model.getProjectname().isEmpty()) {
 				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
 						userids,
 						model.getImeiForSearch(),
