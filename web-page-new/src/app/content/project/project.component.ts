@@ -136,7 +136,7 @@ export class ProjectComponent implements OnInit {
       "targetuserCompanyid": item.company,
     };
     this.initData();
-    this.rows = [...this.rows];
+
   }
 
   async initData(){
@@ -150,12 +150,12 @@ export class ProjectComponent implements OnInit {
     jsonItem.forEach(element => {
       this.rows.push(element);
     });
+    this.rows = [...this.rows];
     this.getTabledata();
     this.getProductTypes();
     this.getProductNameList();
     console.log("rows 数据");
     console.log(this.rows);
-    this.rows = [...this.rows];
   }
 
 
@@ -333,11 +333,7 @@ export class ProjectComponent implements OnInit {
           "targetUserInfo":this.pageModel.targetUserInfo,
           "projectlist": this.selected,
         }
-        console.log("这是删除操作传入的参数");
-        console.log(query);
         this.httpService.useRpDelete('deleteProjects', query).then(item => {
-          console.log("这是删除操作得到的参数");
-          console.log(item);
           try {
             if (item.resultCode == "0000") {
               this.searchValue = {
@@ -384,7 +380,7 @@ export class ProjectComponent implements OnInit {
     // 每个元素添加了 isSelected 属性
     this.tableDisplayData.forEach(x => x.isSelected = false)
     // this.tableDisplayData = this.PaginationData();
-    this.PaginationData;
+    // this.PaginationData;
   }
   /**
  * Pagination table
@@ -397,6 +393,9 @@ export class ProjectComponent implements OnInit {
   }
 
   sortData(nm) {
+    console.log("这是排序前的rows");
+    console.log(this.rows);
+    console.log(nm);
     if (this.sortOn == 1) {
       this.rows.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
@@ -404,6 +403,8 @@ export class ProjectComponent implements OnInit {
       this.rows.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
     }
+    console.log("这是排序后的rows");
+    console.log(this.rows);
     this.valueSortFlg.projectNameUp = false;
     this.valueSortFlg.projectNameDown = false;
     this.valueSortFlg.productNameUp = false;

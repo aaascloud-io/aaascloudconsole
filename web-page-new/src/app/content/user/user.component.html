@@ -62,16 +62,10 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-12">
-                    <ng-container *ngIf="pageModel.loginUser.loginrole === 1">
-                      <button class="btn btn-primary btn-sm gap_contact"
-                      (click)="addSelfTableDataModal(addSelfTableDataModalContent)">
-                      <i class="d-md-none d-block feather ft-plus white"></i>
-                      <span class="d-md-block d-none">本社使用者新規</span></button>
-                    </ng-container>
                     <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
                       (click)="addTableDataModal(addTableDataModalContent)">
                       <i class="d-md-none d-block feather ft-plus white"></i>
-                      <span class="d-md-block d-none">他社新規</span></button>
+                      <span class="d-md-block d-none">新 規</span></button>
                     <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
                       (click)="deleteCheckedRow()">
                       <i class="d-md-none d-block feather ft-plus white"></i>
@@ -89,20 +83,20 @@
                       <th scope="col" class="thcolor">No.</th>
                       <th scope="col" class="thcolor" (click)="sortData('companyName')">会社名
                         <i *ngIf="pageModel.sort.companyNameUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.companyNameDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.companyNameDown" class="la la-sort-down"></i>
                       </th>
                       <th scope="col" class="thcolor" (click)="sortData('name')">ユーザー姓名
                         <i *ngIf="pageModel.sort.nameUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.nameDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.nameDown" class="la la-sort-down"></i>
                       </th>
-                      <th scope="col" class="thcolor" >メール</th>
+                      <th scope="col" class="thcolor">メール</th>
                       <th scope="col" class="thcolor" (click)="sortData('username')">ログインID
                         <i *ngIf="pageModel.sort.usernameUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.usernameDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.usernameDown" class="la la-sort-down"></i>
                       </th>
                       <th scope="col" class="thcolor" (click)="sortData('address')">住所
                         <i *ngIf="pageModel.sort.addressUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.addressDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.addressDown" class="la la-sort-down"></i>
                       </th>
                       <th scope="col" class="thcolor">ユーザー数</th>
                       <th scope="col" class="thcolor">デバイス数</th>
@@ -121,7 +115,7 @@
                       <td>{{ element.username }}</td>
                       <td>{{ element.address}}</td>
                       <td>{{ element.userCount}}</td>
-                      <td>{{ element.devicecount}}</td>
+                      <td>{{ element.deviceCount}}</td>
                       <td>
                         <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="editTableDataModal(editTableDataModalContent, element)"><i class="la la-pencil"></i>
@@ -151,8 +145,10 @@
   </div>
 </div>
 <div class="footer">
-  <span *ngIf="pageModel.result.retcode =='0000'" style="color:blue">{{pageModel.result.retcode}}　{{pageModel.result.message}}</span>
-  <span *ngIf="pageModel.result.retcode !='0000'" class="text-danger">{{pageModel.result.retcode}}　{{pageModel.result.message}}</span>
+  <span *ngIf="pageModel.result.retcode =='0000'"
+    style="color:blue">{{pageModel.result.retcode}}　{{pageModel.result.message}}</span>
+  <span *ngIf="pageModel.result.retcode !='0000'"
+    class="text-danger">{{pageModel.result.retcode}}　{{pageModel.result.message}}</span>
 </div>
 
 
@@ -264,207 +260,198 @@
           </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
-          <h6>権限<code>＊</code></h6>
+          <h6>新規種類<code>＊</code></h6>
+
           <select class="form-control" id="role" name="role" [(ngModel)]="pageModel.adduserInfo.role" #addrole="ngModel"
             class="name form-control" [ngClass]="{ 'is-invalid': addForm.submitted && addrole.invalid }" required>
-            <option [value]=1>管理者</option>
-            <option [value]=2>使用者</option>
+            <option [value]=1>他社新規（管理者）</option>
+            <option *ngIf="pageModel.loginUser.loginrole === 1" [value]=2>自社新規（使用者）</option>
           </select>
           <div *ngIf="addForm.submitted && addrole.invalid" class="invalid-feedback">
-            <div *ngIf="addrole.errors.required">権限を選択してください</div>
-          </div>
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>上位管理者<code>＊</code></h6>
-          <select class="form-control" name="upperuser" id="upperuser" [(ngModel)]="pageModel.adduserInfo.upperuserid"
-            placeholder="選択してください。" #editupperuser="ngModel"
-            [ngClass]="{ 'is-invalid': addForm.submitted && editupperuser.invalid }" required>
-            <option *ngFor="let user of rows; let i = index" [ngValue]="user.userid">
-              {{user.name}}
-            </option>
-          </select>
-          <div *ngIf="addForm.submitted && editupperuser.invalid" class="invalid-feedback">
-            <div *ngIf="editupperuser.errors.required">権限を選択してください</div>
+            <div *ngIf="addrole.errors.required">新規種類を選択してください</div>
           </div>
         </div>
 
-        <div class="form-group col-lg-12 col-md-12">
-          <ul class="nav nav-tabs _bottom nav-underline no-hover-bg tabsborder">
-            <ngb-tabset>
-              <ngb-tab title="会社情報">
-                <ng-template ngbTabContent>
-                  <h4 class="form-section">会社情報</h4>
-                  <div class="row">
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6 style="width: 410px;">会社名<code>＊</code></h6>
-                      <select class="form-control" name="company" id="company"
-                        [(ngModel)]="pageModel.adduserInfo.companyInfo.companyid" placeholder="選択してください。"
-                        #editname="ngModel" (change)="show()"
-                        [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
-                        <option *ngFor="let companyInfo of pageModel.companyInfoAll; let i = index"
-                          [ngValue]="companyInfo.companyid">
-                          {{companyInfo.companyname}}
-                        </option>
-                      </select>
-                      <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback">
-                        <div *ngIf="editname.errors.required">ユーザータイプを選んでください</div>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>法人番号<code>＊</code></h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.corporatenumber"
-                        #editversion="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
-                        placeholder="法人番号" disabled maxlength="13">
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>住所</h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.address" #editversion="ngModel"
-                        name="address" id="address" class="name form-control" placeholder="住所" disabled maxlength="100">
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>業種</h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.industry" #editversion="ngModel"
-                        name="industry" id="industry" class="name form-control" placeholder="業種" disabled
-                        maxlength="50">
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>メール</h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.mail" #editversion="ngModel"
-                        name="mail" id="mail" class="name form-control" placeholder="メール" disabled maxlength="50">
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>電話</h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.tel" #editversion="ngModel"
-                        name="tel" id="tel" class="name form-control" placeholder="電話" disabled maxlength="13">
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>Fax</h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.fax" #editversion="ngModel"
-                        name="fax" id="fax" class="name form-control" placeholder="Fax" disabled maxlength="13">
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <div class="form-group position-relative has-icon-left mb-0">
-                      <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(addForm)">
-                        <!-- <i class='ficon feather ft-x mr-25'></i> -->
-                        <span class="d-sm-inline d-none">取消</span>
-                      </button>
-                    </div>
-                    <div class="form-group position-relative has-icon-left mb-0">
-                      <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
-                        data-dismiss="modal"><i class="la la-paper-plane-o d-lg-none"></i> <span
-                          class="d-none d-lg-block" (click)="addCompUser(addForm)">登録</span></button>
-                    </div>
-                  </div>
-                </ng-template>
-              </ngb-tab>
-              <ngb-tab title="新規会社">
-                <ng-template ngbTabContent>
-                  <h4 class="form-section">新規会社情報</h4>
-                  <div class="row">
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6 style="width: 410px;">会社名<code>＊</code></h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.companyname"
-                        #editname="ngModel" name="companyname" id="companyname" class="name form-control"
-                        placeholder="会社名" [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
-                      <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback">
-                        <div *ngIf="editname.errors.required">会社名を入力してください</div>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>法人番号<code>＊</code></h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.corporatenumber"
-                        #addcorporatenumber="ngModel" name="corporatenumber" id="corporatenumber"
-                        class="name form-control" placeholder="法人番号"
-                        [ngClass]="{ 'is-invalid': addForm.submitted && addcorporatenumber.invalid }" required>
-                      <div *ngIf="addForm.submitted && addcorporatenumber.invalid" class="invalid-feedback"
-                        maxlength="13">
-                        <div *ngIf="addcorporatenumber.errors.required">法人番号を入力してください</div>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>住所</h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.address"
-                        #editversion="ngModel" name="address" id="address" class="name form-control" placeholder="住所"
-                        maxlength="100">
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>業種</h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.industry"
-                        #editversion="ngModel" name="industry" id="industry" class="name form-control" placeholder="業種"
-                        maxlength="50">
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>メール</h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.mail" #editversion="ngModel"
-                        name="mail" id="mail" class="name form-control" placeholder="メール" maxlength="50">
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>電話</h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.tel" #editversion="ngModel"
-                        name="tel" id="tel" class="name form-control" placeholder="電話" maxlength="13">
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                      <h6>Fax</h6>
-                      <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.fax" #editversion="ngModel"
-                        name="fax" id="fax" class="name form-control" placeholder="Fax" maxlength="13">
-                    </div>
-                    <div class="form-group col-lg-6 col-md-12">
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <div class="form-group position-relative has-icon-left mb-0">
-                      <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(addForm)">
-                        <!-- <i class='ficon feather ft-x mr-25'></i> -->
-                        <span class="d-sm-inline d-none">取消</span>
-                      </button>
-                    </div>
-                    <div class="form-group position-relative has-icon-right mb-0">
-                      <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
-                        data-dismiss="modal" data-dismiss="modal"><span class="d-none d-lg-block"
-                          (click)="addNewCompUser(addForm)" aria-label="Close">登録</span></button>
-                    </div>
-                  </div>
-                </ng-template>
-              </ngb-tab>
-            </ngb-tabset>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </form>
-</ng-template>
-
-<ng-template #addSelfTableDataModalContent let-c="close" let-d="dismiss">
-  <form #addMyForm="ngForm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">自社使用者新規</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-        <div class="form-group col-lg-12">
-          <h6>ユーザー名<code>＊</code></h6>
-          <input type="text" [(ngModel)]="pageModel.adduserInfo.username" #editname="ngModel" name="username"
-            id="username" class="name form-control" placeholder="半角英数で入力してください"
-            [ngClass]="{ 'is-invalid': addMyForm.submitted && editname.invalid }" required>
-          <div *ngIf="addMyForm.submitted && editname.invalid" class="invalid-feedback">
-            <div *ngIf="editname.errors.required">ユーザー名を入力してください</div>
+        <ng-container *ngIf="pageModel.adduserInfo.role === '1'; else elseTemplate">
+          <div class="form-group col-lg-6 col-md-12">
+            <h6>上位管理者<code>＊</code></h6>
+            <select class="form-control" name="upperuser" id="upperuser" [(ngModel)]="pageModel.adduserInfo.upperuserid"
+              placeholder="選択してください。" #editupperuser="ngModel" (ngModelChange)="getMyUnderCompanies()"
+              [ngClass]="{ 'is-invalid': addForm.submitted && editupperuser.invalid }" required>
+              <option *ngFor="let user of userAll; let i = index" [ngValue]="user.userid">
+                {{user.lastname + " " + user.firstname}}
+              </option>
+            </select>
+            <div *ngIf="addForm.submitted && editupperuser.invalid" class="invalid-feedback">
+              <div *ngIf="editupperuser.errors.required">上位管理者を選択してください</div>
+            </div>
           </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-      <div class="form-group position-relative has-icon-left mb-0">
-        <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(addMyForm)">
-          <!-- <i class='ficon feather ft-x mr-25'></i> -->
-          <span class="d-sm-inline d-none">取消</span>
-        </button>
+
+          <div class="form-group col-lg-12 col-md-12">
+            <ul class="nav nav-tabs _bottom nav-underline no-hover-bg tabsborder">
+              <ngb-tabset>
+                <ngb-tab title="会社情報">
+                  <ng-template ngbTabContent>
+                    <h4 class="form-section">会社情報</h4>
+                    <div class="row">
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6 style="width: 410px;">会社名<code>＊</code></h6>
+                        <select class="form-control" name="company" id="company"
+                          [(ngModel)]="pageModel.adduserInfo.companyInfo.companyid" placeholder="選択してください。"
+                          #editname="ngModel" (change)="show()"
+                          [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
+                          <option *ngFor="let companyInfo of pageModel.myCompanyInfoAll; let i = index"
+                            [ngValue]="companyInfo.companyid">
+                            {{companyInfo.companyname}}
+                          </option>
+                        </select>
+                        <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback">
+                          <div *ngIf="editname.errors.required">ユーザータイプを選んでください</div>
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>法人番号<code>＊</code></h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.corporatenumber"
+                          #editversion="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
+                          placeholder="法人番号" disabled maxlength="13">
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>住所</h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.address"
+                          #editversion="ngModel" name="address" id="address" class="name form-control" placeholder="住所"
+                          disabled maxlength="100">
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>業種</h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.industry"
+                          #editversion="ngModel" name="industry" id="industry" class="name form-control"
+                          placeholder="業種" disabled maxlength="50">
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>メール</h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.mail" #editversion="ngModel"
+                          name="mail" id="mail" class="name form-control" placeholder="メール" disabled maxlength="50">
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>電話</h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.tel" #editversion="ngModel"
+                          name="tel" id="tel" class="name form-control" placeholder="電話" disabled maxlength="13">
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>Fax</h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.companyInfo.fax" #editversion="ngModel"
+                          name="fax" id="fax" class="name form-control" placeholder="Fax" disabled maxlength="13">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <div class="form-group position-relative has-icon-left mb-0">
+                        <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(addForm)">
+                          <!-- <i class='ficon feather ft-x mr-25'></i> -->
+                          <span class="d-sm-inline d-none">取消</span>
+                        </button>
+                      </div>
+                      <div class="form-group position-relative has-icon-left mb-0">
+                        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
+                          data-dismiss="modal"><i class="la la-paper-plane-o d-lg-none"></i> <span
+                            class="d-none d-lg-block" (click)="addCompUser(addForm)">登録</span></button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab title="新規会社">
+                  <ng-template ngbTabContent>
+                    <h4 class="form-section">新規会社情報</h4>
+                    <div class="row">
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6 style="width: 410px;">会社名<code>＊</code></h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.companyname"
+                          #editname="ngModel" name="companyname" id="companyname" class="name form-control"
+                          placeholder="会社名" [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }"
+                          required>
+                        <div *ngIf="addForm.submitted && editname.invalid" class="invalid-feedback">
+                          <div *ngIf="editname.errors.required">会社名を入力してください</div>
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>法人番号<code>＊</code></h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.corporatenumber"
+                          #addcorporatenumber="ngModel" name="corporatenumber" id="corporatenumber"
+                          class="name form-control" placeholder="法人番号"
+                          [ngClass]="{ 'is-invalid': addForm.submitted && addcorporatenumber.invalid }" required>
+                        <div *ngIf="addForm.submitted && addcorporatenumber.invalid" class="invalid-feedback"
+                          maxlength="13">
+                          <div *ngIf="addcorporatenumber.errors.required">法人番号を入力してください</div>
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>住所</h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.address"
+                          #editversion="ngModel" name="address" id="address" class="name form-control" placeholder="住所"
+                          maxlength="100">
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>業種</h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.industry"
+                          #editversion="ngModel" name="industry" id="industry" class="name form-control"
+                          placeholder="業種" maxlength="50">
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>メール</h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.mail"
+                          #editversion="ngModel" name="mail" id="mail" class="name form-control" placeholder="メール"
+                          maxlength="50">
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>電話</h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.tel" #editversion="ngModel"
+                          name="tel" id="tel" class="name form-control" placeholder="電話" maxlength="13">
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                        <h6>Fax</h6>
+                        <input type="text" [(ngModel)]="pageModel.adduserInfo.newCompanyInfo.fax" #editversion="ngModel"
+                          name="fax" id="fax" class="name form-control" placeholder="Fax" maxlength="13">
+                      </div>
+                      <div class="form-group col-lg-6 col-md-12">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <div class="form-group position-relative has-icon-left mb-0">
+                        <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(addForm)">
+                          <!-- <i class='ficon feather ft-x mr-25'></i> -->
+                          <span class="d-sm-inline d-none">取消</span>
+                        </button>
+                      </div>
+                      <div class="form-group position-relative has-icon-right mb-0">
+                        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
+                          data-dismiss="modal" data-dismiss="modal"><span class="d-none d-lg-block"
+                            (click)="addNewCompUser(addForm)" aria-label="Close">登録</span></button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+              </ngb-tabset>
+            </ul>
+          </div>
+        </ng-container>
       </div>
-      <div class="form-group position-relative has-icon-right mb-0">
-        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item"
-          data-dismiss="modal" data-dismiss="modal"><span class="d-none d-lg-block"
-            (click)="addMyUser(addMyForm)" aria-label="Close">登録</span></button>
+      <div style="float: right;">
+        <ng-template #elseTemplate>
+          <div style="float: right;">
+            <div class="modal-footer">
+              <div class="form-group position-relative has-icon-left mb-0">
+                <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(addForm)">
+                  <!-- <i class='ficon feather ft-x mr-25'></i> -->
+                  <span class="d-sm-inline d-none">取消</span>
+                </button>
+              </div>
+              <div class="form-group position-relative has-icon-right mb-0">
+                <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"
+                  data-dismiss="modal"><span class="d-none d-lg-block" (click)="addMyCompUser(addForm)"
+                    aria-label="Close">登録</span></button>
+              </div>
+            </div>
+          </div>
+        </ng-template>
       </div>
     </div>
   </form>

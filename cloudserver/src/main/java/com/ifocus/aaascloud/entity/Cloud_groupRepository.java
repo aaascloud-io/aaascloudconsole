@@ -33,7 +33,8 @@ public interface  Cloud_groupRepository extends CrudRepository<Cloud_groupEntity
 	@Query(value = "SELECT g.* FROM cloud_group g "
 			+ " INNER JOIN cloud_project p ON g.projectid = p.projectid "
 			+ " WHERE p.projectname LIKE :projectname "
-			+ " AND g.groupname LIKE :groupname ",nativeQuery = true)
-	public List<Cloud_groupEntity> searchGroupsByProjectnameAndGroupname(@Param("projectname") String projectname, @Param("groupname") String groupname);
+			+ " AND g.groupname LIKE :groupname "
+			+ " AND p.userid = :userid ",nativeQuery = true)
+	public List<Cloud_groupEntity> searchGroupsByProjectnameAndGroupname(@Param("userid") Integer userid, @Param("projectname") String projectname, @Param("groupname") String groupname);
 
 }

@@ -702,13 +702,10 @@ export class GroupComponent implements OnInit {
           }
           this.ngOnInit();
         } catch (e) {
-          console.log(e);
-          this.ngOnInit();
+          alert("登録失敗");
         };
       });
     }
-
-    this.ngOnInit();
   }
 
   /*=======================グループのデバイス削除連携↓================================*/

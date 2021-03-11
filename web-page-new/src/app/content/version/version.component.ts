@@ -392,7 +392,6 @@ export class VersionComponent implements OnInit {
     this.rows.forEach(function (version) {
       if (version.rowid === element['rowid']) { version.isSelected = ev.target.checked }
     });
-    console.log(this.rows);
   }
 
   isAllChecked() {
@@ -417,6 +416,8 @@ export class VersionComponent implements OnInit {
   }
 
   sortData(nm) {
+    console.log("这是排序前的rows");
+    console.log(this.rows);
     if (this.sortOn == 1) {
       this.rows.sort(this.alphabetically(true, nm));
       this.sortOn = 2;
@@ -424,6 +425,8 @@ export class VersionComponent implements OnInit {
       this.rows.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
     }
+    console.log("这是排序后的rows");
+    console.log(this.rows);
     this.valueSortFlg.productNameUp = false;
     this.valueSortFlg.productNameDown = false;
     this.valueSortFlg.versionCodeUp = false;

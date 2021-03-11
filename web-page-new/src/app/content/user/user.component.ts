@@ -25,7 +25,7 @@ class Contact {
     public role: number,
     public upperuserid: string,
     public companyName: string,
-    public devicecount: number,
+    public deviceCount: number,
     public userCount: number,
     public projectCount: number,
     public address: string,
@@ -67,6 +67,7 @@ export class UserComponent implements OnInit {
   contactFavorite: boolean;
   contactactive: string;
   rows: any[] = [];
+  userAll: any[] = [];
   selectedContact: any;
   contactFlag: boolean;
   addContact: any;
@@ -83,7 +84,6 @@ export class UserComponent implements OnInit {
   temp2 = this.rows;
   singlebasicSelected: any;
 
-
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
   public multipleSelectArray = formInputData.multipleSelectArray;
@@ -97,11 +97,6 @@ export class UserComponent implements OnInit {
     // 一括登録のデバイス定義リスト
     addList: [],
     dataAll: [],
-    // userList: [],
-    addMyuserInfo: {
-      username: '',
-      role: '使用者'
-    },
 
     adduserInfo: {
       username: '',
@@ -160,6 +155,7 @@ export class UserComponent implements OnInit {
 
     },
     companyInfoAll: [],
+    myCompanyInfoAll: [],
     userRelationList: [],
     userRelation: {
       userid: null,
@@ -174,7 +170,7 @@ export class UserComponent implements OnInit {
       usernameDown: false,
       addressUp: false,
       addressDown: false,
-    }
+    },
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -227,18 +223,7 @@ export class UserComponent implements OnInit {
     console.log("param情報：" + JSON.stringify(this.pageModel.loginUser));
     this.getUnderCompanies()
     this.searchMyUsers();
-  }
-
-  /**
- * Add new contact
- *
- * @param addTableDataModalContent      Id of the add contact modal;
- */
-  addSelfTableDataModal(addSelfTableDataModalContent) {
-    this.addMyModal = this.modal.open(addSelfTableDataModalContent, {
-      windowClass: 'animated fadeInDown'
-    });
-    this.contactFlag = true;
+    this.getUnderUsers();
   }
 
   /**
@@ -463,7 +448,43 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * ユーザー新規登録（会社存在）
+   * ユーザー新規登録（自社新規）
+   *
+   * @param
+   */
+  addMyCompUser(addForm: NgForm) {
+    var companyid = this.pageModel.loginUser.logincompanyid;
+    var username = this.pageModel.adduserInfo.username;
+    var role = this.pageModel.adduserInfo.role;
+    var flg = true;
+
+    if (flg && !username) {
+      confirm(`ユーザー名を入力してください。`);
+      flg = false;
+    }
+
+    if (flg && !role) {
+      confirm(`新規種類を選択してください。`);
+      flg = false;
+    }
+
+    if (flg) {
+      var query = {
+        "loginInfo": this.pageModel.userInfoParame.loginInfo,
+        "targetUserInfo": {
+          "targetuserid": this.pageModel.loginUser.loginuserid,
+        },
+
+        "companyid": companyid,
+        "username": username,
+        "role": role,
+      }
+      this.registerUser(query, addForm);
+    }
+  }
+
+  /**
+   * ユーザー新規登録（他社新規・会社存在）
    *
    * @param 
    */
@@ -507,7 +528,7 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * ユーザー新規登録（新規会社）
+   * ユーザー新規登録（他社新規・会社存在しない）
    * 
    */
   addNewCompUser(addForm: NgForm) {
@@ -736,7 +757,7 @@ export class UserComponent implements OnInit {
               elem.role,
               elem.upperuserid,
               companyname,
-              elem.devicecount,
+              elem.deviceCount,
               elem.userCount,
               elem.projectCount,
               address,
@@ -759,7 +780,36 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * 会社情報を取得
+   * ユーザー一覧を取得する(上位管理者)
+   * 
+   */
+  async getUnderUsers() {
+    var query = {
+      "loginInfo": this.pageModel.userInfoParame.loginInfo,
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginuserid,
+        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
+      },
+      "companyname": this.pageModel.query.companyname,
+      "firstName": this.pageModel.query.firstname,
+      "lastName": this.pageModel.query.lastname,
+      "email": this.pageModel.query.email,
+    }
+    this.httpService.usePost('getUnderUsers', query).then(item => {
+      try {
+        if (item) {
+          console.log('上位管理者：');
+          console.log(item);
+          this.userAll = item;
+        }
+      } catch (e) {
+        console.log('');
+      }
+    });
+  }
+
+  /**
+   * 会社情報を取得(一覧画面の会社名)
    */
   protected async getUnderCompanies() {
     var query = {
@@ -769,7 +819,40 @@ export class UserComponent implements OnInit {
       try {
         if (item) {
           this.pageModel.companyInfoAll = item;
-          console.log(item);
+          console.log(this.pageModel.myCompanyInfoAll);
+          console.log("会社情報の取得は成功しました。");
+        } else {
+          console.log("会社情報の取得は失敗しました。");
+        }
+      } catch (e) {
+        console.log("会社情報の取得は失敗しました。");
+      }
+    });
+  }
+
+  /**
+   * 会社情報を取得（新規の会社選択）
+   */
+  protected async getMyUnderCompanies() {
+    var query = {
+      "loginuserid": this.pageModel.adduserInfo.upperuserid
+    }
+    this.httpService.usePost('getMyUnderCompanies', query).then(item => {
+      try {
+        if (item) {
+          this.pageModel.myCompanyInfoAll = item;
+          this.pageModel.myCompanyInfoAll.push({
+            address: ""
+            , companyid: null
+            , companyname: ""
+            , corporatenumber: ""
+            , fax: ""
+            , industry: ""
+            , level: ""
+            , mail: ""
+            , tel: ""
+          });
+          console.log(this.pageModel.myCompanyInfoAll);
           console.log("会社情報の取得は成功しました。");
         } else {
           console.log("会社情報の取得は失敗しました。");
@@ -785,15 +868,15 @@ export class UserComponent implements OnInit {
    */
   show() {
     // 会社情報変更
-    for (var company in this.pageModel.companyInfoAll) {
+    for (var company in this.pageModel.myCompanyInfoAll) {
       console.log(company);
-      if (this.pageModel.adduserInfo.companyInfo.companyid === this.pageModel.companyInfoAll[company]["companyid"]) {
-        this.pageModel.adduserInfo.companyInfo.corporatenumber = this.pageModel.companyInfoAll[company]["corporatenumber"];
-        this.pageModel.adduserInfo.companyInfo.address = this.pageModel.companyInfoAll[company]["address"];
-        this.pageModel.adduserInfo.companyInfo.industry = this.pageModel.companyInfoAll[company]["industry"];
-        this.pageModel.adduserInfo.companyInfo.mail = this.pageModel.companyInfoAll[company]["mail"];
-        this.pageModel.adduserInfo.companyInfo.tel = this.pageModel.companyInfoAll[company]["tel"];
-        this.pageModel.adduserInfo.companyInfo.fax = this.pageModel.companyInfoAll[company]["fax"];
+      if (this.pageModel.adduserInfo.companyInfo.companyid === this.pageModel.myCompanyInfoAll[company]["companyid"]) {
+        this.pageModel.adduserInfo.companyInfo.corporatenumber = this.pageModel.myCompanyInfoAll[company]["corporatenumber"];
+        this.pageModel.adduserInfo.companyInfo.address = this.pageModel.myCompanyInfoAll[company]["address"];
+        this.pageModel.adduserInfo.companyInfo.industry = this.pageModel.myCompanyInfoAll[company]["industry"];
+        this.pageModel.adduserInfo.companyInfo.mail = this.pageModel.myCompanyInfoAll[company]["mail"];
+        this.pageModel.adduserInfo.companyInfo.tel = this.pageModel.myCompanyInfoAll[company]["tel"];
+        this.pageModel.adduserInfo.companyInfo.fax = this.pageModel.myCompanyInfoAll[company]["fax"];
       }
     }
   }
@@ -902,8 +985,6 @@ export class UserComponent implements OnInit {
    * 
    */
   cancleModel(openForm: NgForm) {
-    // if (openForm.valid === true) {
-    // openForm.reset();
     if (this.addModal != null) {
       openForm.reset();
       this.addModal.close(openForm.resetForm);
@@ -912,12 +993,6 @@ export class UserComponent implements OnInit {
       openForm.reset();
       this.updateModal.close(openForm.resetForm);
     }
-
-    if (this.addMyModal != null) {
-      openForm.reset();
-      this.addMyModal.close(openForm.resetForm);
-    }
-    // }
   }
 
   getResultMs(item) {
