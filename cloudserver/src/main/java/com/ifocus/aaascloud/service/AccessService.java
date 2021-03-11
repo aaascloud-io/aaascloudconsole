@@ -115,6 +115,27 @@ public class AccessService {
 	}
 
 	/*
+	 * アクセス権限ユーザ一覧を取得する(本ユーザーと一層子ユーザー)
+	 * @param userid Integer ログインユーザID
+	 * @return List<Integer> アクセス権限を持つユーザ一覧
+	 *
+	 */
+	public List<Integer> getMyAccessUsers(Integer userid) throws Exception {
+		List<Integer> returnList = new ArrayList<Integer>();
+		returnList.add(userid);
+		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
+		
+		if (list.isEmpty()) {
+			return returnList;
+		} else {
+			for (Cloud_userEntity entity:list) {
+				returnList.add(entity.getUserid());
+			}
+			return returnList;
+		}
+	}
+
+	/*
 	 * アクセス権限ユーザ一覧を取得する
 	 * @param userid Integer ログインユーザID
 	 * @return List<Cloud_userModel> アクセス権限を持つユーザ一覧

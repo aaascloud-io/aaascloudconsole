@@ -41,6 +41,22 @@ public class Cloud_companyService {
 		return getModelsByEntitys(underCompanyList);
 
 	}
+	
+	/*
+	 * 配下会社一覧取得(本社と一層子会社)
+	 * @param loginUserId Integer ログインユーザーID
+	 * @return List<Cloud_companyModel> 配下会社一覧
+	 *
+	 */
+	public List<Cloud_companyModel> getMyUnderCompanies(Integer loginUserId) throws Exception {
+
+		// アクセス権限ユーザ一覧を取得する
+		List<Integer> accessUsers = accessService.getMyAccessUsers(loginUserId);
+		// 配下各社ID一覧を取得する
+		List<Cloud_companyEntity> underCompanyList = cloud_companyRepository.findUnderCompanyListByUseridIn(accessUsers);
+
+		return getModelsByEntitys(underCompanyList);
+	}
 
 	/*
 	 * 会社情報取得
