@@ -59,8 +59,8 @@ public class Cloud_deviceModel {
 	 */
 	public String getImeiForSearch() {
 
-		if (this.imei == null) {
-			return CommonConstant.DEFAULT_MATCH_ALL;
+		if (this.imei == null || this.imei.isEmpty()) {
+		return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.imei.trim() + "%";
 		}
@@ -72,7 +72,7 @@ public class Cloud_deviceModel {
 	 */
 	public String getProductnameForSearch() {
 
-		if (this.productname == null) {
+		if (this.productname == null || this.productname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.productname.trim() + "%";
@@ -85,7 +85,7 @@ public class Cloud_deviceModel {
 	 */
 	public String getProjectnameForSearch() {
 
-		if (this.projectname == null) {
+		if (this.projectname == null || this.projectname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.projectname.trim() + "%";
@@ -98,20 +98,16 @@ public class Cloud_deviceModel {
 	 */
 	public String getIndustryForSearch() {
 
-		if (this.industry == null) {
-			return CommonConstant.DEFAULT_MATCH_ALL;
-		} else {
-			return "%" + this.industry.trim() + "%";
-		}
+		return CommonConstant.DEFAULT_MATCH_ALL;
 	}
 
 	/*
-	 * group情報検索条件取得
+	 * groupname情報検索条件取得
 	 *
 	 */
-	public String getGroupForSearch() {
+	public String getGroupnameForSearch() {
 
-		if (this.groupname == null) {
+		if (this.groupname == null || this.groupname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.groupname.trim() + "%";
