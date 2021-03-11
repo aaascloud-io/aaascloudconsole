@@ -123,23 +123,7 @@ export class ProjectComponent implements OnInit {
      * OnInit
      */
   ngOnInit() {
-    // this.rows = [];
-    // this.tableDisplayData = [];
-    // this.selectedProject = {};
-    // this.selected=[];
-    // this.usableDeviceList =[];
-    // this.selectedDevice = [];
-    // this.searchValue = {
-    //   projectname:'',
-    //   productname:''
-    // };
-    // this.linkedDeviceList =[];
-    // this.productTypes = [];
-    // this.productNameList = [];
-
-
-
-
+    this.variableReset();
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     this.pageModel.loginInfo = {
         "loginuserid": item.uid,
@@ -343,27 +327,38 @@ export class ProjectComponent implements OnInit {
           this.selected.push(row);
         }
       }
-      var query = {
-        "loginInfo": this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
-        "projectlist": this.selected,
-      }
-      this.httpService.useRpDelete('deleteProjects', query).then(item => {
-        try {
-          if (item.resultCode == "0000") {
-            this.searchValue = {
-              projectname:'',
-              productname:''
-            };;
-            this.selected=[];
-            this.ngOnInit();
-            alert('選択したプロジェクトを削除しました');
-          }
-        } catch (e) {
-          console.log(e);
-          alert(e);
+      if(this.selected.length > 0){
+        var query = {
+          "loginInfo": this.pageModel.loginInfo,
+          "targetUserInfo":this.pageModel.targetUserInfo,
+          "projectlist": this.selected,
         }
-      });
+        console.log("这是删除操作传入的参数");
+        console.log(query);
+        this.httpService.useRpDelete('deleteProjects', query).then(item => {
+          console.log("这是删除操作得到的参数");
+          console.log(item);
+          try {
+            if (item.resultCode == "0000") {
+              this.searchValue = {
+                projectname:'',
+                productname:''
+              };;
+              this.selected=[];
+              this.ngOnInit();
+              alert('選択したプロジェクトを削除しました');
+            }else{
+              alert(item);
+              this.ngOnInit();
+            }
+          } catch (e) {
+            console.log(e);
+            alert(e);
+          }
+        });
+      }else{
+        alert("プロジェクトを選択してください。");
+      }
     }
   }
 
@@ -483,7 +478,7 @@ export class ProjectComponent implements OnInit {
       size: 'lg'
     });
   }
-
+  // 利用できるデバイスListを取得
   async getUsableDeviceList(){
     this.usableDeviceList = [];
     let param = {
@@ -516,29 +511,35 @@ export class ProjectComponent implements OnInit {
             this.selectedDevice.push(item);
           }
         }
-        var param = {
-          "loginInfo":this.pageModel.loginInfo,
-          "targetUserInfo":this.pageModel.targetUserInfo,
-          "projectid": projectid,
-          "deviceList": this.selectedDevice,
-        };
-        this.httpService.useRpPut('addProjectDevices', param).then(item => {
-          try {
-            if (item.resultCode == "0000") {
-              // this.selectedDevice=[];
-              alert('プロジェクト情報を改修しました');
-              if (projectDeviceForm.valid === true) {
-                projectDeviceForm.reset();
-                this.editModal.close(projectDeviceForm.resetForm);
-              }
-            }
-            this.ngOnInit();
-          } catch (e) {
-            console.log(e);
-            alert(e);
-            this.ngOnInit();
+        console.log("这是 this.selectedDevice");
+        console.log(this.selectedDevice);
+        if(this.selectedDevice.length > 0){
+          var param = {
+            "loginInfo":this.pageModel.loginInfo,
+            "targetUserInfo":this.pageModel.targetUserInfo,
+            "projectid": projectid,
+            "deviceList": this.selectedDevice,
           };
-        });
+          this.httpService.useRpPut('addProjectDevices', param).then(item => {
+            try {
+              if (item.resultCode == "0000") {
+                // this.selectedDevice=[];
+                alert('プロジェクト情報を更新しました');
+                if (projectDeviceForm.valid === true) {
+                  projectDeviceForm.reset();
+                  this.editModal.close(projectDeviceForm.resetForm);
+                }
+              }
+              this.ngOnInit();
+            } catch (e) {
+              console.log(e);
+              alert(e);
+              this.ngOnInit();
+            };
+          });
+        }else{
+          alert("デバイスを選択してください。");
+        }
       }
     }
   }
@@ -578,7 +579,7 @@ export class ProjectComponent implements OnInit {
       if (device.deviceid === element['deviceid']) { device.isSelected = ev.target.checked }
     });
   }
-
+  // プロジェクトに連携したデバイスを削除
   projectLinkedDeviceDataUpdate(projectLinkedDeviceForm,projectid){
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
@@ -588,30 +589,34 @@ export class ProjectComponent implements OnInit {
             this.selectedDevice.push(item);
           }
         }
-        var param = {
-          "loginInfo":this.pageModel.loginInfo,
-          "targetUserInfo":this.pageModel.targetUserInfo,
-          
-          "projectid": projectid,
-          "deviceList": this.selectedDevice,
-        };
-        this.httpService.useRpPut('deleteProjectDevices', param).then(item => {
-          try {
-            if (item.resultCode == "0000") {
-              this.selectedDevice=[];
-              alert('プロジェクトからデバイスを削除しました。');
-              if (projectLinkedDeviceForm.valid === true) {
-                projectLinkedDeviceForm.reset();
-                this.editModal.close(projectLinkedDeviceForm.resetForm);
+        if(this.selectedDevice.length >0){
+          var param = {
+            "loginInfo":this.pageModel.loginInfo,
+            "targetUserInfo":this.pageModel.targetUserInfo,
+            
+            "projectid": projectid,
+            "deviceList": this.selectedDevice,
+          };
+          this.httpService.useRpPut('deleteProjectDevices', param).then(item => {
+            try {
+              if (item.resultCode == "0000") {
+                this.selectedDevice=[];
+                alert('プロジェクトからデバイスを削除しました。');
+                if (projectLinkedDeviceForm.valid === true) {
+                  projectLinkedDeviceForm.reset();
+                  this.editModal.close(projectLinkedDeviceForm.resetForm);
+                }
               }
+              this.ngOnInit();
+            } catch (e) {
+              console.log(e);
+              alert(e);
+              this.ngOnInit();
             }
-            this.ngOnInit();
-          } catch (e) {
-            console.log(e);
-            alert(e);
-            this.ngOnInit();
-          }
-        });
+          });
+        }else{
+          alert("デバイスを選択してください。");
+        }
       }
     }
   }
@@ -662,5 +667,21 @@ export class ProjectComponent implements OnInit {
   viewProjectLinkedDevice(viewProjectLinkedDeviceForm){
     viewProjectLinkedDeviceForm.reset();
     this.editModal.close(viewProjectLinkedDeviceForm.resetForm);
+  }
+
+  variableReset(){
+    this.rows = [];
+    this.tableDisplayData = [];
+    this.selectedProject = {};
+    this.selected=[];
+    this.usableDeviceList =[];
+    this.selectedDevice = [];
+    this.searchValue = {
+      projectname:'',
+      productname:''
+    };
+    this.linkedDeviceList =[];
+    this.productTypes = [];
+    this.productNameList = [];
   }
 }
