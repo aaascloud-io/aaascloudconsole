@@ -187,7 +187,6 @@ editClickFlg=false;
         this.pageModel.sort[prop] = false;
       }
     }
-    this.pageModel.query.companyid = this.pageModel.query.conpanySelected !== null ? this.pageModel.query.conpanySelected["companyid"] : '';
     let item: UserInfo = this.httpService.getLoginUser();
     if (item != null) {
       var param = {
@@ -204,9 +203,8 @@ editClickFlg=false;
         "imei": this.pageModel.query.querycode,
         "productname": this.pageModel.query.productname,
         "projectname": this.pageModel.query.projectname,
-        "group": this.pageModel.query.group,
+        "groupname": this.pageModel.query.group,
         "companyid": this.pageModel.query.companyid,
-        "industry": this.pageModel.query.industry,
       }
       this.httpService.usePost('/searchUnderUserDevices', param).then(item => {
         try {
