@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_producttypeEntity;
@@ -54,6 +55,22 @@ public class Cloud_productService {
 				model.getCreateusernameForSearch(),
 				model.getProducttypenameForSearch(),
 				model.getProductnameForSearch());
+		return getModelsByEntitys(list);
+
+	}
+
+	/*
+	 *マイプロダクト検索(ダッシュボード用)
+	 *
+	 *
+	 */
+	public List<Cloud_productModel> searchMyProductList(List<Integer> userList) throws Exception {
+
+		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByProducttypenameAndProductname(
+				userList,
+				CommonConstant.DEFAULT_MATCH_ALL,
+				CommonConstant.DEFAULT_MATCH_ALL,
+				CommonConstant.DEFAULT_MATCH_ALL);
 		return getModelsByEntitys(list);
 
 	}

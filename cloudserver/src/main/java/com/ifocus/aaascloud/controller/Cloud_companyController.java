@@ -54,5 +54,37 @@ public class Cloud_companyController {
 
 		return response;
 	}
+	
+	/**
+	 * 配下会社一覧を取得する(本社と一層子会社)
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getMyUnderCompanies", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> getMyUnderCompanies(@RequestBody LoginInfo loginInfo) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			List<Cloud_companyModel> list = cloud_companyService.getMyUnderCompanies(loginInfo.getLoginuserid());
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+			response.setCount(list.size());
+			response.setData(Util.getJsonString(list));
+
+		} catch (Exception e) {
+			/* 異常系 */
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_companyService.getUnderCompanies:" + e.getMessage());
+			return response;
+		}
+
+		return response;
+	}
 
 }

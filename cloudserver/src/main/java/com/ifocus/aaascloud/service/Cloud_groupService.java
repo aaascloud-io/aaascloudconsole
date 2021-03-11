@@ -60,7 +60,7 @@ public class Cloud_groupService {
 	 */
 	public List<Cloud_groupModel> searchGroups(Cloud_groupModel model) throws Exception {
 
-		List<Cloud_groupEntity> entityList = cloud_groupRepository.searchGroupsByProjectnameAndGroupname(model.getProjectnameForSearch(), model.getGroupnameForSearch());
+		List<Cloud_groupEntity> entityList = cloud_groupRepository.searchGroupsByProjectnameAndGroupname(model.getLoginInfo().getLoginuserid(), model.getProjectnameForSearch(), model.getGroupnameForSearch());
 
 		return getModelsByEntitys(entityList);
 

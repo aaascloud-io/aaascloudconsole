@@ -163,47 +163,99 @@ public class Cloud_deviceService {
 		if (model.getGroupname() == null || model.getGroupname().isEmpty()) {
 			// プロジェクト名指定なし
 			if (model.getProjectname() == null || model.getProjectname().isEmpty()) {
-				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLike(
-						userids,
-						model.getImeiForSearch(),
-						model.getImeiForSearch(),
-						model.getProductnameForSearch(),
-						model.getIndustryForSearch()
-						);
+				// 所有者指定なし
+				if (model.getCompanyid() == null) {
+					list = cloud_deviceRepository.findByNoCompanyNoGroupNoProject(
+							userids,
+							model.getImeiForSearch(),
+							model.getImeiForSearch(),
+							model.getProductnameForSearch(),
+							model.getIndustryForSearch()
+							);
+				} else {
+					list = cloud_deviceRepository.findByHasCompanyNoGroupNoProject(
+							model.getCompanyid(),
+							userids,
+							model.getImeiForSearch(),
+							model.getImeiForSearch(),
+							model.getProductnameForSearch(),
+							model.getIndustryForSearch()
+							);
+				}
 			// プロジェクト名指定あり
 			} else {
-				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
-						userids,
-						model.getImeiForSearch(),
-						model.getImeiForSearch(),
-						model.getProductnameForSearch(),
-						model.getProjectnameForSearch(),
-						model.getIndustryForSearch()
-						);
+				// 所有者指定なし
+				if (model.getCompanyid() == null) {
+					list = cloud_deviceRepository.findByNoCompanyNoGroupHasProject(
+							userids,
+							model.getImeiForSearch(),
+							model.getImeiForSearch(),
+							model.getProductnameForSearch(),
+							model.getProjectnameForSearch(),
+							model.getIndustryForSearch()
+							);
+				} else {
+					list = cloud_deviceRepository.findByHasCompanyNoGroupHasProject(
+							model.getCompanyid(),
+							userids,
+							model.getImeiForSearch(),
+							model.getImeiForSearch(),
+							model.getProductnameForSearch(),
+							model.getProjectnameForSearch(),
+							model.getIndustryForSearch()
+							);
+				}
 			}
 		// グループ指定ありの場合
 		} else {
 			// プロジェクト名指定なし
 			if (model.getProjectname() == null || model.getProjectname().isEmpty()) {
-				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
-						userids,
-						model.getImeiForSearch(),
-						model.getImeiForSearch(),
-						model.getProductnameForSearch(),
-						model.getIndustryForSearch(),
-						model.getGroupnameForSearch()
-						);
+				// 所有者指定なし
+				if (model.getCompanyid() == null) {
+					list = cloud_deviceRepository.findByNoCompanyHasGroupNoProject(
+							userids,
+							model.getImeiForSearch(),
+							model.getImeiForSearch(),
+							model.getProductnameForSearch(),
+							model.getIndustryForSearch(),
+							model.getGroupnameForSearch()
+							);
+				} else {
+					list = cloud_deviceRepository.findByHasCompanyHasGroupNoProject(
+							model.getCompanyid(),
+							userids,
+							model.getImeiForSearch(),
+							model.getImeiForSearch(),
+							model.getProductnameForSearch(),
+							model.getIndustryForSearch(),
+							model.getGroupnameForSearch()
+							);
+				}
 			// プロジェクト名指定あり
 			} else {
-				list = cloud_deviceRepository.findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
-						userids,
-						model.getImeiForSearch(),
-						model.getImeiForSearch(),
-						model.getProductnameForSearch(),
-						model.getProjectnameForSearch(),
-						model.getIndustryForSearch(),
-						model.getGroupnameForSearch()
-						);
+				// 所有者指定なし
+				if (model.getCompanyid() == null) {
+					list = cloud_deviceRepository.findByNoCompanyHasGroupHasProject(
+							userids,
+							model.getImeiForSearch(),
+							model.getImeiForSearch(),
+							model.getProductnameForSearch(),
+							model.getProjectnameForSearch(),
+							model.getIndustryForSearch(),
+							model.getGroupnameForSearch()
+							);
+				} else {
+					list = cloud_deviceRepository.findByHasCompanyHasGroupHasProject(
+							model.getCompanyid(),
+							userids,
+							model.getImeiForSearch(),
+							model.getImeiForSearch(),
+							model.getProductnameForSearch(),
+							model.getProjectnameForSearch(),
+							model.getIndustryForSearch(),
+							model.getGroupnameForSearch()
+							);
+				}
 			}
 		}
 		return getModelsByEntitys(list);

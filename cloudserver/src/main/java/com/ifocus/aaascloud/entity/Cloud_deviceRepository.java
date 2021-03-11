@@ -140,7 +140,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 		);
 
 	/*
-	 * 配下ユーザデバイス検索(デバイス管理画面用:グループ条件＝あり、プロジェクト名条件＝なし)
+	 * 配下ユーザデバイス検索(デバイス管理画面用:所有者条件＝なし、グループ条件＝あり、プロジェクト名条件＝なし)
 	 *
 	 *
 	 */
@@ -156,7 +156,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " AND com.industry LIKE :industry "
 			+ " AND g.groupname LIKE :groupname "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
-	public List<Cloud_deviceEntity> findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
+	public List<Cloud_deviceEntity> findByNoCompanyHasGroupNoProject(
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
@@ -166,7 +166,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 		);
 
 	/*
-	 * 配下ユーザデバイス検索(デバイス管理画面用:グループ条件＝あり、プロジェクト名条件＝あり)
+	 * 配下ユーザデバイス検索(デバイス管理画面用:所有者条件＝なし、グループ条件＝あり、プロジェクト名条件＝あり)
 	 *
 	 *
 	 */
@@ -184,7 +184,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " AND com.industry LIKE :industry "
 			+ " AND g.groupname LIKE :groupname "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
-	public List<Cloud_deviceEntity> findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
+	public List<Cloud_deviceEntity> findByNoCompanyHasGroupHasProject(
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
@@ -195,7 +195,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 		);
 
 	/*
-	 * 配下ユーザデバイス検索(デバイス管理画面用:グループ条件＝なし、プロジェクト名条件＝なし)
+	 * 配下ユーザデバイス検索(デバイス管理画面用:所有者条件＝なし、グループ条件＝なし、プロジェクト名条件＝なし)
 	 *
 	 *
 	 */
@@ -209,7 +209,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " AND pd.productName LIKE :productname "
 			+ " AND com.industry LIKE :industry "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
-	public List<Cloud_deviceEntity> findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLike(
+	public List<Cloud_deviceEntity> findByNoCompanyNoGroupNoProject(
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
@@ -218,7 +218,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 		);
 
 	/*
-	 * 配下ユーザデバイス検索(デバイス管理画面用:グループ条件＝なし、プロジェクト名条件＝あり)
+	 * 配下ユーザデバイス検索(デバイス管理画面用:所有者条件＝なし、グループ条件＝なし、プロジェクト名条件＝あり)
 	 *
 	 *
 	 */
@@ -234,7 +234,119 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " AND pj.projectName LIKE :projectname "
 			+ " AND com.industry LIKE :industry "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
-	public List<Cloud_deviceEntity> findByUseridInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
+	public List<Cloud_deviceEntity> findByNoCompanyNoGroupHasProject(
+			@Param("userids") List<Integer> userids,
+			@Param("imei") String imei,
+			@Param("sn") String sn,
+			@Param("productname") String productName,
+			@Param("projectname") String projectName,
+			@Param("industry") String industry
+		);
+
+	/*
+	 * 配下ユーザデバイス検索(デバイス管理画面用:所有者条件＝あり、グループ条件＝あり、プロジェクト名条件＝なし)
+	 *
+	 *
+	 */
+	@Query(value = "SELECT d.* "
+			+ " FROM cloud_device d "
+			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
+			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
+			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
+			+ " WHERE d.userid IN :userids "
+			+ " AND (d.IMEI LIKE :imei "
+			+ "    OR d.SN LIKE :sn) "
+			+ " AND pd.productName LIKE :productname "
+			+ " AND com.companyid = :companyid "
+			+ " AND com.industry LIKE :industry "
+			+ " AND g.groupname LIKE :groupname "
+			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> findByHasCompanyHasGroupNoProject(
+			@Param("companyid") Integer companyid,
+			@Param("userids") List<Integer> userids,
+			@Param("imei") String imei,
+			@Param("sn") String sn,
+			@Param("productname") String productName,
+			@Param("industry") String industry,
+			@Param("groupname") String groupname
+		);
+
+	/*
+	 * 配下ユーザデバイス検索(デバイス管理画面用:所有者条件＝あり、グループ条件＝あり、プロジェクト名条件＝あり)
+	 *
+	 *
+	 */
+	@Query(value = "SELECT d.* "
+			+ " FROM cloud_device d "
+			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
+			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
+			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
+			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
+			+ " WHERE d.userid IN :userids "
+			+ " AND (d.IMEI LIKE :imei "
+			+ "    OR d.SN LIKE :sn) "
+			+ " AND pd.productName LIKE :productname "
+			+ " AND pj.projectName LIKE :projectname "
+			+ " AND com.companyid = :companyid "
+			+ " AND com.industry LIKE :industry "
+			+ " AND g.groupname LIKE :groupname "
+			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> findByHasCompanyHasGroupHasProject(
+			@Param("companyid") Integer companyid,
+			@Param("userids") List<Integer> userids,
+			@Param("imei") String imei,
+			@Param("sn") String sn,
+			@Param("productname") String productName,
+			@Param("projectname") String projectName,
+			@Param("industry") String industry,
+			@Param("groupname") String groupname
+		);
+
+	/*
+	 * 配下ユーザデバイス検索(デバイス管理画面用:所有者条件＝あり、グループ条件＝なし、プロジェクト名条件＝なし)
+	 *
+	 *
+	 */
+	@Query(value = "SELECT d.* "
+			+ " FROM cloud_device d "
+			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
+			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
+			+ " WHERE d.userid IN :userids "
+			+ " AND (d.IMEI LIKE :imei "
+			+ "    OR d.SN LIKE :sn) "
+			+ " AND pd.productName LIKE :productname "
+			+ " AND com.companyid = :companyid "
+			+ " AND com.industry LIKE :industry "
+			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> findByHasCompanyNoGroupNoProject(
+			@Param("companyid") Integer companyid,
+			@Param("userids") List<Integer> userids,
+			@Param("imei") String imei,
+			@Param("sn") String sn,
+			@Param("productname") String productName,
+			@Param("industry") String industry
+		);
+
+	/*
+	 * 配下ユーザデバイス検索(デバイス管理画面用:所有者条件＝あり、グループ条件＝なし、プロジェクト名条件＝あり)
+	 *
+	 *
+	 */
+	@Query(value = "SELECT d.* "
+			+ " FROM cloud_device d "
+			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
+			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
+			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
+			+ " WHERE d.userid IN :userids "
+			+ " AND (d.IMEI LIKE :imei "
+			+ "    OR d.SN LIKE :sn) "
+			+ " AND pd.productName LIKE :productname "
+			+ " AND pj.projectName LIKE :projectname "
+			+ " AND com.companyid = :companyid "
+			+ " AND com.industry LIKE :industry "
+			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> findByHasCompanyNoGroupHasProject(
+			@Param("companyid") Integer companyid,
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
