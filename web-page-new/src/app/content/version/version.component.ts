@@ -205,6 +205,10 @@ export class VersionComponent implements OnInit {
             this.addVersion={},
             this.ngOnInit();
             alert("プロジェクトを登録しました。");
+          }else{
+            console.log('登録失敗、ご確認してください。');
+            console.log(item);
+            alert('登録失敗、ご確認してください。');
           }
         }catch(e){
           alert(e);
@@ -272,6 +276,10 @@ export class VersionComponent implements OnInit {
 
             this.ngOnInit();
             alert("プロジェクトを削除しました。");
+          }else{
+            console.log('登録失敗、ご確認してください。');
+            console.log(item);
+            alert('登録失敗、ご確認してください。');
           }
         }catch(e){
           alert(e);
@@ -334,10 +342,14 @@ export class VersionComponent implements OnInit {
   
             this.ngOnInit();
             alert('プロジェクト情報を改修しました');
-          if (versionEditForm.valid === true) {
-            versionEditForm.reset();
-            this.editModal.close(versionEditForm.resetForm);
-          }
+            if (versionEditForm.valid === true) {
+              versionEditForm.reset();
+              this.editModal.close(versionEditForm.resetForm);
+            }
+          }else{
+            console.log('登録失敗、ご確認してください。');
+            console.log(item);
+            alert('登録失敗、ご確認してください。');
           }
         } catch (e) {
           console.log(e);
@@ -377,6 +389,10 @@ export class VersionComponent implements OnInit {
               this.ngOnInit();
               alert('選択したプロジェクトを削除しました');
               this.selected = [];
+            }else{
+              console.log('登録失敗、ご確認してください。');
+              console.log(item);
+              alert('登録失敗、ご確認してください。');
             }
           } catch (e) {
             console.log(e);

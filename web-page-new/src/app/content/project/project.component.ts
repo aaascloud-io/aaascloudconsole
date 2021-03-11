@@ -198,6 +198,10 @@ export class ProjectComponent implements OnInit {
             this.pageModel.addProject.projectSummary = '';
             this.ngOnInit();
             alert("プロジェクトを登録しました。");
+          }else{
+            console.log('登録失敗、ご確認してください。');
+            console.log(item);
+            alert('登録失敗、ご確認してください。');
           }
         }catch(e){
           alert(e);
@@ -260,6 +264,10 @@ export class ProjectComponent implements OnInit {
           if(item.body.resultCode == "0000"){
             this.ngOnInit();
             alert("プロジェクトを削除しました。");
+          }else{
+            console.log('削除失敗、ご確認してください。');
+            console.log(item);
+            alert('削除失敗、ご確認してください。');
           }
         }catch(e){
           alert(e);
@@ -310,6 +318,10 @@ export class ProjectComponent implements OnInit {
               this.editModal.close(projectEditForm.resetForm);
             }
             this.selectedProject={};
+          }else{
+            console.log('改修失敗、ご確認してください。');
+            console.log(item);
+            alert('改修失敗、ご確認してください。');
           }
         } catch (e) {
           console.log(e);
@@ -344,8 +356,9 @@ export class ProjectComponent implements OnInit {
                 this.ngOnInit();
                 alert('選択したプロジェクトを削除しました');
               }else{
-                alert(item);
-                this.ngOnInit();
+                console.log('削除失敗、ご確認してください。');
+                console.log(item);
+                alert('削除失敗、ご確認してください。');
               }
             } catch (e) {
               console.log(e);
@@ -530,6 +543,10 @@ export class ProjectComponent implements OnInit {
                   projectDeviceForm.reset();
                   this.editModal.close(projectDeviceForm.resetForm);
                 }
+              }else{
+                console.log('更新失敗、ご確認してください。');
+                console.log(item);
+                alert('更新失敗、ご確認してください。');
               }
               this.ngOnInit();
             } catch (e) {
@@ -607,6 +624,10 @@ export class ProjectComponent implements OnInit {
                   projectLinkedDeviceForm.reset();
                   this.editModal.close(projectLinkedDeviceForm.resetForm);
                 }
+              }else{
+                console.log('削除失敗、ご確認してください。');
+                console.log(item);
+                alert('削除失敗、ご確認してください。');
               }
               this.ngOnInit();
             } catch (e) {
