@@ -582,6 +582,19 @@ public class Cloud_deviceController {
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
 
+				// ユーザ権限チェックを行う
+				List<Cloud_deviceDetailModel> userErrorList = cloud_deviceService.checkAccessableUserId(cloud_deviceModel);
+				// 権限以外のユーザが存在する場合
+				if (!userErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(userErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessableUserId");
+					response.setData(Util.getJsonString(userErrorList));
+					return response;
+				}
+
 				// プロダクト存在チェックを行う
 				List<Cloud_deviceDetailModel> productErrorList = cloud_deviceService.checkProductExistedInDB(cloud_deviceModel);
 				// DB存在しないプロダクトがあれば、
