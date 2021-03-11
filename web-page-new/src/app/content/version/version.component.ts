@@ -354,33 +354,38 @@ export class VersionComponent implements OnInit {
    * Delete selected contact
    */
   deleteCheckedRow() {
-    if (confirm("選択したデーターを削除しますか")) {
-      for (var row of this.rows) {
-        if (row.isSelected) {
-          this.selected.push(row.rowid);
+    for (var row of this.rows) {
+      if (row.isSelected) {
+        this.selected.push(row.rowid);
+      }
+    }
+
+    if(this.selected.length > 0){
+      if (confirm("選択したデーターを削除しますか")) {
+        var query = {
+          "loginInfo":this.pageModel.loginInfo,
+          "targetUserInfo":this.pageModel.targetUserInfo,
+          "rowidlist": this.selected,
         }
-      }
-      var query = {
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
-        "rowidlist": this.selected,
-      }
-      this.httpService.useRpDelete('deleteVersions', query).then(item => {
-        try {
-          if (item.resultCode == "0000") {
-            this.searchValue = {
-              productname:'',
-              versionname:''
-            };
-            this.ngOnInit();
-            alert('選択したプロジェクトを削除しました');
-            this.selected = [];
+        this.httpService.useRpDelete('deleteVersions', query).then(item => {
+          try {
+            if (item.resultCode == "0000") {
+              this.searchValue = {
+                productname:'',
+                versionname:''
+              };
+              this.ngOnInit();
+              alert('選択したプロジェクトを削除しました');
+              this.selected = [];
+            }
+          } catch (e) {
+            console.log(e);
+            alert(e);
           }
-        } catch (e) {
-          console.log(e);
-          alert(e);
-        }
-      });
+        });
+      }
+    }else{
+      alert("バージョンを選択してください。");
     }
   }
 

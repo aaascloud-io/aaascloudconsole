@@ -321,40 +321,40 @@ export class ProjectComponent implements OnInit {
 
   // 選択したプロジェクトを複数削除
   deleteCheckedRow() {
-    if (confirm("選択したデーターを削除しますか")) {
-      for (var row of this.rows) {
-        if (row.isSelected) {
-          this.selected.push(row);
-        }
+    for (var row of this.rows) {
+      if (row.isSelected) {
+        this.selected.push(row);
       }
-      if(this.selected.length > 0){
-        var query = {
-          "loginInfo": this.pageModel.loginInfo,
-          "targetUserInfo":this.pageModel.targetUserInfo,
-          "projectlist": this.selected,
-        }
-        this.httpService.useRpDelete('deleteProjects', query).then(item => {
-          try {
-            if (item.resultCode == "0000") {
-              this.searchValue = {
-                projectname:'',
-                productname:''
-              };;
-              this.selected=[];
-              this.ngOnInit();
-              alert('選択したプロジェクトを削除しました');
-            }else{
-              alert(item);
-              this.ngOnInit();
-            }
-          } catch (e) {
-            console.log(e);
-            alert(e);
+    }
+    if(this.selected.length > 0){
+      if (confirm("選択したデーターを削除しますか")) {
+          var query = {
+            "loginInfo": this.pageModel.loginInfo,
+            "targetUserInfo":this.pageModel.targetUserInfo,
+            "projectlist": this.selected,
           }
-        });
-      }else{
-        alert("プロジェクトを選択してください。");
+          this.httpService.useRpDelete('deleteProjects', query).then(item => {
+            try {
+              if (item.resultCode == "0000") {
+                this.searchValue = {
+                  projectname:'',
+                  productname:''
+                };;
+                this.selected=[];
+                this.ngOnInit();
+                alert('選択したプロジェクトを削除しました');
+              }else{
+                alert(item);
+                this.ngOnInit();
+              }
+            } catch (e) {
+              console.log(e);
+              alert(e);
+            }
+          });
       }
+    }else{
+      alert("プロジェクトを選択してください。");
     }
   }
 
@@ -506,15 +506,15 @@ export class ProjectComponent implements OnInit {
   projectDeviceDataUpdate(projectDeviceForm,projectid){
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
-      if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
-        for (var item of this.usableDeviceList) {
-          if (item.isSelected) {
-            this.selectedDevice.push(item);
-          }
+      for (var item of this.usableDeviceList) {
+        if (item.isSelected) {
+          this.selectedDevice.push(item);
         }
-        console.log("这是 this.selectedDevice");
-        console.log(this.selectedDevice);
-        if(this.selectedDevice.length > 0){
+      }
+      if(this.selectedDevice.length > 0){
+        if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
+          console.log("这是 this.selectedDevice");
+          console.log(this.selectedDevice);
           var param = {
             "loginInfo":this.pageModel.loginInfo,
             "targetUserInfo":this.pageModel.targetUserInfo,
@@ -538,9 +538,9 @@ export class ProjectComponent implements OnInit {
               this.ngOnInit();
             };
           });
-        }else{
-          alert("デバイスを選択してください。");
         }
+      }else{
+        alert("デバイスを選択してください。");
       }
     }
   }
@@ -584,13 +584,13 @@ export class ProjectComponent implements OnInit {
   projectLinkedDeviceDataUpdate(projectLinkedDeviceForm,projectid){
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
-      if (confirm("選択したデバイスをプロジェクトから削除しますか")) {
-        for (var item of this.linkedDeviceList) {
-          if (item.isSelected) {
-            this.selectedDevice.push(item);
-          }
+      for (var item of this.linkedDeviceList) {
+        if (item.isSelected) {
+          this.selectedDevice.push(item);
         }
-        if(this.selectedDevice.length >0){
+      }
+      if(this.selectedDevice.length >0){
+        if (confirm("選択したデバイスをプロジェクトから削除しますか")) {
           var param = {
             "loginInfo":this.pageModel.loginInfo,
             "targetUserInfo":this.pageModel.targetUserInfo,
@@ -615,9 +615,9 @@ export class ProjectComponent implements OnInit {
               this.ngOnInit();
             }
           });
-        }else{
-          alert("デバイスを選択してください。");
         }
+      }else{
+        alert("デバイスを選択してください。");
       }
     }
   }
