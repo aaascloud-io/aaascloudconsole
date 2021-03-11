@@ -55,6 +55,8 @@ public class Cloud_deviceService {
 
 	@Autowired
 	private Cloud_userService cloud_userService;
+	@Autowired
+	private AccessService accessService;
 
 	/*
 	 * 配下各社のデバイス一覧取得
@@ -591,6 +593,28 @@ public class Cloud_deviceService {
 					// 戻るリストに追加
 					returnList.add(deviceDetailModel);
 				}
+			}
+		}
+		return returnList;
+
+	}
+
+	/*
+	 * デバイス一括登録時ユーザ権限チェック
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceDetailModel> デバイス情報リスト
+	 *
+	 */
+	public List<Cloud_deviceDetailModel> checkAccessableUserId(Cloud_deviceModel model) throws Exception {
+
+		// アクセス権限ユーザ一覧を取得する
+		List<Integer> accessUseridlist = accessService.getAccessUsers(model.getLoginInfo().getLoginuserid());
+		List<Cloud_deviceDetailModel> returnList = new ArrayList<Cloud_deviceDetailModel>();
+		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+			// 存在しない場合、
+			if (!accessUseridlist.contains(deviceDetailModel.getUserid())) {
+				// 戻るリストに追加
+				returnList.add(deviceDetailModel);
 			}
 		}
 		return returnList;
