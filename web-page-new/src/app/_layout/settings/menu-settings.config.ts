@@ -916,14 +916,14 @@ export const MenuSettingsConfig: MenuConfig = {
         page: '/group'
       },
       {
-        title: 'ユーザー管理',
-        icon: 'la-user',
-        page: '/user'
-      },
-      {
         title: 'デバイス管理',
         icon: 'la-tablet',
         page: '/device'
+      },
+      {
+        title: 'ユーザー管理',
+        icon: 'la-user',
+        page: '/user'
       },
       {
         title: 'エラー管理',

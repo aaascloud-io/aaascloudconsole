@@ -31,7 +31,7 @@ public class Cloud_versionModel {
 	 */
 	public String getProductnameForSearch() {
 
-		if (this.productname == null) {
+		if (this.productname == null || this.productname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.productname.trim() + "%";
@@ -44,7 +44,7 @@ public class Cloud_versionModel {
 	 */
 	public String getVersionnameForSearch() {
 
-		if (this.versionname == null) {
+		if (this.versionname == null || this.versionname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.versionname.trim() + "%";

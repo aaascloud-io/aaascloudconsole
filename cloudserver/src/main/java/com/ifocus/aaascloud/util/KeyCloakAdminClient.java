@@ -1,5 +1,6 @@
 package com.ifocus.aaascloud.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -287,5 +288,34 @@ public class KeyCloakAdminClient {
 		credentialRepresentation.setTemporary(false);
 		this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().get(uid).resetPassword(credentialRepresentation);
 	}
+	
+	public void addUser(String username, String password) {
+		UserRepresentation userRepresentation = new UserRepresentation();
+		userRepresentation.setUsername(username);
+		userRepresentation.setEnabled(true);
+		List<CredentialRepresentation> credentials = new ArrayList<CredentialRepresentation>();
+		
+		CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+		credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
+		credentialRepresentation.setValue(password);
+		credentialRepresentation.setTemporary(false);
+		credentials.add(credentialRepresentation);
+		
+		userRepresentation.setCredentials(credentials);
+		this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().create(userRepresentation);
+	}
+	
+	public void delUser(String uid) {
+		this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().delete(uid);
+	}
+	
+	public void delUserByUsername(String username) {
+		List<UserRepresentation> list = this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().search(username);
+		if (list != null && list.size() > 0) {
+			UserRepresentation existsUser = list.get(0);
+			this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().delete(existsUser.getId());
+		}
+	}
+
 
 }

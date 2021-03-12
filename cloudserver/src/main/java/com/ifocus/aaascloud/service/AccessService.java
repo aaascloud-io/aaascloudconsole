@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.CorporateNumberConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
-import com.ifocus.aaascloud.constant.RoleConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_displaysettingsEntity;
@@ -68,29 +67,30 @@ public class AccessService {
 	 */
 	public ReturnModel checkAddUserAccess(Cloud_userModel cloud_userModel) throws Exception {
 
-		LoginInfo loginInfo = cloud_userModel.getLoginInfo();
-		// 会社新規の場合
-		if (cloud_userModel.getCompanyid() == null) {
-			// 登録ユーザが管理者でない場合、
-			if (cloud_userModel.getRole() != RoleConstant.ADMIN) {
-				return new ReturnModel(ErrorConstant.ERROR_CODE_0011, ErrorConstant.ERROR_MSG_0011);
-			}
-		// 既存会社の場合
-		} else {
-			// 自社の場合
-			if (loginInfo.getLogincompanyid() == cloud_userModel.getCompanyid()) {
-				// admin権限以外の場合、
-				if (RoleConstant.ADMIN != loginInfo.getLoginrole() ) {
-					return new ReturnModel(ErrorConstant.ERROR_CODE_0012, ErrorConstant.ERROR_MSG_0012);
-				}
-				// 登録ユーザが管理者である場合、
-				if (cloud_userModel.getRole() == RoleConstant.ADMIN ) {
-					return new ReturnModel(ErrorConstant.ERROR_CODE_0013, ErrorConstant.ERROR_MSG_0013);
-				}
-			// 配下会社の場合
-			} else {
-			}
-		}
+//		LoginInfo loginInfo = cloud_userModel.getLoginInfo();
+//
+//		// 会社新規の場合
+//		if (cloud_userModel.getCompanyid() == null) {
+//			// 登録ユーザが管理者でない場合、
+//			if (cloud_userModel.getRole() != RoleConstant.ADMIN) {
+//				return new ReturnModel(ErrorConstant.ERROR_CODE_0011, ErrorConstant.ERROR_MSG_0011);
+//			}
+//		// 既存会社の場合
+//		} else {
+//			// 自社の場合
+//			if (loginInfo.getLogincompanyid() == cloud_userModel.getCompanyid()) {
+//				// admin権限以外の場合、
+//				if (RoleConstant.ADMIN != loginInfo.getLoginrole() ) {
+//					return new ReturnModel(ErrorConstant.ERROR_CODE_0012, ErrorConstant.ERROR_MSG_0012);
+//				}
+//				// 登録ユーザが管理者である場合、
+//				if (cloud_userModel.getRole() == RoleConstant.ADMIN ) {
+//					return new ReturnModel(ErrorConstant.ERROR_CODE_0013, ErrorConstant.ERROR_MSG_0013);
+//				}
+//			// 配下会社の場合
+//			} else {
+//			}
+//		}
 		return new ReturnModel(ErrorConstant.ERROR_CODE_0000, ErrorConstant.ERROR_MSG_0000);
 	}
 
@@ -124,7 +124,7 @@ public class AccessService {
 		List<Integer> returnList = new ArrayList<Integer>();
 		returnList.add(userid);
 		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
-		
+
 		if (list.isEmpty()) {
 			return returnList;
 		} else {

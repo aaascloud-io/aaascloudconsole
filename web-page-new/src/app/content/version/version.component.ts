@@ -205,6 +205,10 @@ export class VersionComponent implements OnInit {
             this.addVersion={},
             this.ngOnInit();
             alert("プロジェクトを登録しました。");
+          }else{
+            console.log('登録失敗、ご確認してください。');
+            console.log(item);
+            alert('登録失敗、ご確認してください。');
           }
         }catch(e){
           alert(e);
@@ -272,6 +276,10 @@ export class VersionComponent implements OnInit {
 
             this.ngOnInit();
             alert("プロジェクトを削除しました。");
+          }else{
+            console.log('登録失敗、ご確認してください。');
+            console.log(item);
+            alert('登録失敗、ご確認してください。');
           }
         }catch(e){
           alert(e);
@@ -334,10 +342,14 @@ export class VersionComponent implements OnInit {
   
             this.ngOnInit();
             alert('プロジェクト情報を改修しました');
-          if (versionEditForm.valid === true) {
-            versionEditForm.reset();
-            this.editModal.close(versionEditForm.resetForm);
-          }
+            if (versionEditForm.valid === true) {
+              versionEditForm.reset();
+              this.editModal.close(versionEditForm.resetForm);
+            }
+          }else{
+            console.log('登録失敗、ご確認してください。');
+            console.log(item);
+            alert('登録失敗、ご確認してください。');
           }
         } catch (e) {
           console.log(e);
@@ -354,33 +366,42 @@ export class VersionComponent implements OnInit {
    * Delete selected contact
    */
   deleteCheckedRow() {
-    if (confirm("選択したデーターを削除しますか")) {
-      for (var row of this.rows) {
-        if (row.isSelected) {
-          this.selected.push(row.rowid);
+    for (var row of this.rows) {
+      if (row.isSelected) {
+        this.selected.push(row.rowid);
+      }
+    }
+
+    if(this.selected.length > 0){
+      if (confirm("選択したデーターを削除しますか")) {
+        var query = {
+          "loginInfo":this.pageModel.loginInfo,
+          "targetUserInfo":this.pageModel.targetUserInfo,
+          "rowidlist": this.selected,
         }
-      }
-      var query = {
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
-        "rowidlist": this.selected,
-      }
-      this.httpService.useRpDelete('deleteVersions', query).then(item => {
-        try {
-          if (item.resultCode == "0000") {
-            this.searchValue = {
-              productname:'',
-              versionname:''
-            };
-            this.ngOnInit();
-            alert('選択したプロジェクトを削除しました');
-            this.selected = [];
+        this.httpService.useRpDelete('deleteVersions', query).then(item => {
+          try {
+            if (item.resultCode == "0000") {
+              this.searchValue = {
+                productname:'',
+                versionname:''
+              };
+              this.ngOnInit();
+              alert('選択したプロジェクトを削除しました');
+              this.selected = [];
+            }else{
+              console.log('登録失敗、ご確認してください。');
+              console.log(item);
+              alert('登録失敗、ご確認してください。');
+            }
+          } catch (e) {
+            console.log(e);
+            alert(e);
           }
-        } catch (e) {
-          console.log(e);
-          alert(e);
-        }
-      });
+        });
+      }
+    }else{
+      alert("バージョンを選択してください。");
     }
   }
 

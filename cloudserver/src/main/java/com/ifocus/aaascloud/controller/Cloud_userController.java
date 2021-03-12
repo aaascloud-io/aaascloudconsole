@@ -14,19 +14,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
-import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
+import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
-import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.ReturnModel;
-import com.ifocus.aaascloud.model.UserModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_companyService;
+import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
-import com.ifocus.aaascloud.service.Cloud_deviceService;
 
 import net.sf.json.JSONObject;
 
@@ -237,11 +235,11 @@ public class Cloud_userController {
 
 				// プロジェクト一覧を取得する
 				List<Cloud_projectModel> projectList = cloud_projectService.getMyUnderProjects(underUserList);
-				
+
 				// デバイス一覧を取得する
 				List<Cloud_deviceModel> deviceList = cloud_deviceService.getUnderUserDevices(null, underUserList);
 				resJasonObj.put("deviceCount", deviceList.size());
-				
+
 				// 配下プロジェクト数
 				resJasonObj.put("projectCount", projectList.size());
 
@@ -394,41 +392,49 @@ public class Cloud_userController {
 			return response;
 		}
 
-		// KeyCloakに存在しない場合、
-		if (!cloud_userService.isValidUsername(cloud_userModel.getUsername())) {
-			/* 異常系 */
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0008);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録のユーザ名です。");
-			return response;
-		} else {
-			// KeyCloakからユーザ情報取得＆設定
-			UserModel usermodel = cloud_userService.getUserModelFromUsername(cloud_userModel.getUsername());
-			if (usermodel.getLastName().isEmpty()) {
-				cloud_userModel.setLastName("");
-			} else {
-				cloud_userModel.setLastName(usermodel.getLastName());
-			}
-			if (usermodel.getFirstName().isEmpty()) {
-				cloud_userModel.setFirstName("");
-			} else {
-				cloud_userModel.setFirstName(usermodel.getFirstName());
-			}
-			if (usermodel.getEmail().isEmpty()) {
-				cloud_userModel.setEmail("");
-			} else {
-				cloud_userModel.setEmail(usermodel.getEmail());
-			}
-		}
+//		// KeyCloakに存在しない場合、
+//		if (!cloud_userService.isValidUsername(cloud_userModel.getUsername())) {
+//			/* 異常系 */
+//			response.setStatus(200);
+//			response.setResultCode(ErrorConstant.ERROR_CODE_0008);
+//			response.setResultMsg(ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録のユーザ名です。");
+//			return response;
+//		} else {
+//			// KeyCloakからユーザ情報取得＆設定
+//			UserModel usermodel = cloud_userService.getUserModelFromUsername(cloud_userModel.getUsername());
+//			if (usermodel.getLastName().isEmpty()) {
+//				cloud_userModel.setLastName("");
+//			} else {
+//				cloud_userModel.setLastName(usermodel.getLastName());
+//			}
+//			if (usermodel.getFirstName().isEmpty()) {
+//				cloud_userModel.setFirstName("");
+//			} else {
+//				cloud_userModel.setFirstName(usermodel.getFirstName());
+//			}
+//			if (usermodel.getEmail().isEmpty()) {
+//				cloud_userModel.setEmail("");
+//			} else {
+//				cloud_userModel.setEmail(usermodel.getEmail());
+//			}
+//		}
 
 		try {
+
 			Integer registeredUserid = cloud_userService.registerSonUser(cloud_userModel);
 
 			if (null != registeredUserid ) {
-				/* 正常系 */
-				response.setStatus(200);
-				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+				if (registeredUserid == -1) {
+					/* 異常系 */
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0200);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0200 + "cloud_userService.registerSonUser:cloud_user");
+				} else {
+					/* 正常系 */
+					response.setStatus(200);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+				}
 			} else {
 				/* 異常系 */
 				response.setStatus(200);
@@ -459,6 +465,16 @@ public class Cloud_userController {
 	public BaseHttpResponse<String> updateUser(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		// 権限チェック
+		ReturnModel returnModel = accessService.checkAddUserAccess(cloud_userModel);
+		if (!returnModel.getKey().equals(ErrorConstant.ERROR_CODE_0000)) {
+			/* 異常系:権限なし */
+			response.setStatus(200);
+			response.setResultCode(returnModel.getKey());
+			response.setResultMsg("accessService.checkAddUserAccess: " + returnModel.getValue());
+			return response;
+		}
 
 		try {
 			Optional<Cloud_userEntity> tempEntity = cloud_userRepository.findById(cloud_userModel.getUserid());
@@ -520,6 +536,16 @@ public class Cloud_userController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		// 権限チェック
+		ReturnModel returnModel = accessService.checkAddUserAccess(cloud_userModel);
+		if (!returnModel.getKey().equals(ErrorConstant.ERROR_CODE_0000)) {
+			/* 異常系:権限なし */
+			response.setStatus(200);
+			response.setResultCode(returnModel.getKey());
+			response.setResultMsg("accessService.checkAddUserAccess: " + returnModel.getValue());
+			return response;
+		}
+
 		// プロジェクトがある場合、削除しないこと。ToDo
 //		if () {
 //			response.setStatus(200);
@@ -530,29 +556,13 @@ public class Cloud_userController {
 
 		try {
 
-			// 選択されるユーザを削除する
-			for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
-				// 会社ユーザ一覧取得
-				List<Cloud_userEntity> entiyList = cloud_userService.getCompanyUsers(cloud_userModelInfo.getCompanyid());
-
-				// 会社の最後のユーザになった場合、会社も削除する。
-				if (entiyList.size() == 1) {
-					Cloud_companyEntity cloud_companyEntity = new Cloud_companyEntity();
-					cloud_companyEntity.setCompanyid(cloud_userModelInfo.getCompanyid());
-					// 会社を削除する
-					cloud_companyService.deleteCompany(cloud_companyEntity);
-				}
-
-				// ユーザを削除する
-				cloud_userService.deleteSonUser(cloud_userModelInfo.getLoginInfo(),cloud_userModelInfo);
-			}
-
+			cloud_userService.deleteSonUsers(cloud_userModel);
 
 		} catch (Exception e) {
 			/* 異常系 */
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0102);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0102 + "deleteCompany OR deleteSonUser:" + e.getMessage());
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0102 + "deleteCompany OR deleteSonUsers:" + e.getMessage());
 			return response;
 		}
 

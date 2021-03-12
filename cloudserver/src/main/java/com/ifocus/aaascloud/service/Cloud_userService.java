@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
+import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
@@ -214,6 +215,22 @@ public class Cloud_userService {
 	 */
 	public Integer registerSonUser(Cloud_userModel model) throws Exception {
 
+		////////////////////////////////////////////////////////
+		// KeyCloakに登録を行う
+		////////////////////////////////////////////////////////
+		try {
+			String retrunCode = keyCloakUserService.addUser(model.getUsername(), model.getPassword());
+			if (!ErrorConstant.ERROR_CODE_0000.equals(retrunCode)) {
+				return -1;
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+
+		////////////////////////////////////////////////////////
+		// DB登録を行う
+		////////////////////////////////////////////////////////
+
 		// 会社IDが設定していない場合、
 		if (model.getCompanyid() == null) {
 			////////////////////////////////////////////////////////
@@ -324,11 +341,53 @@ public class Cloud_userService {
 	}
 
 	/*
+	 * ユーザ一括削除
+	 * @param loginInfo LoginInfo
+	 * @param cloud_userModel Cloud_userModel
+	 */
+	public void deleteSonUsers(Cloud_userModel cloud_userModel) throws Exception {
+
+		////////////////////////////////////////////////////////
+		// KeyCloakに削除を行う
+		////////////////////////////////////////////////////////
+		try {
+			// 選択されるユーザを削除する
+			for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
+				keyCloakUserService.deleteUser(cloud_userModelInfo.getUsername());
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+
+		////////////////////////////////////////////////////////
+		// DB削除を行う
+		////////////////////////////////////////////////////////
+
+		// 選択されるユーザを削除する
+		for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
+			// 会社ユーザ一覧取得
+			List<Cloud_userEntity> entiyList = getCompanyUsers(cloud_userModelInfo.getCompanyid());
+
+			// 会社の最後のユーザになった場合、会社も削除する。
+			if (entiyList.size() == 1) {
+				Cloud_companyEntity cloud_companyEntity = new Cloud_companyEntity();
+				cloud_companyEntity.setCompanyid(cloud_userModelInfo.getCompanyid());
+				// 会社を削除する
+				cloud_companyService.deleteCompany(cloud_companyEntity);
+			}
+
+			// ユーザを削除する
+			deleteSonUser(cloud_userModelInfo);
+		}
+
+	}
+
+	/*
 	 * ユーザ削除
 	 * @param loginInfo LoginInfo
 	 * @param cloud_userModel Cloud_userModel
 	 */
-	public void deleteSonUser(LoginInfo loginInfo, Cloud_userModel model) throws Exception {
+	public void deleteSonUser(Cloud_userModel model) throws Exception {
 
 		if (cloud_userRepository.existsById(model.getUserid())) {
 			cloud_userRepository.deleteById(model.getUserid());

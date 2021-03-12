@@ -32,8 +32,12 @@ public class ErrorConstant {
 	public static final String ERROR_CODE_0103 = "0103";
 	public static final String ERROR_CODE_0104 = "0104";
 
+	public static final String ERROR_CODE_0200 = "0200";
+	public static final String ERROR_CODE_0201 = "0201";
+
+
 	public static final String ERROR_CODE_9999 = "9999";
-	
+
 	public static final String ERROR_CODE_IMEI = "imei";
 	public static final String ERROR_CODE_SN = "sn";
 	public static final String ERROR_CODE_SIMIMSI = "sim_imsi";
@@ -71,6 +75,9 @@ public class ErrorConstant {
 	public static final String ERROR_MSG_0100 = "登録失敗：";
 	public static final String ERROR_MSG_0101 = "更新失敗：";
 	public static final String ERROR_MSG_0102 = "削除失敗:";
+
+	public static final String ERROR_MSG_0200 = "ユーザがすでに存在しています。";
+	public static final String ERROR_MSG_0201 = "";
 
 	public static final String ERROR_MSG_9999 = "システムエラー:";
 }
