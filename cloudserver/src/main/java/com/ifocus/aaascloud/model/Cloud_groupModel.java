@@ -42,7 +42,7 @@ public class Cloud_groupModel {
 	 */
 	public String getProjectnameForSearch() {
 
-		if (this.projectname == null) {
+		if (this.projectname == null || this.projectname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.projectname.trim() + "%";
@@ -55,7 +55,7 @@ public class Cloud_groupModel {
 	 */
 	public String getGroupnameForSearch() {
 
-		if (this.groupname == null) {
+		if (this.groupname == null || this.groupname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.groupname.trim() + "%";
