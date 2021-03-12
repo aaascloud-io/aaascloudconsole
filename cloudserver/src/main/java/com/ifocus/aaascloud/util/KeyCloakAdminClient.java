@@ -303,5 +303,18 @@ public class KeyCloakAdminClient {
 		userRepresentation.setCredentials(credentials);
 		this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().create(userRepresentation);
 	}
+	
+	public void delUser(String uid) {
+		this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().delete(uid);
+	}
+	
+	public void delUserByUsername(String username) {
+		List<UserRepresentation> list = this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().search(username);
+		if (list != null && list.size() > 0) {
+			UserRepresentation existsUser = list.get(0);
+			this.keyCloakInstance.realm(keycloakAdminConfig.getAuthRealm()).users().delete(existsUser.getId());
+		}
+	}
+
 
 }
