@@ -2,7 +2,6 @@ package com.ifocus.aaascloud.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
-import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
@@ -110,24 +108,24 @@ public class DashboardController {
 				List<Cloud_userEntity> userList = (List<Cloud_userEntity>) cloud_userRepository.findAllById(list);
 
 				List<Cloud_userModel> cloud_userModelList =cloud_userService.getModelsByEntitys(userList);
-				List<UserModel> userModelList = new ArrayList<UserModel>();
-
-				for (Cloud_userModel model:cloud_userModelList) {
-
-					// プロファイルを取得する
-					UserModel userModel = Util.getUserModel(model);
-					if (userModel != null) {
-						// 会社情報を取得する
-						Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(model.getCompanyid());
-						// 会社情報を設定する
-						userModel.setCompanyname(company.get().getCompanyname());
-						// リストに追加
-						userModelList.add(userModel);
-					}
-
-				}
+//				List<UserModel> userModelList = new ArrayList<UserModel>();
+//
+//				for (Cloud_userModel model:cloud_userModelList) {
+//
+//					// プロファイルを取得する
+//					UserModel userModel = Util.getUserModel(model);
+//					if (userModel != null) {
+//						// 会社情報を取得する
+//						Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(model.getCompanyid());
+//						// 会社情報を設定する
+//						userModel.setCompanyname(company.get().getCompanyname());
+//						// リストに追加
+//						userModelList.add(userModel);
+//					}
+//
+//				}
 				// ユーザ一覧を設定する
-				dashboardModel.setUserList(userModelList);
+				dashboardModel.setUserList(getUserModelList(cloud_userModelList));
 
 				// エラーログ一覧を取得する
 				List<Cloud_errlogModel> errlogList = cloud_errlogService.getErrlogList(list,Util.getImeiList(deviceList),Util.getSnList(deviceList));
@@ -158,6 +156,26 @@ public class DashboardController {
 		return response;
 	}
 
+
+	/**
+	 * Cloud_userModelリストからUserModelリスト作成
+	 * @param cloud_userModelList List<Cloud_userModel> ユーザのリスト
+	 * @return List<UserModel> ユーザのUserModelリスト
+	 */
+	private List<UserModel> getUserModelList(List<Cloud_userModel> cloud_userModelList) {
+
+		List<UserModel> list = new ArrayList<UserModel>();
+		for (Cloud_userModel cloud_userModel:cloud_userModelList) {
+			UserModel userModel = new UserModel(
+					"",
+					cloud_userModel.getUsername(),
+					cloud_userModel.getFirstName(),
+					cloud_userModel.getLastName(),
+					cloud_userModel.getEmail());
+			list.add(userModel);
+		}
+		return list;
+	}
 
 	/**
 	 * リストから配列作成
