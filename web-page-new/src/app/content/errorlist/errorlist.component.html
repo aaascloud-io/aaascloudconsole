@@ -15,6 +15,7 @@
                       <thead>
                         <tr>
                           <th class="col" class="thcolor">No</th>
+                          <th class="col" class="thcolor">エラー対応</th>
                           <th class="col" class="thcolor" (click)="sortData('errcode')">エラーコード
                             <i *ngIf="valueSortFlg.errCodeUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.errCodeDown" class="la la-sort-down"></i>
@@ -29,24 +30,20 @@
                             <i *ngIf="valueSortFlg.datatimeDown" class="la la-sort-down"></i>
                           </th>
                           <th class="col" class="thcolor">対応ステータス</th>
-                          <th class="col" class="thcolor">対応履歴</th>
-                          <th class="col" class="thcolor">操作</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr *ngFor="let item of PaginationData;let i = index;">
                           <td>{{(page-1)*pageSize+i+1}}</td>
+                          <td>
+                            <a class="primary edit mr-1 mrless" (click)="viewErrProcessingHistoryModal(errProcessHistoryModalContent, item)" title="対応履歴一覧"><i class="la la-history"></i></a>
+                            <a class="primary edit pull-right" (click)="processErrDataModal(processErrDataModalContent, item)" title="エラー対応"><i class="la la-pencil-square-o"></i></a>
+                          </td>
                           <td>{{item.errcode}}</td>
                           <td>{{item.device}}</td>
                           <td>{{item.username}}</td>
-                          <td>{{item.datatime | date:'yyyy/MM/dd hh:mm:ss'}}</td>
+                          <td>{{item.datatime | date:'yyyy/MM/dd h:m:s a'}}</td>
                           <td>{{item.statusInStr}}</td>
-                          <td>
-                            <a class="primary edit mr-1 mrless" (click)="viewErrProcessingHistoryModal(errProcessHistoryModalContent, item)"><i class="la la-calendar-check-o"></i></a>
-                          </td>
-                          <td>
-                            <a class="primary edit mr-1 mrless" (click)="processErrDataModal(processErrDataModalContent, item)"><i class="la la-pencil"></i></a>
-                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -86,8 +83,10 @@
 
       <div class="form-group col-12">
         <label >対応メモ<code>＊</code></label>
-        <textarea id="contents" rows="4" class="form-control square" name="contents"
-          [(ngModel)]="selectedErrorItem.contents" maxlength="500"></textarea>
+        <textarea id="contents" rows="4" class="form-control square" #errMemo="ngModel" name="contents" [(ngModel)]="selectedErrorItem.contents" maxlength="500" [ngClass]="{ 'is-invalid': processErrDataUpdateForm.submitted && errMemo.invalid }" required></textarea>
+        <div *ngIf="processErrDataUpdateForm.submitted && errMemo.invalid" class="invalid-feedback">
+          <div *ngIf="errMemo.errors.required">対応メモを入力してください。</div>
+      </div>
       </div>
 
       <div class="form-group col-12">
@@ -136,7 +135,7 @@
           <tbody>
             <tr *ngFor="let element of errResumeList;let i = index">
               <td>{{i+1}}</td>
-              <td>{{element.i_time | date:'yyyy/MM/dd hh:mm:ss'}}</td>
+              <td>{{element.i_time | date:'yyyy/MM/dd h:m:s a'}}</td>
               <td>{{ element.statusflagbeforeInStr}}</td>
               <td>{{ element.statusflagafterInStr }}</td>
               <td>{{ element.contents}}</td>

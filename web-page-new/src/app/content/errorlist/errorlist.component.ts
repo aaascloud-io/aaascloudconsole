@@ -164,6 +164,7 @@ export class ErrorlistComponent implements OnInit {
   processErrDataModal(processErrDataModalContent, row) {
     // 把选中的 row 对象内的东西全部给全局变量 selectedErrorItem
     this.selectedErrorItem = Object.assign({},row);
+    this.selectedErrorItem.doneFlag = 0;
     this.selectedErrorItem["contents"] = "";
     this.selectedErrorItem["errlogid"] = this.selectedErrorItem["rowid"];
     console.log("这是selectedErrorItem");
@@ -176,8 +177,15 @@ export class ErrorlistComponent implements OnInit {
   }
 
   processErrDataUpdate(processErrDataUpdateForm,projectid){
+    var flg = true;
+    if (flg && !this.selectedErrorItem['contents']) {
+      confirm(`対応メモを入力してください。`);
+      flg = false;
+    }
+
+
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
-    if (routeif != null) {
+    if (routeif != null && flg) {
       if (confirm("対応情報を提出しますか")) {
         var param = {
           "loginInfo":this.pageModel.loginInfo,

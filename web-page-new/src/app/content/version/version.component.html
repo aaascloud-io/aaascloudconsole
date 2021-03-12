@@ -75,6 +75,7 @@
                           <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAll($event)">
                           </th>
                           <th scope="col" class="thcolor">No.</th>
+                          <th scope="col" class="thcolor">操作</th>
                           <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト名
                             <i *ngIf="valueSortFlg.productNameUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.productNameDown" class="la la-sort-down"></i>
@@ -89,7 +90,7 @@
                           </th>
                           <th scope="col" class="thcolor">詳細</th>
                           <th scope="col" class="thcolor">DownLoad</th>
-                          <th scope="col" class="thcolor">操作&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          
                         </tr>
                       </thead>
                       <tbody>
@@ -99,19 +100,22 @@
                               (change)="checkChange($event,element)">
                           </td>
                           <td>{{(page-1)*pageSize+i+1}}</td>
+                          <td>
+                            <div class="row">
+                              <a class="primary edit mr-1 mrless"
+                                (click)="editVersionDataModal(editVersionDataModalContent, element)" title="編集"><i
+                                  class="la la-pencil"></i>
+                              </a>
+                              <a class="danger delete"><i class="la la-trash-o" (click)="deleteRow(element)" title="削除"></i></a>
+                            </div>
+                          </td>
                           <td>{{ element.productname }}</td>
                           <td>{{ element.versioncode }}</td>
                           <td>{{ element.versionname }}</td>
                           <td>{{ element.description}}</td>
                           <td>{{ element.downloadurl}}</td>
                           
-                          <td>
-                            <a class="primary edit mr-1"
-                              (click)="editVersionDataModal(editVersionDataModalContent, element)"><i
-                                class="la la-pencil"></i>
-                            </a>
-                            <a class="danger delete mr-1"><i class="la la-trash-o" (click)="deleteRow(element)"></i></a>
-                          </td>
+                          
                         </tr>
                       </tbody>
                     </table>
