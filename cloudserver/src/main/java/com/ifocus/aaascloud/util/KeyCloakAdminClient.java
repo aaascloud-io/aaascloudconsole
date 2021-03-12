@@ -292,6 +292,7 @@ public class KeyCloakAdminClient {
 	public void addUser(String username, String password) {
 		UserRepresentation userRepresentation = new UserRepresentation();
 		userRepresentation.setUsername(username);
+		userRepresentation.setEnabled(true);
 		List<CredentialRepresentation> credentials = new ArrayList<CredentialRepresentation>();
 		
 		CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
