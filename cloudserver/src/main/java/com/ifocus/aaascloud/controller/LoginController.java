@@ -55,6 +55,7 @@ public class LoginController {
 					resJasonObj.put("logincompanyid", model.getCompanyid());
 					resJasonObj.put("loginrole", model.getRole());
 					resJasonObj.put("loginupperuserid", model.getUpperuserid());
+					resJasonObj.put("fullname", model.getFullName());
 //					// 会社情報取得
 //					Cloud_companyModel cloud_companyModel = cloud_companyService.getCompanyInfo(model.getCompanyid());
 //

@@ -475,9 +475,9 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(snErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_CODE_SN);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0022);
-					response.setData(Util.getJsonString(snErrorList));
+					response.setResultCode(ErrorConstant.ERROR_CODE_0003);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_SN);
+					response.setData(ErrorConstant.ERROR_CODE_SN);
 					return response;
 				}
 
@@ -488,22 +488,9 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(imeiErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_CODE_IMEI);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0021);
-					response.setData(Util.getJsonString(imeiErrorList));
-					return response;
-				}
-
-				// SIM_IMSI存在チェックを行う
-				List<Cloud_deviceDetailModel> sim_imsiErrorList = cloud_deviceService.checkSim_imsiExistedInDB(cloud_deviceModel);
-				// DBにすでに存在した場合、
-				if (!sim_imsiErrorList.isEmpty()) {
-
-					response.setStatus(200);
-					response.setCount(sim_imsiErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_CODE_SIMIMSI);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0023);
-					response.setData(Util.getJsonString(sim_imsiErrorList));
+					response.setResultCode(ErrorConstant.ERROR_CODE_0003);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_IMEI);
+					response.setData(ErrorConstant.ERROR_CODE_IMEI);
 					return response;
 				}
 
@@ -514,9 +501,22 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(sim_iccidErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_CODE_SIMICCID);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0024);
-					response.setData(Util.getJsonString(sim_iccidErrorList));
+					response.setResultCode(ErrorConstant.ERROR_CODE_0003);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_SIMICCID);
+					response.setData(ErrorConstant.ERROR_CODE_SIMICCID);
+					return response;
+				}
+
+				// SIM_IMSI存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_imsiErrorList = cloud_deviceService.checkSim_imsiExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_imsiErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_imsiErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_CODE_0003);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_SIMIMSI);
+					response.setData(ErrorConstant.ERROR_CODE_SIMIMSI);
 					return response;
 				}
 
@@ -527,9 +527,9 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(sim_telErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_CODE_SIMTEL);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0025);
-					response.setData(Util.getJsonString(sim_telErrorList));
+					response.setResultCode(ErrorConstant.ERROR_CODE_0003);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_SIMTEL);
+					response.setData(ErrorConstant.ERROR_CODE_SIMTEL);
 					return response;
 				}
 
@@ -590,7 +590,7 @@ public class Cloud_deviceController {
 					response.setStatus(200);
 					response.setCount(userErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "checkAccessableUserId");
+					response.setResultMsg(ErrorConstant.ERROR_MSG_USER_ACCESS);
 					response.setData(Util.getJsonString(userErrorList));
 					return response;
 				}
@@ -603,7 +603,7 @@ public class Cloud_deviceController {
 					response.setStatus(200);
 					response.setCount(productErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkProductExistedInDB");
+					response.setResultMsg(ErrorConstant.ERROR_MSG_PRODUCT);
 					response.setData(Util.getJsonString(productErrorList));
 					return response;
 				}
@@ -616,7 +616,7 @@ public class Cloud_deviceController {
 					response.setStatus(200);
 					response.setCount(projectErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkProjectExistedInDB");
+					response.setResultMsg(ErrorConstant.ERROR_MSG_PROJECT);
 					response.setData(Util.getJsonString(projectErrorList));
 					return response;
 				}
@@ -629,7 +629,7 @@ public class Cloud_deviceController {
 					response.setStatus(200);
 					response.setCount(groupErrorList.size());
 					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkGroupExistedInDB");
+					response.setResultMsg(ErrorConstant.ERROR_MSG_GROUP);
 					response.setData(Util.getJsonString(groupErrorList));
 					return response;
 				}
@@ -641,8 +641,8 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(snErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_CODE_SN);
+					response.setResultCode(ErrorConstant.ERROR_MSG_0003);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_SN);
 					response.setData(Util.getJsonString(snErrorList));
 					return response;
 				}
@@ -654,22 +654,9 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(imeiErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_CODE_IMEI);
+					response.setResultCode(ErrorConstant.ERROR_MSG_0003);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_IMEI);
 					response.setData(Util.getJsonString(imeiErrorList));
-					return response;
-				}
-
-				// SIM_IMSI存在チェックを行う
-				List<Cloud_deviceDetailModel> sim_imsiErrorList = cloud_deviceService.checkSim_imsiExistedInDB(cloud_deviceModel);
-				// DBにすでに存在した場合、
-				if (!sim_imsiErrorList.isEmpty()) {
-
-					response.setStatus(200);
-					response.setCount(sim_imsiErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_CODE_SIMIMSI);
-					response.setData(Util.getJsonString(sim_imsiErrorList));
 					return response;
 				}
 
@@ -680,9 +667,22 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(sim_iccidErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_CODE_SIMICCID);
+					response.setResultCode(ErrorConstant.ERROR_MSG_0003);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_SIMICCID);
 					response.setData(Util.getJsonString(sim_iccidErrorList));
+					return response;
+				}
+				
+				// SIM_IMSI存在チェックを行う
+				List<Cloud_deviceDetailModel> sim_imsiErrorList = cloud_deviceService.checkSim_imsiExistedInDB(cloud_deviceModel);
+				// DBにすでに存在した場合、
+				if (!sim_imsiErrorList.isEmpty()) {
+
+					response.setStatus(200);
+					response.setCount(sim_imsiErrorList.size());
+					response.setResultCode(ErrorConstant.ERROR_MSG_0003);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_SIMIMSI);
+					response.setData(Util.getJsonString(sim_imsiErrorList));
 					return response;
 				}
 
@@ -693,8 +693,8 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(sim_telErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-					response.setResultMsg(ErrorConstant.ERROR_CODE_SIMTEL);
+					response.setResultCode(ErrorConstant.ERROR_MSG_0003);
+					response.setResultMsg(ErrorConstant.ERROR_MSG_SIMTEL);
 					response.setData(Util.getJsonString(sim_telErrorList));
 					return response;
 				}
@@ -866,6 +866,22 @@ public class Cloud_deviceController {
 				// チェック準備
 				cloud_deviceModel.addDeviceDetailToDeviceDetailList();
 
+				if (cloud_deviceModel.getDeviceDetail().getSim_iccid() != null && !cloud_deviceModel.getDeviceDetail().getSim_iccid().equals(oldDevice.getSim_iccid())) {
+
+					// SIM_ICCID存在チェックを行う
+					List<Cloud_deviceDetailModel> sim_iccidErrorList = cloud_deviceService.checkSim_iccidExistedInDB(cloud_deviceModel);
+					// DBにすでに存在した場合、
+					if (!sim_iccidErrorList.isEmpty()) {
+
+						response.setStatus(200);
+						response.setCount(sim_iccidErrorList.size());
+						response.setResultCode(ErrorConstant.ERROR_CODE_0007);
+						response.setResultMsg(ErrorConstant.ERROR_MSG_SIMICCID);
+						response.setData(ErrorConstant.ERROR_CODE_SIMICCID);
+						return response;
+					}
+				}
+				
 				if (cloud_deviceModel.getDeviceDetail().getSim_imsi() != null && !cloud_deviceModel.getDeviceDetail().getSim_imsi().equals(oldDevice.getSim_imsi())) {
 
 
@@ -877,27 +893,12 @@ public class Cloud_deviceController {
 						response.setStatus(200);
 						response.setCount(sim_imsiErrorList.size());
 						response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-						response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_imsiExistedInDB");
-						response.setData(Util.getJsonString(sim_imsiErrorList));
+						response.setResultMsg(ErrorConstant.ERROR_MSG_SIMIMSI);
+						response.setData(ErrorConstant.ERROR_CODE_SIMIMSI);
 						return response;
 					}
 				}
 
-				if (cloud_deviceModel.getDeviceDetail().getSim_iccid() != null && !cloud_deviceModel.getDeviceDetail().getSim_iccid().equals(oldDevice.getSim_iccid())) {
-
-					// SIM_ICCID存在チェックを行う
-					List<Cloud_deviceDetailModel> sim_iccidErrorList = cloud_deviceService.checkSim_iccidExistedInDB(cloud_deviceModel);
-					// DBにすでに存在した場合、
-					if (!sim_iccidErrorList.isEmpty()) {
-
-						response.setStatus(200);
-						response.setCount(sim_iccidErrorList.size());
-						response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-						response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_iccidExistedInDB");
-						response.setData(Util.getJsonString(sim_iccidErrorList));
-						return response;
-					}
-				}
 				if (cloud_deviceModel.getDeviceDetail().getSim_tel() != null && !cloud_deviceModel.getDeviceDetail().getSim_tel().equals(oldDevice.getSim_tel())) {
 
 					// SIM_TEL存在チェックを行う
@@ -908,8 +909,8 @@ public class Cloud_deviceController {
 						response.setStatus(200);
 						response.setCount(sim_telErrorList.size());
 						response.setResultCode(ErrorConstant.ERROR_CODE_0007);
-						response.setResultMsg(ErrorConstant.ERROR_MSG_0007 + "checkSim_telExistedInDB");
-						response.setData(Util.getJsonString(sim_telErrorList));
+						response.setResultMsg(ErrorConstant.ERROR_MSG_SIMTEL);
+						response.setData(ErrorConstant.ERROR_CODE_SIMTEL);
 						return response;
 					}
 				}

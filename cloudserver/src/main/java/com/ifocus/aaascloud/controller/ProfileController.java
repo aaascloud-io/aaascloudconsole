@@ -98,7 +98,6 @@ public class ProfileController {
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-					response.setData(Util.getJsonString(cloud_userModel));
 
 				} catch (Exception e) {
 					/* 異常系 */

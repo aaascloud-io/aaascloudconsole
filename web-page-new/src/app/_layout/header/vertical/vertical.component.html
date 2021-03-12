@@ -200,7 +200,7 @@
             <a class="nav-link dropdown-user-link" ngbDropdownToggle>
               <span *ngIf="currentUser.displayName"
                 class="mr-1 user-name text-bold-700">{{currentUser.displayName}}</span>
-              <span *ngIf="!currentUser.displayName" class="mr-1 user-name text-bold-700">John Doe</span>
+              <span *ngIf="!currentUser.displayName" class="mr-1 user-name text-bold-700">{{username}}</span>
               <span class="avatar avatar-online">
                 <img *ngIf="currentUser.photoURL" src="{{currentUser.photoURL}}" alt="avatar">
                 <img *ngIf="!currentUser.photoURL" src="../../../assets/images/portrait/small/default.png"
@@ -209,13 +209,12 @@
               </span>
             </a>
             <div ngbDropdownMenu class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownProfileMenu">
-              <a class="dropdown-item" [routerLink]="['/profile']"><i class="feather ft-user"></i> Edit
-                Profile </a>
-              <a class="dropdown-item" [routerLink]="['/email']"><i class="feather ft-mail"></i> My Inbox </a>
+              <a class="dropdown-item" [routerLink]="['/profile']"><i class="feather ft-user"></i>パスワード変更</a>
+              <!-- <a class="dropdown-item" [routerLink]="['/email']"><i class="feather ft-mail"></i> My Inbox </a>
               <a class="dropdown-item" [routerLink]="['/todos']"><i class="feather ft-check-square"></i> Task </a>
-              <a class="dropdown-item" [routerLink]="['/chats']"><i class="feather ft-message-square"></i> Chats </a>
+              <a class="dropdown-item" [routerLink]="['/chats']"><i class="feather ft-message-square"></i> Chats </a> -->
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" [routerLink]="" (click)="logout()"><i class="feather ft-power"></i> Logout</a>
+              <a class="dropdown-item" [routerLink]="" (click)="logout()"><i class="feather ft-power"></i>ログアウト</a>
             </div>
           </li>
         </ul>

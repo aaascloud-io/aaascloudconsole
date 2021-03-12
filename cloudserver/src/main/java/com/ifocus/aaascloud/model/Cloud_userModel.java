@@ -24,6 +24,7 @@ public class Cloud_userModel extends UserModel {
 	private TargetUserInfo targetUserInfo;
 	private List<Cloud_userModel> cloud_userModelList;
 
+	private String access_token;
 	// 管理者情報
 	private Integer userid;
 	private Integer companyid;
