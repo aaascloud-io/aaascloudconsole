@@ -62,7 +62,7 @@ public class Cloud_userModel extends UserModel {
 	 */
 	public String getCompanynameForSearch() {
 
-		if (this.companyname.isEmpty()) {
+		if (this.companyname == null || this.companyname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.companyname.trim() + "%";
@@ -75,7 +75,7 @@ public class Cloud_userModel extends UserModel {
 	 */
 	public String getFirstNameForSearch() {
 
-		if (this.firstName.isEmpty()) {
+		if (this.firstName == null || this.firstName.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.firstName.trim() + "%";
@@ -88,7 +88,7 @@ public class Cloud_userModel extends UserModel {
 	 */
 	public String getLastNameForSearch() {
 
-		if (this.lastName.isEmpty()) {
+		if (this.lastName == null || this.lastName.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.lastName.trim() + "%";
@@ -101,7 +101,7 @@ public class Cloud_userModel extends UserModel {
 	 */
 	public String getEmailForSearch() {
 
-		if (this.email.isEmpty()) {
+		if (this.email == null || this.email.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.email.trim() + "%";

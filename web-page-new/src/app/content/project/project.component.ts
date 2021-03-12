@@ -256,6 +256,8 @@ export class ProjectComponent implements OnInit {
           "projectid":row.projectid,
         };
       }
+      console.log("单个删除的传入参数");
+      console.log(param);
       // var res = await this.httpService.post("/deleteProject",param);
       // console.log("这是 delete 的 res");
       // console.log(res);
@@ -345,6 +347,8 @@ export class ProjectComponent implements OnInit {
             "targetUserInfo":this.pageModel.targetUserInfo,
             "projectlist": this.selected,
           }
+          console.log('多个删除时的传入参数');
+          console.log(query);
           this.httpService.useRpDelete('deleteProjects', query).then(item => {
             try {
               if (item.resultCode == "0000") {

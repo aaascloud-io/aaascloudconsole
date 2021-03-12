@@ -33,7 +33,7 @@ public class Cloud_projectModel {
 	 */
 	public String getProjectnameForSearch() {
 
-		if (this.projectname == null) {
+		if (this.projectname == null || this.projectname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.projectname.trim() + "%";
@@ -46,7 +46,7 @@ public class Cloud_projectModel {
 	 */
 	public String getProductnameForSearch() {
 
-		if (this.productname == null) {
+		if (this.productname == null || this.productname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.productname.trim() + "%";
