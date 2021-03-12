@@ -39,7 +39,7 @@ public class Cloud_productModel {
 	 */
 	public String getProducttypenameForSearch() {
 
-		if (this.producttypename == null) {
+		if (this.producttypename == null || this.producttypename.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.producttypename.trim() + "%";
@@ -52,7 +52,7 @@ public class Cloud_productModel {
 	 */
 	public String getProductnameForSearch() {
 
-		if (this.productname == null) {
+		if (this.productname == null || this.productname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.productname.trim() + "%";
@@ -65,7 +65,7 @@ public class Cloud_productModel {
 	 */
 	public String getCreateusernameForSearch() {
 
-		if (this.createusername == null) {
+		if (this.createusername == null || this.createusername.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
 			return "%" + this.createusername.trim() + "%";
