@@ -43,7 +43,20 @@ export class HttpService {
     }
 
     usePost(path: string, data: any): Promise<any> {
-        data.access_token= ConstantsHandler.TOKEN.access_token;
+        if (path != '/login') {
+            let item: UserInfo = this.getLoginUser();
+            data.loginInfo = {
+                "loginuserid": item.uid,
+                "loginusername": item.login_id,
+                "loginrole": item.role,
+                "logincompanyid": item.company,
+                "access_token": item.access_token
+            };
+            data.targetUserInfo = {
+                "targetuserid": item.uid,
+                "targetuserCompanyid": item.company,
+            };
+        }
         return this._http.post(this.baseService.getPath(path), JSON.stringify(data), this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
@@ -71,6 +84,18 @@ export class HttpService {
     }
 
     useRpPut(path: string, data: any): Promise<any> {
+            let item: UserInfo = this.getLoginUser();
+            data.loginInfo = {
+                "loginuserid": item.uid,
+                "loginusername": item.login_id,
+                "loginrole": item.role,
+                "logincompanyid": item.company,
+                "access_token": item.access_token
+            };
+            data.targetUserInfo = {
+                "targetuserid": item.uid,
+                "targetuserCompanyid": item.company,
+            };
         return this._http.put(this.baseService.getPath(path), JSON.stringify(data), this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
@@ -85,6 +110,18 @@ export class HttpService {
     }
 
     useRpPost(path: string, datas: any): Promise<any> {
+        let item: UserInfo = this.getLoginUser();
+        datas.loginInfo = {
+            "loginuserid": item.uid,
+            "loginusername": item.login_id,
+            "loginrole": item.role,
+            "logincompanyid": item.company,
+            "access_token": item.access_token
+        };
+        datas.targetUserInfo = {
+            "targetuserid": item.uid,
+            "targetuserCompanyid": item.company,
+        };
         return this._http.post(this.baseService.getPath(path), datas, this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
@@ -99,6 +136,18 @@ export class HttpService {
     }
 
     useRpDelete(path: string, datas: any): Promise<any> {
+        let item: UserInfo = this.getLoginUser();
+        datas.loginInfo = {
+            "loginuserid": item.uid,
+            "loginusername": item.login_id,
+            "loginrole": item.role,
+            "logincompanyid": item.company,
+            "access_token": item.access_token
+        };
+        datas.targetUserInfo = {
+            "targetuserid": item.uid,
+            "targetuserCompanyid": item.company,
+        };
         var options = this.baseService.getHeader();
         // const options = {
         //     headers:header ,
@@ -120,6 +169,19 @@ export class HttpService {
     }
 
     useVerify(path: string, data: any): Promise<any> {
+        let item: UserInfo = this.getLoginUser();
+        data.loginInfo = {
+            "loginuserid": item.uid,
+            "loginusername": item.login_id,
+            "loginrole": item.role,
+            "logincompanyid": item.company,
+            "access_token": item.access_token
+        }
+        data.targetUserInfo = {
+            "targetuserid": item.uid,
+            "targetuserCompanyid": item.company,
+        }
+
         return this._http.post(this.baseService.getPath(path), JSON.stringify(data), this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
@@ -456,7 +518,8 @@ export class HttpService {
                 login_id: res.loginusername,
                 company: res.logincompanyid,
                 role: res.loginrole,
-                upperuserid: res.loginupperuserid
+                upperuserid: res.loginupperuserid,
+                access_token: ConstantsHandler.TOKEN.access_token
             }
             this.dataFatoryService.setUserInfo(temp);
 
