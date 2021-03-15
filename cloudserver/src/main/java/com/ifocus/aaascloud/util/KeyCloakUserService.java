@@ -107,10 +107,10 @@ public class KeyCloakUserService {
 	 */
 	public void deleteUser(String username) throws Exception {
 
-		try {
-			keyCloakAdminClient.delUserByUsername(username);
-		} catch (Exception e) {
-			throw e;
-		}
+//		try {
+//			keyCloakAdminClient.delUserByUsername(username);
+//		} catch (Exception e) {
+//			throw e;
+//		}
 	}
 }

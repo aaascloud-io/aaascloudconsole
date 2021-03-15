@@ -1,6 +1,7 @@
 package com.ifocus.aaascloud;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -12,9 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
+import com.ifocus.aaascloud.constant.RoleConstant;
 import com.ifocus.aaascloud.constant.StatusFlagConstant;
 import com.ifocus.aaascloud.controller.AccessController;
+import com.ifocus.aaascloud.controller.Cloud_deviceController;
 import com.ifocus.aaascloud.controller.Cloud_errlogController;
+import com.ifocus.aaascloud.controller.Cloud_groupController;
+import com.ifocus.aaascloud.controller.Cloud_projectController;
+import com.ifocus.aaascloud.controller.Cloud_userController;
 import com.ifocus.aaascloud.controller.Cloud_versionController;
 import com.ifocus.aaascloud.controller.DashboardController;
 import com.ifocus.aaascloud.controller.ProfileController;
@@ -26,9 +32,11 @@ import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
+import com.ifocus.aaascloud.model.Cloud_deviceDetailModel;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_errlogModel;
 import com.ifocus.aaascloud.model.Cloud_errresumeModel;
+import com.ifocus.aaascloud.model.Cloud_groupModel;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;
@@ -42,6 +50,7 @@ import com.ifocus.aaascloud.service.Cloud_errlogService;
 import com.ifocus.aaascloud.service.Cloud_errresumeService;
 import com.ifocus.aaascloud.service.Cloud_productService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
+import com.ifocus.aaascloud.service.Cloud_userService;
 
 import junit.framework.TestCase;
 
@@ -50,7 +59,13 @@ class AaascloudApplicationTests extends TestCase{
 
 	@Autowired
 	private Cloud_userRepository cloud_userRepository;
+	@Autowired
+	private Cloud_productRepository cloud_productRepository;
+	@Autowired
+	private Cloud_deviceRepository cloud_deviceRepository;
 
+	@Autowired
+	private Cloud_userService cloud_userService;
 	@Autowired
 	private Cloud_errresumeService cloud_errresumeService;
 	@Autowired
@@ -63,11 +78,6 @@ class AaascloudApplicationTests extends TestCase{
 	private Cloud_deviceService cloud_deviceService;
 	@Autowired
 	private Cloud_projectService cloud_projectService;
-
-	@Autowired
-	private Cloud_productRepository cloud_productRepository;
-	@Autowired
-	private Cloud_deviceRepository cloud_deviceRepository;
 
 	@Autowired
 	private AccessController accessController;
@@ -83,6 +93,14 @@ class AaascloudApplicationTests extends TestCase{
 	private DashboardController dashboardController;
 	@Autowired
 	private Cloud_groupRepository cloud_groupRepository;
+	@Autowired
+	private Cloud_projectController cloud_projectController;
+	@Autowired
+	private Cloud_deviceController cloud_deviceController;
+	@Autowired
+	private Cloud_userController cloud_userController;
+	@Autowired
+	private Cloud_groupController cloud_groupController;
 
 //	/*
 //	 * Cloud_userService:login
@@ -564,7 +582,7 @@ class AaascloudApplicationTests extends TestCase{
 //
 //
 //		HttpClient httpClient = new HttpClient();
-//		String token = httpClient.getToken("ifocus","123456");
+//		String token = httpClient.getToken("wang","123456");
 //
 //		JSONObject json = (JSONObject) JSONSerializer.toJSON(token);
 //		String accessToken = json.getString("access_token");
@@ -584,7 +602,7 @@ class AaascloudApplicationTests extends TestCase{
 //
 //
 //		HttpClient httpClient = new HttpClient();
-//		String userInfo = httpClient.getUserInfo("ifocus","123456");
+//		String userInfo = httpClient.getUserInfo("wang","123456");
 //
 //		JSONObject json = (JSONObject) JSONSerializer.toJSON(userInfo);
 //		String attributes = json.getString(CommonConstant.JSON_KEY_ATTRIBUTES);
@@ -647,10 +665,9 @@ class AaascloudApplicationTests extends TestCase{
 
 		List<Integer> userList = Arrays.asList(1,2,3);
 		List<String> imeiList = Arrays.asList("123456");
-		List<String> iccidList = Arrays.asList("234567");
 		List<String> snList = Arrays.asList("56789");
 
-		List<Cloud_errlogModel> list = cloud_errlogService.getErrlogList(userList,imeiList,iccidList,snList);
+		List<Cloud_errlogModel> list = cloud_errlogService.getErrlogList(userList,imeiList,snList);
 
 		assertEquals( list.size(), 4);
 	}
@@ -682,13 +699,12 @@ class AaascloudApplicationTests extends TestCase{
 
 		List<Integer> companyidList = Arrays.asList(1);
 		String imei1 = CommonConstant.DEFAULT_MATCH_ALL;
-		String iccid1 = CommonConstant.DEFAULT_MATCH_ALL;
 		String sn1 = CommonConstant.DEFAULT_MATCH_ALL;
 		String projectName1 = CommonConstant.DEFAULT_MATCH_ALL;
 		String productName1 = CommonConstant.DEFAULT_MATCH_ALL;
 		String industry1 = CommonConstant.DEFAULT_MATCH_ALL;
 
-		List<Cloud_deviceEntity> list1 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei1,iccid1,sn1,productName1,projectName1,industry1);
+		List<Cloud_deviceEntity> list1 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei1,sn1,productName1,projectName1,industry1);
 
 		assertEquals( list1.size(), 5);
 	}
@@ -765,10 +781,9 @@ class AaascloudApplicationTests extends TestCase{
 		String projectName = "%販売分%";
 		String industry = "%サービス%";
 		String imei = "%104%";
-		String iccid = "%104%";
 		String sn = "%104%";
 
-		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList, imei, iccid, sn, productName, projectName, industry);
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList, imei, sn, productName, projectName, industry);
 
 		assertEquals( 1, list.size() );
 	}
@@ -787,11 +802,10 @@ class AaascloudApplicationTests extends TestCase{
 		String projectName = "%入庫%";
 		String industry = "%サービス%";
 		String imei = "%0%";
-		String iccid = "%0%";
 		String sn = "%0%";
 		String groupName = "%A%";
 
-		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(companyidList, imei, iccid, sn, productName, projectName, industry, groupName);
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(companyidList, imei, sn, productName, projectName, industry, groupName);
 
 		assertEquals( 2, list.size() );
 	}
@@ -872,7 +886,7 @@ class AaascloudApplicationTests extends TestCase{
 	@Test
 	public void testRegisterVersion() throws Exception {
 
-		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("ifocus");
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
 		LoginInfo loginInfo = new LoginInfo();
 		loginInfo.setLoginusername(loginUserEntity.getUsername());
 		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
@@ -900,7 +914,7 @@ class AaascloudApplicationTests extends TestCase{
 	@Test
 	public void testDeleteVersion() throws Exception {
 
-		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("ifocus");
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
 		LoginInfo loginInfo = new LoginInfo();
 		loginInfo.setLoginusername(loginUserEntity.getUsername());
 		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
@@ -914,31 +928,31 @@ class AaascloudApplicationTests extends TestCase{
 		assertEquals( response.getResultCode(), ErrorConstant.ERROR_CODE_0000);
 	}
 
-	/*
-	 * Cloud_versionController
-	 * 一覧テストgetVersionList
-	 * 正常系（権限なし）
-	 *
-	 */
-	@Test
-	public void testGetVersionListNoAccess() throws Exception {
-
-		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
-		LoginInfo loginInfo = new LoginInfo();
-		loginInfo.setLoginusername(loginUserEntity.getUsername());
-		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
-		loginInfo.setLoginuserid(loginUserEntity.getUserid());
-
-		Cloud_userModel model = new Cloud_userModel();
-		model.setUsername(loginUserEntity.getUsername());
-		model.setUserid(loginUserEntity.getUserid());
-
-		BaseHttpResponse<String> response = cloud_versionController.getVersionList(model);
-
-		assertEquals( ErrorConstant.ERROR_CODE_0000, response.getResultCode());
-		assertEquals( 2, response.getCount());
-
-	}
+//	/*
+//	 * Cloud_versionController
+//	 * 一覧テストgetAllVersions
+//	 * 正常系（権限なし）
+//	 *
+//	 */
+//	@Test
+//	public void testGetAllVersionsNoAccess() throws Exception {
+//
+//		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+//		LoginInfo loginInfo = new LoginInfo();
+//		loginInfo.setLoginusername(loginUserEntity.getUsername());
+//		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+//		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+//
+//		Cloud_versionModel model = new Cloud_versionModel();
+//		model.setUsername(loginUserEntity.getUsername());
+//		model.setUserid(loginUserEntity.getUserid());
+//
+//		BaseHttpResponse<String> response = cloud_versionController.getAllVersions(model);
+//
+//		assertEquals( ErrorConstant.ERROR_CODE_0000, response.getResultCode());
+//		assertEquals( 2, response.getCount());
+//
+//	}
 
 	/*
 	 * ProfileController
@@ -1021,7 +1035,7 @@ class AaascloudApplicationTests extends TestCase{
 //		Cloud_userModel model = new Cloud_userModel();
 //		model.setUsername("wang");
 
-		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("ifocus");
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
 
 		Cloud_userModel model = new Cloud_userModel();
 		model.setUsername(loginUserEntity.getUsername());
@@ -1030,6 +1044,7 @@ class AaascloudApplicationTests extends TestCase{
 		BaseHttpResponse<String> response = dashboardController.getDashboardInfo(model);
 
 		assertEquals(200, response.getStatus());
+		assertEquals(ErrorConstant.ERROR_CODE_0000, response.getResultCode());
 
 	}
 
@@ -1048,4 +1063,440 @@ class AaascloudApplicationTests extends TestCase{
 		assertEquals(new Integer(2), count);
 
 	}
+
+	/*
+	 * Cloud_projectController
+	 * プロジェクト検索テストsearchProjects
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testSearchProjects() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("i-test");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_projectModel cloud_projectModel = new Cloud_projectModel();
+		cloud_projectModel.setLoginInfo(loginInfo);
+		cloud_projectModel.setTargetUserInfo(targetUserInfo);
+
+		BaseHttpResponse<String> response = cloud_projectController.searchProjects(cloud_projectModel);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+
+	}
+
+	/*
+	 * Cloud_projectController
+	 * プロジェクト一覧テストgetProjects
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testGetProjects() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_projectModel cloud_projectModel = new Cloud_projectModel();
+		cloud_projectModel.setLoginInfo(loginInfo);
+		cloud_projectModel.setTargetUserInfo(targetUserInfo);
+
+		BaseHttpResponse<String> response = cloud_projectController.getProjects(cloud_projectModel);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+
+	}
+
+	/*
+	 * Cloud_deviceController
+	 * 自社デバイス一覧取得テストgetMySelectableDevices
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testGetMySelectableDevices() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_deviceModel model = new Cloud_deviceModel();
+		model.setLoginInfo(loginInfo);
+		model.setTargetUserInfo(targetUserInfo);
+
+		BaseHttpResponse<String> response = cloud_deviceController.getMySelectableDevices(model);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+
+	}
+
+	/*
+	 * Cloud_deviceController
+	 * デバイスを登録するテストregisterDevice
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testRegisterDevice() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_deviceDetailModel deviceDetailModel = new Cloud_deviceDetailModel();
+		deviceDetailModel.setCompanyid(loginUserEntity.getCompanyid());
+		deviceDetailModel.setDevicename("DEV0001");
+
+		Cloud_deviceModel model = new Cloud_deviceModel();
+		model.setLoginInfo(loginInfo);
+		model.setTargetUserInfo(targetUserInfo);
+		model.setDeviceDetail(deviceDetailModel);
+
+		BaseHttpResponse<String> response = cloud_deviceController.registerDevice(model);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+
+	}
+
+	/*
+	 * Cloud_userController
+	 * ユーザ追加テストregisterUser
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testRegisterUser() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+		loginInfo.setLoginrole(loginUserEntity.getRole());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_userModel model = new Cloud_userModel();
+		model.setLoginInfo(loginInfo);
+		model.setTargetUserInfo(targetUserInfo);
+
+		model.setCompanyid(1);
+		model.setUsername("testdong");
+		model.setPassword("123456");
+		model.setFirstName("テスト");
+		model.setLastName("董");
+		model.setEmail("dong@i-focus.co.jp");
+		model.setRole(RoleConstant.ADMIN);
+		model.setUpperuserid(1);
+
+		BaseHttpResponse<String> response = cloud_userController.registerUser(model);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+
+	}
+
+	/*
+	 * Cloud_userController
+	 * ユーザ追加テストregisterUser
+	 * 異常系
+	 *
+	 */
+	@Test
+	public void testRegisterUserNG() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+		loginInfo.setLoginrole(loginUserEntity.getRole());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_userModel model = new Cloud_userModel();
+		model.setLoginInfo(loginInfo);
+		model.setTargetUserInfo(targetUserInfo);
+
+		model.setCompanyid(1);
+		model.setUsername("wang");
+		model.setPassword("123456");
+		model.setFirstName("富美子");
+		model.setLastName("王");
+		model.setEmail("wang@i-focus.co.jp");
+		model.setRole(RoleConstant.PERSONNEL);
+
+		BaseHttpResponse<String> response = cloud_userController.registerUser(model);
+
+		assertEquals(200, response.getStatus());
+		assertEquals(ErrorConstant.ERROR_CODE_0200, response.getResultCode());
+
+	}
+
+	/*
+	 * Cloud_userController
+	 * ユーザ削除テストdeleteUser
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testDeleteUser() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+		loginInfo.setLoginrole(loginUserEntity.getRole());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_userModel model = new Cloud_userModel();
+		model.setLoginInfo(loginInfo);
+		model.setTargetUserInfo(targetUserInfo);
+
+		Cloud_userModel deleteModel = new Cloud_userModel();
+		deleteModel.setUserid(64);
+		deleteModel.setUsername("test103");
+		List<Cloud_userModel> delList = new ArrayList<Cloud_userModel>();
+		delList.add(deleteModel);
+
+		model.setCloud_userModelList(delList);
+
+		BaseHttpResponse<String> response = cloud_userController.deleteUser(model);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+
+	}
+
+	/*
+	 * Cloud_groupController
+	 * ユーザ追加テストsearchGroups
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testSearchGroups() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+		loginInfo.setLoginrole(loginUserEntity.getRole());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_groupModel model = new Cloud_groupModel();
+		model.setLoginInfo(loginInfo);
+		model.setTargetUserInfo(targetUserInfo);
+
+		model.setProjectid(1);
+
+		BaseHttpResponse<String> response = cloud_groupController.searchGroups(model);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+
+	}
+
+	/*
+	 * Cloud_deviceController
+	 * デバイス検索テストsearchCompanyDevices
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testSearchCompanyDevices() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+		loginInfo.setLoginrole(loginUserEntity.getRole());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_deviceModel model = new Cloud_deviceModel();
+		model.setLoginInfo(loginInfo);
+		model.setTargetUserInfo(targetUserInfo);
+
+		model.setProjectid(1);
+
+		BaseHttpResponse<String> response = cloud_deviceController.searchCompanyDevices(model);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+
+	}
+
+	/*
+	 * Cloud_groupController
+	 * グループ削除テストdeleteGroup
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testDeleteGroup() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_groupModel cloud_groupModel = new Cloud_groupModel();
+		cloud_groupModel.setLoginInfo(loginInfo);
+		cloud_groupModel.setTargetUserInfo(targetUserInfo);
+
+		cloud_groupModel.setGroupid(1);
+
+		BaseHttpResponse<String> response = cloud_groupController.deleteGroup(cloud_groupModel);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+
+	}
+
+	/*
+	 * Cloud_projectController
+	 * プロジェクト削除テストdeleteProject
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testDeleteProject() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_projectModel cloud_projectModel = new Cloud_projectModel();
+		cloud_projectModel.setLoginInfo(loginInfo);
+		cloud_projectModel.setTargetUserInfo(targetUserInfo);
+
+		cloud_projectModel.setProjectid(1);
+
+		BaseHttpResponse<String> response = cloud_projectController.deleteProject(cloud_projectModel);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+
+	}
+
+//	/*
+//	 * Cloud_deviceController
+//	 * デバイス更新テストupdateDevice
+//	 * 正常系
+//	 *
+//	 */
+//	@Test
+//	public void testUpdateDevice() throws Exception {
+//
+//		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+//		LoginInfo loginInfo = new LoginInfo();
+//		loginInfo.setLoginusername(loginUserEntity.getUsername());
+//		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+//		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+//
+//		TargetUserInfo targetUserInfo = new TargetUserInfo();
+//		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+//		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+//
+//		Cloud_deviceModel cloud_projectModel = new Cloud_deviceModel();
+//		cloud_projectModel.setLoginInfo(loginInfo);
+//		cloud_projectModel.setTargetUserInfo(targetUserInfo);
+//
+//		cloud_projectModel.setProjectid(1);
+//
+//		BaseHttpResponse<String> response = cloud_projectController.deleteProject(cloud_projectModel);
+//
+//		assertEquals(200, response.getStatus());
+//		assertEquals("0000", response.getResultCode());
+//
+//	}
+
+	/*
+	 * Cloud_userService
+	 * テストcheckToken
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testCheckToken() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+		loginInfo.setAccess_token("eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJaSjZmRGZ5OVdqNGU2bEhLNjU1RktULWlKcjJqOGExckZ3MENLM0ljN0FnIn0.eyJqdGkiOiIyMjUzZWQwNC1hZWQ5LTRmMDktOTZhOC0wYzk0NWViZjNkMDUiLCJleHAiOjE2MTU4MDkzODYsIm5iZiI6MCwiaWF0IjoxNjE1NzczMzg2LCJpc3MiOiJodHRwczovL2F1dGguYWFhc2Nsb3VkLmlvL2F1dGgvcmVhbG1zL3RyYWNrdW4iLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiODRhOWNjMjQtNDBiZi00OTE4LTkxNWUtMWVlNDllMzNmYmJkIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoidHJhY2t1biIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjUzYTE0ZTQyLThhMzMtNDE2ZC04OTkxLTg5ZWE1MTYxYjg2NCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0VXNlciIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJ4bSB3YW5nIiwicHJlZmVycmVkX3VzZXJuYW1lIjoid2FuZyIsImxvY2FsZSI6ImphIiwiZ2l2ZW5fbmFtZSI6InhtIiwiZmFtaWx5X25hbWUiOiJ3YW5nIiwiZW1haWwiOiJ4aWFuZ21pbi53YW5nQGktZm9jdXMuY28uanAifQ.VSRctQ0njcJpwsZ6wPTfP71iXEnLNNcSFE9dXPqhhabRm6HF79F8IH7pLbbDiJpqw74MayY0ZEOskFnLmrsxR-ftOICYTGaUXD8mFJL3e3OJSLuuAGJIC1LZ58F9cZYF4VnFgx3U0ZBk7M3h5W1P70rktgS8In6j6STZBsIzsDCtHJZzSiLjE7EO6dwzYVZuFxH-1BzUkV_426J-KdOCrvGsaERcQuaCWZNVC5dDLYO7EMdF5CDIQZ9IMkVaugVdlGxsKsB4bKGWEL_do1RXkWbzccNBFWsN5TBattlaiYIk80mcA7EU55OxR-rpbh4Vw6pQ5ju5Rgt6PHfF5rf9Fw");
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_projectModel cloud_projectModel = new Cloud_projectModel();
+		cloud_projectModel.setLoginInfo(loginInfo);
+		cloud_projectModel.setTargetUserInfo(targetUserInfo);
+
+		boolean response = cloud_userService.checkToken(cloud_projectModel.getLoginInfo());
+
+		assertEquals(true, response);
+
+	}
+
 }

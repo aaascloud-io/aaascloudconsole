@@ -11,12 +11,13 @@ import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
 import {MessageService} from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+import {ConfirmationService} from 'primeng/api';
 
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css'],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
 })
 export class ProjectComponent implements OnInit {
 
@@ -100,7 +101,8 @@ export class ProjectComponent implements OnInit {
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
     private messageService: MessageService, 
-    private primengConfig: PrimeNGConfig
+    private primengConfig: PrimeNGConfig,
+    private confirmationService: ConfirmationService,
     ) { 
     }
 
@@ -256,35 +258,42 @@ export class ProjectComponent implements OnInit {
 
   // プロジェクト削除
   deleteRow(row) {
-    if (confirm(row.projectname + "を削除します。よろしいですか？")){
-      let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-      if (routeif != null) {
-        var param = {
-          "loginInfo":this.pageModel.loginInfo,
-          "targetUserInfo":this.pageModel.targetUserInfo,
-          "projectid":row.projectid,
-        };
-      }
-      console.log("单个删除的传入参数");
-      console.log(param);
-      // var res = await this.httpService.post("/deleteProject",param);
-      // console.log("这是 delete 的 res");
-      // console.log(res);
-      this.httpService.delete('deleteProject',param).then(item=>{
-        try{
-          if(item.body.resultCode == "0000"){
-            this.ngOnInit();
-            this.showAlert("success", "プロジェクトを削除しました。");
-          }else{
-            console.log('削除失敗、ご確認してください。');
-            console.log(item);
-            this.showAlert("error", "削除失敗、ご確認してください。");
-          }
-        }catch(e){
-          this.showAlert("error", e);
+    this.confirmationService.confirm({
+      message: row.projectname + "を削除します。よろしいですか？",
+      header: 'プロジェクト削除確認',
+      accept: () => {
+        let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+        if (routeif != null) {
+          var param = {
+            "loginInfo":this.pageModel.loginInfo,
+            "targetUserInfo":this.pageModel.targetUserInfo,
+            "projectid":row.projectid,
+          };
         }
-      });
-    }
+        console.log("单个删除的传入参数");
+        console.log(param);
+        // var res = await this.httpService.post("/deleteProject",param);
+        // console.log("这是 delete 的 res");
+        // console.log(res);
+        this.httpService.delete('deleteProject',param).then(item=>{
+          try{
+            if(item.body.resultCode == "0000"){
+              this.ngOnInit();
+              this.showAlert("success", "プロジェクトを削除しました。");
+            }else{
+              console.log('削除失敗、ご確認してください。');
+              console.log(item);
+              this.showAlert("error", "削除失敗、ご確認してください。");
+            }
+          }catch(e){
+            this.showAlert("error", e);
+          }
+        });
+      },
+      reject: () => {
+        this.showAlert("info","削除操作を取消しました");
+      },
+    });
   }
 
 
@@ -336,7 +345,6 @@ export class ProjectComponent implements OnInit {
           }
         } catch (e) {
           console.log(e);
-          alert(e);
           this.showAlert("error", e);
         }
       });
@@ -351,7 +359,10 @@ export class ProjectComponent implements OnInit {
       }
     }
     if(this.selected.length > 0){
-      if (confirm("選択したデーターを削除しますか")) {
+      this.confirmationService.confirm({
+        message: "選択したデーターを削除しますか",
+        header: 'プロジェクト削除確認',
+        accept: () => {
           var query = {
             "loginInfo": this.pageModel.loginInfo,
             "targetUserInfo":this.pageModel.targetUserInfo,
@@ -377,7 +388,11 @@ export class ProjectComponent implements OnInit {
               this.showAlert("error", e);
             }
           });
-      }
+        },
+        reject: () => {
+          this.showAlert("info","削除操作を取消しました");
+        },
+      });
     }else{
       this.showAlert("warn", "プロジェクトを選択してください。");
     }
@@ -537,37 +552,44 @@ export class ProjectComponent implements OnInit {
         }
       }
       if(this.selectedDevice.length > 0){
-        if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
-          console.log("这是 this.selectedDevice");
-          console.log(this.selectedDevice);
-          var param = {
-            "loginInfo":this.pageModel.loginInfo,
-            "targetUserInfo":this.pageModel.targetUserInfo,
-            "projectid": projectid,
-            "deviceList": this.selectedDevice,
-          };
-          this.httpService.useRpPut('addProjectDevices', param).then(item => {
-            try {
-              if (item.resultCode == "0000") {
-                // this.selectedDevice=[];
-                this.showAlert("success", "プロジェクトにデバイスを追加しました");
-                if (projectDeviceForm.valid === true) {
-                  projectDeviceForm.reset();
-                  this.editModal.close(projectDeviceForm.resetForm);
-                }
-              }else{
-                console.log('更新失敗、ご確認してください。');
-                console.log(item);
-                this.showAlert("error", "更新失敗、ご確認してください。");
-              }
-              this.ngOnInit();
-            } catch (e) {
-              console.log(e);
-              alert(e);
-              this.ngOnInit();
+        this.confirmationService.confirm({
+          message: "選択したデバイスをプロジェクトに連携しますか",
+          header: 'デバイス連携確認',
+          accept: () => {
+            console.log("这是 this.selectedDevice");
+            console.log(this.selectedDevice);
+            var param = {
+              "loginInfo":this.pageModel.loginInfo,
+              "targetUserInfo":this.pageModel.targetUserInfo,
+              "projectid": projectid,
+              "deviceList": this.selectedDevice,
             };
-          });
-        }
+            this.httpService.useRpPut('addProjectDevices', param).then(item => {
+              try {
+                if (item.resultCode == "0000") {
+                  // this.selectedDevice=[];
+                  this.showAlert("success", "プロジェクトにデバイスを追加しました");
+                  if (projectDeviceForm.valid === true) {
+                    projectDeviceForm.reset();
+                    this.editModal.close(projectDeviceForm.resetForm);
+                  }
+                }else{
+                  console.log('更新失敗、ご確認してください。');
+                  console.log(item);
+                  this.showAlert("error", "更新失敗、ご確認してください。");
+                }
+                this.ngOnInit();
+              } catch (e) {
+                console.log(e);
+                this.showAlert("error", e);
+                this.ngOnInit();
+              };
+            });
+          },
+          reject: () => {
+              this.showAlert("info","デバイス連携操作を取消しました");
+          },
+        });
       }else{
         this.showAlert("warn", "デバイスを選択してください。");
       }
@@ -619,36 +641,43 @@ export class ProjectComponent implements OnInit {
         }
       }
       if(this.selectedDevice.length >0){
-        if (confirm("選択したデバイスをプロジェクトから削除しますか")) {
-          var param = {
-            "loginInfo":this.pageModel.loginInfo,
-            "targetUserInfo":this.pageModel.targetUserInfo,
-            
-            "projectid": projectid,
-            "deviceList": this.selectedDevice,
-          };
-          this.httpService.useRpPut('deleteProjectDevices', param).then(item => {
-            try {
-              if (item.resultCode == "0000") {
-                this.selectedDevice=[];
-                this.showAlert("success", "プロジェクトからデバイスを削除しました。");
-                if (projectLinkedDeviceForm.valid === true) {
-                  projectLinkedDeviceForm.reset();
-                  this.editModal.close(projectLinkedDeviceForm.resetForm);
+        this.confirmationService.confirm({
+          message: "選択したデバイスをプロジェクトから解除しますか",
+          header: 'デバイス解除確認',
+          accept: () => {
+            var param = {
+              "loginInfo":this.pageModel.loginInfo,
+              "targetUserInfo":this.pageModel.targetUserInfo,
+              
+              "projectid": projectid,
+              "deviceList": this.selectedDevice,
+            };
+            this.httpService.useRpPut('deleteProjectDevices', param).then(item => {
+              try {
+                if (item.resultCode == "0000") {
+                  this.selectedDevice=[];
+                  this.showAlert("success", "プロジェクトからデバイスを削除しました。");
+                  if (projectLinkedDeviceForm.valid === true) {
+                    projectLinkedDeviceForm.reset();
+                    this.editModal.close(projectLinkedDeviceForm.resetForm);
+                  }
+                }else{
+                  console.log('削除失敗、ご確認してください。');
+                  console.log(item);
+                  this.showAlert("error", "削除失敗、ご確認してください。");
                 }
-              }else{
-                console.log('削除失敗、ご確認してください。');
-                console.log(item);
-                this.showAlert("error", "削除失敗、ご確認してください。");
+                this.ngOnInit();
+              } catch (e) {
+                console.log(e);
+                this.showAlert("error", e);
+                this.ngOnInit();
               }
-              this.ngOnInit();
-            } catch (e) {
-              console.log(e);
-              this.showAlert("error", e);
-              this.ngOnInit();
-            }
-          });
-        }
+            });
+          },
+          reject: () => {
+              this.showAlert("info","解除操作を取消しました");
+          },
+        });
       }else{
         this.showAlert("warn", "デバイスを選択してください。");
       }
