@@ -75,6 +75,11 @@ import { AuthSignService } from './_services/AuthSignService';
 import { AuthSignListener } from './_services/AuthSignListener';
 import { BaseService } from './_services/BaseService';
 
+import {MessageService} from 'primeng/api';
+import {ButtonModule} from 'primeng/button';
+import {ToastModule} from 'primeng/toast';
+import {RippleModule} from 'primeng/ripple';
+
 
 
 
@@ -103,7 +108,10 @@ import { BaseService } from './_services/BaseService';
         LoadingBarRouterModule,
         BlockUIModule.forRoot({
           template: BlockTemplateComponent
-        })
+        }),
+        ToastModule,
+        ButtonModule,
+        RippleModule,
     ],
     declarations: [
         AppComponent,
@@ -150,6 +158,7 @@ import { BaseService } from './_services/BaseService';
         AuthSignService,
         AuthSignListener,
         BaseService,
+        MessageService
     ],
     bootstrap: [AppComponent],
     exports: [RouterModule]

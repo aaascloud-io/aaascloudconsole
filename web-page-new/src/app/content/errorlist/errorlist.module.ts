@@ -9,6 +9,11 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 import { ErrorlistComponent } from './errorlist.component';
 
+import {ToastModule} from 'primeng/toast';
+import {MessageService} from 'primeng/api';
+import {ButtonModule} from 'primeng/button';
+import {RippleModule} from 'primeng/ripple';
+
 
 
 @NgModule({
@@ -25,9 +30,14 @@ import { ErrorlistComponent } from './errorlist.component';
         component: ErrorlistComponent
       }
     ]),
-
+    ToastModule,
+    ButtonModule,
+    RippleModule,
+  ],
+  providers: [
+    MessageService,
   ],
   declarations: [ErrorlistComponent],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class ErrorlistModule { }
