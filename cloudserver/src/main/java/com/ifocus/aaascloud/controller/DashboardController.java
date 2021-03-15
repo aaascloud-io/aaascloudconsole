@@ -66,6 +66,22 @@ public class DashboardController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		DashboardModel dashboardModel = new DashboardModel();
 
 		// ユーザID必須判定

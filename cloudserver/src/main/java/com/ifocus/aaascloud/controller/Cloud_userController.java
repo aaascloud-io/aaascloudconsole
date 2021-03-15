@@ -57,6 +57,22 @@ public class Cloud_userController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		Integer loginuserid = cloud_userModel.getLoginInfo().getLoginuserid();
 		Integer targetuserid = cloud_userModel.getTargetUserInfo().getTargetuserid();
 
@@ -163,6 +179,22 @@ public class Cloud_userController {
 	public BaseHttpResponse<String> searchUnderUsers(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		Integer loginuserid = cloud_userModel.getLoginInfo().getLoginuserid();
 		Integer targetuserid = cloud_userModel.getTargetUserInfo().getTargetuserid();
@@ -277,6 +309,22 @@ public class Cloud_userController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		Integer loginuserid = cloud_userModel.getLoginInfo().getLoginuserid();
 		Integer targetuserid = cloud_userModel.getTargetUserInfo().getTargetuserid();
 
@@ -382,6 +430,22 @@ public class Cloud_userController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// 権限チェック
 		ReturnModel returnModel = accessService.checkAddUserAccess(cloud_userModel);
 		if (!returnModel.getKey().equals(ErrorConstant.ERROR_CODE_0000)) {
@@ -466,6 +530,22 @@ public class Cloud_userController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// 権限チェック
 		ReturnModel returnModel = accessService.checkAddUserAccess(cloud_userModel);
 		if (!returnModel.getKey().equals(ErrorConstant.ERROR_CODE_0000)) {
@@ -535,6 +615,22 @@ public class Cloud_userController {
 	public BaseHttpResponse<String> deleteUser(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		// 権限チェック
 		ReturnModel returnModel = accessService.checkAddUserAccess(cloud_userModel);

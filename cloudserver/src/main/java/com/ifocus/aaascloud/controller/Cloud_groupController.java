@@ -43,6 +43,22 @@ public class Cloud_groupController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// ユーザID必須判定
 		if (null != model.getLoginInfo().getLoginusername()) {
 
@@ -89,6 +105,22 @@ public class Cloud_groupController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// ユーザID必須判定
 		if (null != model.getLoginInfo().getLoginusername()) {
 
@@ -134,6 +166,22 @@ public class Cloud_groupController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			// グループ詳細を取得する
 			Cloud_groupModel cloud_groupModel = cloud_groupService.getGroupInfo(model);
 
@@ -169,6 +217,22 @@ public class Cloud_groupController {
 	public BaseHttpResponse<String> registerGroup(@RequestBody Cloud_groupModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 			Cloud_groupModel insertedModel =  cloud_groupService.registerGroup(model);
@@ -208,6 +272,22 @@ public class Cloud_groupController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			Cloud_groupModel updatedModel =  cloud_groupService.updateGroup(model);
 
 			if (updatedModel == null) {
@@ -245,6 +325,22 @@ public class Cloud_groupController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			 cloud_groupService.deleteGroup(model.getLoginInfo(), model.getGroupid());
 
 			/* 正常系 */
@@ -273,6 +369,22 @@ public class Cloud_groupController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			 cloud_groupService.deleteGroups(model);
 
 			/* 正常系 */
@@ -299,6 +411,22 @@ public class Cloud_groupController {
 	public BaseHttpResponse<String> getGroupDevices(@RequestBody Cloud_groupModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 			// グループデバイス一覧を取得する
@@ -333,17 +461,33 @@ public class Cloud_groupController {
 	@RequestMapping(value = "/addGroupDevices", method = RequestMethod.PUT)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> addGroupDevices(@RequestBody Cloud_groupModel cloud_groupModel) throws Exception {
+	public BaseHttpResponse<String> addGroupDevices(@RequestBody Cloud_groupModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 
 			// 権限チェック
-			if (cloud_userService.checkAccessOK(cloud_groupModel.getLoginInfo().getLoginuserid(), cloud_groupModel.getTargetUserInfo().getTargetuserid())) {
+			if (cloud_userService.checkAccessOK(model.getLoginInfo().getLoginuserid(), model.getTargetUserInfo().getTargetuserid())) {
 
 				// ロジェクトのデバイスを追加する
-				cloud_groupService.addGroupDevices(cloud_groupModel);
+				cloud_groupService.addGroupDevices(model);
 
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
@@ -374,17 +518,33 @@ public class Cloud_groupController {
 	@RequestMapping(value = "/deleteGroupDevices", method = RequestMethod.PUT)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> deleteGroupDevices(@RequestBody Cloud_groupModel cloud_groupModel) throws Exception {
+	public BaseHttpResponse<String> deleteGroupDevices(@RequestBody Cloud_groupModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 
 			// 権限チェック
-			if (cloud_userService.checkAccessOK(cloud_groupModel.getLoginInfo().getLoginuserid(), cloud_groupModel.getTargetUserInfo().getTargetuserid())) {
+			if (cloud_userService.checkAccessOK(model.getLoginInfo().getLoginuserid(), model.getTargetUserInfo().getTargetuserid())) {
 
 				// グループのデバイスを削除する
-				cloud_groupService.deleteGroupDevices(cloud_groupModel);
+				cloud_groupService.deleteGroupDevices(model);
 
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0000);

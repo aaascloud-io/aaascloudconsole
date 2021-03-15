@@ -21,15 +21,19 @@ import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.model.DisplayItem;
 import com.ifocus.aaascloud.model.SettingInfo;
 import com.ifocus.aaascloud.service.AccessService;
+import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.Util;
 
 @Controller
 public class AccessController {
 
 	@Autowired
+	private Cloud_userRepository cloud_userRepository;
+
+	@Autowired
 	private AccessService accessService;
 	@Autowired
-	private Cloud_userRepository cloud_userRepository;
+	private Cloud_userService cloud_userService;
 
 	/**
 	 * アクセス権限ユーザ一覧を取得する
@@ -44,6 +48,22 @@ public class AccessController {
 	public BaseHttpResponse<String> getAccessUsers(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		AccessModel accessModel = new AccessModel();
 
@@ -95,6 +115,22 @@ public class AccessController {
 	public BaseHttpResponse<String> getAccessUsersForTrackun(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		// ユーザID必須判定
 		if (null != cloud_userModel.getUsername()) {

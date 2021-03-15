@@ -18,15 +18,19 @@ import com.ifocus.aaascloud.entity.Cloud_errresumeRepository;
 import com.ifocus.aaascloud.model.Cloud_errlogModel;
 import com.ifocus.aaascloud.model.Cloud_errresumeModel;
 import com.ifocus.aaascloud.service.Cloud_errresumeService;
+import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.Util;
 
 @Controller
 public class Cloud_errresumeController {
 
 	@Autowired
+	private Cloud_errresumeRepository cloud_errresumeRepository;
+
+	@Autowired
 	private Cloud_errresumeService cloud_errresumeService;
 	@Autowired
-	private Cloud_errresumeRepository cloud_errresumeRepository;
+	private Cloud_userService cloud_userService;
 
 	/**
 	 * エラー処理履歴一覧情報を取得する
@@ -38,17 +42,33 @@ public class Cloud_errresumeController {
 	@RequestMapping(value = "/getErrResumeList", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getErrResumeList(@RequestBody Cloud_errlogModel cloud_errlogModel) throws Exception {
+	public BaseHttpResponse<String> getErrResumeList(@RequestBody Cloud_errlogModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// ユーザID必須判定
-		if (null != cloud_errlogModel.getLoginInfo().getLoginusername()) {
+		if (null != model.getLoginInfo().getLoginusername()) {
 
 			try {
 
 				// エラー処理履歴一覧を取得する
-				List<Cloud_errresumeModel> errresumeList = cloud_errresumeService.getErrresumeList(cloud_errlogModel.getRowid());
+				List<Cloud_errresumeModel> errresumeList = cloud_errresumeService.getErrresumeList(model.getRowid());
 
 				/* 正常終了 */
 				response.setStatus(200);
@@ -88,6 +108,22 @@ public class Cloud_errresumeController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			// エラー処理履歴詳細を取得する
 			Cloud_errresumeModel errresumeDetail = cloud_errresumeService.getErrresumeInfo(model.getRowid());
 
@@ -123,6 +159,22 @@ public class Cloud_errresumeController {
 	public BaseHttpResponse<String> registerErrresume(@RequestBody Cloud_errresumeModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 
@@ -161,6 +213,22 @@ public class Cloud_errresumeController {
 	public BaseHttpResponse<String> deleteErrresume(@RequestBody Cloud_errresumeModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		Optional<Cloud_errresumeEntity> errresumeRow = cloud_errresumeRepository.findById(model.getRowid());
 

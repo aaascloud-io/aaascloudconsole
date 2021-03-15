@@ -49,6 +49,9 @@ public class LoginController {
 
 				if (model.getUserid() >= 0) {
 
+					// トークン刷新
+					cloud_userService.refreshToken(cloud_userModel.getUsername(), cloud_userModel.getAccess_token());
+
 					// 管理者情報設定
 					resJasonObj.put("loginuserid", model.getUserid());
 					resJasonObj.put("loginusername", model.getUsername());

@@ -20,10 +20,14 @@ import com.ifocus.aaascloud.model.Cloud_userModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_errlogService;
+import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.Util;
 
 @Controller
 public class Cloud_errlogController {
+
+	@Autowired
+	private Cloud_userRepository cloud_userRepository;
 
 	@Autowired
 	private AccessService accessService;
@@ -32,7 +36,7 @@ public class Cloud_errlogController {
 	@Autowired
 	private Cloud_errlogService cloud_errlogService;
 	@Autowired
-	private Cloud_userRepository cloud_userRepository;
+	private Cloud_userService cloud_userService;
 
 	/**
 	 * エラーログ一覧情報を取得する
@@ -47,6 +51,22 @@ public class Cloud_errlogController {
 	public BaseHttpResponse<String> getErrlogList(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		// ユーザID必須判定
 		if (null != cloud_userModel.getUsername()) {
