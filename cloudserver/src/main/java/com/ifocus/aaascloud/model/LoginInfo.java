@@ -14,10 +14,6 @@ public class LoginInfo {
 	private Integer loginrole;
 	private Integer loginupperuserid;
 	
-	@Getter
-	@Setter
-	private String access_token;
-
 	// トークン情報
 	private String access_token;
 }
