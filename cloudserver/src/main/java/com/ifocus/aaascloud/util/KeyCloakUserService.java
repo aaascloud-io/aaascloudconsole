@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.model.UserModel;
 
 @Component
@@ -75,5 +76,41 @@ public class KeyCloakUserService {
 		UserModel userModel = getUserModelFromUsername(username);
 
 		keyCloakAdminClient.changePassword(userModel.getUid(), newPassword);
+	}
+
+	/*
+	 * ユーザ登録
+	 * @param username String ユーザー名（CloudのログインID）
+	 * @param password String パスワード
+	 * @return String
+	 *      "0000" = 正常終了
+	 *      "0200" = ユーザがすでに存在しています。
+	 */
+	public String addUser(String username, String password) throws Exception {
+
+		// ユーザが存在する場合
+		if (isValidUsername(username)) {
+			return ErrorConstant.ERROR_CODE_0200;
+		} else {
+			try {
+				keyCloakAdminClient.addUser(username, password);
+			} catch (Exception e) {
+				throw e;
+			}
+		}
+		return ErrorConstant.ERROR_CODE_0000;
+	}
+
+	/*
+	 * ユーザ削除
+	 * @param username String ユーザー名（CloudのログインID）
+	 */
+	public void deleteUser(String username) throws Exception {
+
+		try {
+			keyCloakAdminClient.delUserByUsername(username);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 }

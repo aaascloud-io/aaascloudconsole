@@ -41,26 +41,17 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.init();
+    this.isPageLoaded = true;
+  }
+
+  init() {
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
       checkcode: ['', Validators.required]
     });
-    // Remember Me
-    // if (localStorage.getItem('remember')) {
-    //   this.renderer.removeClass(document.body, 'bg-full-screen-image');
-    //   localStorage.removeItem('currentLayoutStyle');
-    //   this.router.navigate(['/dashboard/sales']);
-    // } else if (localStorage.getItem('currentUser')) {
-    //   // Force logout on login if not remember me
-    //   this.authService.doLogout();
-    //   this.isPageLoaded = true;
-    // } else {
-    //   this.isPageLoaded = true;
-    // }
-    this.isPageLoaded = true;
     this.getCheckCode();
-
   }
 
   // convenience getter for easy access to form fields
@@ -114,16 +105,26 @@ export class LoginComponent implements OnInit {
             this.router.navigate([returnUrl]);
           } else {
             this.alertService.error("ユーザーを検索API エラー　発生しました。");
+            this.resetCheckCode();
+
+
           }
         } catch (e) {
           console.log('ユーザーを検索API エラー　発生しました。');
+          this.resetCheckCode();
           throw (e);
         }
       })
       // this.router.navigate(["/main/page/dashboard"]);
     } catch (err) {
       // this.handleError('操作失敗', err);
-      this.alertService.error(err.message);
+      if (err.status = 401) {
+        this.alertService.error('ユーザー名またはパスワードが間違っています');
+        this.resetCheckCode();
+      } else {
+        this.alertService.error('登録失敗しました');
+        this.resetCheckCode();
+      }
     }
     // //login検証
     // this.authService.doLogin(value).then(

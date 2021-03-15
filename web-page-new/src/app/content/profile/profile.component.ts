@@ -60,18 +60,19 @@ export class ProfileComponent implements OnInit {
       return;
     }
     if (this.profileForm.value.newpassword != this.profileForm.value.confirmpassword) {
-      alert('New Password Different');
+      alert('新規パスワードと新規パスワード（確認用）に同じパスワードを設定してください');
+      // this.alertService.error('新規パスワードと新規パスワード（確認用）に同じパスワードを設定してください');
       return;
     }
     try {
       //権限取得
       let item: UserInfo = this.dataFatoryService.getUserInfo();
       if (item != null) {
-      ///認証
-      await this.httpService.accessToken(
-        item.login_id,
-        this.f.password.value
-      );
+        ///認証
+        await this.httpService.accessToken(
+          item.login_id,
+          this.f.password.value
+        );
         var param = {
           "loginInfo": {
             "loginuserid": item.uid,
@@ -89,20 +90,22 @@ export class ProfileComponent implements OnInit {
         var resUser = await this.httpService.useRpPost('/updateProfile', param).then(item => {
           try {
             if (item != null) {
-              if(item.resultCode==="0000"){
+              if (item.resultCode === "0000") {
                 this.ngOnInit();
                 // $("#addinfo").hide();
                 // $('.modal-backdrop').remove();
-                alert('パスワードを変更しました');
+                alert('パスワードを変更しました、再ログインしてください');
                 this.logout();
-              }else if(item.resultCode==="0006"){
-                alert('アクセス権限取得エラー');
-              }else{
+              } else {
                 alert('パスワードを変更APIエラー発生しました');
+                //pageModel
+                this.clearControls();
               }
             }
           } catch (e) {
             console.log('パスワードを変更APIエラー発生しました');
+            //pageModel
+            this.clearControls();
           }
         })
 
@@ -110,9 +113,27 @@ export class ProfileComponent implements OnInit {
       // this.router.navigate(["/main/page/dashboard"]);
     } catch (err) {
       // this.handleError('操作失敗', err);
-      this.alertService.error(err.message);
+      if (err.status === 401) {
+        // this.alertService.error("パスワードが間違っています");
+        alert('パスワードが間違っています');
+        //pageModel
+        this.clearControls();
+      } else {
+        // this.alertService.error("パスワード変更失敗しました");
+        alert('パスワード変更失敗しました');
+        //pageModel
+        this.clearControls();
+      }
     }
 
+  }
 
+  clearControls() {
+    //pageModel
+    for (var prop in this.pageModel) {
+      if (this.pageModel.hasOwnProperty(prop)) {
+        this.pageModel[prop] = '';
+      }
+    }
   }
 }

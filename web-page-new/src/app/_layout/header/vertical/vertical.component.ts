@@ -9,6 +9,8 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { Router } from '@angular/router';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { AppConstants } from 'src/app/_helpers/app.constants';
+import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
+import { HttpService } from 'src/app/_services/HttpService';
 
 const docElmWithBrowsersFullScreenFunctions = document.documentElement as HTMLElement & {
   mozRequestFullScreen(): Promise<void>;
@@ -27,7 +29,7 @@ const docWithBrowsersExitFunctions = document as Document & {
   styleUrls: ['./vertical.component.css']
 })
 export class VerticalComponent implements OnInit, AfterViewInit {
-
+  public username: any;
   insideTm: any;
   outsideTm: any;
   private _unsubscribeAll: Subject<any>;
@@ -57,7 +59,8 @@ export class VerticalComponent implements OnInit, AfterViewInit {
     private _menuSettingsService: MenuSettingsService,
     public authService: AuthService,
     private router: Router,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private httpService: HttpService,
   ) {
     this._unsubscribeAll = new Subject();
     this._unsubscribeAllMenu = new Subject();
@@ -74,6 +77,20 @@ export class VerticalComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+
+    let item: UserInfo = this.httpService.getLoginUser();
+    var param = { "username": item.login_id };
+    this.httpService.usePost('/login', param).then(item => {
+      try {
+        if (item != null) {
+          this.username = item.fullname;
+        }
+      } catch (e) {
+        console.log('ユーザー名を検索APIエラー発生しました。');
+      }
+    })
+
+
 
     this.isMobile = window.innerWidth < AppConstants.MOBILE_RESPONSIVE_WIDTH;
     if (!this.isMobile) {

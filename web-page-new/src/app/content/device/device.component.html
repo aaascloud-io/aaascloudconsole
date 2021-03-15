@@ -44,8 +44,8 @@
                     <div class="col-xl-4 col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">会社名</label>
-                        <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname" bindValue="companyid" 
-                          [(ngModel)]="pageModel.query.companyid">
+                        <ng-select [items]="companySelectArray" [searchable]="true" bindLabel="companyname"
+                          bindValue="companyid" [(ngModel)]="pageModel.query.companyid">
                         </ng-select>
                       </div>
                     </div>
@@ -96,13 +96,12 @@
                 <table class="table grid-breakpoints">
                   <thead>
                     <tr>
-                      <th scope="col"  class="thcolor"><input type="checkbox" (change)="checkAll($event)">
+                      <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAll($event)">
                       </th>
-                      <th scope="col" style="width: 30%" class="thcolor">No.</th>
+                      <th scope="col" class="thcolor">No.</th>
+                      <th scope="col" class="thcolor">操作</th>
                       <th scope="col" class="thcolor" (click)="sortData('sn')">SN<i *ngIf="pageModel.sort.snUp"
                           class="la la-sort-up"></i><i *ngIf="pageModel.sort.snDown" class="la la-sort-down"></i></th>
-                          <th scope="col" class="thcolor" (click)="sortData('devicename')">デバイス名<i *ngIf="pageModel.sort.devicenameUp"
-                            class="la la-sort-up"></i><i *ngIf="pageModel.sort.devicenameDown" class="la la-sort-down"></i></th>
                       <th scope="col" class="thcolor" (click)="sortData('imei')">IMEI
                         <i *ngIf="pageModel.sort.imeiUp" class="la la-sort-up"></i><i *ngIf="pageModel.sort.imeiDown"
                           class="la la-sort-down"></i>
@@ -111,6 +110,9 @@
                           *ngIf="pageModel.sort.iccidUp" class="la la-sort-up"></i><i *ngIf="pageModel.sort.iccidDown"
                           class="la la-sort-down"></i></th>
                       <!-- <th scope="col" class="thcolor">状態</th> -->
+                      <th scope="col" class="thcolor" (click)="sortData('devicename')">デバイス名<i
+                          *ngIf="pageModel.sort.devicenameUp" class="la la-sort-up"></i><i
+                          *ngIf="pageModel.sort.devicenameDown" class="la la-sort-down"></i></th>
                       <th scope="col" class="thcolor" (click)="sortData('companyname')">会社名<i
                           *ngIf="pageModel.sort.companynameUp" class="la la-sort-up"></i><i
                           *ngIf="pageModel.sort.companynameDown" class="la la-sort-down"></i></th>
@@ -123,7 +125,6 @@
                       <th scope="col" class="thcolor" (click)="sortData('groupname')">グループ<i
                           *ngIf="pageModel.sort.groupnameUp" class="la la-sort-up"></i><i
                           *ngIf="pageModel.sort.groupnameDown" class="la la-sort-down"></i></th>
-                      <th scope="col" class="thcolor">操作</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -131,27 +132,34 @@
                       <td>
                         <input type="checkbox" [checked]="element.isSelected" (change)="checkChange($event,element)">
                       </td>
-                      <td>{{(page-1)*pageSize+i+1}}</td>
-                      <td>{{ element.sn }}</td>
-                      <td>{{ element.devicename }}</td>
-                      <td>{{ element.imei}}</td>
-                      <td>{{ element.sim_iccid }}</td>
-                      <!-- <td>設計中todo</td> -->
-                      <td>{{ element.companyname}}</td>
-                      <td>{{ element.productname}}</td>
-                      <td>{{ element.projectname}}</td>
-                      <td>{{ element.groupname}}</td>
-                      <td>
+                      <td nowrap>{{(page-1)*pageSize+i+1}}</td>
+                      <td nowrap>
                         <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="openEditModal(editDeviceModel, element)"><i class="la la-pencil"></i>
                         </a>
                         <a class="danger delete mr-1 mrless"><i class="la la-trash-o"
                             (click)="deleteRow(element)"></i></a>
                       </td>
+                      <td nowrap>{{ element.sn }}</td>
+                      <td nowrap>{{ element.imei}}</td>
+                      <td nowrap>{{ element.sim_iccid }}</td>
+                      <!-- <td>設計中todo</td> -->
+                      <td nowrap>{{ element.devicename }}</td>
+                      <td nowrap>{{ element.companyname}}</td>
+                      <td nowrap>{{ element.productname}}</td>
+                      <td nowrap>{{ element.projectname}}</td>
+                      <td nowrap>{{ element.groupname}}</td>
+
                     </tr>
                   </tbody>
                 </table>
                 <div class="d-flex justify-content-between p-2">
+                  <div *ngIf="dataCount === 0">{{dataCount}} 件</div>
+                  <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">{{dataCount}} 件中
+                    {{(page-1) * pageSize + 1}} ~ {{page * pageSize}} を表示</div>
+                  <div *ngIf="dataCount<pageSize*page">{{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~
+                    {{dataCount}}
+                    を表示</div>
                   <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
                   </ngb-pagination>
                   <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
@@ -172,7 +180,8 @@
 </div>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 <ng-template #editDeviceModel let-c="close" let-d="dismiss">
-  <form (ngSubmit)="editDeviceDetail(editDeviceForm,selectedDevice.deviceid,editForm)" #editDeviceForm="ngForm" #editForm>
+  <form (ngSubmit)="editDeviceDetail(editDeviceForm,selectedDevice.deviceid,editForm)" #editDeviceForm="ngForm"
+    #editForm>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel1">デバイス詳細</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -208,8 +217,8 @@
         </div> -->
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者<code>＊</code></h6>
-          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="userfullname" 
-            name="underUsers" [(ngModel)]="editUserSelected" #underUsersngname="ngModel" required>
+          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="userfullname" name="underUsers"
+            [(ngModel)]="editUserSelected" #underUsersngname="ngModel" required>
           </ng-select>
           <div *ngIf="editDeviceForm.submitted && underUsersngname.invalid" class="invalid-feedback d-block">
             <div *ngIf="underUsersngname.errors.required">所有者を選択してください</div>
@@ -236,8 +245,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
           <input type="text" [(ngModel)]="selectedDevice.sim_tel" name="sim_tel" class="phone form-control"
-          placeholder="フォーマット:xxxxxxxxxxx" (focusout)="lengthCheck(selectedDevice.sim_tel,'simtel',editForm)" maxlength="11"
-            appNumbersOnly>
+            placeholder="ハイフンなしの10桁または11桁の半角数字" maxlength="11" appNumbersOnly>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>暗号化キー</h6>
@@ -339,7 +347,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者<code>＊</code></h6>
           <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="userfullname" bindValue="userid"
-             name="username" [(ngModel)]="pageModel.deviceDetail.userid" #underusersname="ngModel" required>
+            name="username" [(ngModel)]="pageModel.deviceDetail.userid" #underusersname="ngModel" required>
           </ng-select>
           <div *ngIf="registerDeviceForm.submitted && underusersname.invalid" class="invalid-feedback d-block">
             <div *ngIf="underusersname.errors.required">所有者を入力してください</div>
@@ -348,7 +356,7 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクト<code>＊</code></h6>
           <ng-select [items]="productSelectArray" name="product" bindLabel="productname" bindValue="productid"
-            [(ngModel)]="pageModel.deviceDetail.productid" #productngname="ngModel" 
+            [(ngModel)]="pageModel.deviceDetail.productid" #productngname="ngModel"
             [ngClass]="{ 'is-invalid': registerDeviceForm.submitted && productngname.invalid }" required>
           </ng-select>
           <div *ngIf="registerDeviceForm.submitted && productngname.invalid" class="invalid-feedback d-block">
@@ -358,12 +366,12 @@
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカードIMSI</h6>
           <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_imsi" name="sim_imsi" class="form-control"
-            maxlength="20" placeholder="SIMカードIMSI" >
+            maxlength="20" placeholder="SIMカードIMSI">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>SIMカード電話番号</h6>
-          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="sim_tel" class="phone form-control"
-            placeholder="フォーマット:xxxxxxxxxxx" maxlength="11" appNumbersOnly>
+          <input type="text" [(ngModel)]="pageModel.deviceDetail.sim_tel" name="simtel" class="phone form-control"
+            placeholder="ハイフンなしの10桁または11桁の半角数字" maxlength="11" appNumbersOnly>
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>暗号化キー</h6>
@@ -390,13 +398,13 @@
           <input type="text" class="form-control" name="connectserverport" placeholder="" maxlength="4"
             [(ngModel)]="pageModel.deviceDetail.connectserverport">
         </div>
-        <div class="form-group col-lg-6 col-md-12">
+        <!-- <div class="form-group col-lg-6 col-md-12">
           <h6>バンディング済みフラグ</h6>
           <div class="float-left">
             <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" name="bindingflag"
               [(ngModel)]="pageModel.deviceDetail.bindingflagChecked"></ui-switch>
           </div>
-        </div>
+        </div> -->
 
       </div>
     </div>
@@ -425,12 +433,12 @@
     </div>
     <div class="modal-body">
       <div class="form-group col-12">
-        <i class="feather ft-download info" (click)="downloadSampleFiles()" name="sampoo">サンプルファイルをダウンロード</i>
+        <a class="feather ft-download info" (click)="downloadSampleFiles()" name="sampoo">サンプルファイルをダウンロード</a>
       </div>
       <div class="custom-file form-group col-12">
-        <input type="file" class="custom-file-input" accept='contactImage/*' (change)="changeTarget($event)"
+        <input type="file" class="custom-file-input" accept='contactImage/*' (change)="changeTarget($event,registerdevicesForm)"
           id="customFile" name="selectFile">
-        <label class="custom-file-label" name="selectFileLe">ファイルを選択</label>
+        <label class="custom-file-label" name="selectFileLe">{{OpenFileName}}</label>
       </div>
     </div>
     <div class="table-responsive form-group col-12">

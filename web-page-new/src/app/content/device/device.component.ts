@@ -27,6 +27,7 @@ export class DeviceComponent implements OnInit {
 
   selectedDevice: any;
   //page用
+  dataCount:0;
   pageSize: any;
   collectionSize: any;
   page = 1;
@@ -34,9 +35,9 @@ export class DeviceComponent implements OnInit {
   sortOn: any;
   editProductSelected: {};
   editUserSelected: {};
-editClickFlg=false;
+  editClickFlg = false;
 
-
+  OpenFileName="";
   public pageModel = {
     //Loginユーザー情報
     LoginUser: {
@@ -79,7 +80,7 @@ editClickFlg=false;
       sim_imsi: '',
       sim_tel: '',
       sim_iccid: '',
-      userid:''
+      userid: ''
     },
     deviceDetailEdit: {
       deviceid: '',
@@ -101,7 +102,7 @@ editClickFlg=false;
       sim_imsi: '',
       sim_tel: '',
       sim_iccid: '',
-      userid:''
+      userid: ''
     },
     sort: {
       snUp: false,
@@ -121,8 +122,8 @@ editClickFlg=false;
       groupnameUp: false,
       groupnameDown: false,
     },
-    checkColumn:{
-      imei:false,
+    checkColumn: {
+      imei: false,
     }
   }
 
@@ -131,7 +132,7 @@ editClickFlg=false;
   @ViewChild('registerdevicesForm') registerdevicesForm: ElementRef;
   @ViewChild('registerDeviceForm') registerDeviceForm: NgForm;
   @Output() closeModalEvent = new EventEmitter<boolean>();
-
+  @ViewChild('fileInput') fileInput: ElementRef;
   /**
    * Constructor
    *
@@ -169,6 +170,7 @@ editClickFlg=false;
         try {
           if (item != null) {
             this.pageModel.deviceList = item;
+            this.dataCount = item.length;
             this.getTabledata();
           }
         } catch (e) {
@@ -210,6 +212,7 @@ editClickFlg=false;
         try {
           if (item != null) {
             this.pageModel.deviceList = item;
+            this.dataCount = item.length;
             this.getTabledata();
           }
         } catch (e) {
@@ -254,7 +257,7 @@ editClickFlg=false;
       }
     });
 
-    
+
   }
 
   /**
@@ -300,14 +303,14 @@ editClickFlg=false;
    */
   openEditModal(editDeviceModel, row) {
     this.selectedDevice = Object.assign({}, row);
-    this.selectedDevice.sslChecked =  this.selectedDevice["encryptedcommunications"] == 0 ? false : true;
-    this.selectedDevice.bindingflagChecked =  this.selectedDevice["bindingflag"] == 0 ? false : true;
+    this.selectedDevice.sslChecked = this.selectedDevice["encryptedcommunications"] == 0 ? false : true;
+    this.selectedDevice.bindingflagChecked = this.selectedDevice["bindingflag"] == 0 ? false : true;
     this.editModal = this.modal.open(editDeviceModel, {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
-    this.editProductSelected= row;
-    this.editUserSelected= row;
+    this.editProductSelected = row;
+    this.editUserSelected = row;
   }
 
   /**
@@ -317,12 +320,11 @@ editClickFlg=false;
    */
   registerDeviceDetail(addDeviceForm: NgForm, registerForm: ElementRef) {
     if (this.pageModel.deviceDetail.sn == '' || this.pageModel.deviceDetail.imei == '' || this.pageModel.deviceDetail.productid == '') {
-      alert("必須項目を入力してください。");
       return;
     }
     //tel number 位数チェック　 value, name, templateForm: ElementRef
-    if (this.pageModel.deviceDetail.sim_tel.length > 0 && this.pageModel.deviceDetail.sim_tel.length < 11) {
-      alert("Tel Numberを11桁を入力してください。");
+    if (this.pageModel.deviceDetail.sim_tel.length > 0 && this.pageModel.deviceDetail.sim_tel.length < 10) {
+      alert("SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
       this.setFocus('simtel', registerForm)
       return;
     }
@@ -363,18 +365,18 @@ editClickFlg=false;
               this.Init();
             } else if (item.resultCode == "0002") {
               alert('権限ないです、登録失敗しました');
-            } else if (item.resultCode == "0100") {
-              alert('登録失敗しました');
-            } else {
-              this.setFocus(item.resultCode, registerForm)
+            }else if (item.resultCode == "0003") {
+              this.setFocus(item.resultData, registerForm)
               alert(item.resultMsg);
+            }else{
+              alert('登録失敗しました');
             }
           }
         } catch (e) {
           console.log(e);
         }
       });
-    }else{
+    } else {
       addDeviceForm.reset();
       this.addModal.close(addDeviceForm.resetForm);
     }
@@ -387,14 +389,18 @@ editClickFlg=false;
  * @param deviceid      Id match to the selected row Id
  * 
  */
-  editDeviceDetail(editDeviceForm: NgForm, deviceid,editForm: ElementRef) {
+  editDeviceDetail(editDeviceForm: NgForm, deviceid, editForm: ElementRef) {
+    if (this.editProductSelected["productid"] == null || this.editUserSelected["userid"] == null) {
+      return;
+    }
 
-    if (this.editProductSelected["productid"] == null) {
-      return;
-    }
-    if (this.editUserSelected["userid"] == null) {
-      return;
-    }
+        //tel number 位数チェック　 value, name, templateForm: ElementRef
+        if (this.selectedDevice['sim_tel'].length > 0 && this.selectedDevice['sim_tel'].length < 10) {
+          alert("SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
+          this.setFocus('simtel', editForm)
+          return;
+        }
+
     let routeif: UserInfo = this.httpService.getLoginUser();
     if (routeif != null) {
       this.pageModel.deviceDetailEdit.deviceid = deviceid
@@ -442,19 +448,21 @@ editClickFlg=false;
                 this.pageModel.deviceDetailEdit[prop] = '';
               }
             }
-          }else if(item.resultCode == "0002"){
+          } else if (item.resultCode == "0002") {
             alert('権限なし');
-          }else if(item.resultCode == "0101"){
+          } else if (item.resultCode == "0101") {
             alert('更新失敗しました。');
-          } else {
+          } else if(item.resultCode == "0003"){
             this.setFocus(item.resultCode, editForm)
             alert(item.resultMsg);
+          }else{
+            alert('更新失敗しました。');
           }
         } catch (e) {
           console.log(e);
         }
       });
-    }else{
+    } else {
       editDeviceForm.reset();
       this.editModal.close(editDeviceForm.resetForm);
     }
@@ -465,7 +473,7 @@ editClickFlg=false;
  *
  * @param addExeclForm     Add contact form
  */
-  registerDevices(addExeclForm: NgForm,registerdevicesForm:ElementRef) {
+  registerDevices(addExeclForm: NgForm, registerdevicesForm: ElementRef) {
     let routeif: UserInfo = this.httpService.getLoginUser();
     if (routeif != null) {
       var param = {
@@ -497,13 +505,17 @@ editClickFlg=false;
             addExeclForm.reset();
             this.addModal.close(addExeclForm.resetForm);
           }
-        }else if(item.resultCode == "0002"){
-          alert('権限なし');
-        }else if(item.resultCode == "0007"){
-          alert(item.resultMsg+"重複チェックエラー発生しました、エラーデータを参考して添付ファイルを修正ください。");
+        } else if (item.resultCode == "0002") {
+          alert(item.resultMsg);
+          this.pageModel.addDeviceDetailList = JSON.parse(item.data);
+        } else if (item.resultCode == "0003") {
+          alert(item.resultMsg + " エラーデータを参考して添付ファイルを修正ください。");
           // this.pageModel.checkColumn[item.resultMsg] = true;
-          this.pageModel.addDeviceDetailList=JSON.parse(item.data);
+          this.pageModel.addDeviceDetailList = JSON.parse(item.data);
           // this.setUnavailable("deviceSubmit", registerdevicesForm)
+        }else if(item.resultCode == "0007"){
+          alert(item.resultMsg);
+          this.pageModel.addDeviceDetailList = JSON.parse(item.data);
         }
       } catch (e) {
         console.log(e);
@@ -539,7 +551,7 @@ editClickFlg=false;
               // $("#addinfo").hide();
               // $('.modal-backdrop').remove();
               alert('デバイスを削除しました');
-            }else{
+            } else {
               alert('権限なし');
             }
           } catch (e) {
@@ -589,7 +601,7 @@ editClickFlg=false;
             if (item.resultCode == "0000") {
               alert('選択したデバイスを削除しました');
               this.Init();
-            }else {
+            } else {
               alert('権限なし');
             }
           } catch (e) {
@@ -624,9 +636,11 @@ editClickFlg=false;
    * 
    * @param event 
    */
-  protected async changeTarget(event) {
+  protected async changeTarget(event,fileInput: ElementRef){
+    // fileInput.nativeElement.value = '';
     var obj = this;
     var file = event.target.files[0];
+    this.OpenFileName=file.name;
     // Logger.info(this, `got target file. name:[${file.name}]`);
     if (file) {
       var reader = new FileReader();

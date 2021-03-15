@@ -6,47 +6,60 @@
         <div class="content-body">
             <section class="flexbox-container">
                 <div class="card-content">
-                    <div class="col-lg-6 col-md-12">
+                    <div class="col-lg-8 col-md-12">
                         <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1">
                             <span>パスワード変更</span>
                         </p>
                     </div>
                     <div class="card-body">
-                        <form class="form-horizontal col-lg-6 col-md-12" [formGroup]="profileForm" (ngSubmit)="tryRegister()">
-                            <fieldset class="form-group position-relative has-icon-left">
-                                <input type="password" formControlName="password" class="form-control"
-                                    [ngClass]="{ 'is-invalid': submitted && f.password.errors }" id="password"
-                                    placeholder="元のパスワード" required>
-                                <div class="form-control-position">
-                                    <i class="la la-key"></i>
-                                </div>
-                                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                                    <div *ngIf="f.password.errors.required">元のパスワードを入力してください</div>
-                                    <div *ngIf="f.password.errors.minlength">パスワードを6桁以上入力してください</div>
-                                </div>
-                            </fieldset>
-                            <fieldset class="form-group position-relative has-icon-left">
-                                <input type="password" formControlName="newpassword" class="form-control"
-                                    [ngClass]="{ 'is-invalid': submitted && f.newpassword.errors }" id="newpassword"
-                                    placeholder="新規パスワード" required>
-                                <div class="form-control-position">
-                                    <i class="la la-key"></i>
-                                </div>
-                                <div *ngIf="submitted && f.newpassword.errors" class="invalid-feedback">
-                                    <div *ngIf="f.newpassword.errors.required">新規パスワードを入力してください</div>
-                                    <div *ngIf="f.newpassword.errors.minlength">パスワードを6桁以上入力してください</div>
+                        <form class="form-horizontal col-lg-8 col-md-12" [formGroup]="profileForm"
+                            (ngSubmit)="tryRegister()">
+                            <fieldset class="form-group position-relative ">
+                                <div class="row">
+                                    <div class="form-group col-lg-4 col-md-12">
+                                        <label for="password">元のパスワード<code>＊</code>:</label>
+                                    </div>
+                                    <div class="form-group col-lg-8 col-md-12">
+                                        <input type="password" formControlName="password" class="form-control"
+                                            id="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+                                            required>
+                                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                            <div *ngIf="f.password.errors.required">元のパスワードを入力してください</div>
+                                            <div *ngIf="f.password.errors.minlength">パスワードを6桁以上入力してください</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </fieldset>
-                            <fieldset class="form-group position-relative has-icon-left">
-                                <input type="password" formControlName="confirmpassword" class="form-control"
-                                    [ngClass]="{ 'is-invalid': submitted && f.confirmpassword.errors  }" id="confirmpassword"
-                                    placeholder="新規パスワード(確認用)" required>
-                                <div class="form-control-position">
-                                    <i class="la la-key"></i>
+                            <fieldset class="form-group position-relative ">
+                                <div class="row">
+                                    <div class="form-group col-lg-4 col-md-12">
+                                        <label for="">新規パスワード<code>＊</code>:</label>
+                                    </div>
+                                    <div class="form-group col-lg-8 col-md-12">
+                                        <input type="password" formControlName="newpassword" class="form-control"
+                                        [ngClass]="{ 'is-invalid': submitted && f.newpassword.errors }" id="newpassword"
+                                        placeholder="" required>
+                                    <div *ngIf="submitted && f.newpassword.errors" class="invalid-feedback">
+                                        <div *ngIf="f.newpassword.errors.required">新規パスワードを入力してください</div>
+                                        <div *ngIf="f.newpassword.errors.minlength">パスワードを6桁以上入力してください</div>
+                                    </div>
+                                    </div>
                                 </div>
-                                <div *ngIf="submitted && f.confirmpassword.errors" class="invalid-feedback">
-                                    <div *ngIf="f.confirmpassword.errors.required">新規パスワード(確認用)を入力してください</div>
-                                    <div *ngIf="f.confirmpassword.errors.minlength">パスワードを6桁以上入力してください</div>
+                            </fieldset>
+                            <fieldset class="form-group position-relative ">
+                                <div class="row">
+                                    <div class="form-group col-lg-4 col-md-12">
+                                        <label for="">新規パスワード(確認用)<code>＊</code>:</label>
+                                    </div>
+                                    <div class="form-group col-lg-8 col-md-12">
+                                        <input type="password" formControlName="confirmpassword" class="form-control"
+                                        [ngClass]="{ 'is-invalid': submitted && f.confirmpassword.errors  }"
+                                        id="confirmpassword" placeholder=""required>
+                                    <div *ngIf="submitted && f.confirmpassword.errors" class="invalid-feedback">
+                                        <div *ngIf="f.confirmpassword.errors.required">新規パスワード(確認用)を入力してください</div>
+                                        <div *ngIf="f.confirmpassword.errors.minlength">パスワードを6桁以上入力してください</div>
+                                    </div>
+                                    </div>
                                 </div>
                             </fieldset>
                             <div class="modal-footer">

@@ -43,6 +43,7 @@ export class HttpService {
     }
 
     usePost(path: string, data: any): Promise<any> {
+        data.access_token= ConstantsHandler.TOKEN.access_token;
         return this._http.post(this.baseService.getPath(path), JSON.stringify(data), this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {

@@ -32,8 +32,12 @@ public class ErrorConstant {
 	public static final String ERROR_CODE_0103 = "0103";
 	public static final String ERROR_CODE_0104 = "0104";
 
+	public static final String ERROR_CODE_0200 = "0200";
+	public static final String ERROR_CODE_0201 = "0201";
+
+
 	public static final String ERROR_CODE_9999 = "9999";
-	
+
 	public static final String ERROR_CODE_IMEI = "imei";
 	public static final String ERROR_CODE_SN = "sn";
 	public static final String ERROR_CODE_SIMIMSI = "sim_imsi";
@@ -57,15 +61,23 @@ public class ErrorConstant {
 	public static final String ERROR_MSG_0012 = "権限なし：自社ユーザ新規の場合、管理者権限が必要です。";
 	public static final String ERROR_MSG_0013 = "権限なし：管理者を追加するには、上位会社に依頼してください。";
 
-	public static final String ERROR_MSG_0021 = "IMEI重複チェックエラー";
-	public static final String ERROR_MSG_0022 = "SN重複チェックエラー";
-	public static final String ERROR_MSG_0023 = "SIM_IMSI重複チェックエラー";
-	public static final String ERROR_MSG_0024 = "SIM_ICCID重複チェックエラー";
-	public static final String ERROR_MSG_0025 = "SIM_TEL重複チェックエラー";
+	public static final String ERROR_MSG_IMEI = "IMEI既に存在しています";
+	public static final String ERROR_MSG_SN = "SN既に存在しています";
+	public static final String ERROR_MSG_SIMIMSI = "SIMカードIMSI既に存在しています";
+	public static final String ERROR_MSG_SIMICCID = "SIMカードICCID既に存在しています";
+	public static final String ERROR_MSG_SIMTEL = "SIMカード電話番号既に存在しています";
+	public static final String ERROR_MSG_PRODUCT = "プロダクト存在いません";
+	public static final String ERROR_MSG_PROJECT = "プロジェクト存在いません";
+	public static final String ERROR_MSG_GROUP = "グループ存在いません";
+	public static final String ERROR_MSG_USER_ACCESS = "上位管理者にデバイスを登録できません、登録不可のデータを一覧に表示します、そのデータを参考して添付ファイルを修正してください。";
+	
 
 	public static final String ERROR_MSG_0100 = "登録失敗：";
 	public static final String ERROR_MSG_0101 = "更新失敗：";
 	public static final String ERROR_MSG_0102 = "削除失敗:";
+
+	public static final String ERROR_MSG_0200 = "ユーザがすでに存在しています。";
+	public static final String ERROR_MSG_0201 = "";
 
 	public static final String ERROR_MSG_9999 = "システムエラー:";
 }
