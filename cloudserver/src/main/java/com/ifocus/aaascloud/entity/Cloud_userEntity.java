@@ -25,6 +25,7 @@ public class Cloud_userEntity {
 	private String email;
 	private Integer role;
 	private Integer upperuserid;
+	private String token;
 	private Integer alive;
 	private Integer i_uid;
 	private Timestamp i_time;

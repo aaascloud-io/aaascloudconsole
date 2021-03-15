@@ -35,6 +35,7 @@ public class ErrorConstant {
 	public static final String ERROR_CODE_0200 = "0200";
 	public static final String ERROR_CODE_0201 = "0201";
 
+	public static final String ERROR_CODE_0300 = "0300";
 
 	public static final String ERROR_CODE_9999 = "9999";
 
@@ -70,7 +71,7 @@ public class ErrorConstant {
 	public static final String ERROR_MSG_PROJECT = "プロジェクト存在いません";
 	public static final String ERROR_MSG_GROUP = "グループ存在いません";
 	public static final String ERROR_MSG_USER_ACCESS = "上位管理者にデバイスを登録できません、登録不可のデータを一覧に表示します、そのデータを参考して添付ファイルを修正してください。";
-	
+
 
 	public static final String ERROR_MSG_0100 = "登録失敗：";
 	public static final String ERROR_MSG_0101 = "更新失敗：";
@@ -78,6 +79,8 @@ public class ErrorConstant {
 
 	public static final String ERROR_MSG_0200 = "ユーザがすでに存在しています。";
 	public static final String ERROR_MSG_0201 = "";
+
+	public static final String ERROR_MSG_0300 = "トークン認証エラー。";
 
 	public static final String ERROR_MSG_9999 = "システムエラー:";
 }
