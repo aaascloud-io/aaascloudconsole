@@ -57,6 +57,64 @@ public class Cloud_userService {
 	}
 
 	/*
+	 * トークン刷新
+	 * @param username String ユーザ名
+	 * @return Cloud_userModel ログインユーザー情報モデル
+	 *
+	 */
+	public void refreshToken(String username, String token) throws Exception {
+		// ログインユーザ取得
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername(username);
+		loginUserEntity.setToken(token);
+		loginUserEntity.setU_uid(loginUserEntity.getUserid());
+		loginUserEntity.setU_time(new Timestamp(System.currentTimeMillis()));
+
+		return ;
+	}
+
+	/*
+	 * トークンクリア
+	 * @param username String ユーザ名
+	 * @return Cloud_userModel ログインユーザー情報モデル
+	 *
+	 */
+	public void clearToken(String username) throws Exception {
+		// ログインユーザ取得
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername(username);
+		loginUserEntity.setToken("");
+		loginUserEntity.setU_uid(loginUserEntity.getUserid());
+		loginUserEntity.setU_time(new Timestamp(System.currentTimeMillis()));
+
+		return ;
+	}
+
+	/*
+	 * トークン認証
+	 * @param loginInfo LoginInfo ログインユーザー情報
+	 * @return boolean 認証結果
+	 *        true  = OK
+	 *        false = NG
+	 *
+	 */
+	public boolean checkToken(LoginInfo loginInfo) throws Exception {
+
+		try {
+			if (loginInfo.getAccess_token() == null || loginInfo.getAccess_token().isEmpty()) {
+				return false;
+			}
+			Cloud_userEntity user = cloud_userRepository.findByToken(loginInfo.getAccess_token());
+			if (user != null && user.getUsername().equals(loginInfo.getLoginusername())) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+
+	}
+
+	/*
 	 * アクセス権限チェック
 	 *
 	 *
@@ -278,6 +336,7 @@ public class Cloud_userService {
 		entity.setEmail(model.getEmail());
 		entity.setRole(model.getRole());
 		entity.setUpperuserid(model.getTargetUserInfo().getTargetuserid());
+		entity.setToken("");
 		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);

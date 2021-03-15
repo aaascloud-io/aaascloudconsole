@@ -14,12 +14,15 @@ import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.model.Cloud_versionModel;
 import com.ifocus.aaascloud.service.AccessService;
+import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.service.Cloud_versionService;
 import com.ifocus.aaascloud.util.Util;
 
 @Controller
 public class Cloud_versionController {
 
+	@Autowired
+	private Cloud_userService cloud_userService;
 	@Autowired
 	private AccessService accessService;
 	@Autowired
@@ -38,6 +41,22 @@ public class Cloud_versionController {
 	public BaseHttpResponse<String> getAllVersions(@RequestBody Cloud_versionModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		// OEM権限チェック
 		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
@@ -94,6 +113,22 @@ public class Cloud_versionController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// OEM権限チェック
 		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
 			response.setStatus(200);
@@ -148,6 +183,22 @@ public class Cloud_versionController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			// バージョン詳細を取得する
 			Cloud_versionModel cloud_versionModel = cloud_versionService.getVersioninInfo(model);
 
@@ -183,6 +234,22 @@ public class Cloud_versionController {
 	public BaseHttpResponse<String> registerVersion(@RequestBody Cloud_versionModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		// OEM権限チェック
 		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
@@ -229,6 +296,22 @@ public class Cloud_versionController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// OEM権限チェック
 		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
 			response.setStatus(200);
@@ -274,6 +357,22 @@ public class Cloud_versionController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// OEM権限チェック
 		if (!accessService.checkOEMAccess(model.getLoginInfo())) {
 			response.setStatus(200);
@@ -309,6 +408,22 @@ public class Cloud_versionController {
 	public BaseHttpResponse<String> deleteVersions(@RequestBody Cloud_versionModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		// OEM権限チェック
 		if (!accessService.checkOEMAccess(model.getLoginInfo())) {

@@ -17,7 +17,7 @@ import com.ifocus.aaascloud.service.Cloud_userService;
 import net.sf.json.JSONObject;
 
 @Controller
-public class LoginController {
+public class LogoutController {
 
 	@Autowired
 	private Cloud_userService cloud_userService;
@@ -25,68 +25,51 @@ public class LoginController {
 	private Cloud_companyService cloud_companyService;
 
 	/**
-	 * ログイン認証
+	 * ログアウト
 	 * @param cloud_userModel Cloud_userModel
 	 *         loginId
 	 *         password
 	 * @return BaseHttpResponse<String> JSON形式
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> login(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
+	public BaseHttpResponse<String> logout(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		JSONObject resJasonObj = new JSONObject();
 
 		if (null != cloud_userModel.getUsername()) {
 
 			try {
-				// ログイン認証
-				Cloud_userModel model = cloud_userService.login(cloud_userModel.getUsername());
 
-				if (model.getUserid() >= 0) {
-
-					// トークン刷新
-					cloud_userService.refreshToken(cloud_userModel.getUsername(), cloud_userModel.getAccess_token());
-
-					// 管理者情報設定
-					resJasonObj.put("loginuserid", model.getUserid());
-					resJasonObj.put("loginusername", model.getUsername());
-					resJasonObj.put("logincompanyid", model.getCompanyid());
-					resJasonObj.put("loginrole", model.getRole());
-					resJasonObj.put("loginupperuserid", model.getUpperuserid());
-					resJasonObj.put("fullname", model.getFullName());
-//					// 会社情報取得
-//					Cloud_companyModel cloud_companyModel = cloud_companyService.getCompanyInfo(model.getCompanyid());
-//
-//					// 会社情報設定
-//					resJasonObj.put("companyname", cloud_companyModel.getCompanyname());
-//					resJasonObj.put("address", cloud_companyModel.getAddress());
-//					resJasonObj.put("industry", cloud_companyModel.getIndustry());
-//					resJasonObj.put("mail", cloud_companyModel.getMail());
-//					resJasonObj.put("tel", cloud_companyModel.getTel());
-//					resJasonObj.put("fax", cloud_companyModel.getFax());
-//					resJasonObj.put("level", cloud_companyModel.getLevel());
-
-					resJasonObj.put("result", true);
-
-				} else {
-
-					/* 異常系 */
-					response.setStatus(200);
-					response.setResultCode(ErrorConstant.ERROR_CODE_0005);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0005 + "login:");
-					return response;
-				}
+				// トークンクリア
+				cloud_userService.clearToken(cloud_userModel.getLoginInfo().getLoginusername());
+				resJasonObj.put("result", true);
 
 			} catch (Exception e) {
 				/* 異常系 */
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0005);
-				response.setResultMsg(ErrorConstant.ERROR_MSG_0005 + "login:" + e.getMessage());
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0005 + "logout:" + e.getMessage());
 				return response;
 			}
 

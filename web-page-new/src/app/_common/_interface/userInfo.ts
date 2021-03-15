@@ -5,4 +5,6 @@ export interface UserInfo{
 	company:string;
 	role:number;
 	upperuserid:string;
+	access_token:string;
+	fullname:string;
 }

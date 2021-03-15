@@ -43,6 +43,22 @@ public class Cloud_projectController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_projectModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
 
@@ -85,6 +101,22 @@ public class Cloud_projectController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_projectModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
 
@@ -125,6 +157,22 @@ public class Cloud_projectController {
 	public BaseHttpResponse<String> getProject(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_projectModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 
@@ -187,6 +235,22 @@ public class Cloud_projectController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_projectDetailModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_projectDetailModel.getLoginInfo().getLoginuserid(), cloud_projectDetailModel.getTargetUserInfo().getTargetuserid())) {
@@ -243,6 +307,22 @@ public class Cloud_projectController {
 	public BaseHttpResponse<String> updateProject(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_projectDetailModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 
@@ -303,6 +383,22 @@ public class Cloud_projectController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_projectDetailModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_projectDetailModel.getLoginInfo().getLoginuserid(), cloud_projectDetailModel.getTargetUserInfo().getTargetuserid())) {
@@ -342,6 +438,22 @@ public class Cloud_projectController {
 	public BaseHttpResponse<String> deleteProjectDevices(@RequestBody Cloud_projectDetailModel cloud_projectDetailModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_projectDetailModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 
@@ -384,6 +496,22 @@ public class Cloud_projectController {
 	public BaseHttpResponse<String> deleteProject(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_projectModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 
@@ -436,6 +564,22 @@ public class Cloud_projectController {
 	public BaseHttpResponse<String> deleteProjects(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_projectModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 

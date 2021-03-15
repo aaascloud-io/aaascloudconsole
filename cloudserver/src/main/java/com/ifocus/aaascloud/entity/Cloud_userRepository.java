@@ -17,6 +17,16 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	public Cloud_userEntity findByUsername(@Param("username") String username);
 
 	/*
+	 * ユーザ取得
+	 *
+	 *
+	 */
+	@Query(value = "SELECT u.* "
+			+ " FROM cloud_user u "
+			+ " WHERE u.token = :token ", nativeQuery = true)
+	public Cloud_userEntity findByToken(@Param("token") String token);
+
+	/*
 	 * ユーザ一覧
 	 *
 	 *

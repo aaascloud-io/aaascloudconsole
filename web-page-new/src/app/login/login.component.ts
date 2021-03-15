@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
 
     try {
       ///認証
-      await this.httpService.accessToken(
+    var resToken =  await this.httpService.accessToken(
         this.f.email.value,
         this.f.password.value
       );
@@ -89,7 +89,11 @@ export class LoginComponent implements OnInit {
       ///自身の情報取得
       // var res = await this.userService.getMyInfo().toPromise();
 
-      var param = { "username": this.f.email.value };
+      var param = { 
+        "username": this.f.email.value ,
+        "access_token":resToken["access_token"]
+      };
+
       var resUser = await this.httpService.usePost('/login', param).then(item => {
         try {
           if (item != null) {

@@ -46,6 +46,22 @@ public class Cloud_deviceController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// 必須チェック
 		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
 
@@ -110,43 +126,38 @@ public class Cloud_deviceController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// 必須チェック
-		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
+		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid()) {
 
 			List<Cloud_deviceModel> list = new ArrayList<Cloud_deviceModel>();
 			// アクセスユーザ一覧取得
 			List<Integer> accessUserlist = accessService.getAccessUsers(cloud_deviceModel.getLoginInfo().getLoginuserid());
 
-			if (cloud_deviceModel.getLoginInfo().getLoginuserid().equals(cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
-				try {
+			try {
 
-					list = cloud_deviceService.getUnderUserDevices(cloud_deviceModel, accessUserlist);
-				} catch (Exception e) {
-					/* 異常系 */
-					response.setStatus(200);
-					response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevices:" + e.getMessage());
-					return response;
-				}
-			} else {
-				// 権限判断
-				if (cloud_userService.isAncestor(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
-					try {
-						list = cloud_deviceService.getUnderUserDevices(cloud_deviceModel, accessUserlist);
-					} catch (Exception e) {
-						/* 異常系 */
-						response.setStatus(200);
-						response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-						response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevices:" + e.getMessage());
-						return response;
-					}
-				} else {
-					/* 異常系 */
-					response.setStatus(200);
-					response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "cloud_userService.isAncestor");
-					return response;
-				}
+				list = cloud_deviceService.getUnderUserDevices(cloud_deviceModel, accessUserlist);
+			} catch (Exception e) {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevices:" + e.getMessage());
+				return response;
 			}
 
 			response.setStatus(200);
@@ -178,44 +189,40 @@ public class Cloud_deviceController {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
 		// 必須チェック
-		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
+		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid()) {
 
 			// アクセスユーザ一覧取得
 			List<Integer> accessUserlist = accessService.getAccessUsers(cloud_deviceModel.getLoginInfo().getLoginuserid());
 
 			List<Cloud_deviceModel> list = new ArrayList<Cloud_deviceModel>();
-			if (cloud_deviceModel.getLoginInfo().getLoginuserid().equals(cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
-				try {
-					list = cloud_deviceService.getUnderUserDevicesByConditions(cloud_deviceModel, accessUserlist);
-				} catch (Exception e) {
-					/* 異常系 */
-					response.setStatus(200);
-					response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevicesByConditions:" + e.getMessage());
-					return response;
-				}
-			} else {
-				// 権限判断
-				if (cloud_userService.isAncestor(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
-					try {
-						list = cloud_deviceService.getUnderUserDevicesByConditions(cloud_deviceModel, accessUserlist);
-					} catch (Exception e) {
-						/* 異常系 */
-						response.setStatus(200);
-						response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-						response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevicesByConditions:" + e.getMessage());
-						return response;
-					}
-				} else {
-					/* 異常系 */
-					response.setStatus(200);
-					response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "cloud_userService.isAncestor");
-					return response;
-				}
-			}
 
+			try {
+				list = cloud_deviceService.getUnderUserDevicesByConditions(cloud_deviceModel, accessUserlist);
+			} catch (Exception e) {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevicesByConditions:" + e.getMessage());
+				return response;
+			}
+			
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
@@ -244,6 +251,22 @@ public class Cloud_deviceController {
 	public BaseHttpResponse<String> searchCompanyDevices(@RequestBody Cloud_deviceModel cloud_deviceModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		// 必須チェック
 		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
@@ -308,6 +331,22 @@ public class Cloud_deviceController {
 	public BaseHttpResponse<String> getMySelectableDevices(@RequestBody Cloud_deviceModel cloud_deviceModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		// 必須チェック
 		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
@@ -374,6 +413,22 @@ public class Cloud_deviceController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
@@ -421,6 +476,22 @@ public class Cloud_deviceController {
 	public BaseHttpResponse<String> registerDevice(@RequestBody Cloud_deviceModel cloud_deviceModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 
@@ -578,6 +649,22 @@ public class Cloud_deviceController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
@@ -672,7 +759,7 @@ public class Cloud_deviceController {
 					response.setData(Util.getJsonString(sim_iccidErrorList));
 					return response;
 				}
-				
+
 				// SIM_IMSI存在チェックを行う
 				List<Cloud_deviceDetailModel> sim_imsiErrorList = cloud_deviceService.checkSim_imsiExistedInDB(cloud_deviceModel);
 				// DBにすでに存在した場合、
@@ -751,6 +838,22 @@ public class Cloud_deviceController {
 	public BaseHttpResponse<String> checkDevices(@RequestBody Cloud_deviceModel cloud_deviceModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 
@@ -857,6 +960,22 @@ public class Cloud_deviceController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
@@ -881,7 +1000,7 @@ public class Cloud_deviceController {
 						return response;
 					}
 				}
-				
+
 				if (cloud_deviceModel.getDeviceDetail().getSim_imsi() != null && !cloud_deviceModel.getDeviceDetail().getSim_imsi().equals(oldDevice.getSim_imsi())) {
 
 
@@ -969,6 +1088,22 @@ public class Cloud_deviceController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
@@ -1020,6 +1155,22 @@ public class Cloud_deviceController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 
 			// 権限チェック
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
@@ -1069,6 +1220,22 @@ public class Cloud_deviceController {
 	public BaseHttpResponse<String> deleteAllCompanyDevices(@RequestBody Cloud_deviceModel cloud_deviceModel) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_deviceModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 

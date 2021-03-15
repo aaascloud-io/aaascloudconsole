@@ -15,6 +15,7 @@ import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.service.Cloud_companyService;
+import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.Util;
 
 @Controller
@@ -22,6 +23,8 @@ public class Cloud_companyController {
 
 	@Autowired
 	private Cloud_companyService cloud_companyService;
+	@Autowired
+	private Cloud_userService cloud_userService;
 
 	/**
 	 * 配下会社一覧を取得する
@@ -35,6 +38,22 @@ public class Cloud_companyController {
 	public BaseHttpResponse<String> getUnderCompanies(@RequestBody LoginInfo loginInfo) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(loginInfo)) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 			List<Cloud_companyModel> list = cloud_companyService.getUnderCompanies(loginInfo.getLoginuserid());
@@ -54,7 +73,7 @@ public class Cloud_companyController {
 
 		return response;
 	}
-	
+
 	/**
 	 * 配下会社一覧を取得する(本社と一層子会社)
 	 * @param json
@@ -67,6 +86,22 @@ public class Cloud_companyController {
 	public BaseHttpResponse<String> getMyUnderCompanies(@RequestBody LoginInfo loginInfo) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(loginInfo)) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 			List<Cloud_companyModel> list = cloud_companyService.getMyUnderCompanies(loginInfo.getLoginuserid());

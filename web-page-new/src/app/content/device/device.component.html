@@ -436,7 +436,7 @@
         <a class="feather ft-download info" (click)="downloadSampleFiles()" name="sampoo">サンプルファイルをダウンロード</a>
       </div>
       <div class="custom-file form-group col-12">
-        <input type="file" class="custom-file-input" accept='contactImage/*' (change)="changeTarget($event,registerdevicesForm)"
+        <input type="file" class="custom-file-input" accept='contactImage/*' onclick="this.value = null" (change)="changeTarget($event)"
           id="customFile" name="selectFile">
         <label class="custom-file-label" name="selectFileLe">{{OpenFileName}}</label>
       </div>

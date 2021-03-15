@@ -20,6 +20,7 @@ import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_productService;
+import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.Util;
 
 @Controller
@@ -31,6 +32,8 @@ public class Cloud_productController {
 	private Cloud_productService cloud_productService;
 	@Autowired
 	private Cloud_productRepository cloud_productRepository;
+	@Autowired
+	private Cloud_userService cloud_userService;
 
 	/**
 	 * プロダクト一覧を取得する
@@ -43,6 +46,22 @@ public class Cloud_productController {
 	public BaseHttpResponse<String> getProductAll(@RequestBody Cloud_productModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 			// アクセス権限ユーザ一覧を取得する
@@ -78,6 +97,22 @@ public class Cloud_productController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			// アクセス権限ユーザ一覧を取得する
 			List<Integer> useridlist = accessService.getAccessUsers(model.getLoginInfo().getLoginuserid());
 			// マイプロダクトを検索する
@@ -109,6 +144,22 @@ public class Cloud_productController {
 	public BaseHttpResponse<String> getProductDetail(@RequestBody Cloud_productModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 			// プロダクト詳細を取得する
@@ -148,6 +199,22 @@ public class Cloud_productController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			Cloud_productEntity inserEntity = getCloud_productEntity(model);
 
 			Cloud_productEntity insertedEntity =  cloud_productService.registerProduct(inserEntity);
@@ -185,6 +252,22 @@ public class Cloud_productController {
 	public BaseHttpResponse<String> updateProduct(@RequestBody Cloud_productModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 
@@ -239,6 +322,22 @@ public class Cloud_productController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
 			/* 削除するため、productidを設定する */
 			if (model.getProductid() == null) {
 				/* 異常系 */
@@ -275,6 +374,22 @@ public class Cloud_productController {
 	public BaseHttpResponse<String> deleteProducts(@RequestBody Cloud_productModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
 
 		try {
 			/* 一括削除する */
