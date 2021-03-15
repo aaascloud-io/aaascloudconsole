@@ -24,5 +24,9 @@ public class LoginInfo {
 	@Getter
 	@Setter
 	private Integer loginupperuserid;
+	
+	@Getter
+	@Setter
+	private String access_token;
 
 }

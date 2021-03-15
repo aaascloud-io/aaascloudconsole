@@ -111,42 +111,21 @@ public class Cloud_deviceController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		// 必須チェック
-		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
+		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid()) {
 
 			List<Cloud_deviceModel> list = new ArrayList<Cloud_deviceModel>();
 			// アクセスユーザ一覧取得
 			List<Integer> accessUserlist = accessService.getAccessUsers(cloud_deviceModel.getLoginInfo().getLoginuserid());
 
-			if (cloud_deviceModel.getLoginInfo().getLoginuserid().equals(cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
-				try {
+			try {
 
-					list = cloud_deviceService.getUnderUserDevices(cloud_deviceModel, accessUserlist);
-				} catch (Exception e) {
-					/* 異常系 */
-					response.setStatus(200);
-					response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevices:" + e.getMessage());
-					return response;
-				}
-			} else {
-				// 権限判断
-				if (cloud_userService.isAncestor(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
-					try {
-						list = cloud_deviceService.getUnderUserDevices(cloud_deviceModel, accessUserlist);
-					} catch (Exception e) {
-						/* 異常系 */
-						response.setStatus(200);
-						response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-						response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevices:" + e.getMessage());
-						return response;
-					}
-				} else {
-					/* 異常系 */
-					response.setStatus(200);
-					response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "cloud_userService.isAncestor");
-					return response;
-				}
+				list = cloud_deviceService.getUnderUserDevices(cloud_deviceModel, accessUserlist);
+			} catch (Exception e) {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevices:" + e.getMessage());
+				return response;
 			}
 
 			response.setStatus(200);
@@ -179,43 +158,23 @@ public class Cloud_deviceController {
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		// 必須チェック
-		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid() && null != cloud_deviceModel.getTargetUserInfo().getTargetuserid()) {
+		if (null != cloud_deviceModel.getLoginInfo().getLoginuserid()) {
 
 			// アクセスユーザ一覧取得
 			List<Integer> accessUserlist = accessService.getAccessUsers(cloud_deviceModel.getLoginInfo().getLoginuserid());
 
 			List<Cloud_deviceModel> list = new ArrayList<Cloud_deviceModel>();
-			if (cloud_deviceModel.getLoginInfo().getLoginuserid().equals(cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
-				try {
-					list = cloud_deviceService.getUnderUserDevicesByConditions(cloud_deviceModel, accessUserlist);
-				} catch (Exception e) {
-					/* 異常系 */
-					response.setStatus(200);
-					response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevicesByConditions:" + e.getMessage());
-					return response;
-				}
-			} else {
-				// 権限判断
-				if (cloud_userService.isAncestor(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
-					try {
-						list = cloud_deviceService.getUnderUserDevicesByConditions(cloud_deviceModel, accessUserlist);
-					} catch (Exception e) {
-						/* 異常系 */
-						response.setStatus(200);
-						response.setResultCode(ErrorConstant.ERROR_CODE_0004);
-						response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevicesByConditions:" + e.getMessage());
-						return response;
-					}
-				} else {
-					/* 異常系 */
-					response.setStatus(200);
-					response.setResultCode(ErrorConstant.ERROR_CODE_0002);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "cloud_userService.isAncestor");
-					return response;
-				}
-			}
 
+			try {
+				list = cloud_deviceService.getUnderUserDevicesByConditions(cloud_deviceModel, accessUserlist);
+			} catch (Exception e) {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + "cloud_deviceService.getUnderUserDevicesByConditions:" + e.getMessage());
+				return response;
+			}
+			
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);

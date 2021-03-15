@@ -4,8 +4,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as XLSX from 'xlsx';
 import { AlertService } from '../../_services/alert.service';
 import { HttpService } from 'src/app/_services/HttpService';
-import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
-import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 import { number } from 'ngx-custom-validators/src/app/number/validator';
 // import * as _ from 'lodash';
 import { map, startWith } from 'rxjs/operators';
@@ -150,9 +148,9 @@ export class DeviceComponent implements OnInit {
   }
 
   Init() {
-      var param = {}
+      var param = {};
       // this.getDropdownList(param);
-      this.httpService.usePost('/getUnderUserDevices', param).then(item => {
+      this.httpService.usePost('/getUnderUserDevices',param).then(item => {
         try {
           if (item != null) {
             this.pageModel.deviceList = item;
@@ -172,19 +170,17 @@ export class DeviceComponent implements OnInit {
         this.pageModel.sort[prop] = false;
       }
     }
-    let item: UserInfo = this.httpService.getLoginUser();
-    if (item != null) {
       var param = {
-        "loginInfo": {
-          "loginuserid": item.uid,
-          "loginusername": item.login_id,
-          "loginrole": item.role,
-          "logincompanyid": item.company
-        },
-        "targetUserInfo": {
-          "targetuserid": item.uid,
-          "targetuserCompanyid": item.company
-        },
+        // "loginInfo": {
+        //   "loginuserid": item.uid,
+        //   "loginusername": item.login_id,
+        //   "loginrole": item.role,
+        //   "logincompanyid": item.company
+        // },
+        // "targetUserInfo": {
+        //   "targetuserid": item.uid,
+        //   "targetuserCompanyid": item.company
+        // },
         "imei": this.pageModel.query.querycode,
         "productname": this.pageModel.query.productname,
         "projectname": this.pageModel.query.projectname,
@@ -202,7 +198,6 @@ export class DeviceComponent implements OnInit {
           console.log('デバイスを検索APIエラー発生しました。');
         }
       })
-    }
   }
 
   getDropdownList(param: any) {
@@ -305,21 +300,9 @@ export class DeviceComponent implements OnInit {
         return;
       }
     }
-    let routeif: UserInfo = this.httpService.getLoginUser();
-    if (routeif != null) {
       this.pageModel.deviceDetail.encryptedcommunications = this.pageModel.deviceDetail.sslChecked == false ? 0 : 1;
       this.pageModel.deviceDetail.bindingflag = this.pageModel.deviceDetail.bindingflagChecked == false ? 0 : 1;
       var param = {
-        "loginInfo": {
-          "loginuserid": routeif.uid,
-          "loginusername": routeif.login_id,
-          "loginrole": routeif.role,
-          "logincompanyid": routeif.company
-        },
-        "targetUserInfo": {
-          "targetuserid": routeif.uid,
-          "targetuserCompanyid": routeif.company
-        },
         "deviceDetail": this.pageModel.deviceDetail
       }
       this.httpService.useRpPost('registerDevice', param).then(item => {
@@ -353,10 +336,6 @@ export class DeviceComponent implements OnInit {
           console.log(e);
         }
       });
-    } else {
-      addDeviceForm.reset();
-      this.addModal.close(addDeviceForm.resetForm);
-    }
   }
 
   /**
@@ -379,9 +358,6 @@ export class DeviceComponent implements OnInit {
       this.setFocus('simtel', editForm)
       return;
     }
-
-    let routeif: UserInfo = this.httpService.getLoginUser();
-    if (routeif != null) {
       this.pageModel.deviceDetailEdit.deviceid = deviceid
       this.pageModel.deviceDetailEdit.devicename = this.selectedDevice['devicename'];
       this.pageModel.deviceDetailEdit.sim_iccid = this.selectedDevice['sim_iccid'];
@@ -397,16 +373,6 @@ export class DeviceComponent implements OnInit {
       this.pageModel.deviceDetailEdit.fmlastestversion = this.selectedDevice['fmlastestversion'];
       this.pageModel.deviceDetailEdit.versioncomfirmtime = this.selectedDevice['versioncomfirmtime'];
       var param = {
-        "loginInfo": {
-          "loginuserid": routeif.uid,
-          "loginusername": routeif.login_id,
-          "loginrole": routeif.role,
-          "logincompanyid": routeif.company
-        },
-        "targetUserInfo": {
-          "targetuserid": routeif.uid,
-          "targetuserCompanyid": routeif.company
-        },
         "deviceDetail": this.pageModel.deviceDetailEdit
       }
       this.httpService.useRpPut('updateDevice', param).then(item => {
@@ -441,10 +407,7 @@ export class DeviceComponent implements OnInit {
           console.log(e);
         }
       });
-    } else {
-      editDeviceForm.reset();
-      this.editModal.close(editDeviceForm.resetForm);
-    }
+
   }
 
   /**
@@ -453,22 +416,10 @@ export class DeviceComponent implements OnInit {
  * @param addExeclForm     Add contact form
  */
   registerDevices(addExeclForm: NgForm, registerdevicesForm: ElementRef) {
-    let routeif: UserInfo = this.httpService.getLoginUser();
-    if (routeif != null) {
       var param = {
-        "loginInfo": {
-          "loginuserid": routeif.uid,
-          "loginusername": routeif.login_id,
-          "loginrole": routeif.role,
-          "logincompanyid": routeif.company
-        },
-        "targetUserInfo": {
-          "targetuserid": routeif.uid,
-          "targetuserCompanyid": routeif.company
-        },
         "deviceDetailList": this.pageModel.addDeviceDetailList
       }
-    }
+    
     this.httpService.useRpPost('registerDevices', param).then(item => {
       try {
         if (item.resultCode == "0000") {
@@ -508,19 +459,7 @@ export class DeviceComponent implements OnInit {
    */
   deleteRow(row) {
     if (confirm(row.devicename + "を削除します。よろしいですか？")) {
-      let item: UserInfo = this.httpService.getLoginUser();
-      if (item != null) {
         var param = {
-          "loginInfo": {
-            "loginuserid": item.uid,
-            "loginusername": item.login_id,
-            "loginrole": item.role,
-            "logincompanyid": item.company
-          },
-          "targetUserInfo": {
-            "targetuserid": item.uid,
-            "targetuserCompanyid": item.company
-          },
           "deviceid": row.deviceid
         }
         this.httpService.useRpDelete('deleteDevice', param).then(item => {
@@ -538,7 +477,7 @@ export class DeviceComponent implements OnInit {
           }
         }
         );
-      }
+      
     }
   }
 
@@ -560,19 +499,7 @@ export class DeviceComponent implements OnInit {
       return
     }
     if (confirm("選択したデバイスを全削除します。よろしいですか？")) {
-      let item: UserInfo = this.httpService.getLoginUser();
-      if (item != null) {
         var param = {
-          "loginInfo": {
-            "loginuserid": item.uid,
-            "loginusername": item.login_id,
-            "loginrole": item.role,
-            "logincompanyid": item.company
-          },
-          "targetUserInfo": {
-            "targetuserid": item.uid,
-            "targetuserCompanyid": item.company
-          },
           "deviceidlist": removedIndex
         }
         this.httpService.useRpDelete('deleteDevices', param).then(item => {
@@ -588,7 +515,6 @@ export class DeviceComponent implements OnInit {
           }
         }
         );
-      }
     }
   }
 
