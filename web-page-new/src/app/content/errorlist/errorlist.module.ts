@@ -13,7 +13,8 @@ import {ToastModule} from 'primeng/toast';
 import {MessageService} from 'primeng/api';
 import {ButtonModule} from 'primeng/button';
 import {RippleModule} from 'primeng/ripple';
-
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
 
 
 @NgModule({
@@ -33,9 +34,11 @@ import {RippleModule} from 'primeng/ripple';
     ToastModule,
     ButtonModule,
     RippleModule,
+    ConfirmDialogModule,
   ],
   providers: [
     MessageService,
+    ConfirmationService,
   ],
   declarations: [ErrorlistComponent],
   exports: [RouterModule],

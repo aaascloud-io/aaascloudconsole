@@ -70,6 +70,13 @@
 
 
 <p-toast position="top-right" key="alertModal" baseZIndex="999"></p-toast>
+<p-confirmDialog
+  [baseZIndex]="10000" 
+  rejectButtonStyleClass="p-button-secondary" 
+  icon="pi pi-exclamation-triangle" 
+  acceptLabel="確認" 
+  rejectLabel="取消">
+</p-confirmDialog>
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 <!-- エラー処理 -->
@@ -149,7 +156,7 @@
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">確認</span></button>
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">完了</span></button>
       </div>
     </div>
   </form>

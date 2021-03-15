@@ -9,14 +9,16 @@ import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
-import {MessageService} from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+import {ConfirmationService} from 'primeng/api';
 
 @Component({
   selector: 'app-version',
   templateUrl: './version.component.html',
   styleUrls: ['./version.component.css'],
-  providers: [MessageService],
+  providers: [MessageService,
+    ConfirmationService],
 })
 export class VersionComponent implements OnInit {
 
@@ -92,7 +94,8 @@ export class VersionComponent implements OnInit {
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
     private messageService: MessageService, 
-    private primengConfig: PrimeNGConfig
+    private primengConfig: PrimeNGConfig,
+    private confirmationService: ConfirmationService,
     ) { 
     }
 
@@ -265,33 +268,41 @@ export class VersionComponent implements OnInit {
    */
   deleteRow(row) {
     let index = 0;
-    if (confirm(row.versionname + "を削除します。よろしいですか？")){
-      let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
-    if (routeif != null) {
-      var param = {
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
-        "rowid":row.rowid,
-      };
-    }
-      this.httpService.delete('deleteVersion',param).then(item=>{
-        console.log("这是 delete 的 item");
-        console.log(item);
-        try{
-          if(item.body.resultCode == "0000"){
 
-            this.ngOnInit();
-            this.showAlert("success","プロジェクトを削除しました。");
-          }else{
-            console.log('登録失敗、ご確認してください。');
-            console.log(item);
-            this.showAlert("error","登録失敗、ご確認してください。");
+    this.confirmationService.confirm({
+      message: row.versionname + "を削除します。よろしいですか？",
+      header: 'バージョン削除確認',
+      accept: () => {
+          let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+          if (routeif != null) {
+            var param = {
+              "loginInfo":this.pageModel.loginInfo,
+              "targetUserInfo":this.pageModel.targetUserInfo,
+              "rowid":row.rowid,
+            };
           }
-        }catch(e){
-          this.showAlert("error",e);
-        }
-      });
-    }
+          this.httpService.delete('deleteVersion',param).then(item=>{
+            console.log("这是 delete 的 item");
+            console.log(item);
+            try{
+              if(item.body.resultCode == "0000"){
+
+                this.ngOnInit();
+                this.showAlert("success","バージョンを削除しました。");
+              }else{
+                console.log('登録失敗、ご確認してください。');
+                console.log(item);
+                this.showAlert("error","登録失敗、ご確認してください。");
+              }
+            }catch(e){
+              this.showAlert("error",e);
+            }
+          });
+      },
+      reject: () => {
+        this.showAlert("info","削除操作を取消しました");
+      },
+    });
   }
 
   // プロジェクト詳細と修正
@@ -379,33 +390,41 @@ export class VersionComponent implements OnInit {
     }
 
     if(this.selected.length > 0){
-      if (confirm("選択したデーターを削除しますか")) {
-        var query = {
-          "loginInfo":this.pageModel.loginInfo,
-          "targetUserInfo":this.pageModel.targetUserInfo,
-          "rowidlist": this.selected,
-        }
-        this.httpService.useRpDelete('deleteVersions', query).then(item => {
-          try {
-            if (item.resultCode == "0000") {
-              this.searchValue = {
-                productname:'',
-                versionname:''
-              };
-              this.ngOnInit();
-              this.showAlert("success","選択したプロジェクトを削除しました");
-              this.selected = [];
-            }else{
-              console.log('登録失敗、ご確認してください。');
-              console.log(item);
-              this.showAlert("error","登録失敗、ご確認してください。");
-            }
-          } catch (e) {
-            console.log(e);
-            this.showAlert("error",e);
+
+      this.confirmationService.confirm({
+        message: "選択したデーターを削除しますか",
+        header: 'プロジェクト削除確認',
+        accept: () => {
+          var query = {
+            "loginInfo":this.pageModel.loginInfo,
+            "targetUserInfo":this.pageModel.targetUserInfo,
+            "rowidlist": this.selected,
           }
-        });
-      }
+          this.httpService.useRpDelete('deleteVersions', query).then(item => {
+            try {
+              if (item.resultCode == "0000") {
+                this.searchValue = {
+                  productname:'',
+                  versionname:''
+                };
+                this.ngOnInit();
+                this.showAlert("success","選択したプロジェクトを削除しました");
+                this.selected = [];
+              }else{
+                console.log('登録失敗、ご確認してください。');
+                console.log(item);
+                this.showAlert("error","登録失敗、ご確認してください。");
+              }
+            } catch (e) {
+              console.log(e);
+              this.showAlert("error",e);
+            }
+          });
+        },
+        reject: () => {
+          this.showAlert("info","削除操作を取消しました");
+        },
+      });
     }else{
       this.showAlert("warn","バージョンを選択してください。");
     }

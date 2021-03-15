@@ -79,6 +79,9 @@ import {MessageService} from 'primeng/api';
 import {ButtonModule} from 'primeng/button';
 import {ToastModule} from 'primeng/toast';
 import {RippleModule} from 'primeng/ripple';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
+
 
 
 
@@ -112,6 +115,7 @@ import {RippleModule} from 'primeng/ripple';
         ToastModule,
         ButtonModule,
         RippleModule,
+        ConfirmDialogModule,
     ],
     declarations: [
         AppComponent,
@@ -158,7 +162,8 @@ import {RippleModule} from 'primeng/ripple';
         AuthSignService,
         AuthSignListener,
         BaseService,
-        MessageService
+        MessageService,
+        ConfirmationService,
     ],
     bootstrap: [AppComponent],
     exports: [RouterModule]

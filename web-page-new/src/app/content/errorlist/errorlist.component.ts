@@ -11,12 +11,13 @@ import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
 import {MessageService} from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+import {ConfirmationService} from 'primeng/api';
 
 @Component({
   selector: 'app-errorlist',
   templateUrl: './errorlist.component.html',
   styleUrls: ['./errorlist.component.css'],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
 })
 export class ErrorlistComponent implements OnInit {
 
@@ -64,7 +65,8 @@ export class ErrorlistComponent implements OnInit {
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
     private messageService: MessageService, 
-    private primengConfig: PrimeNGConfig
+    private primengConfig: PrimeNGConfig,
+    private confirmationService: ConfirmationService,
     ) { 
     }
 
@@ -191,33 +193,42 @@ export class ErrorlistComponent implements OnInit {
 
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null && flg) {
-      if (confirm("対応情報を提出しますか")) {
-        var param = {
-          "loginInfo":this.pageModel.loginInfo,
-          "targetUserInfo":this.pageModel.targetUserInfo,
-          
-          "errlogid": this.selectedErrorItem.errlogid,
-          "contents":this.selectedErrorItem.contents,
-          "doneFlag": this.selectedErrorItem.doneFlag,
-        };
-        this.httpService.useRpPost('registerErrresume', param).then(item => {
-          try {
-            if (item.resultCode == "0000") {
-              this.selectedErrorItem={};
-              this.showAlert('success' , '対応情報を提出しました');
-              if (processErrDataUpdateForm.valid === true) {
-                processErrDataUpdateForm.reset();
-                this.editModal.close(processErrDataUpdateForm.resetForm);
-              }
-            }
-            this.ngOnInit();
-          } catch (e) {
-            console.log(e);
-            this.showAlert('error' , e);
-            this.ngOnInit();
+
+
+      this.confirmationService.confirm({
+        message: "対応情報を提出しますか",
+        header: '対応情報提出確認',
+        accept: () => {
+          var param = {
+            "loginInfo":this.pageModel.loginInfo,
+            "targetUserInfo":this.pageModel.targetUserInfo,
+            
+            "errlogid": this.selectedErrorItem.errlogid,
+            "contents":this.selectedErrorItem.contents,
+            "doneFlag": this.selectedErrorItem.doneFlag,
           };
-        });
-      }
+          this.httpService.useRpPost('registerErrresume', param).then(item => {
+            try {
+              if (item.resultCode == "0000") {
+                this.selectedErrorItem={};
+                this.showAlert('success' , '対応情報を提出しました');
+                if (processErrDataUpdateForm.valid === true) {
+                  processErrDataUpdateForm.reset();
+                  this.editModal.close(processErrDataUpdateForm.resetForm);
+                }
+              }
+              this.ngOnInit();
+            } catch (e) {
+              console.log(e);
+              this.showAlert('error' , e);
+              this.ngOnInit();
+            };
+          });
+        },
+        reject: () => {
+            this.showAlert("info","削除操作を取消しました");
+        },
+      });
     }
     this.ngOnInit();
   }
