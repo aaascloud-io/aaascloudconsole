@@ -184,7 +184,7 @@ export class ErrorlistComponent implements OnInit {
   processErrDataUpdate(processErrDataUpdateForm,projectid){
     var flg = true;
     if (flg && !this.selectedErrorItem['contents']) {
-      confirm(`対応メモを入力してください。`);
+      this.showAlert('warn' , '対応メモを入力してください。');
       flg = false;
     }
 
@@ -204,7 +204,7 @@ export class ErrorlistComponent implements OnInit {
           try {
             if (item.resultCode == "0000") {
               this.selectedErrorItem={};
-              alert('対応情報を提出しました');
+              this.showAlert('success' , '対応情報を提出しました');
               if (processErrDataUpdateForm.valid === true) {
                 processErrDataUpdateForm.reset();
                 this.editModal.close(processErrDataUpdateForm.resetForm);
@@ -213,7 +213,7 @@ export class ErrorlistComponent implements OnInit {
             this.ngOnInit();
           } catch (e) {
             console.log(e);
-            alert(e);
+            this.showAlert('error' , e);
             this.ngOnInit();
           };
         });
@@ -287,12 +287,12 @@ export class ErrorlistComponent implements OnInit {
     };
   }
 
-  showAlert() {
+  showAlert(alertType, alertDetail) {
     this.messageService.add({
-      key: 'alertModal', 
-      severity:'info', 
-      summary: 'Info', 
-      detail: 'Message Content',
-      life:1000});
+      key : 'alertModal', 
+      severity : alertType, 
+      summary : alertType, 
+      detail : alertDetail,
+      life : 2000});
   }
 }

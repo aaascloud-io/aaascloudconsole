@@ -8,6 +8,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BreadcrumbModule } from 'src/app/_layout/breadcrumb/breadcrumb.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
+import {ToastModule} from 'primeng/toast';
+import {MessageService} from 'primeng/api';
+import {ButtonModule} from 'primeng/button';
+import {RippleModule} from 'primeng/ripple';
+
 
 @NgModule({
   imports: [
@@ -23,7 +28,12 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
         component: ProjectComponent
       }
     ]),
-
+    ToastModule,
+    ButtonModule,
+    RippleModule,
+  ],
+  providers: [
+    MessageService,
   ],
   declarations: [ProjectComponent],
   exports: [RouterModule]

@@ -9,11 +9,14 @@ import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
+import {MessageService} from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-version',
   templateUrl: './version.component.html',
-  styleUrls: ['./version.component.css']
+  styleUrls: ['./version.component.css'],
+  providers: [MessageService],
 })
 export class VersionComponent implements OnInit {
 
@@ -88,6 +91,8 @@ export class VersionComponent implements OnInit {
     private _httpClient: HttpClient,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
+    private messageService: MessageService, 
+    private primengConfig: PrimeNGConfig
     ) { 
     }
 
@@ -121,6 +126,7 @@ export class VersionComponent implements OnInit {
      * OnInit
      */
   ngOnInit() {
+    this.primengConfig.ripple = true;
     this.variableReset();
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     this.pageModel.loginInfo = {
@@ -171,16 +177,16 @@ export class VersionComponent implements OnInit {
   addNewVersionForm(NewVersionForm:NgForm){
     var flg = true;
     if (flg && !this.addVersion['productid']) {
-      confirm(`プロダクト名を選択してください。`);
+      this.showAlert("warn","プロダクト名を選択してください。");
       flg = false;
     }
 
     if (flg && !this.addVersion['versioncode']) {
-      confirm(`バージョンコードを入力してください。`);
+      this.showAlert("warn","バージョンコードを入力してください。");
       flg = false;
     }
     if (flg && !this.addVersion['versionname']) {
-      confirm(`バージョン名を入力してください。`);
+      this.showAlert("warn","バージョン名を入力してください。");
       flg = false;
     }
 
@@ -204,14 +210,14 @@ export class VersionComponent implements OnInit {
           if(item.resultCode == "0000"){
             this.addVersion={},
             this.ngOnInit();
-            alert("プロジェクトを登録しました。");
+            this.showAlert("success","プロジェクトを登録しました。");
           }else{
             console.log('登録失敗、ご確認してください。');
             console.log(item);
-            alert('登録失敗、ご確認してください。');
+            this.showAlert("error","登録失敗、ご確認してください。");
           }
         }catch(e){
-          alert(e);
+          this.showAlert("error",e);
         }
       });
       if (NewVersionForm.valid === true) {
@@ -275,14 +281,14 @@ export class VersionComponent implements OnInit {
           if(item.body.resultCode == "0000"){
 
             this.ngOnInit();
-            alert("プロジェクトを削除しました。");
+            this.showAlert("success","プロジェクトを削除しました。");
           }else{
             console.log('登録失敗、ご確認してください。');
             console.log(item);
-            alert('登録失敗、ご確認してください。');
+            this.showAlert("error","登録失敗、ご確認してください。");
           }
         }catch(e){
-          alert(e);
+          this.showAlert("error",e);
         }
       });
     }
@@ -310,16 +316,16 @@ export class VersionComponent implements OnInit {
   versionDataUpdate(versionEditForm: NgForm, rowid) {
     var flg = true;
     if (flg && !this.selectedVersion['productid']) {
-      confirm(`プロダクト名を選択してください。`);
+      this.showAlert("warn","プロダクト名を選択してください。");
       flg = false;
     }
 
     if (flg && !this.selectedVersion['versioncode']) {
-      confirm(`バージョンコードを入力してください。`);
+      this.showAlert("warn","バージョンコードを入力してください。");
       flg = false;
     }
     if (flg && !this.selectedVersion['versionname']) {
-      confirm(`バージョン名を入力してください。`);
+      this.showAlert("warn","バージョン名を入力してください。");
       flg = false;
     }
 
@@ -341,7 +347,7 @@ export class VersionComponent implements OnInit {
           if (item.resultCode == "0000") {
   
             this.ngOnInit();
-            alert('プロジェクト情報を改修しました');
+            this.showAlert("success","プロジェクト情報を改修しました");
             if (versionEditForm.valid === true) {
               versionEditForm.reset();
               this.editModal.close(versionEditForm.resetForm);
@@ -349,11 +355,11 @@ export class VersionComponent implements OnInit {
           }else{
             console.log('登録失敗、ご確認してください。');
             console.log(item);
-            alert('登録失敗、ご確認してください。');
+            this.showAlert("error","登録失敗、ご確認してください。");
           }
         } catch (e) {
           console.log(e);
-          alert(e);
+          this.showAlert("error",e);
         }
       });
       // versionEditForm.reset();
@@ -387,21 +393,21 @@ export class VersionComponent implements OnInit {
                 versionname:''
               };
               this.ngOnInit();
-              alert('選択したプロジェクトを削除しました');
+              this.showAlert("success","選択したプロジェクトを削除しました");
               this.selected = [];
             }else{
               console.log('登録失敗、ご確認してください。');
               console.log(item);
-              alert('登録失敗、ご確認してください。');
+              this.showAlert("error","登録失敗、ご確認してください。");
             }
           } catch (e) {
             console.log(e);
-            alert(e);
+            this.showAlert("error",e);
           }
         });
       }
     }else{
-      alert("バージョンを選択してください。");
+      this.showAlert("warn","バージョンを選択してください。");
     }
   }
 
@@ -535,5 +541,14 @@ export class VersionComponent implements OnInit {
     };
     this.addVersion = {};
     this.productNameList = [];
+  }
+
+  showAlert(alertType, alertDetail) {
+    this.messageService.add({
+      key : 'alertModal', 
+      severity : alertType, 
+      summary : alertType, 
+      detail : alertDetail,
+      life : 2000});
   }
 }

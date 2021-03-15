@@ -9,10 +9,14 @@ import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
+import {MessageService} from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
+
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
-  styleUrls: ['./project.component.css']
+  styleUrls: ['./project.component.css'],
+  providers: [MessageService],
 })
 export class ProjectComponent implements OnInit {
 
@@ -95,6 +99,8 @@ export class ProjectComponent implements OnInit {
     private _httpClient: HttpClient,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
+    private messageService: MessageService, 
+    private primengConfig: PrimeNGConfig
     ) { 
     }
 
@@ -123,6 +129,7 @@ export class ProjectComponent implements OnInit {
      * OnInit
      */
   ngOnInit() {
+    this.primengConfig.ripple = true;
     this.variableReset();
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     this.pageModel.loginInfo = {
@@ -170,12 +177,12 @@ export class ProjectComponent implements OnInit {
   addNewProjectForm(NewProjectForm:NgForm){
     var flg = true;
     if (flg && !this.pageModel.addProject.projectName) {
-      confirm(`プロジェクト名を入力してください。`);
+      this.showAlert("warn", "プロジェクト名を入力してください。");
       flg = false;
     }
 
     if (flg && !this.pageModel.addProject.productId) {
-      confirm(`プロダクト名を選択してください。`);
+      this.showAlert("warn", "プロダクト名を選択してください。");
       flg = false;
     }
 
@@ -197,14 +204,16 @@ export class ProjectComponent implements OnInit {
             this.pageModel.addProject.productId = '';
             this.pageModel.addProject.projectSummary = '';
             this.ngOnInit();
-            alert("プロジェクトを登録しました。");
+            this.showAlert("success", "プロジェクトを登録しました。");
           }else{
             console.log('登録失敗、ご確認してください。');
             console.log(item);
-            alert('登録失敗、ご確認してください。');
+            this.showAlert("error", "登録失敗、ご確認してください。");
           }
         }catch(e){
-          alert(e);
+          console.log('登録失敗、ご確認してください。');
+          console.log(e);
+          this.showAlert("error", e);
         }
       });
       if (NewProjectForm.valid === true) {
@@ -265,14 +274,14 @@ export class ProjectComponent implements OnInit {
         try{
           if(item.body.resultCode == "0000"){
             this.ngOnInit();
-            alert("プロジェクトを削除しました。");
+            this.showAlert("success", "プロジェクトを削除しました。");
           }else{
             console.log('削除失敗、ご確認してください。');
             console.log(item);
-            alert('削除失敗、ご確認してください。');
+            this.showAlert("error", "削除失敗、ご確認してください。");
           }
         }catch(e){
-          alert(e);
+          this.showAlert("error", e);
         }
       });
     }
@@ -291,12 +300,12 @@ export class ProjectComponent implements OnInit {
   projectDataUpdate(projectEditForm: NgForm, projectid) {
     var flg = true;
     if (flg && !this.selectedProject.projectname) {
-      confirm(`プロジェクト名を入力してください。`);
+      this.showAlert("warn", "プロジェクト名を入力してください。");
       flg = false;
     }
 
     if (flg && !this.selectedProject.productid) {
-      confirm(`プロダクト名を選択してください。`);
+      this.showAlert("warn", "プロダクト名を選択してください。");
       flg = false;
     }
 
@@ -313,7 +322,7 @@ export class ProjectComponent implements OnInit {
       this.httpService.useRpPut('updateProject', param).then(item => {
         try {
           if (item.resultCode == "0000") {
-            alert('プロジェクト情報を改修しました');
+            this.showAlert("success", "プロジェクト情報を改修しました");
             this.ngOnInit();
             if (projectEditForm.valid === true) {
               projectEditForm.reset();
@@ -323,11 +332,12 @@ export class ProjectComponent implements OnInit {
           }else{
             console.log('改修失敗、ご確認してください。');
             console.log(item);
-            alert('改修失敗、ご確認してください。');
+            this.showAlert("error", "改修失敗、ご確認してください。");
           }
         } catch (e) {
           console.log(e);
           alert(e);
+          this.showAlert("error", e);
         }
       });
     }
@@ -347,8 +357,6 @@ export class ProjectComponent implements OnInit {
             "targetUserInfo":this.pageModel.targetUserInfo,
             "projectlist": this.selected,
           }
-          console.log('多个删除时的传入参数');
-          console.log(query);
           this.httpService.useRpDelete('deleteProjects', query).then(item => {
             try {
               if (item.resultCode == "0000") {
@@ -358,20 +366,20 @@ export class ProjectComponent implements OnInit {
                 };;
                 this.selected=[];
                 this.ngOnInit();
-                alert('選択したプロジェクトを削除しました');
+                this.showAlert("success", "選択したプロジェクトを削除しました");
               }else{
                 console.log('削除失敗、ご確認してください。');
                 console.log(item);
-                alert('削除失敗、ご確認してください。');
+                this.showAlert("error", "削除失敗、ご確認してください。");
               }
             } catch (e) {
               console.log(e);
-              alert(e);
+              this.showAlert("error", e);
             }
           });
       }
     }else{
-      alert("プロジェクトを選択してください。");
+      this.showAlert("warn", "プロジェクトを選択してください。");
     }
   }
 
@@ -542,7 +550,7 @@ export class ProjectComponent implements OnInit {
             try {
               if (item.resultCode == "0000") {
                 // this.selectedDevice=[];
-                alert('プロジェクト情報を更新しました');
+                this.showAlert("success", "プロジェクトにデバイスを追加しました");
                 if (projectDeviceForm.valid === true) {
                   projectDeviceForm.reset();
                   this.editModal.close(projectDeviceForm.resetForm);
@@ -550,7 +558,7 @@ export class ProjectComponent implements OnInit {
               }else{
                 console.log('更新失敗、ご確認してください。');
                 console.log(item);
-                alert('更新失敗、ご確認してください。');
+                this.showAlert("error", "更新失敗、ご確認してください。");
               }
               this.ngOnInit();
             } catch (e) {
@@ -561,7 +569,7 @@ export class ProjectComponent implements OnInit {
           });
         }
       }else{
-        alert("デバイスを選択してください。");
+        this.showAlert("warn", "デバイスを選択してください。");
       }
     }
   }
@@ -623,7 +631,7 @@ export class ProjectComponent implements OnInit {
             try {
               if (item.resultCode == "0000") {
                 this.selectedDevice=[];
-                alert('プロジェクトからデバイスを削除しました。');
+                this.showAlert("success", "プロジェクトからデバイスを削除しました。");
                 if (projectLinkedDeviceForm.valid === true) {
                   projectLinkedDeviceForm.reset();
                   this.editModal.close(projectLinkedDeviceForm.resetForm);
@@ -631,18 +639,18 @@ export class ProjectComponent implements OnInit {
               }else{
                 console.log('削除失敗、ご確認してください。');
                 console.log(item);
-                alert('削除失敗、ご確認してください。');
+                this.showAlert("error", "削除失敗、ご確認してください。");
               }
               this.ngOnInit();
             } catch (e) {
               console.log(e);
-              alert(e);
+              this.showAlert("error", e);
               this.ngOnInit();
             }
           });
         }
       }else{
-        alert("デバイスを選択してください。");
+        this.showAlert("warn", "デバイスを選択してください。");
       }
     }
   }
@@ -660,11 +668,11 @@ export class ProjectComponent implements OnInit {
           console.log("プロダクトタイプの取得は成功しました。");
         } else {
           console.log("プロダクトタイプの取得は失敗しました。");
-          alert("プロダクトタイプの取得は失敗しました。");
+          this.showAlert("error", "プロダクトタイプの取得は失敗しました。");
         }
       } catch (e) {
         console.log("プロダクトタイプの取得は失敗しました。");
-        alert(e);
+        this.showAlert("error", e);
       }
     });
   }
@@ -709,5 +717,14 @@ export class ProjectComponent implements OnInit {
     this.linkedDeviceList =[];
     this.productTypes = [];
     this.productNameList = [];
+  }
+
+  showAlert(alertType, alertDetail) {
+    this.messageService.add({
+      key : 'alertModal', 
+      severity : alertType, 
+      summary : alertType, 
+      detail : alertDetail,
+      life : 2000});
   }
 }
