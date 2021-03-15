@@ -65,9 +65,15 @@
         </section>
       </div>
     </div>
-    
+
+    <button type="button" pButton pRipple (click)="showAlert()" label="Bottom Center" class="p-button-success"></button>
+
+
   </div>
 </div>
+
+
+<p-toast position="top-right" key="alertModal" baseZIndex="999"></p-toast>
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 <!-- エラー処理 -->

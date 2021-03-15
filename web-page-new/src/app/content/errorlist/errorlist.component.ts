@@ -9,10 +9,14 @@ import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
+import {MessageService} from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
+
 @Component({
   selector: 'app-errorlist',
   templateUrl: './errorlist.component.html',
-  styleUrls: ['./errorlist.component.css']
+  styleUrls: ['./errorlist.component.css'],
+  providers: [MessageService],
 })
 export class ErrorlistComponent implements OnInit {
 
@@ -59,6 +63,8 @@ export class ErrorlistComponent implements OnInit {
     private _httpClient: HttpClient,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
+    private messageService: MessageService, 
+    private primengConfig: PrimeNGConfig
     ) { 
     }
 
@@ -70,6 +76,7 @@ export class ErrorlistComponent implements OnInit {
      * OnInit
      */
   ngOnInit() {
+    this.primengConfig.ripple = true;
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     this.pageModel.loginInfo = {
         "loginuserid": item.uid,
@@ -83,6 +90,8 @@ export class ErrorlistComponent implements OnInit {
     };
     this.initData();
   }
+
+  
 
   // errorlist データ取得
   async initData(){
@@ -150,8 +159,6 @@ export class ErrorlistComponent implements OnInit {
       this.errResumeList.push(element);
     });
     this.errResumeList = [...this.errResumeList];
-    console.log("这是取到的 errResumeList 的值");
-    console.log(this.errResumeList);
   } 
     // Modal を閉める
   closeErrProcessingHistoryModal(errProcessHistory, row){
@@ -167,8 +174,6 @@ export class ErrorlistComponent implements OnInit {
     this.selectedErrorItem.doneFlag = 0;
     this.selectedErrorItem["contents"] = "";
     this.selectedErrorItem["errlogid"] = this.selectedErrorItem["rowid"];
-    console.log("这是selectedErrorItem");
-    console.log(this.selectedErrorItem);
     // 打开模态框
     this.editModal = this.modal.open(processErrDataModalContent, {
       windowClass: 'animated fadeInDown'
@@ -280,5 +285,14 @@ export class ErrorlistComponent implements OnInit {
         return a[nm] < b[nm] ? 1 : -1;
       }
     };
+  }
+
+  showAlert() {
+    this.messageService.add({
+      key: 'alertModal', 
+      severity:'info', 
+      summary: 'Info', 
+      detail: 'Message Content',
+      life:1000});
   }
 }
