@@ -79,18 +79,7 @@ export class VerticalComponent implements OnInit, AfterViewInit {
   ngOnInit() {
 
     let item: UserInfo = this.httpService.getLoginUser();
-    var param = { "username": item.login_id };
-    this.httpService.usePost('/login', param).then(item => {
-      try {
-        if (item != null) {
-          this.username = item.fullname;
-        }
-      } catch (e) {
-        console.log('ユーザー名を検索APIエラー発生しました。');
-      }
-    })
-
-
+    this.username=item.fullname;
 
     this.isMobile = window.innerWidth < AppConstants.MOBILE_RESPONSIVE_WIDTH;
     if (!this.isMobile) {

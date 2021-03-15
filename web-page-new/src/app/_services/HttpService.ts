@@ -43,7 +43,7 @@ export class HttpService {
     }
 
     usePost(path: string, data: any): Promise<any> {
-        if (path != '/login') {
+        if (path !== '/login') {
             let item: UserInfo = this.getLoginUser();
             data.loginInfo = {
                 "loginuserid": item.uid,
@@ -519,6 +519,7 @@ export class HttpService {
                 company: res.logincompanyid,
                 role: res.loginrole,
                 upperuserid: res.loginupperuserid,
+                fullname: res.fullname,
                 access_token: ConstantsHandler.TOKEN.access_token
             }
             this.dataFatoryService.setUserInfo(temp);

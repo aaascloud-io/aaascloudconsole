@@ -6,4 +6,5 @@ export interface UserInfo{
 	role:number;
 	upperuserid:string;
 	access_token:string;
+	fullname:string;
 }
