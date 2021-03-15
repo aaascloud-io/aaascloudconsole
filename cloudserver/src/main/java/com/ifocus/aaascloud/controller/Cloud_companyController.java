@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
-import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.Util;
@@ -35,13 +34,13 @@ public class Cloud_companyController {
 	@RequestMapping(value = "/getUnderCompanies", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getUnderCompanies(@RequestBody LoginInfo loginInfo) throws Exception {
+	public BaseHttpResponse<String> getUnderCompanies(@RequestBody Cloud_companyModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
 			// トークン認証
-			if (!cloud_userService.checkToken(loginInfo)) {
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
 				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
@@ -56,7 +55,7 @@ public class Cloud_companyController {
 		}
 
 		try {
-			List<Cloud_companyModel> list = cloud_companyService.getUnderCompanies(loginInfo.getLoginuserid());
+			List<Cloud_companyModel> list = cloud_companyService.getUnderCompanies(model.getLoginInfo().getLoginuserid());
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
@@ -83,13 +82,13 @@ public class Cloud_companyController {
 	@RequestMapping(value = "/getMyUnderCompanies", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> getMyUnderCompanies(@RequestBody LoginInfo loginInfo) throws Exception {
+	public BaseHttpResponse<String> getMyUnderCompanies(@RequestBody Cloud_companyModel model) throws Exception {
 
 		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
 		try {
 			// トークン認証
-			if (!cloud_userService.checkToken(loginInfo)) {
+			if (!cloud_userService.checkToken(model.getLoginInfo())) {
 				response.setStatus(200);
 				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
 				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
@@ -104,7 +103,7 @@ public class Cloud_companyController {
 		}
 
 		try {
-			List<Cloud_companyModel> list = cloud_companyService.getMyUnderCompanies(loginInfo.getLoginuserid());
+			List<Cloud_companyModel> list = cloud_companyService.getMyUnderCompanies(model.getLoginInfo().getLoginuserid());
 			response.setStatus(200);
 			response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 			response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
