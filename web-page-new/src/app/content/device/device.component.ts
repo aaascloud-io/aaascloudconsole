@@ -20,6 +20,7 @@ export class DeviceComponent implements OnInit {
   show = false;　 //条件検索表示flg
   addModal = null;
   editModal = null;
+  addsModal = null;
   deviceSelected = false;
   public companySelectArray = [];
   public productSelectArray = [];
@@ -27,7 +28,7 @@ export class DeviceComponent implements OnInit {
 
   selectedDevice: any;
   //page用
-  dataCount:0;
+  dataCount: 0;
   pageSize: any;
   collectionSize: any;
   page = 1;
@@ -37,7 +38,7 @@ export class DeviceComponent implements OnInit {
   editUserSelected: {};
   editClickFlg = false;
 
-  OpenFileName="";
+  OpenFileName = "";
   public pageModel = {
     //Loginユーザー情報
     LoginUser: {
@@ -132,7 +133,6 @@ export class DeviceComponent implements OnInit {
   @ViewChild('registerdevicesForm') registerdevicesForm: ElementRef;
   @ViewChild('registerDeviceForm') registerDeviceForm: NgForm;
   @Output() closeModalEvent = new EventEmitter<boolean>();
-  @ViewChild('fileInput') fileInput: ElementRef;
   /**
    * Constructor
    *
@@ -150,22 +150,8 @@ export class DeviceComponent implements OnInit {
   }
 
   Init() {
-    let item: UserInfo = this.httpService.getLoginUser();
-    if (item != null) {
-      var param = {
-        "loginInfo": {
-          "loginuserid": item.uid,
-          "loginusername": item.login_id,
-          "loginrole": item.role,
-          "logincompanyid": item.company
-        },
-        "targetUserInfo": {
-          "targetuserid": item.uid,
-          "targetuserCompanyid": item.company
-        }
-      }
-      this.getDropdownList(param);
-
+      var param = {}
+      // this.getDropdownList(param);
       this.httpService.usePost('/getUnderUserDevices', param).then(item => {
         try {
           if (item != null) {
@@ -177,9 +163,6 @@ export class DeviceComponent implements OnInit {
           console.log('デバイスを検索APIエラー発生しました。');
         }
       })
-    } else {
-
-    }
   }
 
   serachDevices() {
@@ -223,10 +206,7 @@ export class DeviceComponent implements OnInit {
   }
 
   getDropdownList(param: any) {
-    // let item: UserInfo = this.dataFatoryService.getUserInfo();
-    // var param = {
-    //   {"loginuserid": item.uid}
-    // };
+
     this.httpService.usePost('/getUnderCompanies', { "loginuserid": param.loginInfo.loginuserid }).then(item => {
       try {
         if (item != null) {
@@ -278,20 +258,9 @@ export class DeviceComponent implements OnInit {
   * @param registerExcelModal      Id of the add contact modal;
   */
   openExcelModal(registerExcelModal) {
-    this.addModal = this.modal.open(registerExcelModal, {
+    this.addsModal = this.modal.open(registerExcelModal, {
       windowClass: 'animated fadeInDown modal-xl'
       , size: 'lg'
-    });
-  }
-
-  /**
-* Add new contact
-*
-* @param addTableDataModalContent      Id of the add contact modal;
-*/
-  openSelectGroupModal(addTableDataModalContent) {
-    this.addModal = this.modal.open(addTableDataModalContent, {
-      windowClass: 'animated fadeInDown'
     });
   }
 
@@ -319,14 +288,22 @@ export class DeviceComponent implements OnInit {
    * @param addDeviceForm     Add contact form
    */
   registerDeviceDetail(addDeviceForm: NgForm, registerForm: ElementRef) {
-    if (this.pageModel.deviceDetail.sn == '' || this.pageModel.deviceDetail.imei == '' || this.pageModel.deviceDetail.productid == '') {
+
+    if (this.pageModel.deviceDetail.sn == '' 
+    || this.pageModel.deviceDetail.imei == '' 
+    || this.pageModel.deviceDetail.userid == null 
+    || this.pageModel.deviceDetail.userid == '' 
+    || this.pageModel.deviceDetail.productid == null
+    || this.pageModel.deviceDetail.productid == '') {
       return;
     }
     //tel number 位数チェック　 value, name, templateForm: ElementRef
-    if (this.pageModel.deviceDetail.sim_tel.length > 0 && this.pageModel.deviceDetail.sim_tel.length < 10) {
-      alert("SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
-      this.setFocus('simtel', registerForm)
-      return;
+    if (this.pageModel.deviceDetail.sim_tel != null) {
+      if (this.pageModel.deviceDetail.sim_tel.length > 0 && this.pageModel.deviceDetail.sim_tel.length < 10) {
+        alert("SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
+        this.setFocus('simtel', registerForm)
+        return;
+      }
     }
     let routeif: UserInfo = this.httpService.getLoginUser();
     if (routeif != null) {
@@ -365,10 +342,10 @@ export class DeviceComponent implements OnInit {
               this.Init();
             } else if (item.resultCode == "0002") {
               alert('権限ないです、登録失敗しました');
-            }else if (item.resultCode == "0003") {
+            } else if (item.resultCode == "0003") {
               this.setFocus(item.resultData, registerForm)
               alert(item.resultMsg);
-            }else{
+            } else {
               alert('登録失敗しました');
             }
           }
@@ -390,16 +367,18 @@ export class DeviceComponent implements OnInit {
  * 
  */
   editDeviceDetail(editDeviceForm: NgForm, deviceid, editForm: ElementRef) {
+    if(this.editProductSelected==null || this.editUserSelected==null){
+      return;
+    }
     if (this.editProductSelected["productid"] == null || this.editUserSelected["userid"] == null) {
       return;
     }
-
-        //tel number 位数チェック　 value, name, templateForm: ElementRef
-        if (this.selectedDevice['sim_tel'].length > 0 && this.selectedDevice['sim_tel'].length < 10) {
-          alert("SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
-          this.setFocus('simtel', editForm)
-          return;
-        }
+    //tel number 位数チェック　 value, name, templateForm: ElementRef
+    if (this.selectedDevice['sim_tel'].length > 0 && this.selectedDevice['sim_tel'].length < 10) {
+      alert("SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
+      this.setFocus('simtel', editForm)
+      return;
+    }
 
     let routeif: UserInfo = this.httpService.getLoginUser();
     if (routeif != null) {
@@ -452,10 +431,10 @@ export class DeviceComponent implements OnInit {
             alert('権限なし');
           } else if (item.resultCode == "0101") {
             alert('更新失敗しました。');
-          } else if(item.resultCode == "0003"){
+          } else if (item.resultCode == "0003") {
             this.setFocus(item.resultCode, editForm)
             alert(item.resultMsg);
-          }else{
+          } else {
             alert('更新失敗しました。');
           }
         } catch (e) {
@@ -503,7 +482,7 @@ export class DeviceComponent implements OnInit {
  */
           if (addExeclForm.valid === true) {
             addExeclForm.reset();
-            this.addModal.close(addExeclForm.resetForm);
+            this.addsModal.close(addExeclForm.resetForm);
           }
         } else if (item.resultCode == "0002") {
           alert(item.resultMsg);
@@ -513,7 +492,7 @@ export class DeviceComponent implements OnInit {
           // this.pageModel.checkColumn[item.resultMsg] = true;
           this.pageModel.addDeviceDetailList = JSON.parse(item.data);
           // this.setUnavailable("deviceSubmit", registerdevicesForm)
-        }else if(item.resultCode == "0007"){
+        } else if (item.resultCode == "0007") {
           alert(item.resultMsg);
           this.pageModel.addDeviceDetailList = JSON.parse(item.data);
         }
@@ -636,11 +615,10 @@ export class DeviceComponent implements OnInit {
    * 
    * @param event 
    */
-  protected async changeTarget(event,fileInput: ElementRef){
-    // fileInput.nativeElement.value = '';
+  protected async changeTarget(event) {
     var obj = this;
     var file = event.target.files[0];
-    this.OpenFileName=file.name;
+    this.OpenFileName = file.name;
     // Logger.info(this, `got target file. name:[${file.name}]`);
     if (file) {
       var reader = new FileReader();
@@ -661,6 +639,8 @@ export class DeviceComponent implements OnInit {
       }
       ///読み込み実施
       reader.readAsBinaryString(file);
+      // fileInput.nativeElement.value = '';
+
     }
   }
 
@@ -832,12 +812,35 @@ export class DeviceComponent implements OnInit {
 * @param NgForm    Content overlay
 */
   cancleModel(openForm: NgForm) {
-    openForm.reset();
     if (this.addModal != null) {
-      this.addModal.close(openForm.resetForm);
+        openForm.reset();
+        this.addModal.close(openForm.resetForm);
+        this.addModal=null;
     }
     if (this.editModal != null) {
-      this.editModal.close(openForm.resetForm);
+        openForm.reset();
+        this.editModal.close(openForm.resetForm);
+        this.editModal=null;
     }
+    if (this.addsModal != null) {
+        openForm.reset();
+        this.addsModal.close(openForm.resetForm);
+        this.addsModal=null;
+    }
+
+
+    // @ViewChild('registerForm') registerForm: ElementRef;
+    // @ViewChild('editForm') editForm: ElementRef;
+    // @ViewChild('registerdevicesForm') registerdevicesForm: ElementRef;
+    // @ViewChild('registerDeviceForm') registerDeviceForm: NgForm;
+    
+    this.registerForm=null
+    this.editForm=null
+    this.registerdevicesForm=null
+
+    this.registerDeviceForm=null
+
+
+
   }
 }

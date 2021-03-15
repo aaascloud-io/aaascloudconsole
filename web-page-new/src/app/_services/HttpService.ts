@@ -43,7 +43,16 @@ export class HttpService {
     }
 
     usePost(path: string, data: any): Promise<any> {
-        data.access_token= ConstantsHandler.TOKEN.access_token;
+        if (path != '/login') {
+            let item: UserInfo = this.getLoginUser();
+            data.loginInfo = {
+                "loginuserid": item.uid,
+                "loginusername": item.login_id,
+                "loginrole": item.role,
+                "logincompanyid": item.company,
+                "access_token": item.access_token
+            }
+        }
         return this._http.post(this.baseService.getPath(path), JSON.stringify(data), this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
@@ -456,7 +465,8 @@ export class HttpService {
                 login_id: res.loginusername,
                 company: res.logincompanyid,
                 role: res.loginrole,
-                upperuserid: res.loginupperuserid
+                upperuserid: res.loginupperuserid,
+                access_token: ConstantsHandler.TOKEN.access_token
             }
             this.dataFatoryService.setUserInfo(temp);
 
