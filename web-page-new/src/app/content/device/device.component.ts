@@ -149,7 +149,7 @@ export class DeviceComponent implements OnInit {
 
   Init() {
       var param = {};
-      // this.getDropdownList(param);
+      this.getDropdownList();
       this.httpService.usePost('/getUnderUserDevices',param).then(item => {
         try {
           if (item != null) {
@@ -171,16 +171,6 @@ export class DeviceComponent implements OnInit {
       }
     }
       var param = {
-        // "loginInfo": {
-        //   "loginuserid": item.uid,
-        //   "loginusername": item.login_id,
-        //   "loginrole": item.role,
-        //   "logincompanyid": item.company
-        // },
-        // "targetUserInfo": {
-        //   "targetuserid": item.uid,
-        //   "targetuserCompanyid": item.company
-        // },
         "imei": this.pageModel.query.querycode,
         "productname": this.pageModel.query.productname,
         "projectname": this.pageModel.query.projectname,
@@ -200,9 +190,9 @@ export class DeviceComponent implements OnInit {
       })
   }
 
-  getDropdownList(param: any) {
-
-    this.httpService.usePost('/getUnderCompanies', { "loginuserid": param.loginInfo.loginuserid }).then(item => {
+  getDropdownList() {
+    var param = {};
+    this.httpService.usePost('/getUnderCompanies',param).then(item => {
       try {
         if (item != null) {
           this.companySelectArray = item;
@@ -556,7 +546,7 @@ export class DeviceComponent implements OnInit {
           initial[name] = XLSX.utils.sheet_to_json(sheet);
           return initial;
         }, {});
-        this.pageModel.addDeviceDetailList = jsonData['rawData'];
+        this.pageModel.addDeviceDetailList = jsonData['rawData'].splice(1);
         // Logger.info(this, `loaded. size:[${this.pageModel.dataAll.length}]`);
       }
       reader.onerror = (event) => {
@@ -752,21 +742,8 @@ export class DeviceComponent implements OnInit {
         openForm.reset();
         this.addsModal.close(openForm.resetForm);
         this.addsModal=null;
+        this.pageModel.addDeviceDetailList=null;
+        this.OpenFileName='';
     }
-
-
-    // @ViewChild('registerForm') registerForm: ElementRef;
-    // @ViewChild('editForm') editForm: ElementRef;
-    // @ViewChild('registerdevicesForm') registerdevicesForm: ElementRef;
-    // @ViewChild('registerDeviceForm') registerDeviceForm: NgForm;
-    
-    this.registerForm=null
-    this.editForm=null
-    this.registerdevicesForm=null
-
-    this.registerDeviceForm=null
-
-
-
   }
 }

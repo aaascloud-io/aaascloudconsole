@@ -70,7 +70,7 @@ public class ErrorConstant {
 	public static final String ERROR_MSG_PRODUCT = "プロダクト存在いません";
 	public static final String ERROR_MSG_PROJECT = "プロジェクト存在いません";
 	public static final String ERROR_MSG_GROUP = "グループ存在いません";
-	public static final String ERROR_MSG_USER_ACCESS = "上位管理者にデバイスを登録できません、登録不可のデータを一覧に表示します、そのデータを参考して添付ファイルを修正してください。";
+	public static final String ERROR_MSG_USER_ACCESS = "上位管理者のデバイスを登録できません、登録不可のデータを一覧に表示します、そのデータを参考して添付ファイルのユーザーID列を修正してください。";
 
 
 	public static final String ERROR_MSG_0100 = "登録失敗：";
