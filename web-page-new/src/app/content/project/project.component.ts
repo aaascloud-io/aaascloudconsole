@@ -135,36 +135,47 @@ export class ProjectComponent implements OnInit {
     this.variableReset();
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     this.pageModel.loginInfo = {
-        "loginuserid": item.uid,
-        "loginusername": item.login_id,
-        "loginrole": item.role,
-        "logincompanyid": item.company,
+        // "loginuserid": item.uid,
+        // "loginusername": item.login_id,
+        // "loginrole": item.role,
+        // "logincompanyid": item.company,
       },
     this.pageModel.targetUserInfo = {
-      "targetuserid": item.uid,
-      "targetuserCompanyid": item.company,
+      // "targetuserid": item.uid,
+      // "targetuserCompanyid": item.company,
     };
     this.initData();
 
   }
 
-  async initData(){
+  initData(){
     this.rows = [];
     let param = {
-      "loginInfo":this.pageModel.loginInfo,
-      "targetUserInfo":this.pageModel.targetUserInfo,
+      // "loginInfo":this.pageModel.loginInfo,
+      // "targetUserInfo":this.pageModel.targetUserInfo,
     };
-    var res = await this.httpService.post("/getProjects",param);
-    let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-    jsonItem.forEach(element => {
-      this.rows.push(element);
+    this.httpService.usePost('/getProjects',param).then(item => {
+      item.forEach(element => {
+        this.rows.push(element);
+      });
+      this.rows = [...this.rows];
+      this.getTabledata();
+      this.getProductTypes();
+      this.getProductNameList();
+      console.log("rows 数据");
+      console.log(this.rows);
     });
-    this.rows = [...this.rows];
-    this.getTabledata();
-    this.getProductTypes();
-    this.getProductNameList();
-    console.log("rows 数据");
-    console.log(this.rows);
+    // var res = await this.httpService.post("/getProjects",param);
+    // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+    // jsonItem.forEach(element => {
+    //   this.rows.push(element);
+    // });
+    // this.rows = [...this.rows];
+    // this.getTabledata();
+    // this.getProductTypes();
+    // this.getProductNameList();
+    // console.log("rows 数据");
+    // console.log(this.rows);
   }
 
 
