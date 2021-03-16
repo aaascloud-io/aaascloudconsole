@@ -86,13 +86,6 @@ export class GroupComponent implements OnInit {
       groupname: '',
       summary: ''
     },
-    loginUser: {
-      loginuserid: null,
-      loginusername: '',
-      loginrole: null,
-      logincompanyid: '',
-    },
-    userInfoParame: {},
     query: {
       projectname: '',
       groupname: '',
@@ -125,9 +118,7 @@ export class GroupComponent implements OnInit {
   constructor(
     private modal: NgbModal,
     private _renderer: Renderer2,
-    private alertService: AlertService,
     private httpService: HttpService,
-    private dataFatoryService: DataFatoryService,
   ) {
     // this.getProductAll();
   }
@@ -135,26 +126,8 @@ export class GroupComponent implements OnInit {
   ngOnInit(): void {
     this.pageSize = 10;
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
-    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    this.userInfo = this.httpService.getLoginUser();
 
-    //to do ユーザー名で　ロケーションデータを取る
-    this.pageModel.loginUser.loginuserid = item.uid;
-    this.pageModel.loginUser.loginusername = item.login_id;
-    this.pageModel.loginUser.loginrole = item.role;
-    this.pageModel.loginUser.logincompanyid = item.company;
-
-    this.pageModel.userInfoParame = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "loginusername": this.pageModel.loginUser.loginusername,
-        "loginrole": this.pageModel.loginUser.loginrole,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
-      }
-    }
     this.getProjects();
     this.searchGroups();
   }
@@ -217,15 +190,11 @@ export class GroupComponent implements OnInit {
   deleteRow(row) {
     if (confirm("削除してもよろしいでしょうか")) {
       var query = {
-        "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-        },
         "groupid": row.groupid,
       }
-      this.httpService.delete('deleteGroup', query).then(item => {
+      this.httpService.useRpDelete('deleteGroup', query).then(item => {
         try {
-          if (item.body.resultCode === "0000") {
+          if (item.resultCode === "0000") {
 
             this.searchGroups();
             alert('削除成功です。');
@@ -257,15 +226,11 @@ export class GroupComponent implements OnInit {
     }
     if (confirm("選択したデーターを削除しますか")) {
       var query = {
-        "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-        },
         "groupidList": deleteCheckedids,
       }
-      this.httpService.delete('deleteGroups', query).then(item => {
+      this.httpService.useRpDelete('deleteGroups', query).then(item => {
         try {
-          if (item.body.resultCode === "0000") {
+          if (item.resultCode === "0000") {
             this.searchGroups();
             alert('削除成功です。');
             this.groupSelected = false;
@@ -287,14 +252,6 @@ export class GroupComponent implements OnInit {
    */
   onUpdate(editForm: NgForm) {
     var query = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-      },
-
       "projectid": this.selectedContact.projectid,
       "groupid": this.selectedContact.groupid,
       "groupname": this.selectedContact.groupname,
@@ -367,11 +324,6 @@ export class GroupComponent implements OnInit {
 
     if (flg) {
       var query = {
-        "loginInfo": this.pageModel.userInfoParame,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-        },
-
         "projectid": this.pageModel.addGroup.projectid,
         "groupname": this.pageModel.addGroup.groupname,
         "summary": this.pageModel.addGroup.summary
@@ -430,15 +382,9 @@ export class GroupComponent implements OnInit {
   * グループの条件より、取得する
   */
   async searchGroups() {
-
     var query = {
-      "loginInfo": this.pageModel.loginUser,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-      },
       "projectname": this.pageModel.query.projectname,
       "groupname": this.pageModel.query.groupname,
-
     };
 
     this.httpService.usePost('searchGroups', query).then(item => {
@@ -481,12 +427,7 @@ export class GroupComponent implements OnInit {
  * プロジェクト一覧取得
  */
   protected async getProjects() {
-    var query = {
-      "loginInfo": this.pageModel.loginUser,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-      },
-    };
+    var query = {};
     this.httpService.usePost('getProjects', query).then(item => {
       try {
         if (item) {
@@ -631,13 +572,7 @@ export class GroupComponent implements OnInit {
    * グループのデバイス一覧（追加）
    */
   protected async getUsableDeviceList() {
-    var query = {
-      "loginInfo": this.pageModel.loginUser,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
-      },
-    };
+    var query = {};
     this.httpService.usePost("/getMySelectableDevices", query).then(item => {
       try {
         this.addDeviceList = item;
@@ -681,11 +616,6 @@ export class GroupComponent implements OnInit {
     if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
 
       var query = {
-        "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-          "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
-        },
         "groupid": this.groupDeviceSelected.groupid,
         "projectid": this.groupDeviceSelected.projectid,
         "deviceList": selectedDevice,
@@ -728,11 +658,6 @@ export class GroupComponent implements OnInit {
    */
   protected async getMyGroupDeviceList(row) {
     var query = {
-      "loginInfo": this.pageModel.loginUser,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
-      },
       "groupid": row.groupid,
       "projectid": row.projectid,
     };
@@ -778,11 +703,6 @@ export class GroupComponent implements OnInit {
     if (confirm("選択したデバイスをグループに追加しますか")) {
 
       var query = {
-        "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-          "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
-        },
         "groupid": this.groupDeviceSelected.groupid,
         "projectid": this.groupDeviceSelected.projectid,
         "deviceList": selectedDevice,

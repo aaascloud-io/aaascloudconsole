@@ -155,15 +155,19 @@ export class ProjectComponent implements OnInit {
       // "targetUserInfo":this.pageModel.targetUserInfo,
     };
     this.httpService.usePost('/getProjects',param).then(item => {
-      item.forEach(element => {
-        this.rows.push(element);
-      });
-      this.rows = [...this.rows];
-      this.getTabledata();
-      this.getProductTypes();
-      this.getProductNameList();
-      console.log("rows 数据");
-      console.log(this.rows);
+      try {
+        item.forEach(element => {
+          this.rows.push(element);
+        });
+        this.rows = [...this.rows];
+        this.getTabledata();
+        this.getProductTypes();
+        this.getProductNameList();
+        console.log("rows 数据");
+        console.log(this.rows);
+      } catch (e) {
+        console.log('デバイスを検索APIエラー発生しました。');
+      }
     });
     // var res = await this.httpService.post("/getProjects",param);
     // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
@@ -203,8 +207,8 @@ export class ProjectComponent implements OnInit {
     if (routeif != null && flg) {
       var param = {
         // 登録データ
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
+        // "loginInfo":this.pageModel.loginInfo,
+        // "targetUserInfo":this.pageModel.targetUserInfo,
         // プロジェクト更新データ
         "projectname": this.pageModel.addProject.projectName,
         "productid":this.pageModel.addProject.productId,
@@ -241,8 +245,8 @@ export class ProjectComponent implements OnInit {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       var param = {
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
+        // "loginInfo":this.pageModel.loginInfo,
+        // "targetUserInfo":this.pageModel.targetUserInfo,
         "projectname": this.searchValue.projectname,
         "productname":this.searchValue.productname,
       };
@@ -276,8 +280,8 @@ export class ProjectComponent implements OnInit {
         let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
         if (routeif != null) {
           var param = {
-            "loginInfo":this.pageModel.loginInfo,
-            "targetUserInfo":this.pageModel.targetUserInfo,
+            // "loginInfo":this.pageModel.loginInfo,
+            // "targetUserInfo":this.pageModel.targetUserInfo,
             "projectid":row.projectid,
           };
         }
@@ -286,9 +290,9 @@ export class ProjectComponent implements OnInit {
         // var res = await this.httpService.post("/deleteProject",param);
         // console.log("这是 delete 的 res");
         // console.log(res);
-        this.httpService.delete('deleteProject',param).then(item=>{
+        this.httpService.useRpDelete('deleteProject',param).then(item=>{
           try{
-            if(item.body.resultCode == "0000"){
+            if(item.resultCode == "0000"){
               this.ngOnInit();
               this.showAlert("success", "プロジェクトを削除しました。");
             }else{
@@ -332,8 +336,8 @@ export class ProjectComponent implements OnInit {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null　&& flg) {
       var param = {
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
+        // "loginInfo":this.pageModel.loginInfo,
+        // "targetUserInfo":this.pageModel.targetUserInfo,
         "projectid": projectid,
         "productid": this.selectedProject.productid,
         "projectname": this.selectedProject.projectname,
@@ -375,8 +379,8 @@ export class ProjectComponent implements OnInit {
         header: 'プロジェクト削除確認',
         accept: () => {
           var query = {
-            "loginInfo": this.pageModel.loginInfo,
-            "targetUserInfo":this.pageModel.targetUserInfo,
+            // "loginInfo": this.pageModel.loginInfo,
+            // "targetUserInfo":this.pageModel.targetUserInfo,
             "projectlist": this.selected,
           }
           this.httpService.useRpDelete('deleteProjects', query).then(item => {
@@ -531,18 +535,32 @@ export class ProjectComponent implements OnInit {
     });
   }
   // 利用できるデバイスListを取得
-  async getUsableDeviceList(){
+  getUsableDeviceList(){
     this.usableDeviceList = [];
     let param = {
-      "loginInfo":this.pageModel.loginInfo,
-      "targetUserInfo":this.pageModel.targetUserInfo,
+      // "loginInfo":this.pageModel.loginInfo,
+      // "targetUserInfo":this.pageModel.targetUserInfo,
     };
-    var res = await this.httpService.post("/getMySelectableDevices",param);
-    let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-    jsonItem.forEach(element => {
-      this.usableDeviceList.push(element);
-    });
-    this.usableDeviceList = [...this.usableDeviceList];
+
+
+    this.httpService.usePost('/getMySelectableDevices',param).then(item => {
+      try {
+        if (item != null) {
+          item.forEach(element => {
+            this.usableDeviceList.push(element);
+          });
+          this.usableDeviceList = [...this.usableDeviceList];
+        }
+      } catch (e) {
+        console.log('デバイスを検索APIエラー発生しました。');
+      }
+    })
+    // var res = await this.httpService.post("/getMySelectableDevices",param);
+    // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+    // jsonItem.forEach(element => {
+    //   this.usableDeviceList.push(element);
+    // });
+    // this.usableDeviceList = [...this.usableDeviceList];
   }
 
   checkAllUsableDevice(ev){
@@ -570,8 +588,8 @@ export class ProjectComponent implements OnInit {
             console.log("这是 this.selectedDevice");
             console.log(this.selectedDevice);
             var param = {
-              "loginInfo":this.pageModel.loginInfo,
-              "targetUserInfo":this.pageModel.targetUserInfo,
+              // "loginInfo":this.pageModel.loginInfo,
+              // "targetUserInfo":this.pageModel.targetUserInfo,
               "projectid": projectid,
               "deviceList": this.selectedDevice,
             };
@@ -617,20 +635,33 @@ export class ProjectComponent implements OnInit {
       size: 'lg'
     });
   }
-  async getLinkedDeviceList(projectid){
+  getLinkedDeviceList(projectid){
     this.linkedDeviceList = [];
     let param = {
-      "loginInfo":this.pageModel.loginInfo,
-      "targetUserInfo":this.pageModel.targetUserInfo,
+      // "loginInfo":this.pageModel.loginInfo,
+      // "targetUserInfo":this.pageModel.targetUserInfo,
       "userid":this.pageModel.loginInfo["loginuserid"],
       "projectid": projectid,
     };
-    var res = await this.httpService.post("/getProject",param);
-    var jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-    jsonItem.deviceList.forEach(element => {
-      this.linkedDeviceList.push(element);
-    });
-    this.linkedDeviceList = [...this.linkedDeviceList];
+
+    this.httpService.usePost('/getProject',param).then(item => {
+      try {
+        if (item != null) {
+          item.deviceList.forEach(element => {
+            this.linkedDeviceList.push(element);
+          });
+          this.linkedDeviceList = [...this.linkedDeviceList];
+        }
+      } catch (e) {
+        console.log('デバイスを検索APIエラー発生しました。');
+      }
+    })
+    // var res = await this.httpService.post("/getProject",param);
+    // var jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+    // jsonItem.deviceList.forEach(element => {
+    //   this.linkedDeviceList.push(element);
+    // });
+    // this.linkedDeviceList = [...this.linkedDeviceList];
   }
 
   checkAllLinkedDevice(ev){
@@ -657,8 +688,8 @@ export class ProjectComponent implements OnInit {
           header: 'デバイス解除確認',
           accept: () => {
             var param = {
-              "loginInfo":this.pageModel.loginInfo,
-              "targetUserInfo":this.pageModel.targetUserInfo,
+              // "loginInfo":this.pageModel.loginInfo,
+              // "targetUserInfo":this.pageModel.targetUserInfo,
               
               "projectid": projectid,
               "deviceList": this.selectedDevice,
@@ -699,7 +730,7 @@ export class ProjectComponent implements OnInit {
   /**
    * プロダクトタイプ一覧取得
    */
-  protected async getProductTypes() {
+  getProductTypes() {
     var param = {};
     this.httpService.usePost('getProductTypeAll',param).then(item => {
       try {
@@ -721,21 +752,37 @@ export class ProjectComponent implements OnInit {
   /**
    * プロダクト名覧取得
    */
-  protected async getProductNameList() {
+  getProductNameList() {
     this.productNameList = [];
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       var param = {
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
+        // "loginInfo":this.pageModel.loginInfo,
+        // "targetUserInfo":this.pageModel.targetUserInfo,
         "projectname": this.searchValue,
       };
-      var res = await this.httpService.post("/searchMyProduct",param);
-      let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-      jsonItem.forEach(element => {
-        this.productNameList.push(element);
-        this.productNameList = [...this.productNameList];
+      this.httpService.usePost('searchMyProduct', param).then(item => {
+        try {
+          if (item) {
+            this.productNameList = item;
+            console.log(this.productNameList);
+            console.log("すべてのユーザーの取得は成功しました。");
+            this.productNameList = [...this.productNameList];
+          } else {
+            console.log("すべてのユーザーの取得は0件。");
+          }
+        } catch (e) {
+          console.log("すべてのユーザーの取得は失敗しました。");
+        }
       });
+
+
+      // var res = await this.httpService.post("/searchMyProduct",param);
+      // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+      // jsonItem.forEach(element => {
+      //   this.productNameList.push(element);
+      //   this.productNameList = [...this.productNameList];
+      // });
     }
   }
 
