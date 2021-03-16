@@ -728,7 +728,7 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(snErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_MSG_0003);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0003);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_SN);
 					response.setData(Util.getJsonString(snErrorList));
 					return response;
@@ -741,7 +741,7 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(imeiErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_MSG_0003);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0003);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_IMEI);
 					response.setData(Util.getJsonString(imeiErrorList));
 					return response;
@@ -754,7 +754,7 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(sim_iccidErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_MSG_0003);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0003);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_SIMICCID);
 					response.setData(Util.getJsonString(sim_iccidErrorList));
 					return response;
@@ -767,7 +767,7 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(sim_imsiErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_MSG_0003);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0003);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_SIMIMSI);
 					response.setData(Util.getJsonString(sim_imsiErrorList));
 					return response;
@@ -780,7 +780,7 @@ public class Cloud_deviceController {
 
 					response.setStatus(200);
 					response.setCount(sim_telErrorList.size());
-					response.setResultCode(ErrorConstant.ERROR_MSG_0003);
+					response.setResultCode(ErrorConstant.ERROR_CODE_0003);
 					response.setResultMsg(ErrorConstant.ERROR_MSG_SIMTEL);
 					response.setData(Util.getJsonString(sim_telErrorList));
 					return response;

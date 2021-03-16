@@ -24,7 +24,7 @@ export const ThemeSettingsConfig = {
     brand_name: 'AAASCloud',
     logo: {
       type: 'internal', // internal, url
-      value: 'assets/custom/images/logo.png' // recommended location for custom images
+      value: 'assets/custom/images/titleLogo.png' // recommended location for custom images
       // type:'url',
       // value:'http://evolvision.com/wp-content/uploads/2018/01/envelope4-green.png'
     },

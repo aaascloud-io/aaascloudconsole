@@ -153,23 +153,37 @@
                     </tr>
                   </tbody>
                 </table>
-                <div class="d-flex justify-content-between p-2">
-                  <div *ngIf="dataCount === 0">{{dataCount}} 件</div>
-                  <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">{{dataCount}} 件中
-                    {{(page-1) * pageSize + 1}} ~ {{page * pageSize}} を表示</div>
-                  <div *ngIf="dataCount<pageSize*page">{{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~
-                    {{dataCount}}
-                    を表示</div>
-                  <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
-                  </ngb-pagination>
-                  <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
-                    <option [ngValue]="10">10 items per page</option>
-                    <option [ngValue]="20">20 items per page</option>
-                    <option [ngValue]="50">50 items per page</option>
-                    <option [ngValue]="100">100 items per page</option>
-                  </select>
+                <div class="row">
+                  <div class="col-lg-4 col-md-12">
+                    <div *ngIf="dataCount === 0">{{dataCount}} 件</div>
+                    <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">
+                      {{dataCount}} 件中 {{(page-1) * pageSize + 1}} ~ {{page * pageSize}} を表示
+                    </div>
+                    <div *ngIf="dataCount !== 0 && dataCount<pageSize*page">
+                      {{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~ {{dataCount}}を表示
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-12" style="text-align: center;">
+                    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [maxSize]="3">
+                    </ngb-pagination>
+                  </div>
+                  <div class="col-lg-4 col-md-12" style="text-align: right;">
+                    <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                      <option [ngValue]="10">10 items per page</option>
+                      <option [ngValue]="20">20 items per page</option>
+                      <option [ngValue]="50">50 items per page</option>
+                      <option [ngValue]="100">100 items per page</option>
+                    </select>
+                  </div>
                 </div>
               </div>
+              <!-- <div class="row">
+                <div class="col-lg-4  col-md-12" style="position: fixed ;left: 50%;bottom:5%;">
+                  <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                    [maxSize]="4">
+                  </ngb-pagination>
+                </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -436,8 +450,8 @@
         <a class="feather ft-download info" (click)="downloadSampleFiles()" name="sampoo">サンプルファイルをダウンロード</a>
       </div>
       <div class="custom-file form-group col-12">
-        <input type="file" class="custom-file-input" accept='contactImage/*' onclick="this.value = null" (change)="changeTarget($event)"
-          id="customFile" name="selectFile">
+        <input type="file" class="custom-file-input" accept='contactImage/*' onclick="this.value = null"
+          (change)="changeTarget($event)" id="customFile" name="selectFile">
         <label class="custom-file-label" name="selectFileLe">{{OpenFileName}}</label>
       </div>
     </div>
