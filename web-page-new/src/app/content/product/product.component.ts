@@ -539,7 +539,8 @@ export class ProductComponent implements OnInit {
    * プロダクトタイプ一覧取得
    */
   protected async getProductTypes() {
-    this.httpService.useGet('getProductTypeAll').then(item => {
+    var param:{};
+    this.httpService.usePost('getProductTypeAll',param).then(item => {
       try {
         if (item) {
           this.productTypes = item;

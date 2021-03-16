@@ -29,7 +29,7 @@ public class Cloud_producttypeController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getProductTypeAll", method = RequestMethod.GET)
+	@RequestMapping(value = "/getProductTypeAll", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin(origins = "*", maxAge = 3600)
 	public BaseHttpResponse<String> getProductTypeAll(Cloud_producttypeModel model) throws Exception {
