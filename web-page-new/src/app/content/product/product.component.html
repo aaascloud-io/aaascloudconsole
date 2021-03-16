@@ -75,6 +75,7 @@
                           (change)="checkAll($event)">
                       </th>
                       <th scope="col" class="thcolor">No.</th>
+                      <th scope="col" class="thcolor">操作</th>
                       <th scope="col" class="thcolor" (click)="sortData('producttypename')">タイプ
                         <i *ngIf="pageModel.sort.producttypenameUp" class="la la-sort-up"></i>
                         <i *ngIf="pageModel.sort.producttypenameDown"class="la la-sort-down"></i>
@@ -103,31 +104,30 @@
                         <i *ngIf="pageModel.sort.createusernameUp" class="la la-sort-up"></i>
                         <i *ngIf="pageModel.sort.createusernameDown"class="la la-sort-down"></i>
                       </th>
-                      <th scope="col" class="thcolor">操作</th>
+
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let element of PaginationData;let i = index">
-                      <td>
+                      <td nowrap>
                         <input type="checkbox" [checked]="element.isSelected" (change)="checkChange($event,element)">
                       </td>
-                      <td>{{(page-1)*pageSize+i+1}}</td>
-                      <td>{{ element.producttypename }}</td>
-                      <td>{{ element.productcode}}</td>
-                      <td>{{ element.productname }}</td>
-                      <td>{{ element.model }}</td>
-                      <td *ngIf="element.simflag === 1">有</td>
-                      <td *ngIf="element.simflag === 0">無</td>
-                      <td>{{ element.version}}</td>
-                      <td>{{ element.createusername}}</td>
-
-                      <td>
+                      <td nowrap>{{(page-1)*pageSize+i+1}}</td>
+                      <td nowrap>
                         <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="editTableDataModal(editupdateDataModal, element)"><i class="la la-pencil"></i>
                         </a>
                         <a class="danger delete mr-1 mrless"><i class="la la-trash-o"
                             (click)="deleteRow(element)"></i></a>
                       </td>
+                      <td nowrap>{{ element.producttypename }}</td>
+                      <td nowrap>{{ element.productcode}}</td>
+                      <td nowrap>{{ element.productname }}</td>
+                      <td nowrap>{{ element.model }}</td>
+                      <td nowrap *ngIf="element.simflag === 1">有</td>
+                      <td nowrap *ngIf="element.simflag === 0">無</td>
+                      <td nowrap>{{ element.version}}</td>
+                      <td nowrap>{{ element.createusername}}</td>
                     </tr>
                   </tbody>
                 </table>

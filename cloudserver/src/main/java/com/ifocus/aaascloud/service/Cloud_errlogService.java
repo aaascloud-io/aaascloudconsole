@@ -69,7 +69,7 @@ public class Cloud_errlogService {
 		// ユーザー名
 		Optional<Cloud_userEntity> user = cloud_userRepository.findById(entity.getUserid());
 		if (user.isPresent()) {
-			model.setUsername(user.get().getUsername());
+			model.setUsername(user.get().getLastname() + " " + user.get().getFirstname());
 		}
 
 		model.setDevice(entity.getDevice());
