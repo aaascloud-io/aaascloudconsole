@@ -70,7 +70,7 @@
                       <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
                         (click)="deleteCheckedRow()">
                         <i class="d-md-none d-block feather ft-plus white"></i>
-                        <span class="d-md-block d-none">一括削除</span></button>
+                        <span class="d-md-block d-none">削　除</span></button>
                     </div>
                   </div>
                   <!-- <div class="row">
@@ -102,11 +102,11 @@
                             <i *ngIf="valueSortFlg.productNameDown" class="la la-sort-down"></i>
                           </th>
                           <th scope="col" class="thcolor" >プロジェクト詳細</th>
-                          <th scope="col" class="thcolor" (click)="sortData('groupCounts')">グループ数
+                          <th scope="col" class="thcolor" (click)="sortData('groupCounts')">グループ
                             <i *ngIf="valueSortFlg.groupCountsUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.groupCountsDown" class="la la-sort-down"></i>
                           </th>
-                          <th scope="col" class="thcolor" (click)="sortData('deviceCounts')">連携したデバイス数
+                          <th scope="col" class="thcolor" (click)="sortData('deviceCounts')">デバイス
                             <i *ngIf="valueSortFlg.deviceCountsUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.deviceCountsDown" class="la la-sort-down"></i>
                           </th>
@@ -118,8 +118,8 @@
                             <input type="checkbox" [checked]="element.isSelected"
                               (change)="checkChange($event,element)">
                           </td>
-                          <td>{{(page-1)*pageSize+i+1}}</td>
-                          <td>
+                          <td nowrap>{{(page-1)*pageSize+i+1}}</td>
+                          <td nowrap>
                             <div class="row">
                               <a class="primary edit mr-1 mrless"
                                 (click)="editProjectDataModal(editProjectDataModalContent, element)" title="編集"><i
@@ -128,24 +128,28 @@
                               <a class="danger delete" (click)="deleteRow(element)"><i class="la la-trash-o" title="削除"></i></a>
                             </div>
                           </td>
-                          <td>{{ element.projectname }}</td>
-                          <td>{{ element.productname }}</td>
-                          <td>{{ element.projectsummary }}</td>
-                          <td>{{ element.groupCounts}}</td>
-                          <td>
-                            <a class="primary edit mr-1 mrless" (click)="deviceLinkListModal(deviceLinkListModalContent, element)">{{ element.deviceCounts}}</a>
-                            <a class="danger delete mr-1 mrless　pull-right"
-                              (click)="deviceLinkListModal(deviceLinkDeleteModalContent, element)" title="連携したデバイスを削除"><i class="la la-minus-square"></i>
-                            </a>
-                            <a class="primary edit mr-1 mrless　pull-right"
+                          <td nowrap>{{ element.projectname }}</td>
+                          <td nowrap>{{ element.productname }}</td>
+                          <td nowrap>{{ element.projectsummary }}</td>
+                          <td nowrap>{{ element.groupCounts}}</td>
+                          <td nowrap>
+                            <a class="primary info mr-1 d-inline-block" (click)="deviceLinkListModal(deviceLinkListModalContent, element)">{{ element.deviceCounts}}</a>
+                            <a class="primary edit mr-1 mrless"
                               (click)="deviceLinkAddModal(deviceLinkAddModalContent, element)" title="デバイス連携"><i
                                 class="la la-plus-square"></i>
                             </a>
+                            <a class="danger delete mr-1 mrless"
+                              (click)="deviceLinkListModal(deviceLinkDeleteModalContent, element)" title="連携したデバイスを解除"><i class="la la-minus-square"></i>
+                            </a>
+                            
                           </td>
                         </tr>
                       </tbody>
                     </table>
                     <div class="d-flex justify-content-between p-2">
+                      <div *ngIf="dataCount === 0">{{ dataCount }} 件</div>
+                      <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">{{dataCount}} 件中{{(page-1) * pageSize + 1}} ~ {{page * pageSize}} を表示</div>
+                      <div *ngIf="dataCount<pageSize*page"> {{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~ {{dataCount}} を表示</div>
                       <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
                       </ngb-pagination>
                       <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
@@ -167,7 +171,6 @@
   </div>
 </div>
 
-
 <p-toast position="top-right" key="alertModal" baseZIndex="999"></p-toast>
 <p-confirmDialog
   [baseZIndex]="10000" rejectButtonStyleClass="p-button-secondary" 
@@ -175,9 +178,6 @@
   acceptLabel="確認" 
   rejectLabel="取消">
 </p-confirmDialog>
-
-
-
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 <!-- プロジェクト詳細と修正 -->

@@ -71,6 +71,7 @@ export class VersionComponent implements OnInit {
     versionNameUp : false,
     versionNameDown : false,
   };
+  dataCount: 0;
 
   
   public config: PerfectScrollbarConfigInterface = { };
@@ -161,6 +162,7 @@ export class VersionComponent implements OnInit {
           item.forEach(element => {
             this.rows.push(element);
           });
+          this.dataCount = item.length;
           this.rows = [...this.rows];
           this.getTabledata();
           this.getProductNameList();

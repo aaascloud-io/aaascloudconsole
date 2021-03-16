@@ -65,7 +65,7 @@
                       <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
                         (click)="deleteCheckedRow()">
                         <i class="d-md-none d-block feather ft-plus white"></i>
-                        <span class="d-md-block d-none">一括削除</span></button>
+                        <span class="d-md-block d-none">削　除</span></button>
                     </div>
                   </div>
                   <div class="table-responsive">
@@ -89,7 +89,7 @@
                             <i *ngIf="valueSortFlg.versionNameDown" class="la la-sort-down"></i>
                           </th>
                           <th scope="col" class="thcolor">詳細</th>
-                          <th scope="col" class="thcolor">DownLoad</th>
+                          <th scope="col" class="thcolor">ダウンロードURL</th>
                           
                         </tr>
                       </thead>
@@ -99,8 +99,8 @@
                             <input type="checkbox" [checked]="element.isSelected"
                               (change)="checkChange($event,element)">
                           </td>
-                          <td>{{(page-1)*pageSize+i+1}}</td>
-                          <td>
+                          <td nowrap>{{(page-1)*pageSize+i+1}}</td>
+                          <td nowrap>
                             <div class="row">
                               <a class="primary edit mr-1 mrless"
                                 (click)="editVersionDataModal(editVersionDataModalContent, element)" title="編集"><i
@@ -109,17 +109,23 @@
                               <a class="danger delete"><i class="la la-trash-o" (click)="deleteRow(element)" title="削除"></i></a>
                             </div>
                           </td>
-                          <td>{{ element.productname }}</td>
-                          <td>{{ element.versioncode }}</td>
-                          <td>{{ element.versionname }}</td>
-                          <td>{{ element.description}}</td>
-                          <td>{{ element.downloadurl}}</td>
+                          <td nowrap>{{ element.productname }}</td>
+                          <td nowrap>{{ element.versioncode }}</td>
+                          <td nowrap>{{ element.versionname }}</td>
+                          <td nowrap>{{ element.description}}</td>
+                          <td nowrap>{{ element.downloadurl}}</td>
                           
                           
                         </tr>
                       </tbody>
                     </table>
                     <div class="d-flex justify-content-between p-2">
+                      <div *ngIf="dataCount === 0">{{dataCount}} 件</div>
+                      <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">{{dataCount}} 件中
+                    {{(page-1) * pageSize + 1}} ~ {{page * pageSize}} を表示</div>
+                      <div *ngIf="dataCount<pageSize*page">{{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~
+                    {{dataCount}}
+                    を表示</div>
                       <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
                       </ngb-pagination>
                       <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">

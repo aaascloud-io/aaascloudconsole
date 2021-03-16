@@ -8,12 +8,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BreadcrumbModule } from 'src/app/_layout/breadcrumb/breadcrumb.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
-import {ToastModule} from 'primeng/toast';
-import {MessageService} from 'primeng/api';
-import {ButtonModule} from 'primeng/button';
-import {RippleModule} from 'primeng/ripple';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
-import {ConfirmationService} from 'primeng/api';
+import {ToastModule} from 'primeng/toast';  
+import {MessageService} from 'primeng/api';  
+import {ButtonModule} from 'primeng/button';  
+import {RippleModule} from 'primeng/ripple';  
+import {ConfirmDialogModule} from 'primeng/confirmdialog';  
+import {ConfirmationService} from 'primeng/api';  
 
 
 @NgModule({

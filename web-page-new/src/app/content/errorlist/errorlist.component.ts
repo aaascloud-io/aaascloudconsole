@@ -42,7 +42,7 @@ export class ErrorlistComponent implements OnInit {
     datatimeUp : false,
     datatimeDown : false,
   };
-
+  dataCount: 0;
 
   public config: PerfectScrollbarConfigInterface = { };
 
@@ -93,8 +93,6 @@ export class ErrorlistComponent implements OnInit {
     this.initData();
   }
 
-  
-
   // errorlist データ取得
   initData(){
     this.rows = [];
@@ -112,6 +110,7 @@ export class ErrorlistComponent implements OnInit {
         item.forEach(element => {
           this.rows.push(element);
         });
+        this.dataCount = item.length;
         this.rows = [...this.rows];
         this.getTabledata();
         console.log("rows 数据");
@@ -120,8 +119,6 @@ export class ErrorlistComponent implements OnInit {
         console.log('デバイスを検索APIエラー発生しました。');
       }
     });
-
-
     // var res = await this.httpService.post("/getErrlogList",param);
     // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
     // jsonItem.forEach(element => {
@@ -167,17 +164,19 @@ export class ErrorlistComponent implements OnInit {
   }
     // エラー処理履歴データ取得
   getErrResumeList(selectedErrorItem){
+    this.errResumeList = [];
     var param = {
       // "loginInfo":this.pageModel.loginInfo,
       // "targetUserInfo":this.pageModel.targetUserInfo,
       "rowid":selectedErrorItem.rowid,
     };
-
     this.httpService.usePost('/getErrResumeList',param).then(item => {
       try {
         item.forEach(element => {
+          element["i_time"] = Date.parse(element["i_time"]);
           this.errResumeList.push(element);
-        });
+          });
+        this.errResumeList.sort(this.alphabetically(false, "i_time"));
         this.errResumeList = [...this.errResumeList];
       } catch (e) {
         console.log('デバイスを検索APIエラー発生しました。');
@@ -218,12 +217,8 @@ export class ErrorlistComponent implements OnInit {
       this.showAlert('warn' , '対応メモを入力してください。');
       flg = false;
     }
-
-
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null && flg) {
-
-
       this.confirmationService.confirm({
         message: "対応情報を提出しますか",
         header: '対応情報提出確認',
@@ -269,14 +264,12 @@ export class ErrorlistComponent implements OnInit {
       this.rows.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
     }
-
     this.valueSortFlg.errCodeUp = false;
     this.valueSortFlg.errCodeDown = false;
     this.valueSortFlg.deviceUp = false;
     this.valueSortFlg.deviceDown = false;
     this.valueSortFlg.datatimeUp = false;
     this.valueSortFlg.datatimeDown = false;
-
     switch (nm) {
       case 'errcode':
         if (this.sortOn == 1) {

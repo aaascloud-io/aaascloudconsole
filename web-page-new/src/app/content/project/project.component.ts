@@ -76,6 +76,7 @@ export class ProjectComponent implements OnInit {
     groupCountsUp : false,
     groupCountsDown : false,
   };
+  dataCount: 0;
 
   
 
@@ -159,6 +160,7 @@ export class ProjectComponent implements OnInit {
         item.forEach(element => {
           this.rows.push(element);
         });
+        this.dataCount = item.length;
         this.rows = [...this.rows];
         this.getTabledata();
         this.getProductTypes();
@@ -698,15 +700,15 @@ export class ProjectComponent implements OnInit {
               try {
                 if (item.resultCode == "0000") {
                   this.selectedDevice=[];
-                  this.showAlert("success", "プロジェクトからデバイスを削除しました。");
+                  this.showAlert("success", "プロジェクトからデバイスを解除しました。");
                   if (projectLinkedDeviceForm.valid === true) {
                     projectLinkedDeviceForm.reset();
                     this.editModal.close(projectLinkedDeviceForm.resetForm);
                   }
                 }else{
-                  console.log('削除失敗、ご確認してください。');
+                  console.log('解除失敗、ご確認してください。');
                   console.log(item);
-                  this.showAlert("error", "削除失敗、ご確認してください。");
+                  this.showAlert("error", "解除失敗、ご確認してください。");
                 }
                 this.ngOnInit();
               } catch (e) {
