@@ -520,7 +520,9 @@ export class HttpService {
                 role: res.loginrole,
                 upperuserid: res.loginupperuserid,
                 fullname: res.fullname,
-                access_token: ConstantsHandler.TOKEN.access_token
+                access_token: "aaasdami"
+                // access_token: ConstantsHandler.TOKEN.access_token
+
             }
             this.dataFatoryService.setUserInfo(temp);
 
