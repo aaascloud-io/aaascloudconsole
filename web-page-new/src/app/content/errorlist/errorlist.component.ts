@@ -96,23 +96,41 @@ export class ErrorlistComponent implements OnInit {
   
 
   // errorlist データ取得
-  async initData(){
+  initData(){
     this.rows = [];
     var param = {
-      "loginInfo":this.pageModel.loginInfo,
-      "targetUserInfo":this.pageModel.targetUserInfo,
+      // "loginInfo":this.pageModel.loginInfo,
+      // "targetUserInfo":this.pageModel.targetUserInfo,
       "username": this.pageModel.loginInfo["loginusername"],
     };
     this.rows = [];
-    var res = await this.httpService.post("/getErrlogList",param);
-    let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-    jsonItem.forEach(element => {
-      this.rows.push(element);
+
+    this.httpService.usePost('/getErrlogList',param).then(item => {
+      console.log("rows 数据");
+      console.log(this.rows);
+      try {
+        item.forEach(element => {
+          this.rows.push(element);
+        });
+        this.rows = [...this.rows];
+        this.getTabledata();
+        console.log("rows 数据");
+        console.log(this.rows);
+      } catch (e) {
+        console.log('デバイスを検索APIエラー発生しました。');
+      }
     });
-    this.rows = [...this.rows];
-    this.getTabledata();
-    console.log("rows 数据");
-    console.log(this.rows);
+
+
+    // var res = await this.httpService.post("/getErrlogList",param);
+    // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+    // jsonItem.forEach(element => {
+    //   this.rows.push(element);
+    // });
+    // this.rows = [...this.rows];
+    // this.getTabledata();
+    // console.log("rows 数据");
+    // console.log(this.rows);
   }
 
   getTabledata() {
@@ -148,19 +166,30 @@ export class ErrorlistComponent implements OnInit {
     this.getErrResumeList(this.selectedErrorItem);
   }
     // エラー処理履歴データ取得
-  async getErrResumeList(selectedErrorItem){
+  getErrResumeList(selectedErrorItem){
     var param = {
-      "loginInfo":this.pageModel.loginInfo,
-      "targetUserInfo":this.pageModel.targetUserInfo,
+      // "loginInfo":this.pageModel.loginInfo,
+      // "targetUserInfo":this.pageModel.targetUserInfo,
       "rowid":selectedErrorItem.rowid,
     };
-    var res = await this.httpService.post("/getErrResumeList",param);
-    let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-    this.errResumeList = [];
-    jsonItem.forEach(element => {
-      this.errResumeList.push(element);
+
+    this.httpService.usePost('/getErrResumeList',param).then(item => {
+      try {
+        item.forEach(element => {
+          this.errResumeList.push(element);
+        });
+        this.errResumeList = [...this.errResumeList];
+      } catch (e) {
+        console.log('デバイスを検索APIエラー発生しました。');
+      }
     });
-    this.errResumeList = [...this.errResumeList];
+    // var res = await this.httpService.post("/getErrResumeList",param);
+    // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+    // this.errResumeList = [];
+    // jsonItem.forEach(element => {
+    //   this.errResumeList.push(element);
+    // });
+    // this.errResumeList = [...this.errResumeList];
   } 
     // Modal を閉める
   closeErrProcessingHistoryModal(errProcessHistory, row){
@@ -200,9 +229,8 @@ export class ErrorlistComponent implements OnInit {
         header: '対応情報提出確認',
         accept: () => {
           var param = {
-            "loginInfo":this.pageModel.loginInfo,
-            "targetUserInfo":this.pageModel.targetUserInfo,
-            
+            // "loginInfo":this.pageModel.loginInfo,
+            // "targetUserInfo":this.pageModel.targetUserInfo,
             "errlogid": this.selectedErrorItem.errlogid,
             "contents":this.selectedErrorItem.contents,
             "doneFlag": this.selectedErrorItem.doneFlag,
