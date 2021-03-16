@@ -3,12 +3,12 @@ import { NgForm } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import * as XLSX from 'xlsx';
-import { AlertService } from '../../_services/alert.service';
 import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from '../../_common/_interface/userInfo'
-import { DataFatoryService } from 'src/app/_services/DataFatoryService';
-import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
+import { MessageService } from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
+
 
 class Contact {
   constructor(
@@ -119,11 +119,16 @@ export class GroupComponent implements OnInit {
     private modal: NgbModal,
     private _renderer: Renderer2,
     private httpService: HttpService,
+    private primengConfig: PrimeNGConfig,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
+
   ) {
     // this.getProductAll();
   }
 
   ngOnInit(): void {
+    this.primengConfig.ripple = true;
     this.pageSize = 10;
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
     this.userInfo = this.httpService.getLoginUser();
@@ -188,24 +193,31 @@ export class GroupComponent implements OnInit {
    * @param row     Selected row for delete contact
    */
   deleteRow(row) {
-    if (confirm("削除してもよろしいでしょうか")) {
-      var query = {
-        "groupid": row.groupid,
-      }
-      this.httpService.useRpDelete('deleteGroup', query).then(item => {
-        try {
-          if (item.resultCode === "0000") {
-
-            this.searchGroups();
-            alert('削除成功です。');
-          } else {
-            console.log('削除失敗です。');
-          }
-        } catch (e) {
-          console.log('削除失敗です。');
+    this.confirmationService.confirm({
+      message: "グループ：" + row.groupname + "を削除します。よろしいですか？",
+      header: 'グループ削除確認',
+      accept: () => {
+        var query = {
+          "groupid": row.groupid,
         }
-      });
-    }
+        this.httpService.useRpDelete('deleteGroup', query).then(item => {
+          try {
+            if (item.resultCode === "0000") {
+
+              this.searchGroups();
+              this.showAlert("success", "グループを削除しました。");
+            } else {
+              this.showAlert("error", "削除失敗、ご確認してください。");
+            }
+          } catch (e) {
+            this.showAlert("error", e);
+          }
+        });
+      },
+      reject: () => {
+        this.showAlert("info", "削除操作を取消しました");
+      },
+    });
   }
 
   /**
@@ -221,27 +233,34 @@ export class GroupComponent implements OnInit {
       }
     }
     if (!flg) {
-      alert("プロダクトを選択してください");
+      this.showAlert("warn", "グループを選択してください。");
       return
     }
-    if (confirm("選択したデーターを削除しますか")) {
-      var query = {
-        "groupidList": deleteCheckedids,
-      }
-      this.httpService.useRpDelete('deleteGroups', query).then(item => {
-        try {
-          if (item.resultCode === "0000") {
-            this.searchGroups();
-            alert('削除成功です。');
-            this.groupSelected = false;
-          } else {
-            console.log('削除失敗です。');
-          }
-        } catch (e) {
-          console.log('削除失敗です。');
+    this.confirmationService.confirm({
+      message: "選択したデーターを削除しますか",
+      header: 'グループ削除確認',
+      accept: () => {
+        var query = {
+          "groupidList": deleteCheckedids,
         }
-      });
-    }
+        this.httpService.useRpDelete('deleteGroups', query).then(item => {
+          try {
+            if (item.resultCode === "0000") {
+              this.searchGroups();
+              this.showAlert("success", "選択したグループを削除しました");
+              this.groupSelected = false;
+            } else {
+              this.showAlert("error", "削除失敗、ご確認してください。");
+            }
+          } catch (e) {
+            this.showAlert("error", e);
+          }
+        });
+      },
+      reject: () => {
+        this.showAlert("info", "削除操作を取消しました");
+      },
+    });
   }
 
   /**
@@ -258,19 +277,20 @@ export class GroupComponent implements OnInit {
       "summary": this.selectedContact.summary
     }
 
-    this.httpService.usePost('updateGroup', query).then(item => {
+    this.httpService.useRpPost('updateGroup', query).then(item => {
       try {
-        console.log('更新成功です。');
-        console.log(item);
-        alert('更新成功です。');
-        this.searchGroups();
-        if (editForm.valid === true) {
-          editForm.reset();
-          this.updateModal.close(editForm.resetForm);
+        if (item) {
+          this.showAlert("success", "グループ情報を改修しました");
+          this.searchGroups();
+          if (editForm.valid === true) {
+            editForm.reset();
+            this.updateModal.close(editForm.resetForm);
+          }
+        } else {
+          this.showAlert("error", "改修失敗、ご確認してください。");
         }
       } catch (e) {
-        console.log('更新失敗です。');
-        alert('更新失敗です。');
+        this.showAlert("error", e);
       }
     });
   }
@@ -288,7 +308,6 @@ export class GroupComponent implements OnInit {
     }
   }
 
-
   /**
    * favorite set when add contact
    *
@@ -303,7 +322,7 @@ export class GroupComponent implements OnInit {
   }
 
   /**
-   * New contact add to the table
+   * グループを新規する
    *
    * @param addForm     Add contact form
    */
@@ -313,12 +332,12 @@ export class GroupComponent implements OnInit {
     var flg = true;
 
     if (flg && !projectid) {
-      confirm(`プロジェクを指定してください。`);
+      this.showAlert("success", "プロジェクトを指定してください。");
       flg = false;
     }
 
     if (flg && !groupname) {
-      confirm(`グループ名を入力してください。`);
+      this.showAlert("success", "グループ名を入力してください。");
       flg = false;
     }
 
@@ -332,19 +351,18 @@ export class GroupComponent implements OnInit {
       this.httpService.useRpPost('registerGroup', query).then(item => {
         try {
           if (item.resultCode === "0000") {
-            console.log('登録成功です。');
+            this.showAlert("success", "グループを登録しました。");
             console.log(item);
             if (editForm.valid === true) {
               editForm.reset();
               this.addModal.close(editForm.resetForm);
             }
-            alert('登録成功です。');
             this.searchGroups();
           } else {
-            alert('登録失敗です。');
+            this.showAlert("error", "登録失敗、ご確認してください。");
           }
         } catch (e) {
-          alert('登録失敗です。');
+          this.showAlert("error", e);
         }
       });
     }
@@ -610,32 +628,40 @@ export class GroupComponent implements OnInit {
       }
     }
     if (!flg) {
-      alert("プロダクトを選択してください");
+      this.showAlert("success", "追加のデバイスを選択してください。");
       return
     }
-    if (confirm("選択したデバイスをプロジェクトに連携しますか")) {
-
-      var query = {
-        "groupid": this.groupDeviceSelected.groupid,
-        "projectid": this.groupDeviceSelected.projectid,
-        "deviceList": selectedDevice,
-      };
-
-      this.httpService.useRpPut('addGroupDevices', query).then(item => {
-        try {
-          if (item.resultCode == "0000") {
-            alert('選択したデバイスを追加しました。');
-            if (groupDeviceForm.valid === true) {
-              groupDeviceForm.reset();
-              this.addDeviceModal.close(groupDeviceForm.resetForm);
-            }
-          }
-          this.ngOnInit();
-        } catch (e) {
-          alert("登録失敗");
+    this.confirmationService.confirm({
+      message: "選択したデバイスをグループに追加しますか",
+      header: 'デバイス追加確認',
+      accept: () => {
+        var query = {
+          "groupid": this.groupDeviceSelected.groupid,
+          "projectid": this.groupDeviceSelected.projectid,
+          "deviceList": selectedDevice,
         };
-      });
-    }
+
+        this.httpService.useRpPut('addGroupDevices', query).then(item => {
+          try {
+            if (item.resultCode == "0000") {
+              this.ngOnInit();
+              this.showAlert("success", "デバイスを追加しました。");
+              if (groupDeviceForm.valid === true) {
+                groupDeviceForm.reset();
+                this.addDeviceModal.close(groupDeviceForm.resetForm);
+              }
+            } else {
+              this.showAlert("error", "追加失敗、ご確認してください。");
+            }
+          } catch (e) {
+            this.showAlert("error", e);
+          };
+        });
+      },
+      reject: () => {
+        this.showAlert("info", "デバイス追加操作を取消しました");
+      },
+    });
   }
 
   /*=======================グループのデバイス削除連携↓================================*/
@@ -654,7 +680,7 @@ export class GroupComponent implements OnInit {
   }
 
   /**
-   * グループのデバイス一覧（削除）
+   * グループのデバイス一覧（解除）
    */
   protected async getMyGroupDeviceList(row) {
     var query = {
@@ -663,12 +689,13 @@ export class GroupComponent implements OnInit {
     };
     this.httpService.usePost("/getGroupDevices", query).then(item => {
       try {
-        this.groupDeviceList = item;
-        console.log("デバイス削除連携一覧取得");
-        console.log(JSON.stringify(item));
-
+        if (item) {
+          this.groupDeviceList = item;
+        } else {
+          this.showAlert("error", "グループのデバイス取得は失敗しました。");
+        }
       } catch (e) {
-        console.log();
+        this.showAlert("error", e);
       }
     });
   }
@@ -684,7 +711,7 @@ export class GroupComponent implements OnInit {
   }
 
   /**
-   * グループのデバイスを削除する
+   * グループのデバイスを解除する
    */
   groupLinkedDeviceDataUpdate(groupDeviceForm) {
 
@@ -697,35 +724,40 @@ export class GroupComponent implements OnInit {
       }
     }
     if (!flg) {
-      alert("デバイスを選択してください");
+      this.showAlert("success", "グループを選択してください");
       return
     }
-    if (confirm("選択したデバイスをグループに追加しますか")) {
-
-      var query = {
-        "groupid": this.groupDeviceSelected.groupid,
-        "projectid": this.groupDeviceSelected.projectid,
-        "deviceList": selectedDevice,
-      };
-
-      this.httpService.useRpPut('deleteGroupDevices', query).then(item => {
-        try {
-          if (item.resultCode == "0000") {
-            alert('選択したデバイスを削除しました。');
-            if (groupDeviceForm.valid === true) {
-              groupDeviceForm.reset();
-              this.deleteDeviceModal.close(groupDeviceForm.resetForm);
-            }
-          }
-          this.ngOnInit();
-        } catch (e) {
-          console.log(e);
-          this.ngOnInit();
+    this.confirmationService.confirm({
+      message: "選択したデバイスをプロジェクトから解除しますか",
+      header: 'デバイス解除確認',
+      accept: () => {
+        var query = {
+          "groupid": this.groupDeviceSelected.groupid,
+          "projectid": this.groupDeviceSelected.projectid,
+          "deviceList": selectedDevice,
         };
-      });
-    }
 
-    this.ngOnInit();
+        this.httpService.useRpPut('deleteGroupDevices', query).then(item => {
+          try {
+            if (item.resultCode == "0000") {
+              this.showAlert("success", "グループからデバイスを解除しました。");
+              if (groupDeviceForm.valid === true) {
+                groupDeviceForm.reset();
+                this.deleteDeviceModal.close(groupDeviceForm.resetForm);
+              }
+            } else {
+              this.showAlert("error", "解除失敗、ご確認してください。");
+            }
+            this.ngOnInit();
+          } catch (e) {
+            this.showAlert("error", e);
+          };
+        });
+      },
+      reject: () => {
+        this.showAlert("info", "解除操作を取消しました");
+      },
+    });
   }
 
   /*=======================グループのデバイス詳細↓================================*/
@@ -747,5 +779,15 @@ export class GroupComponent implements OnInit {
     if (this.deviceInfoModal != null) {
       this.deviceInfoModal.close(openForm.resetForm);
     }
+  }
+
+  showAlert(alertType, alertDetail) {
+    this.messageService.add({
+      key: 'alertModal',
+      severity: alertType,
+      summary: alertType,
+      detail: alertDetail,
+      life: 2000
+    });
   }
 }

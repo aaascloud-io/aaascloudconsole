@@ -319,7 +319,6 @@ export class ProductComponent implements OnInit {
       this.httpService.useRpPut('updateProduct', query).then(item => {
         try {
           if (item.resultCode === "0000") {
-
             this.showAlert("success", "プロダクト情報を改修しました");
             this.searchMyProduct();
             if (editForm.valid === true) {
