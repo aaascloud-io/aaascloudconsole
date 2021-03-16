@@ -79,24 +79,18 @@ export class LoginComponent implements OnInit {
     };
 
     try {
-      ///認証
-    // var resToken =  await this.httpService.accessToken(
-    //     this.f.email.value,
-    //     this.f.password.value
-    //   );
- 
+      // 認証
+      var resToken = await this.httpService.accessToken(
+        this.f.email.value,
+        this.f.password.value
+      );
+
       ///自身の情報取得
       // var res = await this.userService.getMyInfo().toPromise();
 
-      // var param = { 
-      //   "username": this.f.email.value ,
-      //   "access_token":resToken["access_token"]
-      // };
-
-
-            var param = { 
-        "username": this.f.email.value ,
-        "access_token":"aaasdami"
+      var param = {
+        "username": this.f.email.value,
+        "access_token": resToken["access_token"]
       };
 
       var resUser = await this.httpService.usePost('/login', param).then(item => {
