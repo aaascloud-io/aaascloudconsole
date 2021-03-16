@@ -71,6 +71,7 @@ export class VersionComponent implements OnInit {
     versionNameUp : false,
     versionNameDown : false,
   };
+  dataCount: 0;
 
   
   public config: PerfectScrollbarConfigInterface = { };
@@ -146,24 +147,42 @@ export class VersionComponent implements OnInit {
 
   }
 
-  async initData(){
+  initData(){
     // 把服务器请求到的数据存在 rows 数组中
     this.rows = [];
     let param = {
-      "loginInfo":this.pageModel.loginInfo,
-      "targetUserInfo":this.pageModel.targetUserInfo,
-      "username": this.pageModel.loginInfo["loginusername"],
+      // "loginInfo":this.pageModel.loginInfo,
+      // "targetUserInfo":this.pageModel.targetUserInfo,
+      // "username": this.pageModel.loginInfo["loginusername"],
     };
-    var res = await this.httpService.post("/getAllVersions",param);
-    let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-    jsonItem.forEach(element => {
-      this.rows.push(element);
-    });
-    this.rows = [...this.rows];
-    this.getTabledata();
-    this.getProductNameList();
-    console.log("rows");
-    console.log(this.rows);
+
+    this.httpService.usePost('/getAllVersions',param).then(item => {
+      try {
+        if (item != null) {
+          item.forEach(element => {
+            this.rows.push(element);
+          });
+          this.dataCount = item.length;
+          this.rows = [...this.rows];
+          this.getTabledata();
+          this.getProductNameList();
+          console.log("rows");
+          console.log(this.rows);
+        }
+      } catch (e) {
+        console.log('デバイスを検索APIエラー発生しました。');
+      }
+    })
+    // var res = await this.httpService.post("/getAllVersions",param);
+    // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+    // jsonItem.forEach(element => {
+    //   this.rows.push(element);
+    // });
+    // this.rows = [...this.rows];
+    // this.getTabledata();
+    // this.getProductNameList();
+    // console.log("rows");
+    // console.log(this.rows);
   }
 
 
@@ -197,8 +216,8 @@ export class VersionComponent implements OnInit {
     if (routeif != null && flg) {
       var param = {
         // 登録データ
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
+        // "loginInfo":this.pageModel.loginInfo,
+        // "targetUserInfo":this.pageModel.targetUserInfo,
         // プロジェクト更新データ
         "productid": this.addVersion['productid'],
         "versioncode": this.addVersion['versioncode'],
@@ -235,8 +254,8 @@ export class VersionComponent implements OnInit {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       var param = {
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
+        // "loginInfo":this.pageModel.loginInfo,
+        // "targetUserInfo":this.pageModel.targetUserInfo,
         "productname": this.searchValue.productname,
         "versionname": this.searchValue.versionname,
       };
@@ -276,23 +295,23 @@ export class VersionComponent implements OnInit {
           let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
           if (routeif != null) {
             var param = {
-              "loginInfo":this.pageModel.loginInfo,
-              "targetUserInfo":this.pageModel.targetUserInfo,
+              // "loginInfo":this.pageModel.loginInfo,
+              // "targetUserInfo":this.pageModel.targetUserInfo,
               "rowid":row.rowid,
             };
           }
-          this.httpService.delete('deleteVersion',param).then(item=>{
+          this.httpService.useRpDelete('deleteVersion',param).then(item=>{
             console.log("这是 delete 的 item");
             console.log(item);
             try{
-              if(item.body.resultCode == "0000"){
+              if(item.resultCode == "0000"){
 
-                this.ngOnInit();
                 this.showAlert("success","バージョンを削除しました。");
+                this.ngOnInit();
               }else{
-                console.log('登録失敗、ご確認してください。');
+                console.log('削除失敗、ご確認してください。');
                 console.log(item);
-                this.showAlert("error","登録失敗、ご確認してください。");
+                this.showAlert("error","削除失敗、ご確認してください。");
               }
             }catch(e){
               this.showAlert("error",e);
@@ -343,8 +362,8 @@ export class VersionComponent implements OnInit {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null && flg) {
       var param = {
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
+        // "loginInfo":this.pageModel.loginInfo,
+        // "targetUserInfo":this.pageModel.targetUserInfo,
 
         "rowid": this.selectedVersion.rowid,
         "productid":this.selectedVersion.productid,
@@ -396,8 +415,8 @@ export class VersionComponent implements OnInit {
         header: 'プロジェクト削除確認',
         accept: () => {
           var query = {
-            "loginInfo":this.pageModel.loginInfo,
-            "targetUserInfo":this.pageModel.targetUserInfo,
+            // "loginInfo":this.pageModel.loginInfo,
+            // "targetUserInfo":this.pageModel.targetUserInfo,
             "rowidlist": this.selected,
           }
           this.httpService.useRpDelete('deleteVersions', query).then(item => {
@@ -531,21 +550,36 @@ export class VersionComponent implements OnInit {
   /**
    * プロダクト名覧取得
    */
-  protected async getProductNameList() {
+  getProductNameList() {
     this.productNameList = [];
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       var param = {
-        "loginInfo":this.pageModel.loginInfo,
-        "targetUserInfo":this.pageModel.targetUserInfo,
+        // "loginInfo":this.pageModel.loginInfo,
+        // "targetUserInfo":this.pageModel.targetUserInfo,
         "projectname": this.searchValue,
       };
-      var res = await this.httpService.post("/searchMyProduct",param);
-      let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-      jsonItem.forEach(element => {
-        this.productNameList.push(element);
-        this.productNameList = [...this.productNameList];
+      this.httpService.usePost('searchMyProduct', param).then(item => {
+        try {
+          if (item) {
+            this.productNameList = item;
+            console.log(this.productNameList);
+            console.log("すべてのユーザーの取得は成功しました。");
+            this.productNameList = [...this.productNameList];
+          } else {
+            console.log("すべてのユーザーの取得は0件。");
+          }
+        } catch (e) {
+          console.log("すべてのユーザーの取得は失敗しました。");
+        }
       });
+
+      // var res = await this.httpService.post("/searchMyProduct",param);
+      // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
+      // jsonItem.forEach(element => {
+      //   this.productNameList.push(element);
+      //   this.productNameList = [...this.productNameList];
+      // });
     }
   }
 

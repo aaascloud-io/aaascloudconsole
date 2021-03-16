@@ -7,9 +7,9 @@ import * as XLSX from 'xlsx';
 import { AlertService } from '../../_services/alert.service';
 import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from '../../_common/_interface/userInfo'
-import { DataFatoryService } from 'src/app/_services/DataFatoryService';
-import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
-// import { USERCODE } from '../../_common/_utils/codes-utils';
+import { MessageService } from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 
 class Contact {
   constructor(
@@ -24,7 +24,7 @@ class Contact {
     public summary: string,
     public producttypename: string,
     public createusername: string,
-    public createuserid: string
+    public createuserid: string,
   ) { }
 }
 const formInputData = require('../../../assets/data/forms/form-elements/form-inputs.json');
@@ -33,7 +33,8 @@ const selectData = require('../../../assets/data/forms/form-elements/select.json
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css']
+  styleUrls: ['./product.component.css'],
+  providers: [MessageService, ConfirmationService],
 })
 export class ProductComponent implements OnInit {
 
@@ -99,13 +100,6 @@ export class ProductComponent implements OnInit {
       sim: 0,
       summary: ''
     },
-    loginUser: {
-      loginuserid: null,
-      loginusername: '',
-      loginrole: null,
-      logincompanyid: '',
-    },
-    userInfoParame: {},
     query: {
       producttypename: '',
       productname: '',
@@ -144,36 +138,20 @@ export class ProductComponent implements OnInit {
   constructor(
     private modal: NgbModal,
     private _renderer: Renderer2,
-    private alertService: AlertService,
     private httpService: HttpService,
-    private dataFatoryService: DataFatoryService,
+    private messageService: MessageService,
+    private primengConfig: PrimeNGConfig,
+    private confirmationService: ConfirmationService,
   ) {
     // this.getProductAll();
   }
 
   ngOnInit(): void {
+    this.primengConfig.ripple = true;
     this.pageSize = 10;
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
-    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    this.userInfo = this.httpService.getLoginUser();
 
-    //to do ユーザー名で　ロケーションデータを取る
-    this.pageModel.loginUser.loginuserid = item.uid;
-    this.pageModel.loginUser.loginusername = item.login_id;
-    this.pageModel.loginUser.loginrole = item.role;
-    this.pageModel.loginUser.logincompanyid = item.company;
-
-    this.pageModel.userInfoParame = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "loginusername": this.pageModel.loginUser.loginusername,
-        "loginrole": this.pageModel.loginUser.loginrole,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
-      }
-    }
     this.getProductTypes();
     this.getUnderUsers();
     this.searchMyProduct();
@@ -234,32 +212,35 @@ export class ProductComponent implements OnInit {
   }
 
   /**
-   * Delete contact row
-   * @param row     Selected row for delete contact
+   * プロダクトを削除する
+   * @param row
    */
   deleteRow(row) {
-    if (confirm("削除してもよろしいでしょうか")) {
-      var query = {
-        "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-        },
-        "productid": row.productid,
-      }
-      this.httpService.delete('deleteProduct', query).then(item => {
-        try {
-          if (item.body.resultCode === "0000") {
-
-            this.searchMyProduct();
-            alert('削除成功です。');
-          } else {
-            console.log('削除失敗です。');
-          }
-        } catch (e) {
-          console.log('削除失敗です。');
+    this.confirmationService.confirm({
+      message: row.productname + "を削除します。よろしいですか？",
+      header: 'プロダクト削除確認',
+      accept: () => {
+        var query = {
+          "productid": row.productid,
         }
-      });
-    }
+        this.httpService.useRpDelete('deleteProduct', query).then(item => {
+          try {
+            if (item.resultCode === "0000") {
+
+              this.searchMyProduct();
+              this.showAlert("success", "プロジェクトを削除しました。");
+            } else {
+              this.showAlert("error", "削除失敗、ご確認してください。");
+            }
+          } catch (e) {
+            this.showAlert("error", e);
+          }
+        });
+      },
+      reject: () => {
+        this.showAlert("info", "削除操作を取消しました");
+      },
+    });
   }
 
   /**
@@ -276,31 +257,35 @@ export class ProductComponent implements OnInit {
       }
     }
     if (!flg) {
-      alert("プロダクトを選択してください");
+      this.showAlert("warn", "プロダクトを選択してください。");
       return
     }
-    if (confirm("選択したデーターを削除しますか")) {
-      var query = {
-        "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-        },
-        "productidlist": deleteCheckedids,
-      }
-      this.httpService.delete('deleteProducts', query).then(item => {
-        try {
-          if (item.body.resultCode === "0000") {
-            this.searchMyProduct();
-            alert('削除成功です。');
-            this.productSelected = false;
-          } else {
-            alert('削除失敗です。');
-          }
-        } catch (e) {
-          console.log('削除失敗です。');
+    this.confirmationService.confirm({
+      message: "選択したデーターを削除しますか",
+      header: 'プロダクト削除確認',
+      accept: () => {
+
+        var query = {
+          "productidlist": deleteCheckedids,
         }
-      });
-    }
+        this.httpService.useRpDelete('deleteProducts', query).then(item => {
+          try {
+            if (item.resultCode === "0000") {
+              this.searchMyProduct();
+              this.showAlert("success", "選択したプロダクトを削除しました");
+              this.productSelected = false;
+            } else {
+              this.showAlert("error", "削除失敗、ご確認してください。");
+            }
+          } catch (e) {
+            this.showAlert("error", e);
+          }
+        });
+      },
+      reject: () => {
+        this.showAlert("info", "削除操作を取消しました");
+      },
+    });
   }
 
   /**
@@ -311,45 +296,44 @@ export class ProductComponent implements OnInit {
    */
   onUpdate(editForm: NgForm) {
 
-    this.selectedContact.simflag = this.simFlg === true ? 1 : 0;
-    var query = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-      },
-
-      "productid": this.selectedContact.productid,
-      "createuserid": this.selectedContact.createuserid,
-      "producttypeid": this.selectedContact.producttypeid,
-      "productcode": this.selectedContact.productcode,
-      "productname": this.selectedContact.productname,
-      "model": this.selectedContact.model,
-      "version": this.selectedContact.version,
-      "simflag": this.selectedContact.simflag,
-      "summary": this.selectedContact.summary
+    var flg = true;
+    if (flg && !this.selectedContact.productname) {
+      this.showAlert("warn", "プロダクト名を入力してください。");
+      flg = false;
     }
 
-    this.httpService.put('updateProduct', query).then(item => {
-      try {
-        if (item.resultCode === "0000") {
-          console.log('更新成功です。');
-          console.log(item);
-          alert('更新成功です。');
-          this.searchMyProduct();
-          if (editForm.valid === true) {
-            editForm.reset();
-            this.updateModal.close(editForm.resetForm);
-          }
-        } else {
-          alert('更新失敗です。');
-        }
-      } catch (e) {
-        alert('更新失敗です。');
+    if (flg) {
+      this.selectedContact.simflag = this.simFlg === true ? 1 : 0;
+      var query = {
+        "productid": this.selectedContact.productid,
+        "createuserid": this.selectedContact.createuserid,
+        "producttypeid": this.selectedContact.producttypeid,
+        "productcode": this.selectedContact.productcode,
+        "productname": this.selectedContact.productname,
+        "model": this.selectedContact.model,
+        "version": this.selectedContact.version,
+        "simflag": this.selectedContact.simflag,
+        "summary": this.selectedContact.summary
       }
-    });
+
+      this.httpService.useRpPut('updateProduct', query).then(item => {
+        try {
+          if (item.resultCode === "0000") {
+
+            this.showAlert("success", "プロダクト情報を改修しました");
+            this.searchMyProduct();
+            if (editForm.valid === true) {
+              editForm.reset();
+              this.updateModal.close(editForm.resetForm);
+            }
+          } else {
+            this.showAlert("error", "改修失敗、ご確認してください。");
+          }
+        } catch (e) {
+          this.showAlert("error", e);
+        }
+      });
+    }
   }
 
   /**
@@ -397,28 +381,23 @@ export class ProductComponent implements OnInit {
     var flg = true;
 
     if (flg && !productTypeId) {
-      confirm(`タイプを選択してください。`);
+      this.showAlert("warn", "タイプを選択してください。");
       flg = false;
     }
 
     if (flg && !createuserid) {
-      confirm(`利用者を選択してください。`);
+      this.showAlert("warn", "利用者を選択してください。");
       flg = false;
     }
 
     if (flg && !productName) {
-      confirm(`会社名を入力してください。`);
+      this.showAlert("warn", "会社名を選択してください。");
       flg = false;
     }
 
     if (flg) {
       var sim = this.pageModel.addProduct.sim === true ? '1' : '0';
       var query = {
-        "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.addProduct.createuserid,
-        },
-
         "producttypeid": this.pageModel.addProduct.productTypeId,
         "createuserid": this.pageModel.addProduct.createuserid,
         "productcode": this.pageModel.addProduct.productcode,
@@ -432,19 +411,19 @@ export class ProductComponent implements OnInit {
       this.httpService.useRpPost('registerProduct', query).then(item => {
         try {
           if (item.resultCode === "0000") {
+            this.showAlert("success", "プロダクトを登録しました。");
             console.log('登録成功です。');
             console.log(item);
             if (editForm.valid === true) {
               editForm.reset();
               this.addModal.close(editForm.resetForm);
             }
-            alert('登録成功です。');
             this.searchMyProduct();
           } else {
-            alert('登録失敗です。');
+            this.showAlert("error", "登録失敗、ご確認してください。");
           }
         } catch (e) {
-          alert('登録失敗です。');
+          this.showAlert("error", e);
         }
       });
     }
@@ -484,14 +463,9 @@ export class ProductComponent implements OnInit {
   async searchMyProduct() {
 
     var query = {
-      "loginInfo": this.pageModel.loginUser,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-      },
       "producttypename": this.pageModel.query.producttypename,
       "productname": this.pageModel.query.productname,
       "createusername": this.pageModel.query.createusername,
-
     };
 
     this.httpService.usePost('searchMyProduct', query).then(item => {
@@ -500,7 +474,7 @@ export class ProductComponent implements OnInit {
         console.log(item);
         var index = 1;
         // this.pageModel.productList = item;
-        if (item != null) {
+        if (item) {
           item.forEach((elem) => {
             var producttypename = ""
             // プロダクトタイプ名の検索
@@ -539,8 +513,8 @@ export class ProductComponent implements OnInit {
    * プロダクトタイプ一覧取得
    */
   protected async getProductTypes() {
-    var param = {};
-    this.httpService.usePost('getProductTypeAll',param).then(item => {
+    var query = {};
+    this.httpService.usePost('getProductTypeAll', query).then(item => {
       try {
         if (item) {
           this.productTypes = item;
@@ -560,10 +534,6 @@ export class ProductComponent implements OnInit {
  */
   protected async getUnderUsers() {
     var query = {
-      "loginInfo": this.pageModel.loginUser,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-      },
     };
     this.httpService.usePost('getUnderUsers', query).then(item => {
       try {
@@ -707,8 +677,8 @@ export class ProductComponent implements OnInit {
   }
 
   /**
-* Pagination table
-*/
+  * Pagination table
+  */
   get PaginationData() {
     if (this.productList) {
       return this.productList.map((person, i) => ({ productid: i + 1, ...person }))
@@ -731,5 +701,15 @@ export class ProductComponent implements OnInit {
       this.updateModal.close(openForm.resetForm);
     }
     // }
+  }
+
+  showAlert(alertType, alertDetail) {
+    this.messageService.add({
+      key: 'alertModal',
+      severity: alertType,
+      summary: alertType,
+      detail: alertDetail,
+      life: 2000
+    });
   }
 }

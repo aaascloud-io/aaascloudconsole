@@ -68,6 +68,7 @@
                           (change)="checkAll($event)">
                       </th>
                       <th scope="col" class="thcolor">No.</th>
+                      <th scope="col" class="thcolor">操作</th>
                       <th scope="col" class="thcolor" (click)="sortData('groupname')">グループ名
                         <i *ngIf="pageModel.sort.groupnameUp" class="la la-sort-up"></i>
                         <i *ngIf="pageModel.sort.groupnameDown"class="la la-sort-down"></i>
@@ -79,38 +80,37 @@
                       <th scope="col" class="thcolor">デバイス数</th>
                       <th scope="col" class="thcolor">グループ説明</th>
                       <th scope="col" class="thcolor">デバイス連携</th>
-                      <th scope="col" class="thcolor">操作</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let element of PaginationData;let i = index">
-                      <td>
+                      <td nowrap>
                         <input type="checkbox" [checked]="element.isSelected" (change)="checkChange($event,element)">
                       </td>
-                      <td>{{(page-1)*pageSize+i+1}}</td>
-                      <td>{{ element.groupname }}</td>
-                      <td>{{ element.projectname}}</td>
-                      <td>
-                        <a class="primary edit mr-1 mrless"
-                          (click)="groupDeviceInfo(groupDeviceInfoModal, element)">{{element.devicecount}}</a>
-                      </td>
-                      <td>{{ element.summary }}</td>
-                      <td>
-                        <a class="primary edit mr-1 mrless"
-                          (click)="deviceLinkAddModal(deviceLinkAddModalContent, element)" title="デバイス連携"><i
-                            class="la la-calendar-plus-o"></i>
-                        </a>
-                        <a class="danger delete mr-1 mrless"
-                          (click)="deviceLinkdeletModal(deviceLinkDeleteModalContent, element)" title="連携したデバイスを削除"><i
-                            class="la la-calendar-check-o"></i>
-                        </a>
-                      </td>
-                      <td>
+                      <td nowrap>{{(page-1)*pageSize+i+1}}</td>
+                      <td nowrap>
                         <a [routerLink]="" class="primary edit mr-1 mrless"
                           (click)="editTableDataModal(editupdateDataModal, element)"><i class="la la-pencil"></i>
                         </a>
                         <a class="danger delete mr-1 mrless"><i class="la la-trash-o"
                             (click)="deleteRow(element)"></i></a>
+                      </td>
+                      <td nowrap>{{ element.groupname }}</td>
+                      <td nowrap>{{ element.projectname}}</td>
+                      <td nowrap>
+                        <a class="primary edit mr-1 mrless"
+                          (click)="groupDeviceInfo(groupDeviceInfoModal, element)">{{element.devicecount}}</a>
+                      </td>
+                      <td nowrap>{{ element.summary }}</td>
+                      <td nowrap>
+                        <a class="primary edit mr-1 mrless"
+                          (click)="deviceLinkAddModal(deviceLinkAddModalContent, element)" title="デバイス追加"><i
+                            class="la la-plus-square"></i>
+                        </a>
+                        <a class="danger delete mr-1 mrless"
+                          (click)="deviceLinkdeletModal(deviceLinkDeleteModalContent, element)" title="デバイス削除"><i
+                            class="la la-minus-square"></i>
+                        </a>
                       </td>
                     </tr>
                   </tbody>

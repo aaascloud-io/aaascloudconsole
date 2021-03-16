@@ -20,7 +20,7 @@
                             <i *ngIf="valueSortFlg.errCodeUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.errCodeDown" class="la la-sort-down"></i>
                           </th>
-                          <th class="col" class="thcolor" (click)="sortData('device')">デバイスID
+                          <th class="col" class="thcolor" (click)="sortData('device')">デバイス
                             <i *ngIf="valueSortFlg.deviceUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.deviceDown" class="la la-sort-down"></i>
                           </th>
@@ -34,20 +34,24 @@
                       </thead>
                       <tbody>
                         <tr *ngFor="let item of PaginationData;let i = index;">
-                          <td>{{(page-1)*pageSize+i+1}}</td>
-                          <td>
-                            <a class="primary edit mr-1 mrless" (click)="viewErrProcessingHistoryModal(errProcessHistoryModalContent, item)" title="対応履歴一覧"><i class="la la-history"></i></a>
-                            <a class="primary edit pull-right" (click)="processErrDataModal(processErrDataModalContent, item)" title="エラー対応"><i class="la la-pencil-square-o"></i></a>
+                          <td nowrap>{{(page-1)*pageSize+i+1}}</td>
+                          <td nowrap>
+                            <a class="primary edit mr-1" (click)="viewErrProcessingHistoryModal(errProcessHistoryModalContent, item)" title="対応履歴一覧"><i class="la la-history"></i></a>
+                            <a class="primary edit " (click)="processErrDataModal(processErrDataModalContent, item)" title="エラー対応"><i class="la la-pencil-square-o"></i></a>
                           </td>
-                          <td>{{item.errcode}}</td>
-                          <td>{{item.device}}</td>
-                          <td>{{item.username}}</td>
-                          <td>{{item.datatime | date:'yyyy/MM/dd h:m:s a'}}</td>
-                          <td>{{item.statusInStr}}</td>
+                          <td nowrap>{{item.errcode}}</td>
+                          <td nowrap>{{item.device}}</td>
+                          <td nowrap>{{item.username}}</td>
+                          <td nowrap>{{item.datatime | date:'YYYY/MM/dd-HH:mm:ss'}}</td>
+                          <td nowrap>{{item.statusInStr}}</td>
                         </tr>
                       </tbody>
                     </table>
                     <div class="d-flex justify-content-between p-2">
+                      <div *ngIf="dataCount === 0">{{dataCount}} 件</div>
+                      <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">{{dataCount}} 件中
+                    {{(page-1) * pageSize + 1}} ~ {{page * pageSize}} を表示</div>
+                      <div *ngIf="dataCount<pageSize*page">{{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~ {{dataCount}} を表示</div>
                       <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
                       </ngb-pagination>
                       <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
@@ -143,11 +147,11 @@
           </thead>
           <tbody>
             <tr *ngFor="let element of errResumeList;let i = index">
-              <td>{{i+1}}</td>
-              <td>{{element.i_time | date:'yyyy/MM/dd h:m:s a'}}</td>
-              <td>{{ element.statusflagbeforeInStr}}</td>
-              <td>{{ element.statusflagafterInStr }}</td>
-              <td>{{ element.contents}}</td>
+              <td nowrap>{{i+1}}</td>
+              <td nowrap>{{element.i_time | date:'YYYY/MM/dd HH:mm:ss'}}</td>
+              <td nowrap>{{ element.statusflagbeforeInStr}}</td>
+              <td nowrap>{{ element.statusflagafterInStr }}</td>
+              <td nowrap>{{ element.contents}}</td>
             </tr>
           </tbody>
         </table>
