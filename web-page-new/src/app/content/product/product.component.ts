@@ -7,9 +7,6 @@ import * as XLSX from 'xlsx';
 import { AlertService } from '../../_services/alert.service';
 import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from '../../_common/_interface/userInfo'
-import { DataFatoryService } from 'src/app/_services/DataFatoryService';
-import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
-// import { USERCODE } from '../../_common/_utils/codes-utils';
 
 class Contact {
   constructor(
@@ -99,13 +96,6 @@ export class ProductComponent implements OnInit {
       sim: 0,
       summary: ''
     },
-    loginUser: {
-      loginuserid: null,
-      loginusername: '',
-      loginrole: null,
-      logincompanyid: '',
-    },
-    userInfoParame: {},
     query: {
       producttypename: '',
       productname: '',
@@ -144,9 +134,7 @@ export class ProductComponent implements OnInit {
   constructor(
     private modal: NgbModal,
     private _renderer: Renderer2,
-    private alertService: AlertService,
     private httpService: HttpService,
-    private dataFatoryService: DataFatoryService,
   ) {
     // this.getProductAll();
   }
@@ -154,26 +142,8 @@ export class ProductComponent implements OnInit {
   ngOnInit(): void {
     this.pageSize = 10;
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
-    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    this.userInfo = this.httpService.getLoginUser();
 
-    //to do ユーザー名で　ロケーションデータを取る
-    this.pageModel.loginUser.loginuserid = item.uid;
-    this.pageModel.loginUser.loginusername = item.login_id;
-    this.pageModel.loginUser.loginrole = item.role;
-    this.pageModel.loginUser.logincompanyid = item.company;
-
-    this.pageModel.userInfoParame = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "loginusername": this.pageModel.loginUser.loginusername,
-        "loginrole": this.pageModel.loginUser.loginrole,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid
-      }
-    }
     this.getProductTypes();
     this.getUnderUsers();
     this.searchMyProduct();
@@ -240,15 +210,11 @@ export class ProductComponent implements OnInit {
   deleteRow(row) {
     if (confirm("削除してもよろしいでしょうか")) {
       var query = {
-        "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-        },
         "productid": row.productid,
       }
-      this.httpService.delete('deleteProduct', query).then(item => {
+      this.httpService.useRpDelete('deleteProduct', query).then(item => {
         try {
-          if (item.body.resultCode === "0000") {
+          if (item.resultCode === "0000") {
 
             this.searchMyProduct();
             alert('削除成功です。');
@@ -281,15 +247,11 @@ export class ProductComponent implements OnInit {
     }
     if (confirm("選択したデーターを削除しますか")) {
       var query = {
-        "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-        },
         "productidlist": deleteCheckedids,
       }
-      this.httpService.delete('deleteProducts', query).then(item => {
+      this.httpService.useRpDelete('deleteProducts', query).then(item => {
         try {
-          if (item.body.resultCode === "0000") {
+          if (item.resultCode === "0000") {
             this.searchMyProduct();
             alert('削除成功です。');
             this.productSelected = false;
@@ -313,14 +275,6 @@ export class ProductComponent implements OnInit {
 
     this.selectedContact.simflag = this.simFlg === true ? 1 : 0;
     var query = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-      },
-
       "productid": this.selectedContact.productid,
       "createuserid": this.selectedContact.createuserid,
       "producttypeid": this.selectedContact.producttypeid,
@@ -332,7 +286,7 @@ export class ProductComponent implements OnInit {
       "summary": this.selectedContact.summary
     }
 
-    this.httpService.put('updateProduct', query).then(item => {
+    this.httpService.useRpPut('updateProduct', query).then(item => {
       try {
         if (item.resultCode === "0000") {
           console.log('更新成功です。');
@@ -414,11 +368,6 @@ export class ProductComponent implements OnInit {
     if (flg) {
       var sim = this.pageModel.addProduct.sim === true ? '1' : '0';
       var query = {
-        "loginInfo": this.pageModel.loginUser,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.addProduct.createuserid,
-        },
-
         "producttypeid": this.pageModel.addProduct.productTypeId,
         "createuserid": this.pageModel.addProduct.createuserid,
         "productcode": this.pageModel.addProduct.productcode,
@@ -484,14 +433,9 @@ export class ProductComponent implements OnInit {
   async searchMyProduct() {
 
     var query = {
-      "loginInfo": this.pageModel.loginUser,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-      },
       "producttypename": this.pageModel.query.producttypename,
       "productname": this.pageModel.query.productname,
       "createusername": this.pageModel.query.createusername,
-
     };
 
     this.httpService.usePost('searchMyProduct', query).then(item => {
@@ -539,8 +483,8 @@ export class ProductComponent implements OnInit {
    * プロダクトタイプ一覧取得
    */
   protected async getProductTypes() {
-    var param = {};
-    this.httpService.usePost('getProductTypeAll',param).then(item => {
+    var query = {};
+    this.httpService.usePost('getProductTypeAll', query).then(item => {
       try {
         if (item) {
           this.productTypes = item;
@@ -560,10 +504,6 @@ export class ProductComponent implements OnInit {
  */
   protected async getUnderUsers() {
     var query = {
-      "loginInfo": this.pageModel.loginUser,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-      },
     };
     this.httpService.usePost('getUnderUsers', query).then(item => {
       try {
