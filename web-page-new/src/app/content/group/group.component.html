@@ -108,7 +108,7 @@
                             class="la la-plus-square"></i>
                         </a>
                         <a class="danger delete mr-1 mrless"
-                          (click)="deviceLinkdeletModal(deviceLinkDeleteModalContent, element)" title="デバイス削除"><i
+                          (click)="deviceLinkdeletModal(deviceLinkDeleteModalContent, element)" title="デバイス解除"><i
                             class="la la-minus-square"></i>
                         </a>
                       </td>
@@ -133,6 +133,14 @@
     </div>
   </div>
 </div>
+
+<p-toast position="top-right" key="alertModal" baseZIndex="999"></p-toast>
+<p-confirmDialog
+  [baseZIndex]="10000" rejectButtonStyleClass="p-button-secondary" 
+  icon="pi pi-exclamation-triangle" 
+  acceptLabel="確認" 
+  rejectLabel="取消">
+</p-confirmDialog>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 
 <ng-template #editupdateDataModal let-c="close" let-d="dismiss">
@@ -230,7 +238,7 @@
 <ng-template #deviceLinkAddModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="groupDeviceDataUpdate(groupDeviceForm)" #groupDeviceForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">グループのデバイス追加</h5>
+      <h5 class="modal-title" id="exampleModalLabel1">デバイス追加</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -242,7 +250,7 @@
             <tr>
               <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAllUsableDevice($event)">
               </th>
-              <th scope="col">no.</th>
+              <th scope="col">No.</th>
               <th scope="col">SN</th>
               <th scope="col">IMEI</th>
               <th scope="col">ICCID</th>
@@ -255,7 +263,7 @@
               <td>
                 <input type="checkbox" [checked]="item.isSelected" (change)="checkChangeUsableDevice($event,item)">
               </td>
-              <td data-label="no.">{{i + 1}}</td>
+              <td data-label="No.">{{i + 1}}</td>
               <td data-label="sn">{{item.sn}}</td>
               <td data-label="deviceName">{{item.imei}}</td>
               <td data-label="sim_iccid">{{item.sim_iccid}}</td>
@@ -284,7 +292,7 @@
 <ng-template #deviceLinkDeleteModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="groupLinkedDeviceDataUpdate(groupLinkedDeviceForm)" #groupLinkedDeviceForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">連携したデバイス</h5>
+      <h5 class="modal-title" id="exampleModalLabel1">デバイス解除</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -296,7 +304,7 @@
             <tr>
               <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAllGroupDevice($event)">
               </th>
-              <th scope="col">no.</th>
+              <th scope="col">No.</th>
               <th scope="col">SN</th>
               <th scope="col">IMEI</th>
               <th scope="col">ICCID</th>
@@ -309,7 +317,7 @@
               <td>
                 <input type="checkbox" [checked]="item.isSelected" (change)="checkChangeGroupDevice($event,item)">
               </td>
-              <td data-label="no.">{{i + 1}}</td>
+              <td data-label="No.">{{i + 1}}</td>
               <td data-label="sn">{{item.sn}}</td>
               <td data-label="deviceName">{{item.imei}}</td>
               <td data-label="sim_iccid">{{item.sim_iccid}}</td>
@@ -328,7 +336,7 @@
       </div>
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="add-contact-item" class="btn btn-danger add-contact-item"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">削除</span></button>
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">解除</span></button>
       </div>
     </div>
   </form>
@@ -347,7 +355,7 @@
         <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col">no.</th>
+              <th scope="col">No.</th>
               <th scope="col">SN</th>
               <th scope="col">IMEI</th>
               <th scope="col">ICCID</th>
@@ -357,7 +365,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of groupDeviceList; let i = index;">
-              <td data-label="no.">{{i + 1}}</td>
+              <td data-label="No.">{{i + 1}}</td>
               <td data-label="sn">{{item.sn}}</td>
               <td data-label="deviceName">{{item.imei}}</td>
               <td data-label="sim_iccid">{{item.sim_iccid}}</td>

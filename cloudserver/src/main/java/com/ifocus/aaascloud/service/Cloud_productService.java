@@ -1,5 +1,6 @@
 package com.ifocus.aaascloud.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.CommonConstant;
+import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_producttypeEntity;
@@ -93,7 +95,8 @@ public class Cloud_productService {
 	 */
 	public List<Cloud_productEntity> getProductAll() throws Exception {
 		List<Cloud_productEntity> returnList = new ArrayList<Cloud_productEntity>();
-		Iterable<Cloud_productEntity> list = cloud_productRepository.findAll();
+		// Iterable<Cloud_productEntity> list = cloud_productRepository.findAll();
+		Iterable<Cloud_productEntity> list = cloud_productRepository.findAllValid();
 		list.forEach(s -> returnList.add(s));
 		return returnList;
 
@@ -122,11 +125,27 @@ public class Cloud_productService {
 	}
 
 	/*
-	 * プロダクト登録・更新
+	 * プロダクト登録
 	 *
 	 *
 	 */
 	public Cloud_productEntity registerProduct(Cloud_productEntity entity) throws Exception {
+
+		// 削除済行を物理削除する
+		cloud_productRepository.deleteProductMarked(entity.getProducttypeid(),entity.getCreateuserid(),entity.getProductname());
+		// プロダクト登録
+		Cloud_productEntity insertedEntity = cloud_productRepository.save(entity);
+		return insertedEntity;
+
+	}
+
+	/*
+	 * プロダクト更新
+	 *
+	 *
+	 */
+	public Cloud_productEntity updateProduct(Cloud_productEntity entity) throws Exception {
+		// プロダクト更新
 		Cloud_productEntity insertedEntity = cloud_productRepository.save(entity);
 		return insertedEntity;
 
@@ -146,6 +165,28 @@ public class Cloud_productService {
 	}
 
 	/*
+	 * プロダクト論理削除
+	 *
+	 *
+	 */
+	public void updateProductForDelete(Cloud_productModel model) throws Exception {
+		Optional<Cloud_productEntity> product = cloud_productRepository.findById(model.getProductid());
+		if (product != null && product.isPresent()) {
+
+			Cloud_productEntity entity = product.get();
+
+			// プロダクト論理削除
+			entity.setDeleteflag(DeleteFlagConstant.DELETED);
+			entity.setU_uid(model.getLoginInfo().getLoginuserid());
+			entity.setU_time(new Timestamp(System.currentTimeMillis()));
+			// DB更新
+			cloud_productRepository.save(entity);
+		}
+		return ;
+
+	}
+
+	/*
 	 * プロダクト一括削除
 	 *
 	 *
@@ -153,6 +194,30 @@ public class Cloud_productService {
 	public void deleteProducts(List<Integer> productids) throws Exception {
 		Iterable<Cloud_productEntity> products = cloud_productRepository.findAllById(productids);
 		cloud_productRepository.deleteAll(products);
+		return ;
+
+	}
+
+	/*
+	 * プロダクト一括論理削除
+	 *
+	 *
+	 */
+	public void updateProductsForDelete(Cloud_productModel model) throws Exception {
+
+		// 対象取得
+		Iterable<Cloud_productEntity> products = cloud_productRepository.findAllById(model.getProductidlist());
+		/* システム日時 */
+		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+		for (Cloud_productEntity entity:products) {
+
+			// プロダクト論理削除
+			entity.setDeleteflag(DeleteFlagConstant.DELETED);
+			entity.setU_uid(model.getLoginInfo().getLoginuserid());
+			entity.setU_time(systemTime);
+		}
+		// DB更新
+		cloud_productRepository.saveAll(products);
 		return ;
 
 	}
@@ -194,6 +259,7 @@ public class Cloud_productService {
 		model.setVersion(entity.getVersion());
 		model.setSimflag(entity.getSimflag());
 		model.setSummary(entity.getSummary());
+		model.setDeleteflag(entity.getDeleteflag());
 		model.setAlive(entity.getAlive());
 		model.setCreateuserid(entity.getCreateuserid());
 		// 作成者名取得

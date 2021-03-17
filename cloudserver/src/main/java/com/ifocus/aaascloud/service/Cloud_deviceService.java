@@ -310,13 +310,16 @@ public class Cloud_deviceService {
 	 * @return List<Cloud_deviceModel> デバイス一覧
 	 *
 	 */
-	public List<Cloud_deviceModel> getMySelectableDevicesByCompanyid(Cloud_deviceModel model) throws Exception {
+	public List<Cloud_deviceModel> getMySelectableDevices(Cloud_deviceModel model) throws Exception {
 
 		// 会社IDを設定する
 		this.setCompanyIDToModel(model);
 
+		// アクセス権限ユーザ一覧を取得する
+		List<Integer> useridList = accessService.getAccessUsers(model.getLoginInfo().getLoginuserid());
+
 		// 全社のデバイス一覧取得
-		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchSelectableDevicesByCompanyid(model.getTargetUserInfo().getTargetuserCompanyid());
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchSelectableDevicesByCompanyidAndUserids(model.getTargetUserInfo().getTargetuserCompanyid(), useridList);
 		return this.getModelsByEntitys(list);
 
 	}
