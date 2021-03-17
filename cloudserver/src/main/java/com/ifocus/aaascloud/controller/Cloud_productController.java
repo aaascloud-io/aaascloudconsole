@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.AliveConstant;
+import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
@@ -285,7 +286,7 @@ public class Cloud_productController {
 				updateEntity.setProductid(model.getProductid());
 			}
 
-			Cloud_productEntity updatedEntity =  cloud_productService.registerProduct(updateEntity);
+			Cloud_productEntity updatedEntity =  cloud_productService.updateProduct(updateEntity);
 
 			if (updatedEntity == null) {
 				/* 異常系 */
@@ -347,7 +348,8 @@ public class Cloud_productController {
 				return response;
 			}
 			/* 削除する */
-			cloud_productService.deleteProduct(model.getProductid());
+			// cloud_productService.deleteProduct(model.getProductid());
+			cloud_productService.updateProductForDelete(model);
 
 			/* 正常系 */
 			response.setStatus(200);
@@ -393,7 +395,8 @@ public class Cloud_productController {
 
 		try {
 			/* 一括削除する */
-			cloud_productService.deleteProducts(model.getProductidlist());
+			// cloud_productService.deleteProducts(model.getProductidlist());
+			cloud_productService.updateProductsForDelete(model);
 
 			/* 正常系 */
 			response.setStatus(200);
@@ -426,6 +429,7 @@ public class Cloud_productController {
 		entity.setSimflag(model.getSimflag());
 		entity.setSummary(model.getSummary());
 		entity.setCreateuserid(model.getTargetUserInfo().getTargetuserid());
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setAlive(AliveConstant.ALIVE);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
@@ -453,6 +457,7 @@ public class Cloud_productController {
 		entity.setVersion(model.getVersion());
 		entity.setSimflag(model.getSimflag());
 		entity.setSummary(model.getSummary());
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setAlive(AliveConstant.ALIVE);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
