@@ -27,6 +27,7 @@ public class Cloud_productModel {
 	private String createusername;
 	private String lastname;
 	private String firstname;
+	private Integer deleteflag;
 	private Integer alive;
 	// 一括削除用リスト
 	private List<Integer> productidlist;
