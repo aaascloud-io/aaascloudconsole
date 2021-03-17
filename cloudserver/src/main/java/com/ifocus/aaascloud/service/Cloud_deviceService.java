@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
@@ -171,6 +172,7 @@ public class Cloud_deviceService {
 							userids,
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
+							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
 							model.getIndustryForSearch()
 							);
@@ -178,6 +180,7 @@ public class Cloud_deviceService {
 					list = cloud_deviceRepository.findByHasCompanyNoGroupNoProject(
 							model.getCompanyid(),
 							userids,
+							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
@@ -192,6 +195,7 @@ public class Cloud_deviceService {
 							userids,
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
+							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
 							model.getProjectnameForSearch(),
 							model.getIndustryForSearch()
@@ -200,6 +204,7 @@ public class Cloud_deviceService {
 					list = cloud_deviceRepository.findByHasCompanyNoGroupHasProject(
 							model.getCompanyid(),
 							userids,
+							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
@@ -218,6 +223,7 @@ public class Cloud_deviceService {
 							userids,
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
+							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
 							model.getIndustryForSearch(),
 							model.getGroupnameForSearch()
@@ -226,6 +232,7 @@ public class Cloud_deviceService {
 					list = cloud_deviceRepository.findByHasCompanyHasGroupNoProject(
 							model.getCompanyid(),
 							userids,
+							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
@@ -241,6 +248,7 @@ public class Cloud_deviceService {
 							userids,
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
+							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
 							model.getProjectnameForSearch(),
 							model.getIndustryForSearch(),
@@ -250,6 +258,7 @@ public class Cloud_deviceService {
 					list = cloud_deviceRepository.findByHasCompanyHasGroupHasProject(
 							model.getCompanyid(),
 							userids,
+							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getProductnameForSearch(),

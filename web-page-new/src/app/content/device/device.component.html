@@ -192,6 +192,13 @@
 
   </div>
 </div>
+<p-toast position="top-right" key="alertModal" baseZIndex="999"></p-toast>
+<p-confirmDialog
+  [baseZIndex]="10000" rejectButtonStyleClass="p-button-secondary" 
+  icon="pi pi-exclamation-triangle" 
+  acceptLabel="確認" 
+  rejectLabel="取消">
+</p-confirmDialog>
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 <ng-template #editDeviceModel let-c="close" let-d="dismiss">
   <form (ngSubmit)="editDeviceDetail(editDeviceForm,selectedDevice.deviceid,editForm)" #editDeviceForm="ngForm"

@@ -151,7 +151,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
 			+ " WHERE d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
-			+ "    OR d.SN LIKE :sn) "
+			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND com.industry LIKE :industry "
 			+ " AND g.groupname LIKE :groupname "
@@ -160,6 +160,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
+			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
 			@Param("industry") String industry,
 			@Param("groupname") String groupname
@@ -178,7 +179,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
 			+ " WHERE d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
-			+ "    OR d.SN LIKE :sn) "
+			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND pj.projectName LIKE :projectname "
 			+ " AND com.industry LIKE :industry "
@@ -188,6 +189,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
+			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
 			@Param("projectname") String projectName,
 			@Param("industry") String industry,
@@ -205,7 +207,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " WHERE d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
-			+ "    OR d.SN LIKE :sn) "
+			+ "    OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND com.industry LIKE :industry "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
@@ -213,6 +215,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
+			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
 			@Param("industry") String industry
 		);
@@ -229,7 +232,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " WHERE d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
-			+ "    OR d.SN LIKE :sn) "
+			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND pj.projectName LIKE :projectname "
 			+ " AND com.industry LIKE :industry "
@@ -238,6 +241,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
+			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
 			@Param("projectname") String projectName,
 			@Param("industry") String industry
@@ -255,7 +259,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
 			+ " WHERE d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
-			+ "    OR d.SN LIKE :sn) "
+			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND com.companyid = :companyid "
 			+ " AND com.industry LIKE :industry "
@@ -266,6 +270,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
+			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
 			@Param("industry") String industry,
 			@Param("groupname") String groupname
@@ -284,7 +289,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
 			+ " WHERE d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
-			+ "    OR d.SN LIKE :sn) "
+			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND pj.projectName LIKE :projectname "
 			+ " AND com.companyid = :companyid "
@@ -296,6 +301,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
+			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
 			@Param("projectname") String projectName,
 			@Param("industry") String industry,
@@ -313,7 +319,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " WHERE d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
-			+ "    OR d.SN LIKE :sn) "
+			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND com.companyid = :companyid "
 			+ " AND com.industry LIKE :industry "
@@ -323,6 +329,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
+			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
 			@Param("industry") String industry
 		);
@@ -339,7 +346,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " WHERE d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
-			+ "    OR d.SN LIKE :sn) "
+			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND pj.projectName LIKE :projectname "
 			+ " AND com.companyid = :companyid "
@@ -350,6 +357,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
+			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
 			@Param("projectname") String projectName,
 			@Param("industry") String industry

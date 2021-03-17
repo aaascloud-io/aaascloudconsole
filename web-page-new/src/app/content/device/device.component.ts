@@ -8,6 +8,9 @@ import { number } from 'ngx-custom-validators/src/app/number/validator';
 // import * as _ from 'lodash';
 import { map, startWith } from 'rxjs/operators';
 import { NgBlockUI, BlockUI } from 'ng-block-ui';
+import {MessageService} from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
+import {ConfirmationService} from 'primeng/api';
 
 @Component({
   selector: 'app-device',
@@ -140,6 +143,9 @@ export class DeviceComponent implements OnInit {
     private modal: NgbModal,
     private alertService: AlertService,
     private httpService: HttpService,
+    private messageService: MessageService, 
+    private primengConfig: PrimeNGConfig,
+    private confirmationService: ConfirmationService,
   ) { }
 
   ngOnInit(): void {
@@ -285,7 +291,7 @@ export class DeviceComponent implements OnInit {
     //tel number 位数チェック　 value, name, templateForm: ElementRef
     if (this.pageModel.deviceDetail.sim_tel != null) {
       if (this.pageModel.deviceDetail.sim_tel.length > 0 && this.pageModel.deviceDetail.sim_tel.length < 10) {
-        alert("SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
+        this.showAlert("error", "SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
         this.setFocus('simtel', registerForm)
         return;
       }
@@ -301,7 +307,8 @@ export class DeviceComponent implements OnInit {
             if (item.resultCode == "0000") {
               // $("#addinfo").hide();
               // $('.modal-backdrop').remove();
-              alert('デバイス情報を登録しました');
+        this.showAlert("error", "デバイス情報を登録しました");
+
               if (addDeviceForm.valid === true) {
                 addDeviceForm.reset();
                 this.addModal.close(addDeviceForm.resetForm);
@@ -314,12 +321,16 @@ export class DeviceComponent implements OnInit {
               }
               this.Init();
             } else if (item.resultCode == "0002") {
-              alert('権限ないです、登録失敗しました');
+        this.showAlert("error", "権限ないです、登録失敗しました");
+
+
             } else if (item.resultCode == "0003") {
               this.setFocus(item.resultData, registerForm)
-              alert(item.resultMsg);
+        this.showAlert("error", item.resultMsg);
+
             } else {
-              alert('登録失敗しました');
+        this.showAlert("error", "登録失敗しました");
+
             }
           }
         } catch (e) {
@@ -344,7 +355,8 @@ export class DeviceComponent implements OnInit {
     }
     //tel number 位数チェック　 value, name, templateForm: ElementRef
     if (this.selectedDevice['sim_tel'].length > 0 && this.selectedDevice['sim_tel'].length < 10) {
-      alert("SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
+      this.showAlert("error", "SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
+
       this.setFocus('simtel', editForm)
       return;
     }
@@ -371,7 +383,7 @@ export class DeviceComponent implements OnInit {
             this.Init();
             // $("#addinfo").hide();
             // $('.modal-backdrop').remove();
-            alert('デバイス情報を改修しました');
+            this.showAlert("error", "デバイス情報を改修しました");
 
             if (editDeviceForm.valid === true) {
               editDeviceForm.reset();
@@ -384,14 +396,18 @@ export class DeviceComponent implements OnInit {
               }
             }
           } else if (item.resultCode == "0002") {
-            alert('権限なし');
+            this.showAlert("error", "権限なし");
+
           } else if (item.resultCode == "0101") {
-            alert('更新失敗しました。');
+            this.showAlert("error", "更新失敗しました。");
+
           } else if (item.resultCode == "0003") {
             this.setFocus(item.resultCode, editForm)
-            alert(item.resultMsg);
+            this.showAlert("error", item.resultMsg);
+
           } else {
-            alert('更新失敗しました。');
+            this.showAlert("error", "更新失敗しました。");
+
           }
         } catch (e) {
           console.log(e);
@@ -417,7 +433,8 @@ export class DeviceComponent implements OnInit {
           this.Init();
           // $("#addinfo").hide();
           // $('.modal-backdrop').remove();
-          alert('一括登録を成功しました');
+          this.showAlert("error", "一括登録を成功しました");
+
           /**
  * Add contact if valid addform value
  */
@@ -426,15 +443,19 @@ export class DeviceComponent implements OnInit {
             this.addsModal.close(addExeclForm.resetForm);
           }
         } else if (item.resultCode == "0002") {
-          alert(item.resultMsg);
+          this.showAlert("error", item.resultMsg);
+
           this.pageModel.addDeviceDetailList = JSON.parse(item.data);
         } else if (item.resultCode == "0003") {
-          alert(item.resultMsg + " エラーデータを参考して添付ファイルを修正ください。");
+          this.showAlert("error", " エラーデータを参考して添付ファイルを修正ください。");
+
           // this.pageModel.checkColumn[item.resultMsg] = true;
           this.pageModel.addDeviceDetailList = JSON.parse(item.data);
           // this.setUnavailable("deviceSubmit", registerdevicesForm)
         } else if (item.resultCode == "0007") {
-          alert(item.resultMsg);
+
+          this.showAlert("error", item.resultMsg);
+
           this.pageModel.addDeviceDetailList = JSON.parse(item.data);
         }
       } catch (e) {
@@ -448,7 +469,10 @@ export class DeviceComponent implements OnInit {
    * @param row     Selected row for delete contact
    */
   deleteRow(row) {
-    if (confirm(row.devicename + "を削除します。よろしいですか？")) {
+    this.confirmationService.confirm({
+      message: row.devicename + "を削除します。よろしいですか？",
+      header: 'デバイスを削除確認',
+      accept: () => {
         var param = {
           "deviceid": row.deviceid
         }
@@ -458,17 +482,26 @@ export class DeviceComponent implements OnInit {
               this.Init();
               // $("#addinfo").hide();
               // $('.modal-backdrop').remove();
-              alert('デバイスを削除しました');
+
+          this.showAlert("error", " デバイスを削除しました");
+
             } else {
-              alert('権限なし');
+
+          this.showAlert("error", " 権限なし");
+
             }
           } catch (e) {
             console.log(e);
           }
         }
         );
-      
-    }
+      },
+      reject: () => {
+        this.showAlert("info","削除操作を取消しました");
+
+      },
+    });
+
   }
 
   /**
@@ -485,32 +518,60 @@ export class DeviceComponent implements OnInit {
       }
     }
     if (index === 0) {
-      alert('デバイスを選択してください。');
+      this.showAlert("error", " デバイスを選択してください。");
+
       return
     }
-    if (confirm("選択したデバイスを全削除します。よろしいですか？")) {
+
+
+    this.confirmationService.confirm({
+      message: "選択したデバイスを全削除します。よろしいですか？",
+      header: 'デバイスを削除確認',
+      accept: () => {
         var param = {
           "deviceidlist": removedIndex
         }
         this.httpService.useRpDelete('deleteDevices', param).then(item => {
           try {
             if (item.resultCode == "0000") {
-              alert('選択したデバイスを削除しました');
+      this.showAlert("error", " 選択したデバイスを削除しました。");
+
               this.Init();
             } else {
-              alert('権限なし');
+      this.showAlert("error", " 権限なし。");
+
             }
           } catch (e) {
             console.log(e);
           }
         }
         );
-    }
+      },
+      reject: () => {
+        this.showAlert("info","削除操作を取消しました");
+      },
+    });
+    // if (confirm("選択したデバイスを全削除します。よろしいですか？")) {
+    //     var param = {
+    //       "deviceidlist": removedIndex
+    //     }
+    //     this.httpService.useRpDelete('deleteDevices', param).then(item => {
+    //       try {
+    //         if (item.resultCode == "0000") {
+    //           this.Init();
+    //         } else {
+    //         }
+    //       } catch (e) {
+    //         console.log(e);
+    //       }
+    //     }
+    //     );
+    // }
   }
 
   lengthCheck(value, name, templateForm: ElementRef) {
     if (value.length > 0 && value.length < 11) {
-      alert("Tel Numberを11桁を入力してください。");
+      this.showAlert("info", " Tel Numberを11桁を入力してください");
       this.setFocus(name, templateForm)
     }
   }
@@ -550,8 +611,8 @@ export class DeviceComponent implements OnInit {
         // Logger.info(this, `loaded. size:[${this.pageModel.dataAll.length}]`);
       }
       reader.onerror = (event) => {
-        // obj.alert.danger("ファイル読み込み失敗しました");
-        this.alertService.error("ファイル読み込み失敗しました");
+      this.showAlert("error", "ファイル読み込み失敗しました");
+
       }
       ///読み込み実施
       reader.readAsBinaryString(file);
@@ -745,5 +806,14 @@ export class DeviceComponent implements OnInit {
         this.pageModel.addDeviceDetailList=null;
         this.OpenFileName='';
     }
+  }
+
+  showAlert(alertType, alertDetail) {
+    this.messageService.add({
+      key : 'alertModal', 
+      severity : alertType, 
+      summary : alertType, 
+      detail : alertDetail,
+      life : 2000});
   }
 }

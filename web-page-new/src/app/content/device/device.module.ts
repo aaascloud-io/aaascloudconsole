@@ -11,6 +11,12 @@ import { BreadcrumbModule } from 'src/app/_layout/breadcrumb/breadcrumb.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { UiSwitchModule } from 'ngx-ui-switch';
 import { NumbersOnlyDirective } from '../../_directives/numbers-only.directive'
+import {ToastModule} from 'primeng/toast';
+import {ButtonModule} from 'primeng/button';
+import {RippleModule} from 'primeng/ripple';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
+import {MessageService} from 'primeng/api';
 
 @NgModule({
   imports: [
@@ -23,13 +29,21 @@ import { NumbersOnlyDirective } from '../../_directives/numbers-only.directive'
     PerfectScrollbarModule,
     NgSelectModule,
     UiSwitchModule,
+    ToastModule,
+    ButtonModule,
+    RippleModule,
+    ConfirmDialogModule,
     RouterModule.forChild([
       {
         path: '',
         component: DeviceComponent
       },
-    ])
+    ]),
   ],
+  // providers: [
+  //   MessageService,
+  //   ConfirmationService,
+  // ],
   declarations: [DeviceComponent,NumbersOnlyDirective],
   exports: [RouterModule]
 
