@@ -16,8 +16,9 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 */
 	@Query(value = "SELECT c.* FROM cloud_device c "
 			+ "WHERE c.companyid = :companyid "
-			+ "AND (c.projectid IS NULL OR c.projectid = 0) ", nativeQuery = true)
-	public List<Cloud_deviceEntity> searchSelectableDevicesByCompanyid(@Param("companyid") Integer companyid);
+			+ " AND c.userid IN :userids "
+			+ " AND (c.projectid IS NULL OR c.projectid = 0) ", nativeQuery = true)
+	public List<Cloud_deviceEntity> searchSelectableDevicesByCompanyidAndUserids(@Param("companyid") Integer companyid, List<Integer> userids);
 
 	/*
 	 * 配下各社デバイス一覧取得(デバイス管理画面用)
