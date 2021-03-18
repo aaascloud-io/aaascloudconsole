@@ -399,15 +399,14 @@ public class Cloud_projectService {
 	public void deleteProject(Cloud_projectModel model) throws Exception {
 
 		////////////////////////////////////////////////////////
-		// プロジェクトデバイスクリア
+		// プロジェクトのデバイス解除
 		////////////////////////////////////////////////////////
 		cloud_deviceService.clearProjectInfoForProjectDelete(model);
 
 		////////////////////////////////////////////////////////
-		// グループ削除
+		// プロジェクトのグループ削除
 		////////////////////////////////////////////////////////
-		List<Cloud_groupEntity> groupEntityList = cloud_groupRepository.searchGroupsByProjectid(model.getProjectid());
-		cloud_groupRepository.deleteAll(groupEntityList);
+		cloud_groupService.deleteGroupsForProject(model);
 
 		////////////////////////////////////////////////////////
 		// プロジェクト削除
@@ -424,10 +423,16 @@ public class Cloud_projectService {
 	 * @param modelList List<Cloud_projectModel> プロジェクトリスト
 	 *
 	 */
-	public void deleteProjects(List<Cloud_projectModel> modelList) throws Exception {
+	public void deleteProjects(Cloud_projectModel cloud_projectModel) throws Exception {
 
-		for (Cloud_projectModel mode:modelList) {
-			deleteProject(mode);
+		// 対象リスト取得
+		List<Cloud_projectModel> modelList = cloud_projectModel.getProjectlist();
+
+		for (Cloud_projectModel model:modelList) {
+			// ログイン情報設定
+			model.setLoginInfo(cloud_projectModel.getLoginInfo());
+			// プロジェクト削除
+			deleteProject(model);
 		}
 		return ;
 
