@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
+import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.ProjectDetailModel;
+import com.ifocus.aaascloud.service.Cloud_deviceService;
 import com.ifocus.aaascloud.service.Cloud_projectService;
 import com.ifocus.aaascloud.service.Cloud_userService;
 import com.ifocus.aaascloud.util.Util;
@@ -28,6 +30,8 @@ public class Cloud_projectController {
 	private Cloud_userService cloud_userService;
 	@Autowired
 	private Cloud_projectService cloud_projectService;
+	@Autowired
+	private Cloud_deviceService cloud_deviceService;
 
 	/**
 	 * プロジェクト一覧を取得する
@@ -203,6 +207,66 @@ public class Cloud_projectController {
 				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
 				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
 				response.setData(Util.getJsonString(projectDetailModel));
+
+			} else {
+				/* 異常系 */
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0002);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0002 + "loginuserid&targetuseridが必須です。");
+
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0004);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0004 + e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
+	 * プロジェクトデバイス一覧を取得する
+	 * @param cloud_projectModel Cloud_projectModel
+	 * @return BaseHttpResponse<String>
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getProjectAllDevices", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin(origins = "*", maxAge = 3600)
+	public BaseHttpResponse<String> getProjectAllDevices(@RequestBody Cloud_projectModel cloud_projectModel) throws Exception {
+
+		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+
+		try {
+			// トークン認証
+			if (!cloud_userService.checkToken(cloud_projectModel.getLoginInfo())) {
+				response.setStatus(200);
+				response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
+				return response;
+			}
+
+		} catch( Exception e) {
+			response.setStatus(200);
+			response.setResultCode(ErrorConstant.ERROR_CODE_0300);
+			response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
+			return response;
+		}
+
+		try {
+
+			// 権限チェック
+			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
+
+				// プロジェクトデバイスを取得する
+				List<Cloud_deviceModel> list = cloud_deviceService.getProjectAllDevices(cloud_projectModel.getProjectid());
+
+				response.setStatus(200);
+				response.setCount(list.size());
+				response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+				response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+				response.setData(Util.getJsonString(list));
 
 			} else {
 				/* 異常系 */
