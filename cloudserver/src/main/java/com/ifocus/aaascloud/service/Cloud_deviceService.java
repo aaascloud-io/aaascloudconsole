@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
@@ -296,7 +295,7 @@ public class Cloud_deviceService {
 	 * @return List<Cloud_deviceModel> デバイス一覧
 	 *
 	 */
-	public List<Cloud_deviceModel> getUnderUserDevices(List<Integer> userids) throws Exception {
+	public List<Cloud_deviceModel> getUnderUserDevices(Cloud_deviceModel model, List<Integer> userids) throws Exception {
 
 		// 配下ユーザのデバイス一覧取得
 		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchUnderUserDevicesByUseridIn(userids);
@@ -333,6 +332,19 @@ public class Cloud_deviceService {
 	public List<Cloud_deviceModel> getProjectDevices(Integer projectid) throws Exception {
 
 		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchProjectDevicesWithNoGroupByProjectid(projectid);
+		return this.getModelsByEntitys(list);
+
+	}
+
+	/*
+	 * プロジェクトデバイス一覧取得(すべて)
+	 * @param projectid Integer プロジェクトID
+	 * @return List<Cloud_deviceModel> プロジェクトデバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getProjectAllDevices(Integer projectid) throws Exception {
+
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchDevicesByProjectid(projectid);
 		return this.getModelsByEntitys(list);
 
 	}
