@@ -9,6 +9,32 @@ import org.springframework.data.repository.query.Param;
 //@Repository
 public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEntity, Integer> {
 
+
+	@Query(value = "SELECT d.* "
+			+ " FROM cloud_device d "
+			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
+			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
+			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
+			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
+			+ " WHERE d.userid IN :userids "
+			+ " AND (d.IMEI LIKE :imei "
+			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
+			+ " AND pd.productName LIKE :productname "
+			+ " AND pj.projectName LIKE :projectname "
+			+ " AND com.companyid = :companyid "
+			+ " AND g.groupname LIKE :groupname "
+			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> findByQuery(
+			@Param("companyid") Integer companyid,
+			@Param("userids") List<Integer> userids,
+			@Param("imei") String imei,
+			@Param("sn") String sn,
+			@Param("sim_iccid") String sim_iccid,
+			@Param("productname") String productName,
+			@Param("projectname") String projectName,
+			@Param("groupname") String groupname
+		);
+
 	/*
 	 * プロジェクトなしの全デバイス一覧(デバイス選択子画面用)
 	 *
@@ -50,7 +76,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " AND (d.IMEI LIKE :imei "
 			+ "    OR d.SN LIKE :sn) "
 			+ " AND pd.productName LIKE :productname "
-			+ " AND com.industry LIKE :industry "
 			+ " AND g.groupname LIKE :groupname "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
@@ -58,7 +83,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("imei") String imei,
 			@Param("sn") String sn,
 			@Param("productname") String productName,
-			@Param("industry") String industry,
 			@Param("groupname") String groupname
 		);
 
@@ -78,7 +102,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ "    OR d.SN LIKE :sn) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND pj.projectName LIKE :projectname "
-			+ " AND com.industry LIKE :industry "
 			+ " AND g.groupname LIKE :groupname "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(
@@ -87,7 +110,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("sn") String sn,
 			@Param("productname") String productName,
 			@Param("projectname") String projectName,
-			@Param("industry") String industry,
 			@Param("groupname") String groupname
 		);
 
@@ -104,14 +126,12 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " AND (d.IMEI LIKE :imei "
 			+ "    OR d.SN LIKE :sn) "
 			+ " AND pd.productName LIKE :productname "
-			+ " AND com.industry LIKE :industry "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndCompany_IndustryLike(
 			@Param("companyids") List<Integer> companyids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
-			@Param("productname") String productName,
-			@Param("industry") String industry
+			@Param("productname") String productName
 		);
 
 	/*
@@ -129,15 +149,13 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ "    OR d.SN LIKE :sn) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND pj.projectName LIKE :projectname "
-			+ " AND com.industry LIKE :industry "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(
 			@Param("companyids") List<Integer> companyids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
 			@Param("productname") String productName,
-			@Param("projectname") String projectName,
-			@Param("industry") String industry
+			@Param("projectname") String projectName
 		);
 
 	/*
@@ -154,7 +172,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
-			+ " AND com.industry LIKE :industry "
 			+ " AND g.groupname LIKE :groupname "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByNoCompanyHasGroupNoProject(
@@ -163,7 +180,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("sn") String sn,
 			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
-			@Param("industry") String industry,
 			@Param("groupname") String groupname
 		);
 
@@ -183,7 +199,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND pj.projectName LIKE :projectname "
-			+ " AND com.industry LIKE :industry "
 			+ " AND g.groupname LIKE :groupname "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByNoCompanyHasGroupHasProject(
@@ -193,7 +208,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
 			@Param("projectname") String projectName,
-			@Param("industry") String industry,
 			@Param("groupname") String groupname
 		);
 
@@ -210,15 +224,13 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " AND (d.IMEI LIKE :imei "
 			+ "    OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
-			+ " AND com.industry LIKE :industry "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByNoCompanyNoGroupNoProject(
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,
 			@Param("sn") String sn,
 			@Param("sim_iccid") String sim_iccid,
-			@Param("productname") String productName,
-			@Param("industry") String industry
+			@Param("productname") String productName
 		);
 
 	/*
@@ -236,7 +248,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND pj.projectName LIKE :projectname "
-			+ " AND com.industry LIKE :industry "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByNoCompanyNoGroupHasProject(
 			@Param("userids") List<Integer> userids,
@@ -244,8 +255,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("sn") String sn,
 			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
-			@Param("projectname") String projectName,
-			@Param("industry") String industry
+			@Param("projectname") String projectName
 		);
 
 	/*
@@ -263,7 +273,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND com.companyid = :companyid "
-			+ " AND com.industry LIKE :industry "
 			+ " AND g.groupname LIKE :groupname "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByHasCompanyHasGroupNoProject(
@@ -273,7 +282,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("sn") String sn,
 			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
-			@Param("industry") String industry,
 			@Param("groupname") String groupname
 		);
 
@@ -294,7 +302,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " AND pd.productName LIKE :productname "
 			+ " AND pj.projectName LIKE :projectname "
 			+ " AND com.companyid = :companyid "
-			+ " AND com.industry LIKE :industry "
 			+ " AND g.groupname LIKE :groupname "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByHasCompanyHasGroupHasProject(
@@ -305,7 +312,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
 			@Param("projectname") String projectName,
-			@Param("industry") String industry,
 			@Param("groupname") String groupname
 		);
 
@@ -323,7 +329,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
 			+ " AND com.companyid = :companyid "
-			+ " AND com.industry LIKE :industry "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByHasCompanyNoGroupNoProject(
 			@Param("companyid") Integer companyid,
@@ -331,8 +336,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("imei") String imei,
 			@Param("sn") String sn,
 			@Param("sim_iccid") String sim_iccid,
-			@Param("productname") String productName,
-			@Param("industry") String industry
+			@Param("productname") String productName
 		);
 
 	/*
@@ -351,7 +355,6 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " AND pd.productName LIKE :productname "
 			+ " AND pj.projectName LIKE :projectname "
 			+ " AND com.companyid = :companyid "
-			+ " AND com.industry LIKE :industry "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByHasCompanyNoGroupHasProject(
 			@Param("companyid") Integer companyid,
@@ -360,8 +363,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			@Param("sn") String sn,
 			@Param("sim_iccid") String sim_iccid,
 			@Param("productname") String productName,
-			@Param("projectname") String projectName,
-			@Param("industry") String industry
+			@Param("projectname") String projectName
 		);
 
 	/*

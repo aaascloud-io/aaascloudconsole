@@ -109,8 +109,7 @@ public class Cloud_deviceService {
 						underUserCompanyIdList,
 						model.getImeiForSearch(),
 						model.getImeiForSearch(),
-						model.getProductnameForSearch(),
-						model.getIndustryForSearch()
+						model.getProductnameForSearch()
 						);
 			// プロジェクト名指定あり
 			} else {
@@ -119,8 +118,7 @@ public class Cloud_deviceService {
 						model.getImeiForSearch(),
 						model.getImeiForSearch(),
 						model.getProductnameForSearch(),
-						model.getProjectnameForSearch(),
-						model.getIndustryForSearch()
+						model.getProjectnameForSearch()
 						);
 			}
 		// グループ指定ありの場合
@@ -132,7 +130,6 @@ public class Cloud_deviceService {
 						model.getImeiForSearch(),
 						model.getImeiForSearch(),
 						model.getProductnameForSearch(),
-						model.getIndustryForSearch(),
 						model.getGroupnameForSearch()
 						);
 			// プロジェクト名指定あり
@@ -143,7 +140,6 @@ public class Cloud_deviceService {
 						model.getImeiForSearch(),
 						model.getProductnameForSearch(),
 						model.getProjectnameForSearch(),
-						model.getIndustryForSearch(),
 						model.getGroupnameForSearch()
 						);
 			}
@@ -152,6 +148,25 @@ public class Cloud_deviceService {
 
 	}
 
+	public List<Cloud_deviceModel> getUnderUserDevicesByquery(Cloud_deviceModel model, List<Integer> userids) throws Exception {
+		
+		// 全社のデバイス一覧取得
+		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
+		list = cloud_deviceRepository.findByQuery(
+				model.getCompanyid(),
+				userids,
+				model.getImeiForSearch(),
+				model.getImeiForSearch(),
+				model.getImeiForSearch(),
+				model.getProductnameForSearch(),
+				model.getProjectnameForSearch(),
+				model.getGroupnameForSearch()
+				);
+		
+		return getModelsByEntitys(list);
+	}
+
+	
 	/*
 	 * 配下ユーザのデバイス検索
 	 * @param model Cloud_deviceModel デバイス情報
@@ -173,8 +188,8 @@ public class Cloud_deviceService {
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
-							model.getProductnameForSearch(),
-							model.getIndustryForSearch()
+							model.getProductnameForSearch()
+
 							);
 				} else {
 					list = cloud_deviceRepository.findByHasCompanyNoGroupNoProject(
@@ -183,8 +198,8 @@ public class Cloud_deviceService {
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
-							model.getProductnameForSearch(),
-							model.getIndustryForSearch()
+							model.getProductnameForSearch()
+				
 							);
 				}
 			// プロジェクト名指定あり
@@ -197,8 +212,8 @@ public class Cloud_deviceService {
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
-							model.getProjectnameForSearch(),
-							model.getIndustryForSearch()
+							model.getProjectnameForSearch()
+		
 							);
 				} else {
 					list = cloud_deviceRepository.findByHasCompanyNoGroupHasProject(
@@ -208,8 +223,8 @@ public class Cloud_deviceService {
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
-							model.getProjectnameForSearch(),
-							model.getIndustryForSearch()
+							model.getProjectnameForSearch()
+					
 							);
 				}
 			}
@@ -225,7 +240,7 @@ public class Cloud_deviceService {
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
-							model.getIndustryForSearch(),
+				
 							model.getGroupnameForSearch()
 							);
 				} else {
@@ -236,7 +251,6 @@ public class Cloud_deviceService {
 							model.getImeiForSearch(),
 							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
-							model.getIndustryForSearch(),
 							model.getGroupnameForSearch()
 							);
 				}
@@ -251,7 +265,6 @@ public class Cloud_deviceService {
 							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
 							model.getProjectnameForSearch(),
-							model.getIndustryForSearch(),
 							model.getGroupnameForSearch()
 							);
 				} else {
@@ -263,7 +276,6 @@ public class Cloud_deviceService {
 							model.getImeiForSearch(),
 							model.getProductnameForSearch(),
 							model.getProjectnameForSearch(),
-							model.getIndustryForSearch(),
 							model.getGroupnameForSearch()
 							);
 				}
@@ -970,8 +982,11 @@ public class Cloud_deviceService {
 		model.setProductid(entity.getProductid());
 
 		// 会社名
-		Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(entity.getCompanyid());
-		if (company.isPresent()) {	model.setCompanyname(company.get().getCompanyname());}
+		// プロダクト名
+		if (entity.getCompanyid() != null) {
+			Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(entity.getCompanyid());
+			if (company.isPresent()) {	model.setCompanyname(company.get().getCompanyname());}
+		}
 
 		// プロダクト名
 		if (entity.getProductid() != null) {

@@ -704,7 +704,7 @@ class AaascloudApplicationTests extends TestCase{
 		String productName1 = CommonConstant.DEFAULT_MATCH_ALL;
 		String industry1 = CommonConstant.DEFAULT_MATCH_ALL;
 
-		List<Cloud_deviceEntity> list1 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei1,sn1,productName1,projectName1,industry1);
+		List<Cloud_deviceEntity> list1 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei1,sn1,productName1,projectName1);
 
 		assertEquals( list1.size(), 5);
 	}
@@ -783,7 +783,7 @@ class AaascloudApplicationTests extends TestCase{
 		String imei = "%104%";
 		String sn = "%104%";
 
-		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList, imei, sn, productName, projectName, industry);
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList, imei, sn, productName, projectName);
 
 		assertEquals( 1, list.size() );
 	}
@@ -805,7 +805,7 @@ class AaascloudApplicationTests extends TestCase{
 		String sn = "%0%";
 		String groupName = "%A%";
 
-		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(companyidList, imei, sn, productName, projectName, industry, groupName);
+		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(companyidList, imei, sn, productName, projectName, groupName);
 
 		assertEquals( 2, list.size() );
 	}

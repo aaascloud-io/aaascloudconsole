@@ -93,15 +93,6 @@ public class Cloud_deviceModel {
 	}
 
 	/*
-	 * industry情報検索条件取得
-	 *
-	 */
-	public String getIndustryForSearch() {
-
-		return CommonConstant.DEFAULT_MATCH_ALL;
-	}
-
-	/*
 	 * groupname情報検索条件取得
 	 *
 	 */

@@ -214,7 +214,8 @@ public class Cloud_deviceController {
 			List<Cloud_deviceModel> list = new ArrayList<Cloud_deviceModel>();
 
 			try {
-				list = cloud_deviceService.getUnderUserDevicesByConditions(cloud_deviceModel, accessUserlist);
+				list = cloud_deviceService.getUnderUserDevicesByquery(cloud_deviceModel, accessUserlist);
+				//list = cloud_deviceService.getUnderUserDevicesByConditions(cloud_deviceModel, accessUserlist);
 			} catch (Exception e) {
 				/* 異常系 */
 				response.setStatus(200);
