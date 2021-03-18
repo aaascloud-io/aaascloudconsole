@@ -151,7 +151,7 @@ public class Cloud_deviceController {
 
 			try {
 
-				list = cloud_deviceService.getUnderUserDevices(cloud_deviceModel, accessUserlist);
+				list = cloud_deviceService.getUnderUserDevices(accessUserlist);
 			} catch (Exception e) {
 				/* 異常系 */
 				response.setStatus(200);

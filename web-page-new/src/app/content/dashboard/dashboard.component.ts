@@ -3,11 +3,7 @@ import * as Chartist from 'chartist';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { ChartEvent, ChartType } from 'ng-chartist';
 import 'chartist-plugin-tooltips';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { PerfectScrollbarDirective, PerfectScrollbarComponent, PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-import { ChartApiService } from '../../_services/chart.api';
-import { TableApiService } from '../../_services/table-api.service';
-import { Router } from '@angular/router';
 import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
@@ -31,7 +27,6 @@ export class DashboardComponent implements OnInit {
   @ViewChild(PerfectScrollbarDirective) directiveRef?: PerfectScrollbarDirective;
 
   currentJustify = 'end';
-
   ChartistData: any;
   datatableData: any;
   lineAreaDay: any;
@@ -44,7 +39,6 @@ export class DashboardComponent implements OnInit {
   Daygraph = true;
   Weekgraph = false;
   Monthgraph = false;
-
   bigSize = true; //windowサイズflg
 
   constructor(

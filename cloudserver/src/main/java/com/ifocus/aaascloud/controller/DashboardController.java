@@ -85,7 +85,7 @@ public class DashboardController {
 		DashboardModel dashboardModel = new DashboardModel();
 
 		// ユーザID必須判定
-		if (null != cloud_userModel.getUsername()) {
+		if (null != cloud_userModel.getLoginInfo().getLoginuserid()) {
 
 			try {
 
@@ -112,7 +112,8 @@ public class DashboardController {
 				dashboardModel.setProductCount(productList.size());
 
 				// デバイス数（全部）を取得する
-				List<Cloud_deviceModel> deviceList  = cloud_deviceService.getUnderCompanyDevicesByUserids(list);
+				//List<Cloud_deviceModel> deviceList  = cloud_deviceService.getUnderCompanyDevicesByUserids(list);
+				List<Cloud_deviceModel> deviceList = cloud_deviceService.getUnderUserDevices(list);
 				// デバイス数（全部）を設定する
 				dashboardModel.setDeviceCount(deviceList.size());
 
