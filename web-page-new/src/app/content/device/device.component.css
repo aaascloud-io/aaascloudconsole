@@ -393,3 +393,16 @@ ng-select.required.ng-invalid.ng-untouched .ng-select-container {
   background-color: #6b6f82 !important;
   color:aliceblue; 
 }
+
+.alignLeft{
+  text-align: left;
+}
+
+.alignRight{
+  text-align: right;
+}
+
+.justify-content-center {
+  display: flex !important;
+  justify-content: center !important;
+}

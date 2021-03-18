@@ -5,7 +5,6 @@ import * as XLSX from 'xlsx';
 import { AlertService } from '../../_services/alert.service';
 import { HttpService } from 'src/app/_services/HttpService';
 import { number } from 'ngx-custom-validators/src/app/number/validator';
-// import * as _ from 'lodash';
 import { map, startWith } from 'rxjs/operators';
 import { NgBlockUI, BlockUI } from 'ng-block-ui';
 import {MessageService} from 'primeng/api';
@@ -18,37 +17,31 @@ import {ConfirmationService} from 'primeng/api';
   styleUrls: ['./device.component.css']
 })
 export class DeviceComponent implements OnInit {
+  bigSize=true; //windowサイズflg
   show = false;　 //条件検索表示flg
+  //template
   addModal = null;
   editModal = null;
   addsModal = null;
+  //dropdownList
   deviceSelected = false;
   public companySelectArray = [];
   public productSelectArray = [];
   public underUsersSelectArray = [];
-
-  selectedDevice: any;
+  selectedDevice: any
+  editProductSelected: {};
+  editUserSelected: {};
   //page用
   dataCount: 0;
   pageSize: any;
   collectionSize: any;
   page = 1;
-  TableData: any;
+  //sort
   sortOn: any;
-  editProductSelected: {};
-  editUserSelected: {};
-  editClickFlg = false;
-
+//一括登録ファイル名
   OpenFileName = "";
   public pageModel = {
-    //Loginユーザー情報
-    LoginUser: {
-      loginuserid: '',
-      logincompanyid: '',
-      loginrole: null,
-      loginusername: '',
-      loginupperuserid: '',
-    },
+//検索条件
     query: {
       querycode: '',
       productname: '',
@@ -124,9 +117,6 @@ export class DeviceComponent implements OnInit {
       groupnameUp: false,
       groupnameDown: false,
     },
-    checkColumn: {
-      imei: false,
-    }
   }
 
   @ViewChild('registerForm') registerForm: ElementRef;
@@ -449,9 +439,7 @@ export class DeviceComponent implements OnInit {
         } else if (item.resultCode == "0003") {
           this.showAlert("error", " エラーデータを参考して添付ファイルを修正ください。");
 
-          // this.pageModel.checkColumn[item.resultMsg] = true;
           this.pageModel.addDeviceDetailList = JSON.parse(item.data);
-          // this.setUnavailable("deviceSubmit", registerdevicesForm)
         } else if (item.resultCode == "0007") {
 
           this.showAlert("error", item.resultMsg);
@@ -815,5 +803,15 @@ export class DeviceComponent implements OnInit {
       summary : alertType, 
       detail : alertDetail,
       life : 2000});
+  }
+
+
+  onResize(){
+    //col-md最大値
+    if(innerWidth<992){
+      this.bigSize=false;
+    }else{
+      this.bigSize=true;
+    }
   }
 }

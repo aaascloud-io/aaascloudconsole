@@ -2,6 +2,8 @@
   <div class="content-wrapper">
     <div class="content-header row mb-1"></div>
     <div class="content-detached">
+      <div (window:resize)="onResize()" >
+      </div>
       <div class="content-body">
         <div>
           <label for="switch">条件検索：</label>
@@ -64,7 +66,6 @@
             </div>
           </div>
         </section>
-
         <!-- *blockUI="'basicTables'; message: 'Loading'" -->
         <div class="row">
           <div class="col-sm-12">
@@ -93,7 +94,7 @@
                 </div>
               </div>
               <div class="table-responsive card-body">
-                <table class="table grid-breakpoints">
+                <table class="table grid-breakpoints" id="devicesTable">
                   <thead>
                     <tr>
                       <th scope="col" class="thcolor"><input type="checkbox" (change)="checkAll($event)">
@@ -163,27 +164,20 @@
                       {{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~ {{dataCount}}を表示
                     </div>
                   </div>
-                  <div class="col-lg-4 col-md-12" style="text-align: center;">
-                    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [maxSize]="3">
-                    </ngb-pagination>
+                  <div class="col-lg-4 col-md-12 " [ngClass]="{'justify-content-center': bigSize}">
+                      <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [maxSize]="3" [rotate]="true" [boundaryLinks]="true">
+                      </ngb-pagination>
                   </div>
-                  <div class="col-lg-4 col-md-12" style="text-align: right;">
-                    <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
-                      <option [ngValue]="10">10 items per page</option>
-                      <option [ngValue]="20">20 items per page</option>
-                      <option [ngValue]="50">50 items per page</option>
-                      <option [ngValue]="100">100 items per page</option>
-                    </select>
-                  </div>
+                    <div class="col-lg-4 col-md-12" [ngClass]="{'alignRight': bigSize}">
+                      <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                        <option [ngValue]="10">10 items per page</option>
+                        <option [ngValue]="20">20 items per page</option>
+                        <option [ngValue]="50">50 items per page</option>
+                        <option [ngValue]="100">100 items per page</option>
+                      </select>
+                    </div>
                 </div>
               </div>
-              <!-- <div class="row">
-                <div class="col-lg-4  col-md-12" style="position: fixed ;left: 50%;bottom:5%;">
-                  <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
-                    [maxSize]="4">
-                  </ngb-pagination>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
