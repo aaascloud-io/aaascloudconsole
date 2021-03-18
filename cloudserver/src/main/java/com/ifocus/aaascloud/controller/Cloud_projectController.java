@@ -588,7 +588,7 @@ public class Cloud_projectController {
 			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
 
 				// 一括プロジェクトを削除する
-				cloud_projectService.deleteProjects(cloud_projectModel.getProjectlist());
+				cloud_projectService.deleteProjects(cloud_projectModel);
 
 				String responseData = new String();
 				responseData = responseData + "{";
