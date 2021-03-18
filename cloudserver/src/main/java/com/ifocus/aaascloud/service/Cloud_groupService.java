@@ -20,6 +20,7 @@ import com.ifocus.aaascloud.entity.Cloud_projectEntity;
 import com.ifocus.aaascloud.entity.Cloud_projectRepository;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_groupModel;
+import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 
 @SpringBootApplication
@@ -200,6 +201,26 @@ public class Cloud_groupService {
 			}
 		}
 
+		return;
+	}
+
+	/*
+	 * グループ一括削除(プロジェクト削除用)
+	 *
+	 */
+	public void deleteGroupsForProject(Cloud_projectModel model) throws Exception {
+		// 対象グループ取得
+		List<Cloud_groupEntity> groupEntityList = cloud_groupRepository.searchGroupsByProjectid(model.getProjectid());
+
+		if (groupEntityList != null && !groupEntityList.isEmpty()) {
+			for (Cloud_groupEntity entity:groupEntityList) {
+
+				////////////////////////////////////////////////////////
+				// グループ削除
+				////////////////////////////////////////////////////////
+				deleteGroup(model.getLoginInfo(), entity.getGroupid());
+			}
+		}
 		return;
 	}
 
