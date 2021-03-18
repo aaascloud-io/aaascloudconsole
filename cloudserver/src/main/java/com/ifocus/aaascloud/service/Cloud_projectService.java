@@ -20,6 +20,8 @@ import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_projectEntity;
 import com.ifocus.aaascloud.entity.Cloud_projectRepository;
+import com.ifocus.aaascloud.entity.Cloud_userEntity;
+import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
@@ -38,14 +40,18 @@ public class Cloud_projectService {
 	private Cloud_groupRepository cloud_groupRepository ;
 	@Autowired
 	private Cloud_deviceRepository cloud_deviceRepository ;
+	@Autowired
+	private Cloud_userRepository cloud_userRepository;
 
 	@Autowired
 	private Cloud_groupService cloud_groupService ;
 	@Autowired
 	private Cloud_deviceService cloud_deviceService ;
+	@Autowired
+	private AccessService accessService;
 
 	/*
-	 * プロジェクト一覧取得
+	 * マイプロジェクト一覧取得
 	 * @param userid Integer ターゲットユーザーID
 	 * @List<Cloud_projectModel> プロジェクト一覧
 	 */
@@ -63,6 +69,48 @@ public class Cloud_projectService {
 			Optional<Cloud_productEntity> entity = cloud_productRepository.findById(model.getProductid());
 			if (!entity.equals(Optional.empty())) {
 				model.setProductname(entity.get().getProductname());
+			}
+			/* グループ数取得 */
+			List<Cloud_groupEntity> groupList = cloud_groupRepository.searchGroupsByProjectid(model.getProjectid());
+			model.setGroupCounts(groupList.size());
+			/* デバイス数取得 */
+			List<Cloud_deviceEntity> deviceList = cloud_deviceRepository.searchDevicesByProjectid(model.getProjectid());
+			model.setDeviceCounts(deviceList.size());
+
+			returnList.add(model);
+		});
+		return returnList;
+
+	}
+
+	/*
+	 * 配下プロジェクト一覧取得
+	 * @param userid Integer ターゲットユーザーID
+	 * @List<Cloud_projectModel> プロジェクト一覧
+	 */
+	public List<Cloud_projectModel> getUnderProjects(Cloud_projectModel cloud_projectModel) throws Exception {
+		List<Cloud_projectModel> returnList = new ArrayList<Cloud_projectModel>();
+
+		// アクセス権限ユーザ一覧を取得する
+		List<Integer> useridList = accessService.getAccessUsers(cloud_projectModel.getTargetUserInfo().getTargetuserid());
+
+		Iterable<Cloud_projectEntity> list = cloud_projectRepository.searchByUseridIn(useridList);
+		list.forEach(s -> {
+			Cloud_projectModel model = new Cloud_projectModel();
+			model.setProjectid(s.getProjectid());
+			model.setProjectname(s.getProjectname());
+			model.setUserid(s.getUserid());
+			model.setProductid(s.getProductid());
+			model.setProjectsummary(s.getProjectsummary());
+			/* 管理者情報取得 */
+			Optional<Cloud_userEntity> user = cloud_userRepository.findById(model.getUserid());
+			if (user.isPresent()) {
+				model.setUsername(user.get().getLastname() + " " + user.get().getFirstname());
+			}
+			/* プロダクト情報取得 */
+			Optional<Cloud_productEntity> product = cloud_productRepository.findById(model.getProductid());
+			if (product.isPresent()) {
+				model.setProductname(product.get().getProductname());
 			}
 			/* グループ数取得 */
 			List<Cloud_groupEntity> groupList = cloud_groupRepository.searchGroupsByProjectid(model.getProjectid());

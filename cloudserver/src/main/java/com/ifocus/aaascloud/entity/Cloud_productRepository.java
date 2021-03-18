@@ -20,7 +20,7 @@ public interface  Cloud_productRepository extends CrudRepository<Cloud_productEn
 	public List<Cloud_productEntity> findAllValid();
 
 	/*
-	 * プロダクト物理削除（ALIVE＝０の行）
+	 * プロダクト物理削除（deleteflag＝１の行）
 	 *
 	 *
 	 */

@@ -23,6 +23,7 @@ public class Cloud_projectModel {
 	private Integer alive;
 	private Integer groupCounts;
 	private Integer deviceCounts;
+	private String username;
 
 	// 一括削除用
 	private List<Cloud_projectModel> projectlist;
