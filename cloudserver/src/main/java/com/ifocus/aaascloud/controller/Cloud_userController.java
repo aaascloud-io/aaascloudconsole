@@ -269,7 +269,7 @@ public class Cloud_userController {
 				List<Cloud_projectModel> projectList = cloud_projectService.getMyUnderProjects(underUserList);
 
 				// デバイス一覧を取得する
-				List<Cloud_deviceModel> deviceList = cloud_deviceService.getUnderUserDevices(null, underUserList);
+				List<Cloud_deviceModel> deviceList = cloud_deviceService.getUnderUserDevices(underUserList);
 				resJasonObj.put("deviceCount", deviceList.size());
 
 				// 配下プロジェクト数
