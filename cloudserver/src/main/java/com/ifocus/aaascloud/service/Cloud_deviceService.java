@@ -307,7 +307,7 @@ public class Cloud_deviceService {
 	 * @return List<Cloud_deviceModel> デバイス一覧
 	 *
 	 */
-	public List<Cloud_deviceModel> getUnderUserDevices(Cloud_deviceModel model, List<Integer> userids) throws Exception {
+	public List<Cloud_deviceModel> getUnderUserDevices(List<Integer> userids) throws Exception {
 
 		// 配下ユーザのデバイス一覧取得
 		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchUnderUserDevicesByUseridIn(userids);
