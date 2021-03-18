@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface  Cloud_projectRepository extends CrudRepository<Cloud_projectEntity, Integer> {
 
 	/*
-	 * プロジェクト一覧
+	 * マイプロジェクト一覧
 	 *
 	 *
 	 */
@@ -34,7 +34,7 @@ public interface  Cloud_projectRepository extends CrudRepository<Cloud_projectEn
 	 * プロジェクト一覧（プロジェクト数取得用）
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_project c WHERE c.userid IN :userid", nativeQuery = true)
-	public List<Cloud_projectEntity> searchByUseridIn(@Param("userid") List<Integer> userid);
+	@Query(value = "SELECT c.* FROM cloud_project c WHERE c.userid IN :userids  ORDER BY c.projectname", nativeQuery = true)
+	public List<Cloud_projectEntity> searchByUseridIn(@Param("userids") List<Integer> userids);
 
 }
