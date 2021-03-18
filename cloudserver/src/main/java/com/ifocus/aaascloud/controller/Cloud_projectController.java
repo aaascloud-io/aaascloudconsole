@@ -63,7 +63,8 @@ public class Cloud_projectController {
 			if (cloud_userService.checkAccessOK(cloud_projectModel.getLoginInfo().getLoginuserid(), cloud_projectModel.getTargetUserInfo().getTargetuserid())) {
 
 					// プロジェクト一覧を取得する
-					List<Cloud_projectModel> list = cloud_projectService.getMyProjects(cloud_projectModel.getTargetUserInfo().getTargetuserid());
+					// List<Cloud_projectModel> list = cloud_projectService.getMyProjects(cloud_projectModel.getTargetUserInfo().getTargetuserid());
+					List<Cloud_projectModel> list = cloud_projectService.getUnderProjects(cloud_projectModel);
 
 					response.setStatus(200);
 					response.setResultCode(ErrorConstant.ERROR_CODE_0000);
