@@ -28,10 +28,10 @@ public interface  Cloud_productRepository extends CrudRepository<Cloud_productEn
 	@Transactional
 	@Query(value = " DELETE FROM cloud_product c "
 			+ " WHERE c.deleteflag = 1 "
-			+ " AND c.producttypeid = :producttypeid"
+			+ " AND c.producttypename = :producttypename"
 			+ " AND c.createuserid = :createuserid"
 			+ " AND c.productname = :productname",nativeQuery = true)
-	public void deleteProductMarked(@Param("producttypeid") Integer producttypeid,@Param("createuserid") Integer createuserid,@Param("productname") String productname);
+	public void deleteProductMarked(@Param("producttypename") String producttypename,@Param("createuserid") Integer createuserid,@Param("productname") String productname);
 
 	/*
 	 * プロダクトID一覧（プロダクト数取得用）
@@ -57,12 +57,11 @@ public interface  Cloud_productRepository extends CrudRepository<Cloud_productEn
 	 *
 	 */
 	@Query(value = "SELECT c.* FROM cloud_product c "
-			+ " LEFT JOIN cloud_producttype d ON c.producttypeid = d.producttypeid "
 			+ " LEFT JOIN cloud_user u ON c.createuserid = u.userid "
 			+ " WHERE c.createuserid IN :createuserid "
 			+ " AND CONCAT(u.lastName,u.firstName) LIKE :name "
 			+ " AND c.productname LIKE :productname "
-			+ " AND d.producttypename LIKE :producttypename "
+			+ " AND c.producttypename LIKE :producttypename "
 			+ " AND c.deleteflag = 0 ",nativeQuery = true)
 	public List<Cloud_productEntity> searchMyProductsByProducttypenameAndProductname(@Param("createuserid") List<Integer> createuserid, @Param("name") String name, @Param("producttypename") String producttypename, @Param("productname") String productname);
 
