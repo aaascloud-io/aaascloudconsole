@@ -26,11 +26,11 @@ public interface  Cloud_productRepository extends CrudRepository<Cloud_productEn
 	 */
 	@Modifying
 	@Transactional
-	@Query(value = " DELETE FROM cloud_product c "
-			+ " WHERE c.deleteflag = 1 "
-			+ " AND c.producttypename = :producttypename"
-			+ " AND c.createuserid = :createuserid"
-			+ " AND c.productname = :productname",nativeQuery = true)
+	@Query(value = " DELETE FROM cloud_product "
+			+ " WHERE deleteflag = 1 "
+			+ " AND producttypename = :producttypename"
+			+ " AND createuserid = :createuserid"
+			+ " AND productname = :productname",nativeQuery = true)
 	public void deleteProductMarked(@Param("producttypename") String producttypename,@Param("createuserid") Integer createuserid,@Param("productname") String productname);
 
 	/*
