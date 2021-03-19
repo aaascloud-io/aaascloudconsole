@@ -1,16 +1,15 @@
 package com.ifocus.aaascloud.service;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ifocus.aaascloud.entity.Cloud_producttypeEntity;
-import com.ifocus.aaascloud.entity.Cloud_producttypeRepository;
+import com.ifocus.aaascloud.constant.ProductTypeConstant;
 import com.ifocus.aaascloud.model.Cloud_producttypeModel;
 
 @SpringBootApplication
@@ -19,63 +18,24 @@ import com.ifocus.aaascloud.model.Cloud_producttypeModel;
 @Transactional
 public class Cloud_producttypeService {
 
-	@Autowired
-	private Cloud_producttypeRepository cloud_producttypeRepository ;
-
 	/*
 	 * プロダクトタイプ一覧取得
 	 *
 	 *
 	 */
 	public List<Cloud_producttypeModel> getProductList() throws Exception {
-		List<Cloud_producttypeEntity> list = getProductAll();
-		return getModelsByEntitys(list);
 
-	}
+		List<Cloud_producttypeModel> returnList = new ArrayList<Cloud_producttypeModel>();
+		ProductTypeConstant productType = new ProductTypeConstant();
 
-	/*
-	 * プロダクトタイプ一覧取得
-	 *
-	 *
-	 */
-	public List<Cloud_producttypeEntity> getProductAll() throws Exception {
-		List<Cloud_producttypeEntity> returnList = new ArrayList<Cloud_producttypeEntity>();
-		Iterable<Cloud_producttypeEntity> list = cloud_producttypeRepository.findAll();
-		list.forEach(s -> returnList.add(s));
+	    for (Field field : productType.getClass().getDeclaredFields()) {
+	        field.setAccessible(true);
+	        Cloud_producttypeModel model = new Cloud_producttypeModel();
+	        model.setProducttypename((String)field.get(productType));
+	        returnList.add(model);
+	    }
+
 		return returnList;
-
-	}
-
-	/*
-	 * EntityリストからModeリストl取得
-	 * @param entityList List<Cloud_deviceEntity> Entityリスト
-	 * @return List<Cloud_deviceModel> Modeリスト
-	 *
-	 */
-	public List<Cloud_producttypeModel> getModelsByEntitys(List<Cloud_producttypeEntity> entityList) throws Exception {
-		List<Cloud_producttypeModel> modelList = new ArrayList<Cloud_producttypeModel>();
-		for (Cloud_producttypeEntity entity:entityList) {
-			modelList.add(getModelByEntity(entity));
-		}
-
-		return modelList;
-
-	}
-
-	/*
-	 * EntityからModel取得
-	 * @param entity Cloud_producttypeEntity
-	 * @return Cloud_producttypeModel
-	 *
-	 */
-	public Cloud_producttypeModel getModelByEntity(Cloud_producttypeEntity entity) throws Exception {
-		Cloud_producttypeModel model = new Cloud_producttypeModel();
-		model.setProducttypeid(entity.getProducttypeid());
-		model.setProducttypename(entity.getProducttypename());
-		model.setSummary(entity.getSummary());
-		model.setReleasedate(entity.getReleasedate());
-
-		return model;
 
 	}
 
