@@ -1,16 +1,20 @@
 import { Component, OnInit, ViewChild, EventEmitter, Output, Renderer2 } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import * as XLSX from 'xlsx';
-import { AlertService } from '../../_services/alert.service';
 import { HttpService } from 'src/app/_services/HttpService';
 import { UserInfo } from '../../_common/_interface/userInfo'
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
-import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { TreeNode } from 'primeng/api';
+import { TreeTableModule } from 'primeng/treetable';
+import { MessageService } from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
+
 
 class Contact {
   constructor(
@@ -33,6 +37,7 @@ class Contact {
     public tel: string,
     public fax: string,
     public name: string,
+    // public Contact: any,
   ) { }
 }
 const formInputData = require('../../../assets/data/forms/form-elements/form-inputs.json');
@@ -43,14 +48,20 @@ const selectData = require('../../../assets/data/forms/form-elements/select.json
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
+
+@Injectable()
 export class UserComponent implements OnInit {
 
   userInfo: UserInfo;
+  files: TreeNode[];
+  files1: TreeNode[];
+  addUserInfo: FormGroup;
 
 
   pageSize: any;
   collectionSize: any;
   userList: any;
+  userList_json: any;
   page = 1;
   TableData: any;
   sortOn: any;
@@ -68,13 +79,16 @@ export class UserComponent implements OnInit {
   contactactive: string;
   rows: any[] = [];
   userAll: any[] = [];
+  jsonUsers: any[] = [];
   selectedContact: any;
   contactFlag: boolean;
   addContact: any;
   placement = 'bottom-right';
   imagepathdefault: any;
   addModal = null;
+  addCompanyModal = null;
   addMyModal = null;
+  addProxyModal = null;
   updateModal = null;
   value: any;
   loadingIndicator: true;
@@ -83,6 +97,8 @@ export class UserComponent implements OnInit {
   temp = [];
   temp2 = this.rows;
   singlebasicSelected: any;
+
+  cols: any[];
 
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
@@ -100,7 +116,13 @@ export class UserComponent implements OnInit {
 
     adduserInfo: {
       username: '',
+      lastname: '',
+      firstname: '',
+      password: '',
+      newPassword: '',
       role: null,
+      companyid: null,
+      companyname: '',
       upperuserid: null,
       companyInfo: {
         corporatenumber: '',
@@ -171,6 +193,8 @@ export class UserComponent implements OnInit {
       addressUp: false,
       addressDown: false,
     },
+    jsonUserList: [],
+    jsonUsers: {},
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -188,20 +212,22 @@ export class UserComponent implements OnInit {
   constructor(
     private modal: NgbModal,
     private _renderer: Renderer2,
-    private alertService: AlertService,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private messageService: MessageService,
+    private primengConfig: PrimeNGConfig,
+    private confirmationService: ConfirmationService,
+    private formBuilder: FormBuilder,
   ) {
     // this.searchMyUsers();
   }
 
   ngOnInit(): void {
+    this.primengConfig.ripple = true;
     this.pageSize = 10;
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
     // 画面初期ログイン情報取得
-    let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+    let item: UserInfo = this.httpService.getLoginUser();
 
     //to do ユーザー名で　ロケーシ
     this.pageModel.loginUser.loginuserid = item.uid;
@@ -210,20 +236,390 @@ export class UserComponent implements OnInit {
     this.pageModel.loginUser.logincompanyid = item.company;
     this.pageModel.loginUser.loginupperuserid = item.upperuserid;
     this.companyId = item.company;
-    console.log("ログイン情報：" + JSON.stringify(item));
 
-    this.pageModel.userInfoParame.loginInfo = {
-      "loginuserid": this.pageModel.loginUser.loginuserid,
-      "loginusername": this.pageModel.loginUser.loginusername,
-      "loginrole": this.pageModel.loginUser.loginrole,
-      "logincompanyid": this.pageModel.loginUser.logincompanyid,
-      "loginupperuserid": this.pageModel.loginUser.loginupperuserid
-    }
+    this.cols = [
+      { field: 'userid', header: 'ユーザーID' },
+      { field: 'username', header: 'ユーザー名' },
+      { field: 'companyName', header: '会社名' },
+      { field: 'role', header: '権限' },
+      { field: 'email', header: 'メール' },
+      { field: 'userfullname', header: '作成者' },
+    ];
 
+    this.files = <TreeNode[]>[
+      {
+        "data": {
+          "companyName": "アイフォーカス",
+          "companyid": 1,
+          "email": "ifocus@ifocus",
+          "firstname": "wang",
+          "lastname": "wang",
+          "projectCount": 4,
+          "role": 1,
+          "upperuserid": 0,
+          "userCount": 7,
+          "userfullname": "wang wang",
+          "userid": 1,
+          "username": "wang",
+        },
+        "children": [
+          {
+            "data": {
+              "companyName": "アイフォーカス",
+              "companyid": 1,
+              "email": "ifocus@ifocus",
+              "firstname": "wang",
+              "lastname": "wang",
+              "projectCount": 4,
+              "role": 1,
+              "upperuserid": 0,
+              "userCount": 7,
+              "userfullname": "wang wang",
+              "userid": 1,
+              "username": "wang",
+            },
+            "children": [
+              {
+                "data": {
+                  "companyName": "アイフォーカス",
+                  "companyid": 1,
+                  "email": "ifocus@ifocus",
+                  "firstname": "wang",
+                  "lastname": "wang",
+                  "projectCount": 4,
+                  "role": 1,
+                  "upperuserid": 0,
+                  "userCount": 7,
+                  "userfullname": "wang wang",
+                  "userid": 1,
+                  "username": "wang",
+                }
+              },
+              {
+                "data": {
+                  "companyName": "アイフォーカス",
+                  "companyid": 1,
+                  "email": "ifocus@ifocus",
+                  "firstname": "wang",
+                  "lastname": "wang",
+                  "projectCount": 4,
+                  "role": 1,
+                  "upperuserid": 0,
+                  "userCount": 7,
+                  "userfullname": "wang wang",
+                  "userid": 1,
+                  "username": "wang",
+                }
+              },
+              {
+                "data": {
+                  "companyName": "アイフォーカス",
+                  "companyid": 1,
+                  "email": "ifocus@ifocus",
+                  "firstname": "wang",
+                  "lastname": "wang",
+                  "projectCount": 4,
+                  "role": 1,
+                  "upperuserid": 0,
+                  "userCount": 7,
+                  "userfullname": "wang wang",
+                  "userid": 1,
+                  "username": "wang",
+                }
+              }
+            ]
+          },
+          {
+            "data": {
+              "companyName": "アイフォーカス",
+              "companyid": 1,
+              "email": "ifocus@ifocus",
+              "firstname": "wang",
+              "lastname": "wang",
+              "projectCount": 4,
+              "role": 1,
+              "upperuserid": 0,
+              "userCount": 7,
+              "userfullname": "wang wang",
+              "userid": 1,
+              "username": "wang",
+            }
+          },
+          {
+            "data": {
+              "userid": "1",
+              "username": "王3",
+              "companyName": "王3会社",
+            }
+          }
+        ]
+      },
+      {
+        "data": {
+          "userid": "1",
+          "username": "i-focus2",
+          "companyName": "アイフォーカス２",
+        },
+        "children": [
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            }
+          },
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang1",
+              "companyName": "王1会社",
+            }
+          }
+        ]
+      },
+      {
+        "data": {
+          "userid": "1",
+          "username": "i-focus3",
+          "companyName": "アイフォーカス3",
+        },
+        "children": [
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            }
+          },
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            }
+          }
+        ]
+      },
+      {
+        "data": {
+          "userid": "1",
+          "username": "i-focus4",
+          "companyName": "アイフォーカス4",
+        },
+        "children": [
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            },
+            "children": [
+              {
+                "data": {
+                  "userid": "1",
+                  "username": "wang2",
+                  "companyName": "王2会社",
+                }
+              },
+              {
+                "data": {
+                  "userid": "1",
+                  "username": "wang3",
+                  "companyName": "王3会社",
+                }
+              }
+            ]
+          },
+          {
+            "data": {
+              "userid": "1",
+              "username": "i-focus4",
+              "companyName": "アイフォーカス２",
+            },
+            "children": [
+              {
+                "data": {
+                  "userid": "1",
+                  "username": "wang",
+                  "companyName": "王会社",
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "data": {
+          "userid": "1",
+          "username": "wang",
+          "companyName": "王会社",
+        },
+        "children": [
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            },
+            "children": [
+              {
+                "data": {
+                  "userid": "1",
+                  "username": "wang",
+                  "companyName": "王会社",
+                }
+              },
+              {
+                "data": {
+                  "userid": "1",
+                  "username": "wang",
+                  "companyName": "王会社",
+                }
+              }
+            ]
+          },
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            },
+            "children": [
+              {
+                "data": {
+                  "userid": "1",
+                  "username": "wang",
+                  "companyName": "王会社",
+                }
+              },
+              {
+                "data": {
+                  "userid": "1",
+                  "username": "wang",
+                  "companyName": "王会社",
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "data": {
+          "userid": "1",
+          "username": "wang",
+          "companyName": "王会社",
+        },
+        "children": [
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            }
+          },
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            }
+          },
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            }
+          }
+        ]
+      },
+      {
+        "data": {
+          "userid": "1",
+          "username": "wang",
+          "companyName": "王会社",
+        },
+        "children": [
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            }
+          },
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            }
+          }
+        ]
+      },
+      {
+        "data": {
+          "userid": "1",
+          "username": "wang",
+          "companyName": "王会社",
+        },
+        "children": [
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            }
+          },
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            },
+          }
+        ],
+      },
+      {
+        "data": {
+          "userid": "1",
+          "username": "wang",
+          "companyName": "王会社",
+        },
+        "children": [
+          {
+            "data": {
+              "userid": "1",
+              "username": "wang",
+              "companyName": "王会社",
+            }
+          },
+          {
+            "data": {
+              "name": "intro.avi",
+              "size": "500mb",
+              "type": "Video"
+            }
+          }
+        ]
+      }
+    ]
+
+    this.addUserInfo = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      newpassword: ['', [Validators.required, Validators.minLength(6)]],
+    });
+
+    console.log("サンプルデーター表示：");
+    console.log(this.files);
     console.log("param情報：" + JSON.stringify(this.pageModel.loginUser));
     this.getUnderCompanies()
     this.searchMyUsers();
     this.getUnderUsers();
+  }
+
+  get f() {
+    return this.addUserInfo.controls;
   }
 
   /**
@@ -233,6 +629,19 @@ export class UserComponent implements OnInit {
  */
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
+      windowClass: 'animated fadeInDown'
+      , size: 'lg'
+    });
+    this.contactFlag = true;
+  }
+
+  /**
+  * 新規会社を呼び出し
+  *
+  * @param addTableDataModalContent      Id of the add contact modal;
+  */
+  addCompanyDataModal(addNewCompanyModalContent) {
+    this.addCompanyModal = this.modal.open(addNewCompanyModalContent, {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
     });
@@ -264,6 +673,20 @@ export class UserComponent implements OnInit {
         this.pageModel.updataUserInfo.fax = this.pageModel.companyInfoAll[company]["fax"];
       }
     }
+  }
+
+  /**
+     * 代理店の新規ユーザーを呼び出し
+     *
+     * @param editTableDataModalContent     Id of the edit contact model.
+     * @param row     The row which needs to be edited.
+     */
+  addRowTableDataModal(editTableNewDataModalContent, row) {
+    this.selectedContact = Object.assign({}, row);
+    this.addProxyModal = this.modal.open(editTableNewDataModalContent, {
+      windowClass: 'animated fadeInDown '
+    });
+    this.contactFlag = false;
   }
 
   /**
@@ -313,19 +736,13 @@ export class UserComponent implements OnInit {
 
     if (confirm("削除してもよろしいでしょうか")) {
 
-
       this.selectedUserid.push({ "userid": row.userid });
       var query = {
-        "loginInfo": this.pageModel.userInfoParame.loginInfo,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
-          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
-        },
         "cloud_userModelList": this.selectedUserid,
       }
-      this.httpService.delete('deleteUser', query).then(item => {
+      this.httpService.useRpDelete('deleteUser', query).then(item => {
         try {
-          if (item.body.resultCode === "0000") {
+          if (item.resultCode === "0000") {
             this.selectedUserid = [];
             this.selected = [];
             this.searchMyUsers();
@@ -363,18 +780,13 @@ export class UserComponent implements OnInit {
     if (confirm("削除してもよろしいでしょうか")) {
       // 削除パラメータの作成
       var query = {
-        "loginInfo": this.pageModel.userInfoParame.loginInfo,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
-          "targetuserCompanyid": this.pageModel.userInfoParame.targetUserInfo.targetuserid,
-        },
         "cloud_userModelList": this.selectedUserid,
       }
 
       // ユーザー情報の削除
-      this.httpService.delete('deleteUser', query).then(item => {
+      this.httpService.useRpDelete('deleteUser', query).then(item => {
         try {
-          if (item.body.resultCode === "0000") {
+          if (item.resultCode === "0000") {
             this.selectedUserid = [];
             this.selected = [];
             this.searchMyUsers();
@@ -401,13 +813,6 @@ export class UserComponent implements OnInit {
    */
   onUpdate(editUpdateForm: NgForm) {
     var query = {
-      "loginInfo": {
-        "loginuserid": this.pageModel.loginUser.loginuserid,
-        "logincompanyid": this.pageModel.loginUser.logincompanyid
-      },
-      "targetUserInfo": {
-        "targetuserid": this.selectedContact.userid,
-      },
       "userid": this.selectedContact.userid,
       "role": this.selectedContact.role,
       "username": this.selectedContact.username,
@@ -421,7 +826,7 @@ export class UserComponent implements OnInit {
       "fax": this.pageModel.updataUserInfo.fax
     }
 
-    this.httpService.put('updateUser', query).then(item => {
+    this.httpService.useRpPut('updateUser', query).then(item => {
       this.pageModel.result.retcode = '';
       this.pageModel.result.message = '';
       try {
@@ -470,11 +875,6 @@ export class UserComponent implements OnInit {
 
     if (flg) {
       var query = {
-        "loginInfo": this.pageModel.userInfoParame.loginInfo,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-        },
-
         "companyid": companyid,
         "username": username,
         "role": role,
@@ -730,8 +1130,6 @@ export class UserComponent implements OnInit {
       try {
         this.rows = [];
         if (item) {
-
-          console.log(item);
           var index = 1;
           // this.pageModel.userList = item;
           var companyname = '';
@@ -768,15 +1166,78 @@ export class UserComponent implements OnInit {
             ));
             index++;
           });
+          var list = [];
+          // this.pageModel.jsonUserList[0].child = item;
+          // this.pageModel.jsonUserList[0].parent = item[0];
+          // this.pageModel.jsonUserList[0].child[0].parent = item[0];
+          // this.pageModel.jsonUserList[0].child[0].child = item;
+          // this.files1 = <TreeNode[]>this.pageModel.jsonUserList;
+          // console.log("画面表示の一覧");
+          // console.log(this.files);
+
+          let parents = item.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
+          let childrens = item.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
+          // var list = {parent:{}, child:[]};
+          this.jsonUsers = this.translator(parents, childrens);
+          console.log("==========取得JSONUSERS=============");
+          console.log(this.jsonUsers);
+          // var files = <TreeNode[]>this.jsonUsers;
+          console.log("==========転換後のJSONUSERS=============");
+          // console.log(files);
         }
         this.rows = [...this.rows];
         this.getTabledata();
         // }
 
       } catch (e) {
-        console.log('');
+        console.log('失敗');
       }
     });
+  }
+
+  translator(parents, childrens) {
+    var list = [];
+    var data = { data: {}, child: [] };
+    var data1 = {};
+    if (parents) {
+      parents.forEach(parent => {
+        childrens.forEach((child, index) => {
+          if (parent.userid == child.upperuserid) {
+            let temp = JSON.parse(JSON.stringify(childrens));
+            temp.childs = temp;
+            temp.splice(index, 1);
+            this.translator([child], temp);
+            typeof parent.childrens !== "undefined" ?
+              parent.Contact.push(child) : parent.Contact = [child];
+          }
+        });
+      });
+    }
+    var userMap = { data: {}, children: [] };
+    const copyList = childrens.slice(0)
+    const tree = []
+    for (let i = 0; i < copyList.length; i++) {
+      // 找出每一项的父节点，并将其作为父节点的children
+      for (let j = 0; j < copyList.length; j++) {
+        if (copyList[i].userid === copyList[j].upperuserid) {
+          if (copyList[j].children === undefined) {
+            copyList[j].children = []
+          }
+          copyList[j].children.push(copyList[i])
+        }
+      }
+      // 把根节点提取出来，parentId为null的就是根节点
+      if (copyList[i].parentId === null) {
+        tree.push(copyList[i])
+      }
+    }
+    return parents;
+  }
+
+
+  fliterEvent(parents, childrens) {
+    this.fliterEvent(parents, childrens);
+    return parents;
   }
 
   /**
@@ -797,6 +1258,10 @@ export class UserComponent implements OnInit {
     }
     this.httpService.usePost('getUnderUsers', query).then(item => {
       try {
+
+        item.forEach(element => {
+          element.userid
+        });
         if (item) {
           console.log('上位管理者：');
           console.log(item);
@@ -1000,5 +1465,15 @@ export class UserComponent implements OnInit {
     this.pageModel.result.message = '';
     this.pageModel.result.retcode = item.resultCode;
     this.pageModel.result.message = item.resultMsg;
+  }
+
+  showAlert(alertType, alertDetail) {
+    this.messageService.add({
+      key: 'alertModal',
+      severity: alertType,
+      summary: alertType,
+      detail: alertDetail,
+      life: 2000
+    });
   }
 }
