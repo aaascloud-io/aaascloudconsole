@@ -172,10 +172,10 @@
       <div class="row">
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクトタイプ<code>＊</code></h6>
-          <select class="form-control" id="typeId" name="typeId" [(ngModel)]="selectedContact.producttypeid"
-            #editname="ngModel" name="producttypeid" id="producttypeid"
+          <select class="form-control" id="typename" name="typename" [(ngModel)]="selectedContact.producttypename"
+            #editname="ngModel" name="producttypename" id="producttypename"
             [ngClass]="{ 'is-invalid': editForm.submitted && editname.invalid }" required>
-            <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+            <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypename">
               {{type.producttypename}}
             </option>
           </select>
@@ -251,9 +251,9 @@
       <div class="row">
         <div class="form-group col-lg-6 col-md-12">
           <h6>プロダクトタイプ<code>＊</code></h6>
-          <select class="form-control" id="typeId" name="typeId" [(ngModel)]="pageModel.addProduct.productTypeId"
+          <select class="form-control" id="typename" name="typename" [(ngModel)]="pageModel.addProduct.producttypename"
             #editname="ngModel" [ngClass]="{ 'is-invalid': addForm.submitted && editname.invalid }" required>
-            <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypeid">
+            <option *ngFor="let type of productTypes; let i = index" [ngValue]="type.producttypename">
               {{type.producttypename}}
             </option>
           </select>

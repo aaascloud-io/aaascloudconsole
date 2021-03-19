@@ -14,7 +14,7 @@ import { ConfirmationService } from 'primeng/api';
 class Contact {
   constructor(
     public id: number,
-    public producttypeid: any,
+    public producttypename: any,
     public productid: any,
     public productcode: any,
     public productname: string,
@@ -22,7 +22,6 @@ class Contact {
     public simflag: number,
     public version: string,
     public summary: string,
-    public producttypename: string,
     public createusername: string,
     public createuserid: string,
   ) { }
@@ -57,7 +56,7 @@ export class ProductComponent implements OnInit {
   temp2 = this.rows;
   singlebasicSelected: any;
   productSelected = false;
-  productTypes = [];
+  productTypes = [{producttypename:"FACE"},{producttypename:"WATCH"},{producttypename:"TRACKUN"}];
   users = [];
   show = false;
   simFlg = false;
@@ -81,7 +80,7 @@ export class ProductComponent implements OnInit {
     dataAll: [],
     productList: [],
     addProduct: {
-      productTypeId: null,
+      producttypename: '',
       createuserid: null,
       productcode: '',
       productName: '',
@@ -92,7 +91,7 @@ export class ProductComponent implements OnInit {
     },
     updataProduct: {
       productId: 0,
-      productTypeId: 0,
+      producttypename: '',
       productcode: '',
       productName: '',
       model: '',
@@ -152,7 +151,6 @@ export class ProductComponent implements OnInit {
     this.singlebasicSelected = this.singleSelectArray[0].item_text;
     this.userInfo = this.httpService.getLoginUser();
 
-    this.getProductTypes();
     this.getUnderUsers();
     this.searchMyProduct();
   }
@@ -307,7 +305,7 @@ export class ProductComponent implements OnInit {
       var query = {
         "productid": this.selectedContact.productid,
         "createuserid": this.selectedContact.createuserid,
-        "producttypeid": this.selectedContact.producttypeid,
+        "producttypename": this.selectedContact.producttypename,
         "productcode": this.selectedContact.productcode,
         "productname": this.selectedContact.productname,
         "model": this.selectedContact.model,
@@ -374,12 +372,12 @@ export class ProductComponent implements OnInit {
     //   this.contactactive = this.contactactive;
     // }
 
-    var productTypeId = this.pageModel.addProduct.productTypeId;
+    var producttypename = this.pageModel.addProduct.producttypename;
     var createuserid = this.pageModel.addProduct.createuserid;
     var productName = this.pageModel.addProduct.productName;
     var flg = true;
 
-    if (flg && !productTypeId) {
+    if (flg && !producttypename) {
       this.showAlert("warn", "タイプを選択してください。");
       flg = false;
     }
@@ -397,7 +395,7 @@ export class ProductComponent implements OnInit {
     if (flg) {
       var sim = this.pageModel.addProduct.sim === true ? '1' : '0';
       var query = {
-        "producttypeid": this.pageModel.addProduct.productTypeId,
+        "producttypename": this.pageModel.addProduct.producttypename,
         "createuserid": this.pageModel.addProduct.createuserid,
         "productcode": this.pageModel.addProduct.productcode,
         "productname": this.pageModel.addProduct.productName,
@@ -472,19 +470,12 @@ export class ProductComponent implements OnInit {
         this.rows = [];
         console.log(item);
         var index = 1;
-        // this.pageModel.productList = item;
         if (item) {
           item.forEach((elem) => {
             var producttypename = ""
-            // プロダクトタイプ名の検索
-            for (const productType of this.productTypes) {
-              if (productType.producttypeid === elem.producttypeid) {
-                producttypename = productType.producttypename;
-              }
-            }
             this.rows.push(new Contact(
               index,
-              elem.producttypeid,
+              elem.producttypename,
               elem.productid,
               elem.productcode,
               elem.productname,
@@ -492,7 +483,6 @@ export class ProductComponent implements OnInit {
               elem.simflag,
               elem.version,
               elem.summary,
-              producttypename,
               elem.createusername,
               elem.createuserid
             ));
@@ -504,26 +494,6 @@ export class ProductComponent implements OnInit {
 
       } catch (e) {
         console.log('ユーザー数数を検索API エラー　発生しました。');
-      }
-    });
-  }
-
-  /**
-   * プロダクトタイプ一覧取得
-   */
-  protected async getProductTypes() {
-    var query = {};
-    this.httpService.usePost('getProductTypeAll', query).then(item => {
-      try {
-        if (item) {
-          this.productTypes = item;
-          console.log(item);
-          console.log("プロダクトタイプの取得は成功しました。");
-        } else {
-          console.log("プロダクトタイプの取得は失敗しました。");
-        }
-      } catch (e) {
-        console.log("プロダクトタイプの取得は失敗しました。");
       }
     });
   }

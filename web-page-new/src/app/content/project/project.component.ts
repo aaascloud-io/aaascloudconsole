@@ -9,9 +9,9 @@ import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 
-import {MessageService} from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
-import {ConfirmationService} from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-project',
@@ -32,56 +32,55 @@ export class ProjectComponent implements OnInit {
   loadingIndicator: true;
   temp = [];
   temp2 = [];
-  
+
   // 必用なデータ
-    // rows サーバから取ったメインデータ
+  // rows サーバから取ったメインデータ
   rows: any[] = [];
-    // 今メインデータ総数
+  // 今メインデータ総数
   collectionSize: any;
-    // 今のページ
+  // 今のページ
   page = 1;
-    // 1ページに展示するデータ数量
-  pageSize =10;
-    // 1ページに展示するデータ
-  tableDisplayData:any;
-    // 選択されたプロダクト
+  // 1ページに展示するデータ数量
+  pageSize = 10;
+  // 1ページに展示するデータ
+  tableDisplayData: any;
+  // 選択されたプロダクト
   selectedProject: any;
-    // 複数選択されたプロダクト
+  // 複数選択されたプロダクト
   selected = [];
-    // 利用できるデバイスリスト
-  usableDeviceList:any;
-    // 複数選択されたデバイスリスト
+  // 利用できるデバイスリスト
+  usableDeviceList: any;
+  // 複数選択されたデバイスリスト
   selectedDevice = [];
-    // 検索値
+  // 検索値
   searchValue = {
-    projectname:'',
-    productname:''
+    projectname: '',
+    productname: ''
   };
   sortOn: any;
   checkOn: 1;
   show = false;
-    // プロジェクトに配られたデバイスリスト
-  linkedDeviceList =[];
-    // すべてのproduct typeを取る
-  productTypes = [];
-    // すべてのproductName
+  // プロジェクトに配られたデバイスリスト
+  linkedDeviceList = [];
+  linkedDeviceInfo = [];
+  // すべてのproductName
   productNameList = [];
   valueSortFlg = {
-    projectNameUp : false,
-    projectNameDown : false,
-    productNameUp : false,
-    productNameDown : false,
-    deviceCountsUp : false,
-    deviceCountsDown : false,
-    groupCountsUp : false,
-    groupCountsDown : false,
+    projectNameUp: false,
+    projectNameDown: false,
+    productNameUp: false,
+    productNameDown: false,
+    deviceCountsUp: false,
+    deviceCountsDown: false,
+    groupCountsUp: false,
+    groupCountsDown: false,
   };
   dataCount: 0;
 
-  
 
 
-  public config: PerfectScrollbarConfigInterface = { };
+
+  public config: PerfectScrollbarConfigInterface = {};
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
   @ViewChild(PerfectScrollbarDirective) directiveRef?: PerfectScrollbarDirective;
@@ -101,61 +100,61 @@ export class ProjectComponent implements OnInit {
     private _httpClient: HttpClient,
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
-    private messageService: MessageService, 
+    private messageService: MessageService,
     private primengConfig: PrimeNGConfig,
     private confirmationService: ConfirmationService,
-    ) { 
-    }
+  ) {
+  }
 
-    protected pageModel = {
-      USERCODE:null,
-      addList: [],
-      dataAll: [],
-      productList: [],
-      data:[],
-      selectedData : {},
-      
-      // 登録用認証データ
-      loginInfo:{},
-      targetUserInfo:{},
-      // 新規項目データ
-      addProject:{
-        projectName:'',
-        productId:'',
-        productname:'',
-        projectSummary:'',
-        userId:'',
-      },
-    }
+  protected pageModel = {
+    USERCODE: null,
+    addList: [],
+    dataAll: [],
+    productList: [],
+    data: [],
+    selectedData: {},
 
-    /**
-     * OnInit
-     */
+    // 登録用認証データ
+    loginInfo: {},
+    targetUserInfo: {},
+    // 新規項目データ
+    addProject: {
+      projectName: '',
+      productId: '',
+      productname: '',
+      projectSummary: '',
+      userId: '',
+    },
+  }
+
+  /**
+   * OnInit
+   */
   ngOnInit() {
     this.primengConfig.ripple = true;
     this.variableReset();
     let item: RouteIdIF = this.dataFatoryService.getRouteIdIF();
     this.pageModel.loginInfo = {
-        // "loginuserid": item.uid,
-        // "loginusername": item.login_id,
-        // "loginrole": item.role,
-        // "logincompanyid": item.company,
-      },
-    this.pageModel.targetUserInfo = {
-      // "targetuserid": item.uid,
-      // "targetuserCompanyid": item.company,
-    };
+      // "loginuserid": item.uid,
+      // "loginusername": item.login_id,
+      // "loginrole": item.role,
+      // "logincompanyid": item.company,
+    },
+      this.pageModel.targetUserInfo = {
+        // "targetuserid": item.uid,
+        // "targetuserCompanyid": item.company,
+      };
     this.initData();
 
   }
 
-  initData(){
+  initData() {
     this.rows = [];
     let param = {
       // "loginInfo":this.pageModel.loginInfo,
       // "targetUserInfo":this.pageModel.targetUserInfo,
     };
-    this.httpService.usePost('/getProjects',param).then(item => {
+    this.httpService.usePost('/getProjects', param).then(item => {
       try {
         item.forEach(element => {
           this.rows.push(element);
@@ -163,7 +162,6 @@ export class ProjectComponent implements OnInit {
         this.dataCount = item.length;
         this.rows = [...this.rows];
         this.getTabledata();
-        this.getProductTypes();
         this.getProductNameList();
         console.log("rows 数据");
         console.log(this.rows);
@@ -171,29 +169,18 @@ export class ProjectComponent implements OnInit {
         console.log('デバイスを検索APIエラー発生しました。');
       }
     });
-    // var res = await this.httpService.post("/getProjects",param);
-    // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
-    // jsonItem.forEach(element => {
-    //   this.rows.push(element);
-    // });
-    // this.rows = [...this.rows];
-    // this.getTabledata();
-    // this.getProductTypes();
-    // this.getProductNameList();
-    // console.log("rows 数据");
-    // console.log(this.rows);
   }
 
 
   // 新規プロジェクト
-    // Modal を開く
-  addNewProjectModal(addNewProjectModal){
+  // Modal を開く
+  addNewProjectModal(addNewProjectModal) {
     this.addModal = this.modal.open(addNewProjectModal, {
       windowClass: 'animated fadeInDown'
     });
   }
-    // ModalデータをAPIに更新
-  addNewProjectForm(NewProjectForm:NgForm){
+  // ModalデータをAPIに更新
+  addNewProjectForm(NewProjectForm: NgForm) {
     var flg = true;
     if (flg && !this.pageModel.addProject.projectName) {
       this.showAlert("warn", "プロジェクト名を入力してください。");
@@ -213,23 +200,23 @@ export class ProjectComponent implements OnInit {
         // "targetUserInfo":this.pageModel.targetUserInfo,
         // プロジェクト更新データ
         "projectname": this.pageModel.addProject.projectName,
-        "productid":this.pageModel.addProject.productId,
-        "projectsummary":this.pageModel.addProject.projectSummary,
+        "productid": this.pageModel.addProject.productId,
+        "projectsummary": this.pageModel.addProject.projectSummary,
       }
-      this.httpService.useRpPost('registerProject',param).then(item=>{
-        try{
-          if(item.resultCode == "0000"){
+      this.httpService.useRpPost('registerProject', param).then(item => {
+        try {
+          if (item.resultCode == "0000") {
             this.pageModel.addProject.projectName = '';
             this.pageModel.addProject.productId = '';
             this.pageModel.addProject.projectSummary = '';
             this.ngOnInit();
             this.showAlert("success", "プロジェクトを登録しました。");
-          }else{
+          } else {
             console.log('登録失敗、ご確認してください。');
             console.log(item);
             this.showAlert("error", "登録失敗、ご確認してください。");
           }
-        }catch(e){
+        } catch (e) {
           console.log('登録失敗、ご確認してください。');
           console.log(e);
           this.showAlert("error", e);
@@ -243,16 +230,16 @@ export class ProjectComponent implements OnInit {
   }
 
   // 検索機能
-  searchProject(){
+  searchProject() {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       var param = {
         // "loginInfo":this.pageModel.loginInfo,
         // "targetUserInfo":this.pageModel.targetUserInfo,
         "projectname": this.searchValue.projectname,
-        "productname":this.searchValue.productname,
+        "productname": this.searchValue.productname,
       };
-      this.httpService.useRpPost('searchProjects',param).then(item=>{
+      this.httpService.useRpPost('searchProjects', param).then(item => {
         let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
         this.rows = [];
         jsonItem.forEach(element => {
@@ -265,10 +252,10 @@ export class ProjectComponent implements OnInit {
   }
 
   // 検索条件クリア
-  clearSearchProject(){
+  clearSearchProject() {
     this.searchValue = {
-      projectname:'',
-      productname:''
+      projectname: '',
+      productname: ''
     };
     this.ngOnInit();
   }
@@ -284,7 +271,7 @@ export class ProjectComponent implements OnInit {
           var param = {
             // "loginInfo":this.pageModel.loginInfo,
             // "targetUserInfo":this.pageModel.targetUserInfo,
-            "projectid":row.projectid,
+            "projectid": row.projectid,
           };
         }
         console.log("单个删除的传入参数");
@@ -292,37 +279,37 @@ export class ProjectComponent implements OnInit {
         // var res = await this.httpService.post("/deleteProject",param);
         // console.log("这是 delete 的 res");
         // console.log(res);
-        this.httpService.useRpDelete('deleteProject',param).then(item=>{
-          try{
-            if(item.resultCode == "0000"){
+        this.httpService.useRpDelete('deleteProject', param).then(item => {
+          try {
+            if (item.resultCode == "0000") {
               this.ngOnInit();
               this.showAlert("success", "プロジェクトを削除しました。");
-            }else{
+            } else {
               console.log('削除失敗、ご確認してください。');
               console.log(item);
               this.showAlert("error", "削除失敗、ご確認してください。");
             }
-          }catch(e){
+          } catch (e) {
             this.showAlert("error", e);
           }
         });
       },
       reject: () => {
-        this.showAlert("info","削除操作を取消しました");
+        this.showAlert("info", "削除操作を取消しました");
       },
     });
   }
 
 
   // プロジェクト詳細と修正
-    // // Modal を開く
+  // // Modal を開く
   editProjectDataModal(editProjectDataModalContent, row) {
-    this.selectedProject = Object.assign({},row);
+    this.selectedProject = Object.assign({}, row);
     this.editModal = this.modal.open(editProjectDataModalContent, {
       windowClass: 'animated fadeInDown'
     });
   }
-    // ModalデータをAPIに更新
+  // ModalデータをAPIに更新
   projectDataUpdate(projectEditForm: NgForm, projectid) {
     var flg = true;
     if (flg && !this.selectedProject.projectname) {
@@ -336,7 +323,7 @@ export class ProjectComponent implements OnInit {
     }
 
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
-    if (routeif != null　&& flg) {
+    if (routeif != null && flg) {
       var param = {
         // "loginInfo":this.pageModel.loginInfo,
         // "targetUserInfo":this.pageModel.targetUserInfo,
@@ -354,8 +341,8 @@ export class ProjectComponent implements OnInit {
               projectEditForm.reset();
               this.editModal.close(projectEditForm.resetForm);
             }
-            this.selectedProject={};
-          }else{
+            this.selectedProject = {};
+          } else {
             console.log('改修失敗、ご確認してください。');
             console.log(item);
             this.showAlert("error", "改修失敗、ご確認してください。");
@@ -375,7 +362,7 @@ export class ProjectComponent implements OnInit {
         this.selected.push(row);
       }
     }
-    if(this.selected.length > 0){
+    if (this.selected.length > 0) {
       this.confirmationService.confirm({
         message: "選択したデーターを削除しますか",
         header: 'プロジェクト削除確認',
@@ -389,13 +376,13 @@ export class ProjectComponent implements OnInit {
             try {
               if (item.resultCode == "0000") {
                 this.searchValue = {
-                  projectname:'',
-                  productname:''
+                  projectname: '',
+                  productname: ''
                 };;
-                this.selected=[];
+                this.selected = [];
                 this.ngOnInit();
                 this.showAlert("success", "選択したプロジェクトを削除しました");
-              }else{
+              } else {
                 console.log('削除失敗、ご確認してください。');
                 console.log(item);
                 this.showAlert("error", "削除失敗、ご確認してください。");
@@ -407,16 +394,16 @@ export class ProjectComponent implements OnInit {
           });
         },
         reject: () => {
-          this.showAlert("info","削除操作を取消しました");
+          this.showAlert("info", "削除操作を取消しました");
         },
       });
-    }else{
+    } else {
       this.showAlert("warn", "プロジェクトを選択してください。");
     }
   }
 
 
-  checkAll(ev){
+  checkAll(ev) {
     this.rows.forEach(x => x.isSelected = ev.target.checked)
     // this.selectedProject = ev.target.checked;
   }
@@ -526,7 +513,7 @@ export class ProjectComponent implements OnInit {
     };
   }
 
-// デバイス連携追加
+  // デバイス連携追加
   // Modal 開く
   deviceLinkAddModal(deviceLinkAddModalContent, row) {
     this.getUsableDeviceList();
@@ -537,7 +524,7 @@ export class ProjectComponent implements OnInit {
     });
   }
   // 利用できるデバイスListを取得
-  getUsableDeviceList(){
+  getUsableDeviceList() {
     this.usableDeviceList = [];
     let param = {
       // "loginInfo":this.pageModel.loginInfo,
@@ -545,7 +532,7 @@ export class ProjectComponent implements OnInit {
     };
 
 
-    this.httpService.usePost('/getMySelectableDevices',param).then(item => {
+    this.httpService.usePost('/getMySelectableDevices', param).then(item => {
       try {
         if (item != null) {
           item.forEach(element => {
@@ -565,7 +552,7 @@ export class ProjectComponent implements OnInit {
     // this.usableDeviceList = [...this.usableDeviceList];
   }
 
-  checkAllUsableDevice(ev){
+  checkAllUsableDevice(ev) {
     this.usableDeviceList.forEach(x => x.isSelected = ev.target.checked)
   }
   checkChangeUsableDevice(ev, element) {
@@ -574,7 +561,7 @@ export class ProjectComponent implements OnInit {
     });
   }
 
-  projectDeviceDataUpdate(projectDeviceForm,projectid){
+  projectDeviceDataUpdate(projectDeviceForm, projectid) {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       for (var item of this.usableDeviceList) {
@@ -582,7 +569,7 @@ export class ProjectComponent implements OnInit {
           this.selectedDevice.push(item);
         }
       }
-      if(this.selectedDevice.length > 0){
+      if (this.selectedDevice.length > 0) {
         this.confirmationService.confirm({
           message: "選択したデバイスをプロジェクトに連携しますか",
           header: 'デバイス連携確認',
@@ -604,7 +591,7 @@ export class ProjectComponent implements OnInit {
                     projectDeviceForm.reset();
                     this.editModal.close(projectDeviceForm.resetForm);
                   }
-                }else{
+                } else {
                   console.log('更新失敗、ご確認してください。');
                   console.log(item);
                   this.showAlert("error", "更新失敗、ご確認してください。");
@@ -618,17 +605,17 @@ export class ProjectComponent implements OnInit {
             });
           },
           reject: () => {
-              this.showAlert("info","デバイス連携操作を取消しました");
+            this.showAlert("info", "デバイス連携操作を取消しました");
           },
         });
-      }else{
+      } else {
         this.showAlert("warn", "デバイスを選択してください。");
       }
     }
   }
 
   // project　連携した　DeviceList　一覧
-    // Modal 開く
+  // Modal 開く
   deviceLinkListModal(deviceLinkDeleteModalContent, row) {
     this.getLinkedDeviceList(row.projectid);
     this.selectedProject = Object.assign({}, row);
@@ -637,16 +624,17 @@ export class ProjectComponent implements OnInit {
       size: 'lg'
     });
   }
-  getLinkedDeviceList(projectid){
+
+  getLinkedDeviceList(projectid) {
     this.linkedDeviceList = [];
     let param = {
       // "loginInfo":this.pageModel.loginInfo,
       // "targetUserInfo":this.pageModel.targetUserInfo,
-      "userid":this.pageModel.loginInfo["loginuserid"],
+      // "userid":this.pageModel.loginInfo["loginuserid"],
       "projectid": projectid,
     };
 
-    this.httpService.usePost('/getProject',param).then(item => {
+    this.httpService.usePost('/getProject', param).then(item => {
       try {
         if (item != null) {
           item.deviceList.forEach(element => {
@@ -666,7 +654,39 @@ export class ProjectComponent implements OnInit {
     // this.linkedDeviceList = [...this.linkedDeviceList];
   }
 
-  checkAllLinkedDevice(ev){
+    /**
+   * プロジェクトのデバイス情報
+   */
+  deviceLinkInfoModal(deviceLinkListModalContent, row) {
+    this.getLinkedDeviceInfo(row.projectid);
+    this.selectedProject = Object.assign({}, row);
+    this.editModal = this.modal.open(deviceLinkListModalContent, {
+      windowClass: 'animated fadeInDown',
+      size: 'lg'
+    });
+  }
+
+  getLinkedDeviceInfo(projectid) {
+    this.linkedDeviceInfo = [];
+    let param = {
+      "projectid": projectid,
+    };
+
+    this.httpService.usePost('/getProjectAllDevices', param).then(item => {
+      try {
+        if (item != null) {
+          item.forEach(element => {
+            this.linkedDeviceInfo.push(element);
+          });
+          this.linkedDeviceInfo = [...this.linkedDeviceInfo];
+        }
+      } catch (e) {
+        console.log('デバイスを検索APIエラー発生しました。');
+      }
+    })
+  }
+
+  checkAllLinkedDevice(ev) {
     this.linkedDeviceList.forEach(x => x.isSelected = ev.target.checked)
     // this.selectedProject = ev.target.checked;
   }
@@ -676,7 +696,7 @@ export class ProjectComponent implements OnInit {
     });
   }
   // プロジェクトに連携したデバイスを削除
-  projectLinkedDeviceDataUpdate(projectLinkedDeviceForm,projectid){
+  projectLinkedDeviceDataUpdate(projectLinkedDeviceForm, projectid) {
     let routeif: UserInfo = this.dataFatoryService.getUserInfo();
     if (routeif != null) {
       for (var item of this.linkedDeviceList) {
@@ -684,7 +704,7 @@ export class ProjectComponent implements OnInit {
           this.selectedDevice.push(item);
         }
       }
-      if(this.selectedDevice.length >0){
+      if (this.selectedDevice.length > 0) {
         this.confirmationService.confirm({
           message: "選択したデバイスをプロジェクトから解除しますか",
           header: 'デバイス解除確認',
@@ -692,20 +712,20 @@ export class ProjectComponent implements OnInit {
             var param = {
               // "loginInfo":this.pageModel.loginInfo,
               // "targetUserInfo":this.pageModel.targetUserInfo,
-              
+
               "projectid": projectid,
               "deviceList": this.selectedDevice,
             };
             this.httpService.useRpPut('deleteProjectDevices', param).then(item => {
               try {
                 if (item.resultCode == "0000") {
-                  this.selectedDevice=[];
+                  this.selectedDevice = [];
                   this.showAlert("success", "プロジェクトからデバイスを解除しました。");
                   if (projectLinkedDeviceForm.valid === true) {
                     projectLinkedDeviceForm.reset();
                     this.editModal.close(projectLinkedDeviceForm.resetForm);
                   }
-                }else{
+                } else {
                   console.log('解除失敗、ご確認してください。');
                   console.log(item);
                   this.showAlert("error", "解除失敗、ご確認してください。");
@@ -719,36 +739,13 @@ export class ProjectComponent implements OnInit {
             });
           },
           reject: () => {
-              this.showAlert("info","解除操作を取消しました");
+            this.showAlert("info", "解除操作を取消しました");
           },
         });
-      }else{
+      } else {
         this.showAlert("warn", "デバイスを選択してください。");
       }
     }
-  }
-
-
-  /**
-   * プロダクトタイプ一覧取得
-   */
-  getProductTypes() {
-    var param = {};
-    this.httpService.usePost('getProductTypeAll',param).then(item => {
-      try {
-        if (item) {
-          this.productTypes = item;
-          console.log(item);
-          console.log("プロダクトタイプの取得は成功しました。");
-        } else {
-          console.log("プロダクトタイプの取得は失敗しました。");
-          this.showAlert("error", "プロダクトタイプの取得は失敗しました。");
-        }
-      } catch (e) {
-        console.log("プロダクトタイプの取得は失敗しました。");
-        this.showAlert("error", e);
-      }
-    });
   }
 
   /**
@@ -788,33 +785,33 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  viewProjectLinkedDevice(viewProjectLinkedDeviceForm){
+  viewProjectLinkedDevice(viewProjectLinkedDeviceForm) {
     viewProjectLinkedDeviceForm.reset();
     this.editModal.close(viewProjectLinkedDeviceForm.resetForm);
   }
 
-  variableReset(){
+  variableReset() {
     this.rows = [];
     this.tableDisplayData = [];
     this.selectedProject = {};
-    this.selected=[];
-    this.usableDeviceList =[];
+    this.selected = [];
+    this.usableDeviceList = [];
     this.selectedDevice = [];
     this.searchValue = {
-      projectname:'',
-      productname:''
+      projectname: '',
+      productname: ''
     };
-    this.linkedDeviceList =[];
-    this.productTypes = [];
+    this.linkedDeviceList = [];
     this.productNameList = [];
   }
 
   showAlert(alertType, alertDetail) {
     this.messageService.add({
-      key : 'alertModal', 
-      severity : alertType, 
-      summary : alertType, 
-      detail : alertDetail,
-      life : 2000});
+      key: 'alertModal',
+      severity: alertType,
+      summary: alertType,
+      detail: alertDetail,
+      life: 2000
+    });
   }
 }
