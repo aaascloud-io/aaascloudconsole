@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 //@Repository
 public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEntity, Integer>, JpaSpecificationExecutor<Cloud_deviceEntity> {
 
-
 	@Query(value = "SELECT d.* "
 			+ " FROM cloud_device d "
 			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
@@ -21,12 +20,35 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " WHERE d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
-			+ " AND pd.productName LIKE :productname "
-			+ " AND pj.projectName LIKE :projectname "
-			+ " AND com.companyid = :companyid "
-			+ " AND g.groupname LIKE :groupname "
+			+ " AND IFNULL(pd.productName, '') LIKE :productname "
+			+ " AND IFNULL(pj.projectName, '') LIKE :projectname "
+			+ " AND IFNULL(g.groupname, '') LIKE :groupname "
 			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> findByQuery(
+			@Param("userids") List<Integer> userids,
+			@Param("imei") String imei,
+			@Param("sn") String sn,
+			@Param("sim_iccid") String sim_iccid,
+			@Param("productname") String productName,
+			@Param("projectname") String projectName,
+			@Param("groupname") String groupname
+		);
+	
+	@Query(value = "SELECT d.* "
+			+ " FROM cloud_device d "
+			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
+			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
+			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
+			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
+			+ " WHERE d.userid IN :userids "
+			+ " AND (d.IMEI LIKE :imei "
+			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
+			+ " AND IFNULL(pd.productName, '') LIKE :productname "
+			+ " AND IFNULL(pj.projectName, '') LIKE :projectname "
+			+ " AND com.companyid = :companyid "
+			+ " AND IFNULL(g.groupname, '') LIKE :groupname "
+			+ " ORDER BY d.companyId,d.imei", nativeQuery = true)
+	public List<Cloud_deviceEntity> findByQueryByCompanyid(
 			@Param("companyid") Integer companyid,
 			@Param("userids") List<Integer> userids,
 			@Param("imei") String imei,

@@ -168,25 +168,40 @@ public class Cloud_deviceService {
 //  }
 
 	
-	
-	public List<Cloud_deviceModel> getUnderUserDevicesByquery(Cloud_deviceModel model, List<Integer> userids) throws Exception {
-		
+	/*
+	 * 配下ユーザのデバイス検索
+	 * @param model Cloud_deviceModel デバイス情報
+	 * @return List<Cloud_deviceModel> デバイス一覧
+	 *
+	 */
+	public List<Cloud_deviceModel> getUnderUserDevicesByquery(Cloud_deviceModel model, List<Integer> userids) throws Exception {		
 		// 全社のデバイス一覧取得
 		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
-		list = cloud_deviceRepository.findByQuery(
-				model.getCompanyid(),
-				userids,
-				model.getImeiForSearch(),
-				model.getImeiForSearch(),
-				model.getImeiForSearch(),
-				model.getProductnameForSearch(),
-				model.getProjectnameForSearch(),
-				model.getGroupnameForSearch()
-				);
-		
+		if(model.getCompanyid()!=null) {
+			list = cloud_deviceRepository.findByQueryByCompanyid(
+					model.getCompanyid(),
+					userids,
+					model.getImeiForSearch(),
+					model.getImeiForSearch(),
+					model.getImeiForSearch(),
+					model.getProductnameForSearch(),
+					model.getProjectnameForSearch(),
+					model.getGroupnameForSearch()
+					);
+		}else {
+			list = cloud_deviceRepository.findByQuery(
+					userids,
+					model.getImeiForSearch(),
+					model.getImeiForSearch(),
+					model.getImeiForSearch(),
+					model.getProductnameForSearch(),
+					model.getProjectnameForSearch(),
+					model.getGroupnameForSearch()
+					);
+		}	
 		return getModelsByEntitys(list);
 	}
-
+	
 	
 	/*
 	 * 配下ユーザのデバイス検索
