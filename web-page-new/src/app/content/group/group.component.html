@@ -116,6 +116,11 @@
                   </tbody>
                 </table>
                 <div class="d-flex justify-content-between p-2">
+                  <div *ngIf="dataCount === 0">{{ dataCount }} 件</div>
+                  <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">{{dataCount}} 件中{{(page-1) * pageSize +
+                    1}} ~ {{page * pageSize}} を表示</div>
+                  <div *ngIf="dataCount<pageSize*page"> {{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~ {{dataCount}}
+                    を表示</div>
                   <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
                   </ngb-pagination>
                   <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">

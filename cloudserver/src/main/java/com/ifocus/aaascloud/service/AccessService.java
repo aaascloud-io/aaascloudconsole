@@ -156,6 +156,27 @@ public class AccessService {
 	}
 
 	/*
+	 * アクセス権限ユーザ一覧を取得する
+	 * @param userid Integer ログインユーザID
+	 * @return List<Cloud_userModel> アクセス権限を持つユーザ一覧
+	 *
+	 */
+	public Cloud_userModel getAccessModelUsersInTree(Integer userid) throws Exception {
+		Cloud_userModel model = new Cloud_userModel();
+		model.setParent(getModel(cloud_userRepository.findById(userid).get()));
+		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
+		if (list.isEmpty()) {
+			return model;
+		} else {
+			for (Cloud_userEntity entity:list) {
+				Cloud_userModel child = getAccessModelUsersInTree(entity.getUserid());
+				model.addToCloud_userModelList(child);
+			}
+			return model;
+		}
+	}
+
+	/*
 	 * 代理店情報を取得する
 	 * @param userid Integer ログインユーザID
 	 * @return Cloud_userModel 代理店情報モデル

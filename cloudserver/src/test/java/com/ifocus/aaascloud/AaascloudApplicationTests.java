@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
-import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.constant.RoleConstant;
 import com.ifocus.aaascloud.constant.StatusFlagConstant;
@@ -688,27 +687,27 @@ class AaascloudApplicationTests extends TestCase{
 		assertEquals( list.size(), 5);
 	}
 
-	/*
-	 * Cloud_deviceRepository
-	 * 一覧取得findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike
-	 * 正常系
-	 *
-	 */
-	@Test
-	public void testfindByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike() throws Exception {
-
-		List<Integer> companyidList = Arrays.asList(1);
-		String imei1 = CommonConstant.DEFAULT_MATCH_ALL;
-		String sn1 = CommonConstant.DEFAULT_MATCH_ALL;
-		String projectName1 = CommonConstant.DEFAULT_MATCH_ALL;
-		String productName1 = CommonConstant.DEFAULT_MATCH_ALL;
-		String industry1 = CommonConstant.DEFAULT_MATCH_ALL;
-
-		List<Cloud_deviceEntity> list1 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei1,sn1,productName1,projectName1);
-
-		assertEquals( list1.size(), 5);
-	}
-
+//	/*
+//	 * Cloud_deviceRepository
+//	 * 一覧取得findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike
+//	 * 正常系
+//	 *
+//	 */
+//	@Test
+//	public void testfindByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike() throws Exception {
+//
+//		List<Integer> companyidList = Arrays.asList(1);
+//		String imei1 = CommonConstant.DEFAULT_MATCH_ALL;
+//		String sn1 = CommonConstant.DEFAULT_MATCH_ALL;
+//		String projectName1 = CommonConstant.DEFAULT_MATCH_ALL;
+//		String productName1 = CommonConstant.DEFAULT_MATCH_ALL;
+//		String industry1 = CommonConstant.DEFAULT_MATCH_ALL;
+//
+//		List<Cloud_deviceEntity> list1 = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList,imei1,sn1,productName1,projectName1,industry1);
+//
+//		assertEquals( list1.size(), 5);
+//	}
+//
 //	/*
 //	 * Cloud_deviceRepository
 //	 * 一覧取得findByCompanyidInProject_ProjectnameLike
@@ -767,48 +766,48 @@ class AaascloudApplicationTests extends TestCase{
 //		assertEquals( 1, list.size() );
 //	}
 
-	/*
-	 * Cloud_deviceRepository
-	 * 一覧取得findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike
-	 * 正常系(グループなし)
-	 *
-	 */
-	@Test
-	public void testFindByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike() throws Exception {
+//	/*
+//	 * Cloud_deviceRepository
+//	 * 一覧取得findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike
+//	 * 正常系(グループなし)
+//	 *
+//	 */
+//	@Test
+//	public void testFindByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike() throws Exception {
+//
+//		List<Integer> companyidList = Arrays.asList(1,2);
+//		String productName = "%FACE%";
+//		String projectName = "%販売分%";
+//		String industry = "%サービス%";
+//		String imei = "%104%";
+//		String sn = "%104%";
+//
+//		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList, imei, sn, productName, projectName, industry);
+//
+//		assertEquals( 1, list.size() );
+//	}
 
-		List<Integer> companyidList = Arrays.asList(1,2);
-		String productName = "%FACE%";
-		String projectName = "%販売分%";
-		String industry = "%サービス%";
-		String imei = "%104%";
-		String sn = "%104%";
-
-		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLike(companyidList, imei, sn, productName, projectName);
-
-		assertEquals( 1, list.size() );
-	}
-
-	/*
-	 * Cloud_deviceRepository
-	 * 一覧取得findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike
-	 * 正常系(グループあり)
-	 *
-	 */
-	@Test
-	public void testFindByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike() throws Exception {
-
-		List<Integer> companyidList = Arrays.asList(1,2);
-		String productName = "%FACE%";
-		String projectName = "%入庫%";
-		String industry = "%サービス%";
-		String imei = "%0%";
-		String sn = "%0%";
-		String groupName = "%A%";
-
-		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(companyidList, imei, sn, productName, projectName, groupName);
-
-		assertEquals( 2, list.size() );
-	}
+//	/*
+//	 * Cloud_deviceRepository
+//	 * 一覧取得findByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike
+//	 * 正常系(グループあり)
+//	 *
+//	 */
+//	@Test
+//	public void testFindByCompanyidInAndImeiLikeOrIccidLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike() throws Exception {
+//
+//		List<Integer> companyidList = Arrays.asList(1,2);
+//		String productName = "%FACE%";
+//		String projectName = "%入庫%";
+//		String industry = "%サービス%";
+//		String imei = "%0%";
+//		String sn = "%0%";
+//		String groupName = "%A%";
+//
+//		List<Cloud_deviceEntity> list = cloud_deviceRepository.findByCompanyidInAndImeiLikeOrSnLikeAndProduct_ProductnameLikeAndProject_ProjectnameLikeAndCompany_IndustryLikeAndGroupentity_GroupnameLike(companyidList, imei, sn, productName, projectName, industry, groupName);
+//
+//		assertEquals( 2, list.size() );
+//	}
 
 	//	/*
 //	 * AccessController
@@ -1496,6 +1495,55 @@ class AaascloudApplicationTests extends TestCase{
 		boolean response = cloud_userService.checkToken(cloud_projectModel.getLoginInfo());
 
 		assertEquals(true, response);
+
+	}
+
+	/*
+	 * Cloud_projectController
+	 * テストgetProjectAllDevices
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testGetProjectAllDevices() throws Exception {
+
+		Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername("wang");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setLoginusername(loginUserEntity.getUsername());
+		loginInfo.setLogincompanyid(loginUserEntity.getCompanyid());
+		loginInfo.setLoginuserid(loginUserEntity.getUserid());
+		loginInfo.setAccess_token("eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJaSjZmRGZ5OVdqNGU2bEhLNjU1RktULWlKcjJqOGExckZ3MENLM0ljN0FnIn0.eyJqdGkiOiJiYzY1ZGU0ZC03MzI3LTQwMDItYjk1YS1hYWFiOWRmYjkyMzEiLCJleHAiOjE2MTYwODgwOTcsIm5iZiI6MCwiaWF0IjoxNjE2MDUyMDk3LCJpc3MiOiJodHRwczovL2F1dGguYWFhc2Nsb3VkLmlvL2F1dGgvcmVhbG1zL3RyYWNrdW4iLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiODRhOWNjMjQtNDBiZi00OTE4LTkxNWUtMWVlNDllMzNmYmJkIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoidHJhY2t1biIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjUyMmQzMmM2LWQzZTAtNDdkZS1iOGE3LWJlMTYyMDEwM2RkMCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0VXNlciIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJ4bSB3YW5nIiwicHJlZmVycmVkX3VzZXJuYW1lIjoid2FuZyIsImxvY2FsZSI6ImphIiwiZ2l2ZW5fbmFtZSI6InhtIiwiZmFtaWx5X25hbWUiOiJ3YW5nIiwiZW1haWwiOiJ4aWFuZ21pbi53YW5nQGktZm9jdXMuY28uanAifQ.KfDxnjeokuMiinqqaPAxXoAvFubObVwThaQRo5FU8XHpbh8P449Pe9FyyG7wupLntjH1rYNCOuPPnheNvqC4VJ3vIzG5Ydy-bE_sBxnlMHgYpLGTXWuzeMhzHktt7O1VAy0SJ4YomRbVCJlgeGdC3svSZtm6oh9tSeNytWjwhq9GXwk5_5ht2mnmhir1xJU9r6lMs5R-BJR26_67gNjFhMnV28fSahpPhAMMWqUiOpw54pH4tqrUCVj1XZPC9hbfHVas8twcLvLih0C6-ZOFwyzkgumHR-vqgF1VY1KWPNC5_1yENDPqQppsLLOrBy-D87kHqexpx8RHesmG2Up2vw");
+
+		TargetUserInfo targetUserInfo = new TargetUserInfo();
+		targetUserInfo.setTargetuserCompanyid(loginUserEntity.getCompanyid());
+		targetUserInfo.setTargetuserid(loginUserEntity.getUserid());
+
+		Cloud_projectModel cloud_projectModel = new Cloud_projectModel();
+		cloud_projectModel.setLoginInfo(loginInfo);
+		cloud_projectModel.setTargetUserInfo(targetUserInfo);
+
+		cloud_projectModel.setProjectid(100);
+
+		BaseHttpResponse<String> response = cloud_projectController.getProjectAllDevices(cloud_projectModel);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("0000", response.getResultCode());
+		assertEquals(4, response.getCount());
+
+	}
+
+	/*
+	 * AccessService
+	 * テストgetAccessModelUsersInTree
+	 * 正常系
+	 *
+	 */
+	@Test
+	public void testGetAccessModelUsersInTree() throws Exception {
+
+		Cloud_userModel model = accessService.getAccessModelUsersInTree(1);
+
+		assertEquals("wang", model.getUsername());
 
 	}
 

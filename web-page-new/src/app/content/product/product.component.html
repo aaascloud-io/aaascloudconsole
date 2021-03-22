@@ -78,31 +78,31 @@
                       <th scope="col" class="thcolor">操作</th>
                       <th scope="col" class="thcolor" (click)="sortData('producttypename')">タイプ
                         <i *ngIf="pageModel.sort.producttypenameUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.producttypenameDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.producttypenameDown" class="la la-sort-down"></i>
                       </th>
                       <th scope="col" class="thcolor" (click)="sortData('productcode')">プロダクトコード
                         <i *ngIf="pageModel.sort.productcodeUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.productcodeDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.productcodeDown" class="la la-sort-down"></i>
                       </th>
                       <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト名
                         <i *ngIf="pageModel.sort.productnameUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.productnameDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.productnameDown" class="la la-sort-down"></i>
                       </th>
                       <th scope="col" class="thcolor" (click)="sortData('model')">型番
                         <i *ngIf="pageModel.sort.modelUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.modelDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.modelDown" class="la la-sort-down"></i>
                       </th>
                       <th scope="col" class="thcolor" (click)="sortData('simflag')">SIMカード
                         <i *ngIf="pageModel.sort.simflagUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.simflagDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.simflagDown" class="la la-sort-down"></i>
                       </th>
                       <th scope="col" class="thcolor" (click)="sortData('version')">バージョン
                         <i *ngIf="pageModel.sort.versionUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.versionDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.versionDown" class="la la-sort-down"></i>
                       </th>
                       <th scope="col" class="thcolor" (click)="sortData('createusername')">利用者
                         <i *ngIf="pageModel.sort.createusernameUp" class="la la-sort-up"></i>
-                        <i *ngIf="pageModel.sort.createusernameDown"class="la la-sort-down"></i>
+                        <i *ngIf="pageModel.sort.createusernameDown" class="la la-sort-down"></i>
                       </th>
 
                     </tr>
@@ -132,6 +132,11 @@
                   </tbody>
                 </table>
                 <div class="d-flex justify-content-between p-2">
+                  <div *ngIf="dataCount === 0">{{ dataCount }} 件</div>
+                  <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">{{dataCount}} 件中{{(page-1) * pageSize +
+                    1}} ~ {{page * pageSize}} を表示</div>
+                  <div *ngIf="dataCount<pageSize*page"> {{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~ {{dataCount}}
+                    を表示</div>
                   <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
                   </ngb-pagination>
                   <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
@@ -151,11 +156,8 @@
 </div>
 
 <p-toast position="top-right" key="alertModal" baseZIndex="999"></p-toast>
-<p-confirmDialog
-  [baseZIndex]="10000" rejectButtonStyleClass="p-button-secondary" 
-  icon="pi pi-exclamation-triangle" 
-  acceptLabel="確認" 
-  rejectLabel="取消">
+<p-confirmDialog [baseZIndex]="10000" rejectButtonStyleClass="p-button-secondary" icon="pi pi-exclamation-triangle"
+  acceptLabel="確認" rejectLabel="取消">
 </p-confirmDialog>
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->

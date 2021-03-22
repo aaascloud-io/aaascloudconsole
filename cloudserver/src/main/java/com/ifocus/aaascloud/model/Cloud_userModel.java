@@ -1,6 +1,7 @@
 package com.ifocus.aaascloud.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ifocus.aaascloud.constant.CommonConstant;
@@ -56,6 +57,7 @@ public class Cloud_userModel extends UserModel {
 	private Integer devicecount;
 	// ユーザ数
 	private Integer usercount;
+	private Cloud_userModel parent;
 
 	/*
 	 * companyname情報検索条件取得
@@ -107,5 +109,12 @@ public class Cloud_userModel extends UserModel {
 		} else {
 			return "%" + this.email.trim() + "%";
 		}
+	}
+
+	public void addToCloud_userModelList(Cloud_userModel model) {
+		if (this.cloud_userModelList == null) {
+			cloud_userModelList = new ArrayList<Cloud_userModel>();
+		}
+		this.cloud_userModelList.add(model);
 	}
 }
