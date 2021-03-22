@@ -20,6 +20,30 @@ public interface  Cloud_productRepository extends CrudRepository<Cloud_productEn
 	public List<Cloud_productEntity> findAllValid();
 
 	/*
+	 * プロダクトロック（排他管理用）
+	 *
+	 *
+	 */
+	@Transactional
+	@Query(value = "SELECT c.* FROM cloud_product c "
+			+ " WHERE c.deleteflag = 0 "
+			+ " AND c.productid = :productid "
+			+ " FOR UPDATE ",nativeQuery = true)
+	public Cloud_productEntity findByIdForUpdate(@Param("productid") Integer productid);
+
+	/*
+	 * プロダクト一括ロック（排他管理用）
+	 *
+	 *
+	 */
+	@Transactional
+	@Query(value = "SELECT c.* FROM cloud_product c "
+			+ " WHERE c.deleteflag = 0 "
+			+ " AND c.productid IN :productids "
+			+ " FOR UPDATE ",nativeQuery = true)
+	public List<Cloud_productEntity> findAllByIdForUpdate(@Param("productids") List<Integer> productids);
+
+	/*
 	 * プロダクト物理削除（deleteflag＝１の行）
 	 *
 	 *
