@@ -55,6 +55,7 @@ export class GroupComponent implements OnInit {
   groupSelected = false;
   projects = [];
   show = false;
+  dataCount: 0;
 
   public config: PerfectScrollbarConfigInterface = {};
   multipleMultiSelect: any;
@@ -411,6 +412,7 @@ export class GroupComponent implements OnInit {
         console.log("グループデーターの取得：");
         console.log(JSON.stringify(item));
         if (item) {
+          this.dataCount = item.length;
           item.forEach((elem) => {
             console.log(elem);
             var projectname = ""
@@ -432,6 +434,7 @@ export class GroupComponent implements OnInit {
           this.rows = [...this.rows];
           this.getTabledata();
         } else {
+          this.dataCount = 0;
           console.log("グループ取得：0件です。");
         }
 

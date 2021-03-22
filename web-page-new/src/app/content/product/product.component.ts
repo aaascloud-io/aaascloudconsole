@@ -73,6 +73,7 @@ export class ProductComponent implements OnInit {
   TableData: any;
   sortOn: any;
   checkOn: 1;
+  dataCount: 0;
 
   pageModel = {
     USERCODE: null,
@@ -468,9 +469,11 @@ export class ProductComponent implements OnInit {
     this.httpService.usePost('searchMyProduct', query).then(item => {
       try {
         this.rows = [];
+        this.dataCount = 0;
         console.log(item);
         var index = 1;
         if (item) {
+          this.dataCount = item.length;
           item.forEach((elem) => {
             var producttypename = ""
             this.rows.push(new Contact(
@@ -490,6 +493,8 @@ export class ProductComponent implements OnInit {
           });
           this.rows = [...this.rows];
           this.getTabledata();
+        } else {
+          this.dataCount = 0;
         }
 
       } catch (e) {
@@ -507,7 +512,6 @@ export class ProductComponent implements OnInit {
     this.httpService.usePost('getUnderUsers', query).then(item => {
       try {
         if (item) {
-          this.users = item;
           console.log(item);
           console.log("すべてのユーザーの取得は成功しました。");
         } else {
