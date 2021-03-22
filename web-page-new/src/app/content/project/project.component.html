@@ -101,7 +101,7 @@
                             <i *ngIf="valueSortFlg.productNameUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.productNameDown" class="la la-sort-down"></i>
                           </th>
-                          <th scope="col" class="thcolor" >プロジェクト詳細</th>
+                          <th scope="col" class="thcolor" >説明</th>
                           <th scope="col" class="thcolor" (click)="sortData('groupCounts')">グループ
                             <i *ngIf="valueSortFlg.groupCountsUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.groupCountsDown" class="la la-sort-down"></i>
@@ -133,7 +133,7 @@
                           <td nowrap>{{ element.projectsummary }}</td>
                           <td nowrap>{{ element.groupCounts}}</td>
                           <td nowrap>
-                            <a class="primary info mr-1 d-inline-block" (click)="deviceLinkListModal(deviceLinkListModalContent, element)">{{ element.deviceCounts}}</a>
+                            <a class="primary info mr-1 d-inline-block" (click)="deviceLinkInfoModal(deviceLinkListModalContent, element)">{{ element.deviceCounts}}</a>
                             <a class="primary edit mr-1 mrless"
                               (click)="deviceLinkAddModal(deviceLinkAddModalContent, element)" title="デバイス連携"><i
                                 class="la la-plus-square"></i>
@@ -180,11 +180,11 @@
 </p-confirmDialog>
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-<!-- プロジェクト詳細と修正 -->
+<!-- 説明と修正 -->
 <ng-template #editProjectDataModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="projectDataUpdate(projectEditForm,selectedProject.projectid)" #projectEditForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">プロジェクト詳細</h5>
+      <h5 class="modal-title" id="exampleModalLabel">説明</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -215,7 +215,7 @@
       </div>
 
       <div class="form-group col-12">
-        <label>プロジェクト詳細</label>
+        <label>説明</label>
         <!-- <input type="text" [(ngModel)]="selectedProject.projectsummary" #editemail="ngModel" name="projectsummary"
           id="projectsummary" class="email form-control" placeholder="selectedProject.projectsummary" required> -->
         <textarea id="projectsummary" rows="4" class="form-control square" name="projectsummary"
@@ -267,7 +267,7 @@
         </div>
       </div>
       <div class="form-group col-12">
-        <h6>プロジェクト詳細</h6>
+        <h6>説明</h6>
         <!-- <input type="text" [(ngModel)]="pageModel.addProject.projectSummary" name="projectSummary" class="form-control"
           placeholder="" required> -->
         <textarea id="projectSummary" rows="4" class="form-control square" name="projectSummary"
@@ -304,7 +304,7 @@
             <tr>
               <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllUsableDevice($event)">
               </th>
-              <th scope="col">NO.</th>
+              <th scope="col">No.</th>
               <th scope="col">SN</th>
               <th scope="col">IMEI</th>
               <th scope="col">ICCID</th>
@@ -360,12 +360,13 @@
             <tr>
               <th scope="col" class="thcolor"><input type="checkbox"  (change)="checkAllLinkedDevice($event)">
               </th>
-              <th scope="col">NO.</th>
+              <th scope="col">No.</th>
               <th scope="col">SN</th>
               <th scope="col">IMEI</th>
               <th scope="col">ICCID</th>
               <th scope="col">デバイス名</th>
-              <th scope="col">プロダクト名</th> 
+              <th scope="col">プロダクト名</th>
+              <th scope="col">グループ名</th>
             </tr>
           </thead>
           <tbody>
@@ -380,7 +381,8 @@
               <td data-label="deviceName">{{item.imei}}</td>
               <td data-label="imei">{{item.sim_iccid}}</td>
               <td data-label="groupId">{{item.devicename}}</td>
-              <td data-label="imei">{{item.productname}}</td>   
+              <td data-label="imei">{{item.productname}}</td>
+              <td data-label="groupname">{{item.groupname}}</td>
               
             </tr>
           </tbody>
@@ -414,28 +416,24 @@
         <table id="list-table" class="table table-hover table-bordered" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col">no.</th>
-              <th scope="col">sn番号</th>
-              <th scope="col">デバイス名</th>
-              <th scope="col">imei</th>
-              <th scope="col">プロダクト名</th>
+              <th scope="col">No.</th>
+              <th scope="col">SN</th>
+              <th scope="col">IMEI</th>
               <th scope="col">ICCID</th>
-              <th scope="col">sim_imsi</th>
-              <th scope="col">sim_tel</th>
-              
+              <th scope="col">デバイス名</th>
+              <th scope="col">プロダクト名</th>
+              <th scope="col">グループ名</th> 
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of linkedDeviceList; let i = index;">
+            <tr *ngFor="let item of linkedDeviceInfo; let i = index;">
               <td data-label="no.">{{i + 1}}</td>
               <td data-label="imei">{{item.sn}}</td>
-              <td data-label="groupId">{{item.devicename}}</td>
               <td data-label="deviceName">{{item.imei}}</td>
-              <td data-label="imei">{{item.productname}}</td>
               <td data-label="imei">{{item.sim_iccid}}</td>
-              <td data-label="imei">{{item.sim_imsi}}</td>
-              <td data-label="imei">{{item.sim_tel}}</td>
-              
+              <td data-label="groupId">{{item.devicename}}</td>
+              <td data-label="imei">{{item.productname}}</td>
+              <td data-label="groupname">{{item.groupname}}</td>
             </tr>
           </tbody>
         </table>
@@ -445,7 +443,7 @@
     <div class="modal-footer">
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">完了</span></button>
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">閉じる</span></button>
       </div>
     </div>
   </form>

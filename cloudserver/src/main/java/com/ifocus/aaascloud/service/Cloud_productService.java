@@ -15,8 +15,6 @@ import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
-import com.ifocus.aaascloud.entity.Cloud_producttypeEntity;
-import com.ifocus.aaascloud.entity.Cloud_producttypeRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.entity.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_productModel;
@@ -29,8 +27,6 @@ public class Cloud_productService {
 
 	@Autowired
 	private Cloud_productRepository cloud_productRepository ;
-	@Autowired
-	private Cloud_producttypeRepository cloud_producttypeRepository ;
 	@Autowired
 	private Cloud_userRepository cloud_userRepository ;
 
@@ -132,7 +128,7 @@ public class Cloud_productService {
 	public Cloud_productEntity registerProduct(Cloud_productEntity entity) throws Exception {
 
 		// 削除済行を物理削除する
-		cloud_productRepository.deleteProductMarked(entity.getProducttypeid(),entity.getCreateuserid(),entity.getProductname());
+		cloud_productRepository.deleteProductMarked(entity.getProducttypename(),entity.getCreateuserid(),entity.getProductname());
 		// プロダクト登録
 		Cloud_productEntity insertedEntity = cloud_productRepository.save(entity);
 		return insertedEntity;
@@ -247,12 +243,7 @@ public class Cloud_productService {
 	public Cloud_productModel getModelByEntity(Cloud_productEntity entity) throws Exception {
 		Cloud_productModel model = new Cloud_productModel();
 		model.setProductid(entity.getProductid());
-		model.setProducttypeid(entity.getProducttypeid());
-
-		// プロダクトタイプ取得＆設定
-		Optional<Cloud_producttypeEntity> producttype = cloud_producttypeRepository.findById(entity.getProducttypeid());
-		model.setProducttypename(producttype.get().getProducttypename());
-
+		model.setProducttypename(entity.getProducttypename());
 		model.setProductcode(entity.getProductcode());
 		model.setProductname(entity.getProductname());
 		model.setModel(entity.getModel());

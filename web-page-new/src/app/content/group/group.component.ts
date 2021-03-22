@@ -414,7 +414,7 @@ export class GroupComponent implements OnInit {
           item.forEach((elem) => {
             console.log(elem);
             var projectname = ""
-            // プロダクトタイプ名の検索
+            // プロジェクト名の検索
             for (const project of this.projects) {
               if (project.projectid === elem.projectid) {
                 projectname = project.projectname;

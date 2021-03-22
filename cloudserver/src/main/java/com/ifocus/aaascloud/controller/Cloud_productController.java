@@ -422,7 +422,7 @@ public class Cloud_productController {
 		/* システム日時 */
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
 		entity.setProductcode(model.getProductcode());
-		entity.setProducttypeid(model.getProducttypeid());
+		entity.setProducttypename(model.getProducttypename());
 		entity.setProductname(model.getProductname());
 		entity.setModel(model.getModel());
 		entity.setVersion(model.getVersion());
@@ -451,7 +451,7 @@ public class Cloud_productController {
 		/* システム日時 */
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
 		entity.setProductcode(model.getProductcode());
-		entity.setProducttypeid(model.getProducttypeid());
+		entity.setProducttypename(model.getProducttypename());
 		entity.setProductname(model.getProductname());
 		entity.setModel(model.getModel());
 		entity.setVersion(model.getVersion());
