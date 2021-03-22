@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+ 
 //@Repository
-public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEntity, Integer> {
+public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEntity, Integer>, JpaSpecificationExecutor<Cloud_deviceEntity> {
 
 
 	@Query(value = "SELECT d.* "
