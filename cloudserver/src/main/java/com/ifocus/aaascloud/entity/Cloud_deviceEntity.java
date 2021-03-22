@@ -1,5 +1,9 @@
 package com.ifocus.aaascloud.entity;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import javax.persistence.Table;
+
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -9,15 +13,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Data;
 
 @Getter
 @Setter
 @Entity
-@javax.persistence.Table(name="cloud_device")
-public class Cloud_deviceEntity {
+@Data
+@Table(name="cloud_device")
+public class Cloud_deviceEntity implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer deviceid;
@@ -38,6 +45,7 @@ public class Cloud_deviceEntity {
 	private Timestamp versioncomfirmtime;
 
 	private Integer productid;
+	@Column(name="companyid")
 	private Integer companyid;
 	private Integer userid;
 	private Integer lastprojectId;

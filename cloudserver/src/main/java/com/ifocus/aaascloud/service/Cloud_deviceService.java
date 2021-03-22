@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.constant.CommonConstant;
@@ -33,6 +34,7 @@ import com.ifocus.aaascloud.model.Cloud_projectDetailModel;
 import com.ifocus.aaascloud.model.Cloud_projectModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 import com.ifocus.aaascloud.util.Util;
+
 
 @SpringBootApplication
 @RestController
@@ -147,6 +149,26 @@ public class Cloud_deviceService {
 
 	}
 
+	
+//    @Autowired
+//    Cloud_deviceRepository repository;
+// 
+//  public List<Cloud_deviceModel> findIDevices(Cloud_deviceModel model, List<Integer> userids) {
+//		List<Cloud_deviceEntity> list = new ArrayList<Cloud_deviceEntity>();
+//		
+//
+//		list = repository.findAll(Specification
+//	            .where(Cloud_deviceSpecifications.companyidContains(model)));
+//		try {
+//			return getModelsByEntitys(list);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			return null;
+//		}
+//  }
+
+	
+	
 	public List<Cloud_deviceModel> getUnderUserDevicesByquery(Cloud_deviceModel model, List<Integer> userids) throws Exception {
 		
 		// 全社のデバイス一覧取得
