@@ -141,6 +141,8 @@ public class Cloud_productService {
 	 *
 	 */
 	public Cloud_productEntity updateProduct(Cloud_productEntity entity) throws Exception {
+		// 更新行をロックする
+		cloud_productRepository.findByIdForUpdate(entity.getProductid());
 		// プロダクト更新
 		Cloud_productEntity insertedEntity = cloud_productRepository.save(entity);
 		return insertedEntity;
@@ -166,6 +168,9 @@ public class Cloud_productService {
 	 *
 	 */
 	public void updateProductForDelete(Cloud_productModel model) throws Exception {
+		// 更新行をロックする
+		cloud_productRepository.findByIdForUpdate(model.getProductid());
+		// プロダクト論理削除
 		Optional<Cloud_productEntity> product = cloud_productRepository.findById(model.getProductid());
 		if (product != null && product.isPresent()) {
 
@@ -201,6 +206,8 @@ public class Cloud_productService {
 	 */
 	public void updateProductsForDelete(Cloud_productModel model) throws Exception {
 
+		// 更新行を一括ロックする
+		cloud_productRepository.findAllByIdForUpdate(model.getProductidlist());
 		// 対象取得
 		Iterable<Cloud_productEntity> products = cloud_productRepository.findAllById(model.getProductidlist());
 		/* システム日時 */
