@@ -13,6 +13,7 @@ import { TreeNode } from 'primeng/api';
 import { TreeTableModule } from 'primeng/treetable';
 import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
 import { ConfirmationService } from 'primeng/api';
 
 
@@ -57,6 +58,7 @@ export class UserComponent implements OnInit {
   files1: TreeNode[];
   addUserInfo: FormGroup;
 
+  redata: any;
 
   pageSize: any;
   collectionSize: any;
@@ -81,6 +83,8 @@ export class UserComponent implements OnInit {
   userAll: any[] = [];
   jsonUsers: any[] = [];
   selectedContact: any;
+  addSelectedContact: any;
+  addCompanyName: any;
   contactFlag: boolean;
   addContact: any;
   placement = 'bottom-right';
@@ -134,6 +138,17 @@ export class UserComponent implements OnInit {
         mail: '',
         fax: ''
       },
+    },
+    addTargetUserInfo: {
+      username: '',
+      lastname: '',
+      firstname: '',
+      password: '',
+      newPassword: '',
+      role: null,
+      companyid: null,
+      companyname: '',
+      upperuserid: null,
       newCompanyInfo: {
         corporatenumber: '',
         companyname: '',
@@ -160,13 +175,6 @@ export class UserComponent implements OnInit {
       loginrole: null,
       logincompanyid: null,
       loginupperuserid: null
-    },
-    userInfoParame: {
-      loginInfo: {},
-      targetUserInfo: {
-        targetuserid: '',
-        targetuserCompanyid: ''
-      }
     },
 
     query: {
@@ -630,7 +638,6 @@ export class UserComponent implements OnInit {
   addTableDataModal(addTableDataModalContent) {
     this.addModal = this.modal.open(addTableDataModalContent, {
       windowClass: 'animated fadeInDown'
-      , size: 'lg'
     });
     this.contactFlag = true;
   }
@@ -643,8 +650,8 @@ export class UserComponent implements OnInit {
   addCompanyDataModal(addNewCompanyModalContent) {
     this.addCompanyModal = this.modal.open(addNewCompanyModalContent, {
       windowClass: 'animated fadeInDown'
-      , size: 'lg'
     });
+    this.pageModel.addTargetUserInfo.newCompanyInfo.mail = this.pageModel.addTargetUserInfo.username;
     this.contactFlag = true;
   }
 
@@ -681,9 +688,10 @@ export class UserComponent implements OnInit {
      * @param editTableDataModalContent     Id of the edit contact model.
      * @param row     The row which needs to be edited.
      */
-  addRowTableDataModal(editTableNewDataModalContent, row) {
-    this.selectedContact = Object.assign({}, row);
-    this.addProxyModal = this.modal.open(editTableNewDataModalContent, {
+  addRowTableDataModal(addTableNewDataModalContent, row) {
+    this.addSelectedContact = Object.assign({}, row);
+    this.addCompanyName = row.companyName;
+    this.addProxyModal = this.modal.open(addTableNewDataModalContent, {
       windowClass: 'animated fadeInDown '
     });
     this.contactFlag = false;
@@ -734,31 +742,39 @@ export class UserComponent implements OnInit {
    */
   deleteRow(row) {
 
-    if (confirm("削除してもよろしいでしょうか")) {
+    this.confirmationService.confirm({
+      message: row.username + "を削除します。よろしいですか？",
+      header: 'ユーザー削除確認',
+      accept: () => {
 
-      this.selectedUserid.push({ "userid": row.userid });
-      var query = {
-        "cloud_userModelList": this.selectedUserid,
-      }
-      this.httpService.useRpDelete('deleteUser', query).then(item => {
-        try {
-          if (item.resultCode === "0000") {
-            this.selectedUserid = [];
-            this.selected = [];
-            this.searchMyUsers();
-            alert('削除成功です。');
-          } else {
-            console.log('削除失敗です。');
+        this.selectedUserid.push({ "userid": row.userid });
+        var query = {
+          "cloud_userModelList": this.selectedUserid,
+        }
+        this.httpService.useRpDelete('deleteUser', query).then(item => {
+          try {
+            if (item.resultCode === "0000") {
+              this.selectedUserid = [];
+              this.selected = [];
+              this.searchMyUsers();
+              this.showAlert("success", "ユーザーを削除しました。");
+            } else {
+              this.showAlert("error", "削除失敗、ご確認してください。");
+              console.log('削除失敗です。');
+              this.selectedUserid = [];
+              this.selected = [];
+            }
+          } catch (e) {
+            this.showAlert("error", "削除失敗、ご確認してください。");
             this.selectedUserid = [];
             this.selected = [];
           }
-        } catch (e) {
-          console.log('削除失敗です。');
-          this.selectedUserid = [];
-          this.selected = [];
-        }
-      });
-    }
+        });
+      },
+      reject: () => {
+        this.showAlert("info", "削除操作を取消しました");
+      },
+    });
   }
 
   /**
@@ -772,37 +788,43 @@ export class UserComponent implements OnInit {
         flg = true;
       }
     }
-    if (!flg) {
-      alert("プロダクトを選択してください");
-      return
-    }
-
-    if (confirm("削除してもよろしいでしょうか")) {
-      // 削除パラメータの作成
-      var query = {
-        "cloud_userModelList": this.selectedUserid,
-      }
-
-      // ユーザー情報の削除
-      this.httpService.useRpDelete('deleteUser', query).then(item => {
-        try {
-          if (item.resultCode === "0000") {
-            this.selectedUserid = [];
-            this.selected = [];
-            this.searchMyUsers();
-            alert('削除成功です。');
-          } else {
-            alert('ユーザー情報は削除失敗です。');
-            console.log('削除失敗です。');
-            this.selectedUserid = [];
-            this.selected = [];
+    if (this.selectedUserid.length > 0) {
+      this.confirmationService.confirm({
+        message: "選択したデーターを削除しますか",
+        header: 'ユーザー削除確認',
+        accept: () => {
+          // 削除パラメータの作成
+          var query = {
+            "cloud_userModelList": this.selectedUserid,
           }
-        } catch (e) {
-          console.log('削除失敗です。');
-          this.selectedUserid = [];
-          this.selected = [];
+
+          // ユーザー情報の削除
+          this.httpService.useRpDelete('deleteUser', query).then(item => {
+            try {
+              if (item.resultCode === "0000") {
+                this.selectedUserid = [];
+                this.selected = [];
+                this.searchMyUsers();
+                this.showAlert("success", "選択したユーザーを削除しました");
+              } else {
+                this.showAlert("error", "削除失敗、ご確認してください。");
+                console.log('削除失敗です。');
+                this.selectedUserid = [];
+                this.selected = [];
+              }
+            } catch (e) {
+              this.showAlert("error", "削除失敗、ご確認してください。");
+              this.selectedUserid = [];
+              this.selected = [];
+            }
+          });
+        },
+        reject: () => {
+          this.showAlert("info", "削除操作を取消しました");
         }
       });
+    } else {
+      this.showAlert("warn", "ユーザーを選択してください。");
     }
   }
 
@@ -858,69 +880,162 @@ export class UserComponent implements OnInit {
    * @param
    */
   addMyCompUser(addForm: NgForm) {
-    var companyid = this.pageModel.loginUser.logincompanyid;
     var username = this.pageModel.adduserInfo.username;
+    var password = this.pageModel.adduserInfo.password;
+    var newPassword = this.pageModel.adduserInfo.newPassword;
+    var lastname = this.pageModel.adduserInfo.lastname;
+    var firstname = this.pageModel.adduserInfo.firstname;
     var role = this.pageModel.adduserInfo.role;
+    var upperuserid = this.pageModel.loginUser.loginupperuserid;
+    var companyid = this.pageModel.loginUser.logincompanyid;
+    var loginrole = this.pageModel.loginUser.loginrole;
+
+    // 会社管理者の場合
+    if (loginrole === 0) {
+      upperuserid = this.pageModel.loginUser.loginuserid;
+    }
+
     var flg = true;
 
     if (flg && !username) {
-      confirm(`ユーザー名を入力してください。`);
+      this.showAlert("warn", "ログインID（メール）を入力してください。");
+      flg = false;
+    }
+
+    if (flg && !password) {
+      this.showAlert("warn", "パスワードを入力してください。");
+      flg = false;
+    }
+
+    if (flg && !newPassword) {
+      this.showAlert("warn", "確認パスワードを入力してください。");
+      flg = false;
+    }
+
+    if (flg && !lastname) {
+      this.showAlert("warn", "姓を入力してください。");
+      flg = false;
+    }
+
+    if (flg && !firstname) {
+      this.showAlert("warn", "名を入力してください。");
       flg = false;
     }
 
     if (flg && !role) {
-      confirm(`新規種類を選択してください。`);
+      this.showAlert("warn", "権限を入力してください。");
+      flg = false;
+    }
+
+    if (flg && password !== newPassword) {
+      this.showAlert("warn", "新規パスワードと確認パスワードは不一致です。");
       flg = false;
     }
 
     if (flg) {
       var query = {
-        "companyid": companyid,
         "username": username,
+        "password": password,
+        "newPassword": newPassword,
+        "lastname": lastname,
+        "firstname": firstname,
         "role": role,
+        "upperuserid": upperuserid,
+        "companyid": companyid,
       }
-      this.registerUser(query, addForm);
+      // this.registerUser(query, addForm);
     }
   }
 
   /**
-   * ユーザー新規登録（他社新規・会社存在）
+   * ユーザー新規登録（代理会社のユーザー新規・自社）
    *
    * @param 
    */
-  addCompUser(addForm: NgForm) {
-    var companyid = this.pageModel.adduserInfo.companyInfo.companyid;
-    var username = this.pageModel.adduserInfo.username;
-    var role = this.pageModel.adduserInfo.role;
+  addTargetUserDate(addForm: NgForm) {
+    var username = this.pageModel.addTargetUserInfo.username;
+    var password = this.pageModel.addTargetUserInfo.password;
+    var newPassword = this.pageModel.addTargetUserInfo.newPassword;
+    var lastname = this.pageModel.addTargetUserInfo.lastname;
+    var firstname = this.pageModel.addTargetUserInfo.firstname;
+    var role = this.pageModel.addTargetUserInfo.role;
+
+    // 請求者（会社管理者）
+    if (this.addSelectedContact === 0) {
+
+      // 請求者（管理者）  
+    } else if (this.addSelectedContact === 1) {
+
+      // 請求者（使用者）  
+    } else {
+
+    }
+    var upperuserid = "請求者会社の会社管理者";
+    var companyname = this.pageModel.addTargetUserInfo.newCompanyInfo.companyname;
+    var corporatenumber = this.pageModel.addTargetUserInfo.newCompanyInfo.corporatenumber;
+    //　新規会社の場合（子会社の会社管理者の新規）
+    if (companyname && corporatenumber) {
+      upperuserid = this.addSelectedContact.userid;
+      role = 0;
+    }
+
+    var companyid = this.addSelectedContact.companyid;
+    var loginrole = this.addSelectedContact.role;
+
+    // 会社管理者の場合
+    if (loginrole === 0) {
+      upperuserid = this.pageModel.loginUser.loginuserid;
+    }
+
     var flg = true;
 
     if (flg && !username) {
-      confirm(`ユーザー名を入力してください。`);
+      this.showAlert("warn", "ログインID（メール）を入力してください。");
+      flg = false;
+    }
+
+    if (flg && !password) {
+      this.showAlert("warn", "パスワードを入力してください。");
+      flg = false;
+    }
+
+    if (flg && !newPassword) {
+      this.showAlert("warn", "確認パスワードを入力してください。");
+      flg = false;
+    }
+
+    if (flg && !lastname) {
+      this.showAlert("warn", "姓を入力してください。");
+      flg = false;
+    }
+
+    if (flg && !firstname) {
+      this.showAlert("warn", "名を入力してください。");
       flg = false;
     }
 
     if (flg && !role) {
-      confirm(`権限を選択してください。`);
+      this.showAlert("warn", "権限を入力してください。");
       flg = false;
     }
 
-    if (flg && !companyid) {
-      confirm(`会社名を選択してください。`);
+    if (flg && password !== newPassword) {
+      this.showAlert("warn", "新規パスワードと確認パスワードは不一致です。");
       flg = false;
     }
 
     if (flg) {
       var query = {
-        "loginInfo": this.pageModel.userInfoParame.loginInfo,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.adduserInfo.upperuserid,
-        },
-
-        "companyid": this.pageModel.adduserInfo.companyInfo.companyid,
-        "username": this.pageModel.adduserInfo.username,
-        "role": this.pageModel.adduserInfo.role,
+        "username": username,
+        "password": password,
+        "newPassword": newPassword,
+        "lastname": lastname,
+        "firstname": firstname,
+        "role": role,
+        "upperuserid": upperuserid,
+        "companyid": companyid,
       }
-      this.registerUser(query, addForm);
+      // this.registerUser(query, addForm);
     }
     // addForm.reset();
     // this.addModal.close(addForm.resetForm);
@@ -928,56 +1043,59 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * ユーザー新規登録（他社新規・会社存在しない）
+   * ユーザー新規登録（代理会社のユーザー新規・新規会社）
    * 
    */
-  addNewCompUser(addForm: NgForm) {
-    var companyname = this.pageModel.adduserInfo.newCompanyInfo.companyname;
-    var corporatenumber = this.pageModel.adduserInfo.newCompanyInfo.corporatenumber;
-    var username = this.pageModel.adduserInfo.username;
-    var role = this.pageModel.adduserInfo.role;
+  addNewCompany(addForm: NgForm) {
+    var companyname = this.pageModel.addTargetUserInfo.newCompanyInfo.companyname;
+    var corporatenumber = this.pageModel.addTargetUserInfo.newCompanyInfo.corporatenumber;
     var flg = true;
 
-    if (flg && !username) {
-      confirm(`ユーザー名を入力してください。`);
-      flg = false;
-    }
-
-    if (flg && !role) {
-      confirm(`権限を選択してください。`);
-      flg = false;
-    }
-
     if (flg && !companyname) {
-      confirm(`会社名を入力してください。`);
+      this.showAlert("warn", "会社名を入力してください。");
       flg = false;
     }
 
     if (flg && !corporatenumber) {
-      confirm(`法人番号を入力してください。`);
+      this.showAlert("warn", "法人番号を入力してください。");
       flg = false;
     }
 
     if (flg) {
-      var query = {
-        "loginInfo": this.pageModel.userInfoParame.loginInfo,
-        "targetUserInfo": {
-          "targetuserid": this.pageModel.loginUser.loginuserid,
-        },
+      this.addCompanyName = this.pageModel.addTargetUserInfo.newCompanyInfo.companyname;
+      this.confirmationService.confirm({
+        message: "新規会社：" + this.pageModel.addTargetUserInfo.newCompanyInfo.companyname + "保存しますか",
+        header: "会社情報保存確認",
+        accept: () => {
+          let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
+          if (addForm.valid === true && routeif != null) {
+            this.showAlert("success", "会社情報が保存されました。");
+            // addForm.reset();
+            this.addCompanyModal.close(addForm.resetForm);
+            this.addProxyModal.refresh();
+          }
+        }
+      });
 
-        "username": this.pageModel.adduserInfo.username,
-        "upperuserid": this.pageModel.loginUser.loginuserid,
-        "corporatenumber": this.pageModel.adduserInfo.newCompanyInfo.corporatenumber,
-        "role": this.pageModel.adduserInfo.role,
-        "companyname": this.pageModel.adduserInfo.newCompanyInfo.companyname,
-        "address": this.pageModel.adduserInfo.newCompanyInfo.address,
-        "industry": this.pageModel.adduserInfo.newCompanyInfo.industry,
-        "mail": this.pageModel.adduserInfo.newCompanyInfo.mail,
-        "tel": this.pageModel.adduserInfo.newCompanyInfo.tel,
-        "fax": this.pageModel.adduserInfo.newCompanyInfo.fax,
-      };
+      // var query = {
+      //   "loginInfo": this.pageModel.userInfoParame.loginInfo,
+      //   "targetUserInfo": {
+      //     "targetuserid": this.pageModel.loginUser.loginuserid,
+      //   },
 
-      this.registerUser(query, addForm);
+      //   "username": this.pageModel.adduserInfo.username,
+      //   "upperuserid": this.pageModel.loginUser.loginuserid,
+      //   "corporatenumber": this.pageModel.adduserInfo.newCompanyInfo.corporatenumber,
+      //   "role": this.pageModel.adduserInfo.role,
+      //   "companyname": this.pageModel.adduserInfo.newCompanyInfo.companyname,
+      //   "address": this.pageModel.adduserInfo.newCompanyInfo.address,
+      //   "industry": this.pageModel.adduserInfo.newCompanyInfo.industry,
+      //   "mail": this.pageModel.adduserInfo.newCompanyInfo.mail,
+      //   "tel": this.pageModel.adduserInfo.newCompanyInfo.tel,
+      //   "fax": this.pageModel.adduserInfo.newCompanyInfo.fax,
+      // };
+
+      // this.registerUser(query, addForm);
     }
   }
 
@@ -1116,11 +1234,6 @@ export class UserComponent implements OnInit {
    */
   async searchMyUsers() {
     var query = {
-      "loginInfo": this.pageModel.userInfoParame.loginInfo,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
-      },
       "companyname": this.pageModel.query.companyname,
       "firstName": this.pageModel.query.firstname,
       "lastName": this.pageModel.query.lastname,
@@ -1166,28 +1279,17 @@ export class UserComponent implements OnInit {
             ));
             index++;
           });
-          var list = [];
-          // this.pageModel.jsonUserList[0].child = item;
-          // this.pageModel.jsonUserList[0].parent = item[0];
-          // this.pageModel.jsonUserList[0].child[0].parent = item[0];
-          // this.pageModel.jsonUserList[0].child[0].child = item;
-          // this.files1 = <TreeNode[]>this.pageModel.jsonUserList;
-          // console.log("画面表示の一覧");
-          // console.log(this.files);
 
           let parents = item.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
           let childrens = item.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
-          // var list = {parent:{}, child:[]};
           this.jsonUsers = this.translator(parents, childrens);
+
           console.log("==========取得JSONUSERS=============");
           console.log(this.jsonUsers);
-          // var files = <TreeNode[]>this.jsonUsers;
           console.log("==========転換後のJSONUSERS=============");
-          // console.log(files);
         }
         this.rows = [...this.rows];
         this.getTabledata();
-        // }
 
       } catch (e) {
         console.log('失敗');
@@ -1196,47 +1298,45 @@ export class UserComponent implements OnInit {
   }
 
   translator(parents, childrens) {
-    var list = [];
-    var data = { data: {}, child: [] };
-    var data1 = {};
-    if (parents) {
-      parents.forEach(parent => {
-        childrens.forEach((child, index) => {
-          if (parent.userid == child.upperuserid) {
-            let temp = JSON.parse(JSON.stringify(childrens));
-            temp.childs = temp;
-            temp.splice(index, 1);
-            this.translator([child], temp);
-            typeof parent.childrens !== "undefined" ?
-              parent.Contact.push(child) : parent.Contact = [child];
+    parents.forEach(parent => {
+      parent.data = {
+        "companyName": parent.companyName,
+        "companyid": parent.companyid,
+        "deviceCount": parent.deviceCount,
+        "email": parent.email,
+        "firstname": parent.firstname,
+        "lastname": parent.lastname,
+        "projectCount": parent.projectCount,
+        "role": parent.role,
+        "upperuserid": parent.upperuserid,
+        "userCount": parent.userCount,
+        "userid": parent.userid,
+        "username": parent.username
+      };
+      childrens.forEach((child, index) => {
+        child.data = child;
+        if (parent.userid == child.upperuserid) {
+          let temp = [];
+          childrens.forEach(element => {
+            if (element.data) {
+              temp.push(element.data)
+            } else {
+              temp.push(element)
+            }
+          });
+          // let temp = childrens;
+          temp.splice(index, 1);
+          this.translator([child], temp);
+          if (typeof parent.children !== "undefined") {
+            parent.children.push(child);
+            // parent.data.push(child);
+          } else {
+            parent.children = [child]
+            // parent.data = data;
           }
-        });
-      });
-    }
-    var userMap = { data: {}, children: [] };
-    const copyList = childrens.slice(0)
-    const tree = []
-    for (let i = 0; i < copyList.length; i++) {
-      // 找出每一项的父节点，并将其作为父节点的children
-      for (let j = 0; j < copyList.length; j++) {
-        if (copyList[i].userid === copyList[j].upperuserid) {
-          if (copyList[j].children === undefined) {
-            copyList[j].children = []
-          }
-          copyList[j].children.push(copyList[i])
         }
-      }
-      // 把根节点提取出来，parentId为null的就是根节点
-      if (copyList[i].parentId === null) {
-        tree.push(copyList[i])
-      }
-    }
-    return parents;
-  }
-
-
-  fliterEvent(parents, childrens) {
-    this.fliterEvent(parents, childrens);
+      });
+    });
     return parents;
   }
 
@@ -1246,11 +1346,6 @@ export class UserComponent implements OnInit {
    */
   async getUnderUsers() {
     var query = {
-      "loginInfo": this.pageModel.userInfoParame.loginInfo,
-      "targetUserInfo": {
-        "targetuserid": this.pageModel.loginUser.loginuserid,
-        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
-      },
       "companyname": this.pageModel.query.companyname,
       "firstName": this.pageModel.query.firstname,
       "lastName": this.pageModel.query.lastname,
@@ -1458,6 +1553,36 @@ export class UserComponent implements OnInit {
       openForm.reset();
       this.updateModal.close(openForm.resetForm);
     }
+    if (this.addProxyModal != null) {
+      this.cliarCompanyInfo();
+      openForm.reset();
+      this.addProxyModal.close(openForm.resetForm);
+    }
+  }
+
+  /**
+ * 新規会社の取消ボタンを押下 
+ * 
+ */
+  cancleCompanyModel(openForm: NgForm) {
+    if (this.addCompanyModal != null) {
+      this.cliarCompanyInfo();
+      openForm.reset();
+      this.addCompanyModal.close(openForm.resetForm);
+    }
+  }
+
+  /**
+   * 新規会社情報のクリア
+   */
+  cliarCompanyInfo() {
+    this.pageModel.addTargetUserInfo.newCompanyInfo.corporatenumber = '';
+    this.pageModel.addTargetUserInfo.newCompanyInfo.companyname = '';
+    this.pageModel.addTargetUserInfo.newCompanyInfo.address = '';
+    this.pageModel.addTargetUserInfo.newCompanyInfo.industry = '';
+    this.pageModel.addTargetUserInfo.newCompanyInfo.tel = '';
+    this.pageModel.addTargetUserInfo.newCompanyInfo.mail = '';
+    this.pageModel.addTargetUserInfo.newCompanyInfo.fax = '';
   }
 
   getResultMs(item) {
@@ -1475,5 +1600,17 @@ export class UserComponent implements OnInit {
       detail: alertDetail,
       life: 2000
     });
+  }
+
+  /**
+   * 
+   * @param role 
+   */
+  setRole(role) {
+    if (role) {
+      this.pageModel.addTargetUserInfo.role = 1;
+    } else {
+      this.pageModel.addTargetUserInfo.role = 2;
+    }
   }
 }

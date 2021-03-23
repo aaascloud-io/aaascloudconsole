@@ -442,7 +442,7 @@ public class Cloud_userService {
 			}
 
 			// ユーザを削除する
-			deleteSonUser(cloud_userModelInfo);
+			deleteSonUser(cloud_userModelInfo, cloud_userModel);
 		}
 
 	}
@@ -452,7 +452,7 @@ public class Cloud_userService {
 	 * @param loginInfo LoginInfo
 	 * @param cloud_userModel Cloud_userModel
 	 */
-	public void deleteSonUser(Cloud_userModel model) throws Exception {
+	public void deleteSonUser(Cloud_userModel model, Cloud_userModel LoginModel) throws Exception {
 
 		// 対象取得
 		Optional<Cloud_userEntity> user = cloud_userRepository.findById(model.getUserid());
@@ -462,7 +462,7 @@ public class Cloud_userService {
 
 			// プロダクト論理削除
 			entity.setDeleteflag(DeleteFlagConstant.DELETED);
-			entity.setU_uid(model.getLoginInfo().getLoginuserid());
+			entity.setU_uid(LoginModel.getLoginInfo().getLoginuserid());
 			entity.setU_time(new Timestamp(System.currentTimeMillis()));
 			// DB更新
 			cloud_userRepository.save(entity);
