@@ -269,7 +269,7 @@
             [(ngModel)]="pageModel.addProduct.createuserid" #edituserid="ngModel"
             [ngClass]="{ 'is-invalid': addForm.submitted && edituserid.invalid }" required>
             <option *ngFor="let user of users; let i = index" [ngValue]="user.userid">
-              {{user.firstname + user.lastname}}
+              {{user.lastname + user.firstname}}
             </option>
           </select>
           <div *ngIf="addForm.submitted && edituserid.invalid" class="invalid-feedback">
