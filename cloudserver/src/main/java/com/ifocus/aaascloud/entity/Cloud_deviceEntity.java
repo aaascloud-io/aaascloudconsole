@@ -50,6 +50,7 @@ public class Cloud_deviceEntity implements Serializable{
 	private Integer userid;
 	private Integer lastprojectId;
 	private Integer lastgroupid;
+	private Integer deleteflag;
 	private Integer alive;
 	@Column(updatable = false)
 	private Integer i_uid;

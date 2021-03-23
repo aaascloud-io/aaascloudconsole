@@ -21,6 +21,7 @@ public class Cloud_versionModel {
 	private String downloadurl;
 	private String description;
 	private Integer alive;
+	private Integer deleteflag;
 
 	// 一括削除用
 	private List<Integer> rowidlist;

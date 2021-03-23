@@ -21,6 +21,7 @@ public class Cloud_groupModel {
 	private String groupname;
 	private String summary;
 	private Integer alive;
+	private Integer deleteflag;
 	private Integer groupDeviceCounts;
 	private List<Cloud_deviceModel> deviceList;
 	private List<Integer> groupidList = new ArrayList<Integer>();

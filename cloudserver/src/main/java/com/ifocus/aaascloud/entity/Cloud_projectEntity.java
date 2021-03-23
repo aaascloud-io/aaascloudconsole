@@ -40,6 +40,9 @@ public class Cloud_projectEntity {
 	private Integer alive;
 	@Getter
 	@Setter
+	private Integer deleteflag;
+	@Getter
+	@Setter
 	@Column(updatable = false)
 	private Integer i_uid;
 	@Getter

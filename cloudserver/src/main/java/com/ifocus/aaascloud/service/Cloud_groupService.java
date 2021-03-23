@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
+import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
 import com.ifocus.aaascloud.entity.Cloud_groupEntity;
@@ -97,7 +98,9 @@ public class Cloud_groupService {
 	public void registerGroups(List<Cloud_groupModel> groupList) throws Exception {
 		if (groupList != null && groupList.size() > 0) {
 			for (Cloud_groupModel model:groupList) {
-
+				
+				// 削除済行を物理削除する
+				cloud_groupRepository.deleteGroupMarked(model.getProjectid(),model.getGroupname());
 				////////////////////////////////////////////////////////
 				// グループ登録
 				////////////////////////////////////////////////////////
@@ -122,6 +125,8 @@ public class Cloud_groupService {
 	 *
 	 */
 	public Cloud_groupModel registerGroup(Cloud_groupModel cloud_groupModel) throws Exception {
+		// 削除済行を物理削除する
+		cloud_groupRepository.deleteGroupMarked(cloud_groupModel.getProjectid(),cloud_groupModel.getGroupname());
 		Cloud_groupModel model = new Cloud_groupModel();
 		Cloud_groupEntity insertedEntity = cloud_groupRepository.save(getEntityByModel(cloud_groupModel));
 		if (insertedEntity != null ) {
@@ -178,6 +183,7 @@ public class Cloud_groupService {
 			model.setGroupname(updatedEntity.getGroupname());
 			model.setSummary(updatedEntity.getSummary());
 			model.setAlive(updatedEntity.getAlive());
+			model.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		}
 		return model;
 
@@ -221,6 +227,7 @@ public class Cloud_groupService {
 				deleteGroup(model.getLoginInfo(), entity.getGroupid());
 			}
 		}
+
 		return;
 	}
 
@@ -229,11 +236,20 @@ public class Cloud_groupService {
 	 *
 	 */
 	public void deleteGroup(LoginInfo loginInfo, Integer groupid) throws Exception {
-
 		// デバイスのグループ情報をクリア
 		cloud_deviceService.clearGroupInfoForDelete(loginInfo, groupid);
-		// グループ削除
-		cloud_groupRepository.deleteById(groupid);
+		Optional<Cloud_groupEntity> GetEntity = cloud_groupRepository.findById(groupid);
+		if (GetEntity != null && GetEntity.isPresent()) {
+
+			Cloud_groupEntity entity = GetEntity.get();
+
+			// グループ論理削除
+			entity.setDeleteflag(DeleteFlagConstant.DELETED);
+			entity.setU_uid(loginInfo.getLoginuserid());
+			entity.setU_time(new Timestamp(System.currentTimeMillis()));
+			// DB更新
+			cloud_groupRepository.save(entity);
+		}
 	}
 
 	/*
@@ -372,6 +388,7 @@ public class Cloud_groupService {
 		entity.setGroupname(model.getGroupname());
 		entity.setSummary(model.getSummary());
 		entity.setAlive(AliveConstant.ALIVE);
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());

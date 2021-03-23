@@ -1111,7 +1111,7 @@ public class Cloud_deviceController {
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
 
 				// デバイスを削除する
-				cloud_deviceService.deleteDevice(cloud_deviceModel);
+				cloud_deviceService.deleteDevice(cloud_deviceModel.getDeviceid(),cloud_deviceModel.getLoginInfo());
 
 				String responseData = new String();
 				responseData = responseData + "{";
@@ -1178,7 +1178,7 @@ public class Cloud_deviceController {
 			if (cloud_userService.checkAccessOK(cloud_deviceModel.getLoginInfo().getLoginuserid(), cloud_deviceModel.getTargetUserInfo().getTargetuserid())) {
 
 				// 選択デバイスを削除する
-				Integer deleteCount = cloud_deviceService.deleteDevices(cloud_deviceModel.getDeviceidlist());
+				Integer deleteCount = cloud_deviceService.deleteDevices(cloud_deviceModel.getDeviceidlist(),cloud_deviceModel.getLoginInfo());
 
 				String responseData = new String();
 				responseData = responseData + "{";

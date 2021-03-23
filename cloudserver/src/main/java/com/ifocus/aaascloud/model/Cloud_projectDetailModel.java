@@ -39,6 +39,9 @@ public class Cloud_projectDetailModel {
 	private Integer alive;
 	@Getter
 	@Setter
+	private Integer deleteflag;
+	@Getter
+	@Setter
 	private Integer groupCounts;
 	@Getter
 	@Setter

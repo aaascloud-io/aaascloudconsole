@@ -512,6 +512,7 @@ export class ProductComponent implements OnInit {
     this.httpService.usePost('getUnderUsers', query).then(item => {
       try {
         if (item) {
+          this.users=item
           console.log(item);
           console.log("すべてのユーザーの取得は成功しました。");
         } else {

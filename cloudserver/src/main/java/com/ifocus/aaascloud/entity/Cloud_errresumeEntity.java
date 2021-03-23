@@ -24,6 +24,7 @@ public class Cloud_errresumeEntity {
 	private Integer statusflagafter ;
 	private String contents;
 	private Integer alive;
+	private Integer deleteflag;
 	@Column(updatable = false)
 	private Integer i_uid;
 	@Column(updatable = false)

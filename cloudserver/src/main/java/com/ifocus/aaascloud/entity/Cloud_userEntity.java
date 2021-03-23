@@ -27,6 +27,7 @@ public class Cloud_userEntity {
 	private Integer upperuserid;
 	private String token;
 	private Integer alive;
+	private Integer deleteflag;
 	private Integer i_uid;
 	private Timestamp i_time;
 	private Integer u_uid;

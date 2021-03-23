@@ -21,6 +21,7 @@ public class Cloud_projectModel {
 	private String productname;
 	private String projectsummary;
 	private Integer alive;
+	private Integer deleteflag;
 	private Integer groupCounts;
 	private Integer deviceCounts;
 	private String username;

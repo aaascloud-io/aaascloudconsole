@@ -1,5 +1,6 @@
 package com.ifocus.aaascloud.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
+import com.ifocus.aaascloud.model.LoginInfo;
 
 @SpringBootApplication
 @RestController
@@ -84,6 +87,8 @@ public class Cloud_companyService {
 	 *
 	 */
 	public Cloud_companyModel registerCompany(Cloud_companyEntity entity) throws Exception {
+		// 削除済行を物理削除する
+		cloud_companyRepository.deleteCompanyMarked(entity.getCorporatenumber());
 		Cloud_companyModel model = new Cloud_companyModel();
 		Cloud_companyEntity insertedEntity = cloud_companyRepository.save(entity);
 		if (insertedEntity != null ) {
@@ -118,6 +123,7 @@ public class Cloud_companyService {
 			model.setTel(updatedEntity.getTel());
 			model.setFax(updatedEntity.getFax());
 			model.setLevel(updatedEntity.getLevel());
+			model.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		}
 		return model;
 
@@ -127,8 +133,18 @@ public class Cloud_companyService {
 	 * 会社削除
 	 *
 	 */
-	public void deleteCompany(Cloud_companyEntity entity) throws Exception {
-		cloud_companyRepository.deleteById(entity.getCompanyid());
+	public void deleteCompany(Cloud_companyEntity entity,LoginInfo loginInfo) throws Exception {
+		//cloud_companyRepository.deleteById(entity.getCompanyid());
+		Optional<Cloud_companyEntity> value = cloud_companyRepository.findById(entity.getCompanyid());
+		Cloud_companyEntity getEntity = value.get();
+		if (getEntity != null ) {
+			getEntity.setDeleteflag(DeleteFlagConstant.DELETED);
+			getEntity.setU_uid(loginInfo.getLoginuserid());
+			getEntity.setU_time(new Timestamp(System.currentTimeMillis()));
+		}
+		
+		Cloud_companyEntity updatedEntity = cloud_companyRepository.save(getEntity);
+		return ;
 	}
 
 	/*

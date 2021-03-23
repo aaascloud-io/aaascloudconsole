@@ -14,7 +14,7 @@ public interface  Cloud_errlogRepository extends CrudRepository<Cloud_errlogEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_errlog c WHERE c.statusflag != 9 AND (c.userid IN :userids OR c.device IN :imeis OR c.device IN :sns) ",nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_errlog c WHERE c.deleteflag = 0 AND c.statusflag != 9 AND (c.userid IN :userids OR c.device IN :imeis OR c.device IN :sns) ",nativeQuery = true)
 	public List<Cloud_errlogEntity> searchErrlogsByUseridInOrDeviceIn(@Param("userids") List<Integer> userids, @Param("imeis") List<String> imeis, @Param("sns") List<String> sns);
 
 }

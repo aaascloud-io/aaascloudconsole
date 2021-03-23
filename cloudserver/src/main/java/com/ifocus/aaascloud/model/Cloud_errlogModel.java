@@ -29,6 +29,7 @@ public class Cloud_errlogModel {
 	private String errcode;
 	private String errMessage;
 	private Integer alive;
+	private Integer deleteflag;
 	private Integer i_uid;
 	private Timestamp i_time;
 	private Integer u_uid;

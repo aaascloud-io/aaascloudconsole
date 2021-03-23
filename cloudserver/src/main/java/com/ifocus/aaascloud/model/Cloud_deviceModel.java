@@ -41,6 +41,7 @@ public class Cloud_deviceModel {
 	private Integer lastprojectId;
 	private Integer lastgroupid;
 	private Integer alive;
+	private Integer deleteflag;
 	private Integer productid;
 	private String productname;
 	private String industry;

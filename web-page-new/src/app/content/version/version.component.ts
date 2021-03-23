@@ -226,13 +226,12 @@ export class VersionComponent implements OnInit {
         "description": this.addVersion['description'],
       }
       this.httpService.useRpPost('registerVersion',param).then(item=>{
-        console.log("这是item");
         console.log(item);
         try{
           if(item.resultCode == "0000"){
             this.addVersion={},
             this.ngOnInit();
-            this.showAlert("success","プロジェクトを登録しました。");
+            this.showAlert("success","バージョンを登録しました。");
           }else{
             console.log('登録失敗、ご確認してください。');
             console.log(item);
@@ -301,7 +300,6 @@ export class VersionComponent implements OnInit {
             };
           }
           this.httpService.useRpDelete('deleteVersion',param).then(item=>{
-            console.log("这是 delete 的 item");
             console.log(item);
             try{
               if(item.resultCode == "0000"){
@@ -464,9 +462,9 @@ export class VersionComponent implements OnInit {
 
   getTabledata() {
     this.tableDisplayData = this.rows;
-    // 获取当前页码
+
     this.collectionSize = this.tableDisplayData.length;
-    // 每个元素添加了 isSelected 属性
+
     this.tableDisplayData.forEach(x => x.isSelected = false)
     // this.tableDisplayData = this.PaginationData();
   }
@@ -481,7 +479,6 @@ export class VersionComponent implements OnInit {
   }
 
   sortData(nm) {
-    console.log("这是排序前的rows");
     console.log(this.rows);
     if (this.sortOn == 1) {
       this.rows.sort(this.alphabetically(true, nm));
@@ -490,7 +487,6 @@ export class VersionComponent implements OnInit {
       this.rows.sort(this.alphabetically(false, nm));
       this.sortOn = 1;
     }
-    console.log("这是排序后的rows");
     console.log(this.rows);
     this.valueSortFlg.productNameUp = false;
     this.valueSortFlg.productNameDown = false;

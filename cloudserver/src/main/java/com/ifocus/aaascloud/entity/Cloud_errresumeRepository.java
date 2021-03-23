@@ -12,7 +12,7 @@ public interface Cloud_errresumeRepository extends CrudRepository<Cloud_errresum
 	/*
 	 * エラー履歴情報一覧取得
 	 */
-	@Query(value = "SELECT c.* FROM cloud_errresume c WHERE c.errlogid = :errlogid ORDER BY i_time DESC",nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_errresume c WHERE c.deleteflag = 0 AND c.errlogid = :errlogid ORDER BY i_time DESC",nativeQuery = true)
 	public List<Cloud_errresumeEntity> findListByErrlogid(@Param("errlogid") Integer errlogid);
 
 }

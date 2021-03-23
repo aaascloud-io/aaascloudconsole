@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
+import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
@@ -311,6 +312,7 @@ public class Cloud_userService {
 			entity.setFax(model.getFax());
 			entity.setLevel(myEntity.get().getLevel() + 1);   	// レベルアップ
 			entity.setAlive(AliveConstant.ALIVE);
+			entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 			entity.setI_uid(model.getLoginInfo().getLoginuserid());
 			entity.setI_time(systemTime);
 			entity.setU_uid(model.getLoginInfo().getLoginuserid());
@@ -323,8 +325,9 @@ public class Cloud_userService {
 
 		}
 
+		// 削除済行を物理削除する
+		cloud_userRepository.deleteUserMarked(model.getUsername(),model.getLastName(),model.getFirstName(),model.getEmail());
 		// 情報設定
-
 		Cloud_userEntity entity = new Cloud_userEntity();
 		/* システム日時 */
 		Timestamp systemTime = new Timestamp(System.currentTimeMillis());
@@ -338,6 +341,7 @@ public class Cloud_userService {
 		entity.setUpperuserid(model.getTargetUserInfo().getTargetuserid());
 		entity.setToken("");
 		entity.setAlive(AliveConstant.ALIVE);
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
@@ -375,6 +379,7 @@ public class Cloud_userService {
 		companyEntity.setMail(model.getMail());
 		companyEntity.setTel(model.getTel());
 		companyEntity.setFax(model.getFax());
+		companyEntity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		companyEntity.setU_uid(loginInfo.getLoginuserid());
 		companyEntity.setU_time(systemTime);
 
@@ -390,6 +395,7 @@ public class Cloud_userService {
 		entity.setCompanyid(model.getCompanyid());
 		entity.setUsername(model.getUsername());
 		entity.setRole(model.getRole());
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setU_uid(loginInfo.getLoginuserid());
 		entity.setU_time(systemTime);
 
@@ -409,14 +415,14 @@ public class Cloud_userService {
 		////////////////////////////////////////////////////////
 		// KeyCloakに削除を行う
 		////////////////////////////////////////////////////////
-		try {
-			// 選択されるユーザを削除する
-			for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
-				keyCloakUserService.deleteUser(cloud_userModelInfo.getUsername());
-			}
-		} catch (Exception e) {
-			throw e;
-		}
+//		try {
+//			// 選択されるユーザを削除する
+//			for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
+//				keyCloakUserService.deleteUser(cloud_userModelInfo.getUsername());
+//			}
+//		} catch (Exception e) {
+//			throw e;
+//		}
 
 		////////////////////////////////////////////////////////
 		// DB削除を行う
@@ -432,7 +438,7 @@ public class Cloud_userService {
 				Cloud_companyEntity cloud_companyEntity = new Cloud_companyEntity();
 				cloud_companyEntity.setCompanyid(cloud_userModelInfo.getCompanyid());
 				// 会社を削除する
-				cloud_companyService.deleteCompany(cloud_companyEntity);
+				cloud_companyService.deleteCompany(cloud_companyEntity,cloud_userModel.getLoginInfo());
 			}
 
 			// ユーザを削除する
@@ -448,9 +454,20 @@ public class Cloud_userService {
 	 */
 	public void deleteSonUser(Cloud_userModel model) throws Exception {
 
-		if (cloud_userRepository.existsById(model.getUserid())) {
-			cloud_userRepository.deleteById(model.getUserid());
+		// 対象取得
+		Optional<Cloud_userEntity> user = cloud_userRepository.findById(model.getUserid());
+		if (user != null && user.isPresent()) {
+
+			Cloud_userEntity entity = user.get();
+
+			// プロダクト論理削除
+			entity.setDeleteflag(DeleteFlagConstant.DELETED);
+			entity.setU_uid(model.getLoginInfo().getLoginuserid());
+			entity.setU_time(new Timestamp(System.currentTimeMillis()));
+			// DB更新
+			cloud_userRepository.save(entity);
 		}
+		return ;
 
 	}
 
@@ -535,8 +552,9 @@ public class Cloud_userService {
 
 		// 会社名取得
 		Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(entity.getCompanyid());
-		model.setCompanyname(company.get().getCompanyname());
-
+		if(!company.equals(Optional.empty())) {
+			model.setCompanyname(company.get().getCompanyname());
+		}
 		model.setRole(entity.getRole());
 		model.setUpperuserid(entity.getUpperuserid());
 

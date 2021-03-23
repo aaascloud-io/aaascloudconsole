@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
+import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.constant.StatusFlagConstant;
 import com.ifocus.aaascloud.entity.Cloud_errlogEntity;
 import com.ifocus.aaascloud.entity.Cloud_errlogRepository;
@@ -164,6 +165,7 @@ public class Cloud_errresumeService {
 		entity.setErrlogid(model.getErrlogid());
 		entity.setContents(model.getContents());
 		entity.setAlive(AliveConstant.ALIVE);
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());

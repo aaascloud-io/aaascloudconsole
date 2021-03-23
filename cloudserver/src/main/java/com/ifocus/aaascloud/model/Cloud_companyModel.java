@@ -46,6 +46,9 @@ public class Cloud_companyModel {
 	private Integer alive;
 	@Getter
 	@Setter
+	private Integer deleteflag;
+	@Getter
+	@Setter
 	private Integer i_uid;
 	@Getter
 	@Setter

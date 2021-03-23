@@ -18,6 +18,7 @@ public class Cloud_producttypeModel {
 	private String summary;
 	private Date releasedate;
 	private Integer alive;
+	private Integer deleteflag;
 	private Integer i_uid;
 	private Timestamp i_time;
 	private Integer u_uid;

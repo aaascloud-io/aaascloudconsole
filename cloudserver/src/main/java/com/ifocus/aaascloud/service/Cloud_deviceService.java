@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.constant.CommonConstant;
+import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import com.ifocus.aaascloud.entity.Cloud_companyRepository;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
@@ -433,7 +434,9 @@ public class Cloud_deviceService {
 	 *
 	 */
 	public Integer registerDevice(Cloud_deviceModel model) throws Exception {
-
+	    // 削除済行を物理削除する
+		cloud_deviceRepository.deleteDeviceMarked(model.getDeviceDetail().getSn());
+		
 		// 会社IDを設定する
 		this.setCompanyIDToModel(model);
 		// デバイス登録
@@ -455,6 +458,7 @@ public class Cloud_deviceService {
 		// デバイス登録
 		Integer count = 0;
 		for (Cloud_deviceDetailModel deviceDetailModel:model.getDeviceDetailList()) {
+		    cloud_deviceRepository.deleteDeviceMarked(deviceDetailModel.getSn());
 			Cloud_deviceEntity insertedEntity = cloud_deviceRepository.save(getEntitByDetailModel(deviceDetailModel,model.getLoginInfo()));
 			count++;
 		}
@@ -602,15 +606,22 @@ public class Cloud_deviceService {
 	 * @param model Cloud_deviceModel デバイス情報
 	 *
 	 */
-	public void deleteDevice(Cloud_deviceModel model) throws Exception {
+	public void deleteDevice(Integer deviceid,LoginInfo loginInfo) throws Exception {
 		// 会社IDを設定する
-		this.setCompanyIDToModel(model);
-		// デバイス削除
-		if (cloud_deviceRepository.existsById(model.getDeviceid())) {
-			cloud_deviceRepository.deleteById(model.getDeviceid());
-		}
-		return ;
+		//this.setCompanyIDToModel(model);
+		// デバイス削除	
+		Optional<Cloud_deviceEntity> device = cloud_deviceRepository.findById(deviceid);
+		if (device != null && device.isPresent()) {
 
+			Cloud_deviceEntity entity = device.get();
+
+			// プロダクト論理削除
+			entity.setDeleteflag(DeleteFlagConstant.DELETED);
+			entity.setU_uid(loginInfo.getLoginuserid());
+			entity.setU_time(new Timestamp(System.currentTimeMillis()));
+			// DB更新
+			cloud_deviceRepository.save(entity);
+		}
 	}
 
 	/*
@@ -619,16 +630,18 @@ public class Cloud_deviceService {
 	 * @return Integer 削除件数
 	 *
 	 */
-	public Integer deleteDevices(List<Integer> deviceidlist) throws Exception {
-
-		// 削除対象取得
-		Iterable<Cloud_deviceEntity> list = cloud_deviceRepository.findAllById(deviceidlist);
+	public Integer deleteDevices(List<Integer> deviceidlist,LoginInfo loginInfo) throws Exception {
 		// 削除件数取得
-		Integer returnCount = Util.size(list);
-		// 削除実施
-		cloud_deviceRepository.deleteAll(list);
+		Integer returnCount = Util.size(deviceidlist);	
+		if (deviceidlist != null ) {
+			for (Integer deviceid:deviceidlist) {
+				////////////////////////////////////////////////////////
+				// デバイス削除
+				////////////////////////////////////////////////////////
+				deleteDevice(deviceid,loginInfo);
+			}
+		}
 		return returnCount;
-
 	}
 
 	/*
@@ -1233,6 +1246,7 @@ public class Cloud_deviceService {
 //		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
 //		entity.setLastgroupid(CommonConstant.GROUP_NOT_SET);
 		entity.setAlive(AliveConstant.ALIVE);
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setI_uid(loginInfo.getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(loginInfo.getLoginuserid());
@@ -1280,6 +1294,7 @@ public class Cloud_deviceService {
 //		entity.setLastgroupid(model.getLastgroupid());
 //		entity.setAlive(model.getAlive());
 
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		// ユーザIDを設定
 		if (model.getDeviceDetail().getUserid() != null) {
 			entity.setUserid(model.getDeviceDetail().getUserid());

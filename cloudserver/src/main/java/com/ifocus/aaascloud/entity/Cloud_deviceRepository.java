@@ -5,11 +5,26 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
  
 //@Repository
 public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEntity, Integer>, JpaSpecificationExecutor<Cloud_deviceEntity> {
+
+	/*
+	 * デバイス物理削除（deleteflag＝１の行）
+	 *
+	 *
+	 */
+	@Modifying
+	@Transactional
+	@Query(value = " DELETE FROM cloud_device "
+			+ " WHERE deleteflag = 1 "
+			+ " AND sn = :sn",nativeQuery = true)
+	public void deleteDeviceMarked(@Param("sn") String sn);
+
 
 	@Query(value = "SELECT d.* "
 			+ " FROM cloud_device d "
@@ -17,7 +32,8 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
-			+ " WHERE d.userid IN :userids "
+			+ " WHERE d.deleteflag = 0"
+			+ " AND d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND IFNULL(pd.productName, '') LIKE :productname "
@@ -40,7 +56,8 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
-			+ " WHERE d.userid IN :userids "
+			+ " WHERE d.deleteflag = 0 "
+			+ " AND d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND IFNULL(pd.productName, '') LIKE :productname "
@@ -65,7 +82,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 */
 	@Query(value = "SELECT c.* FROM cloud_device c "
-			+ "WHERE c.companyid = :companyid "
+			+ "WHERE c.deleteflag = 0 AND  c.companyid = :companyid "
 			+ " AND c.userid IN :userids "
 			+ " AND (c.projectid IS NULL OR c.projectid = 0) ", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchSelectableDevicesByCompanyidAndUserids(@Param("companyid") Integer companyid, List<Integer> userids);
@@ -75,7 +92,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.companyid IN :companyids ORDER BY c.imei", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND  c.companyid IN :companyids ORDER BY c.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchUnderCompanyDevicesByCompanyidIn(@Param("companyids") List<Integer> companyids);
 
 	/*
@@ -83,7 +100,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.userid IN :userids ORDER BY c.imei", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND  c.userid IN :userids ORDER BY c.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchUnderUserDevicesByUseridIn(@Param("userids") List<Integer> userids);
 
 	/*
@@ -96,7 +113,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
-			+ " WHERE d.companyId IN :companyids "
+			+ " WHERE d.deleteflag = 0 AND  d.companyId IN :companyids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ "    OR d.SN LIKE :sn) "
 			+ " AND pd.productName LIKE :productname "
@@ -121,7 +138,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
-			+ " WHERE d.companyId IN :companyids "
+			+ " WHERE d.deleteflag = 0 AND  d.companyId IN :companyids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ "    OR d.SN LIKE :sn) "
 			+ " AND pd.productName LIKE :productname "
@@ -146,7 +163,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " FROM cloud_device d "
 			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
-			+ " WHERE d.companyId IN :companyids "
+			+ " WHERE d.deleteflag = 0 AND  d.companyId IN :companyids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ "    OR d.SN LIKE :sn) "
 			+ " AND pd.productName LIKE :productname "
@@ -168,7 +185,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
 			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
-			+ " WHERE d.companyId IN :companyids "
+			+ " WHERE d.deleteflag = 0 AND  d.companyId IN :companyids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ "    OR d.SN LIKE :sn) "
 			+ " AND pd.productName LIKE :productname "
@@ -192,7 +209,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
-			+ " WHERE d.userid IN :userids "
+			+ " WHERE d.deleteflag = 0 AND  d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
@@ -218,7 +235,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
-			+ " WHERE d.userid IN :userids "
+			+ " WHERE d.deleteflag = 0 AND  d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
@@ -244,7 +261,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " FROM cloud_device d "
 			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
-			+ " WHERE d.userid IN :userids "
+			+ " WHERE d.deleteflag = 0 AND  d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ "    OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
@@ -267,7 +284,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
 			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
-			+ " WHERE d.userid IN :userids "
+			+ " WHERE d.deleteflag = 0 AND  d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
@@ -292,7 +309,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
-			+ " WHERE d.userid IN :userids "
+			+ " WHERE d.deleteflag = 0 AND  d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
@@ -320,7 +337,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
 			+ " LEFT JOIN cloud_group g ON d.groupId = g.groupId "
-			+ " WHERE d.userid IN :userids "
+			+ " WHERE d.deleteflag = 0 AND  d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
@@ -348,7 +365,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " FROM cloud_device d "
 			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
-			+ " WHERE d.userid IN :userids "
+			+ " WHERE d.deleteflag = 0 AND  d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
@@ -373,7 +390,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ " LEFT JOIN cloud_product pd ON d.productId = pd.productId "
 			+ " LEFT JOIN cloud_project pj ON d.projectId = pj.projectId "
 			+ " LEFT JOIN cloud_company com ON d.companyId = com.companyId "
-			+ " WHERE d.userid IN :userids "
+			+ " WHERE d.deleteflag = 0 AND d.userid IN :userids "
 			+ " AND (d.IMEI LIKE :imei "
 			+ " OR d.SN LIKE :sn OR d.SIM_ICCID LIKE :sim_iccid) "
 			+ " AND pd.productName LIKE :productname "
@@ -395,7 +412,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.companyid = :companyid ORDER BY c.imei", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.companyid = :companyid ORDER BY c.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchAllDevicesByCompanyid(@Param("companyid") Integer companyid);
 
 	/*
@@ -403,7 +420,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.projectid = :projectid", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.projectid = :projectid", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchDevicesByProjectid(@Param("projectid") Integer projectid);
 
 	/*
@@ -411,7 +428,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.projectid = :projectid AND (c.groupid IS NULL OR c.groupid = 0) ", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.projectid = :projectid AND (c.groupid IS NULL OR c.groupid = 0) ", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchProjectDevicesWithNoGroupByProjectid(@Param("projectid") Integer projectid);
 
 	/*
@@ -419,7 +436,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT COUNT(c) FROM cloud_device c WHERE c.projectid = :projectid", nativeQuery = true)
+	@Query(value = "SELECT COUNT(c) FROM cloud_device c WHERE c.deleteflag = 0 AND c.projectid = :projectid", nativeQuery = true)
 	public Integer getProjectDeviceCountsByProjectid(@Param("projectid") Integer projectid);
 
 	/*
@@ -427,7 +444,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.projectid = :projectid AND c.groupid = :groupid", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.projectid = :projectid AND c.groupid = :groupid", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchDevicesByProjectidAndGroupid(@Param("projectid") Integer projectid, @Param("groupid") Integer groupid);
 
 	/*
@@ -435,7 +452,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.groupid = :groupid", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.groupid = :groupid", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchDevicesByGroupid(@Param("groupid") Integer groupid);
 
 	/*
@@ -443,7 +460,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT COUNT(c) FROM cloud_device c WHERE c.projectid = :projectid AND c.groupid = :groupid", nativeQuery = true)
+	@Query(value = "SELECT COUNT(c) FROM cloud_device c WHERE c.deleteflag = 0 AND c.projectid = :projectid AND c.groupid = :groupid", nativeQuery = true)
 	public Integer getGroupDeviceCountsByProjectidAndGroupid(@Param("projectid") Integer projectid, @Param("groupid") Integer groupid);
 
 	/*
@@ -451,7 +468,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.userid IN :userids ORDER BY c.productid,c.imei", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.userid IN :userids ORDER BY c.productid,c.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchUnderCompanyDevicesByUseridIn(@Param("userids") List<Integer> userids);
 
 	/*
@@ -463,7 +480,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 			+ "FROM cloud_device d "
 			+ "INNER JOIN cloud_product pd ON d.productId = pd.productId "
 			+ "INNER JOIN cloud_producttype pt ON pd.productTypeId = pt.productTypeId "
-			+ "WHERE pt.productTypeName = :producttype "
+			+ "WHERE c.deleteflag = 0 AND pt.productTypeName = :producttype "
 			+ "AND d.userid IN :userids "
 			+ "ORDER BY d.productid,d.imei", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchUnderCompanyDevicesByProducttypeAndUseridIn( @Param("producttype") String producttype, @Param("userids") List<Integer> userids);
@@ -473,6 +490,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.imei IN :imei ", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchDevicesByImeiIn(@Param("imei") List<String> imei);
 
 	/*
@@ -480,6 +498,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.sn IN :sn ", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchDeviceBySnIn(@Param("sn") List<String> sn);
 
 	/*
@@ -487,7 +506,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.sim_imsi IN :sim_imsi ", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.sim_imsi IN :sim_imsi ", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchDeviceBySim_imsiIn(@Param("sim_imsi") List<String> sim_imsi);
 
 	/*
@@ -495,7 +514,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.sim_iccid IN :sim_iccid ", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.sim_iccid IN :sim_iccid ", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchDeviceBySim_iccidIn(@Param("sim_iccid") List<String> sim_iccid);
 
 	/*
@@ -503,7 +522,7 @@ public interface  Cloud_deviceRepository extends CrudRepository<Cloud_deviceEnti
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.sim_tel IN :sim_tel ", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_device c WHERE c.deleteflag = 0 AND c.sim_tel IN :sim_tel ", nativeQuery = true)
 	public List<Cloud_deviceEntity> searchDeviceBySim_telIn(@Param("sim_tel") List<String> sim_tel);
 
 }

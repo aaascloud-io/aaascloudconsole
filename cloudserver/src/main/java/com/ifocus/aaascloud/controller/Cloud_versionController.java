@@ -382,7 +382,7 @@ public class Cloud_versionController {
 
 		}
 		try {
-			 cloud_versionService.deleteVersion(model.getRowid());
+			 cloud_versionService.deleteVersion(model.getLoginInfo(),model.getRowid());
 
 			/* 正常系 */
 			response.setStatus(200);
@@ -434,7 +434,7 @@ public class Cloud_versionController {
 
 		}
 		try {
-			 cloud_versionService.deleteVersions(model.getRowidlist());
+			 cloud_versionService.deleteVersions(model.getLoginInfo(),model.getRowidlist());
 
 			/* 正常系 */
 			response.setStatus(200);

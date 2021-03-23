@@ -39,6 +39,7 @@ public class Cloud_userModel extends UserModel {
 	private Integer role;
 	private Integer upperuserid;
 	private Integer alive;
+	private Integer deleteflag;
 	private Integer i_uid;
 	private Timestamp i_time;
 	private Integer u_uid;

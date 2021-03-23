@@ -57,6 +57,9 @@ public class Cloud_errlogEntity {
 	private Integer alive;
 	@Getter
 	@Setter
+	private Integer deleteflag;
+	@Getter
+	@Setter
 	@Column(updatable = false)
 	private Integer i_uid;
 	@Getter

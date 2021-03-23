@@ -25,6 +25,7 @@ public class Cloud_versionEntity {
 	private String downloadurl;
 	private String description;
 	private Integer alive;
+	private Integer deleteflag;
 	@Column(updatable = false)
 	private Integer i_uid;
 	@Column(updatable = false)

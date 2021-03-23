@@ -22,6 +22,7 @@ public class Cloud_errresumeModel {
 	private String statusflagafterInStr;	// 画面表示用項目(後)
 	private String contents;
 	private Integer alive;
+	private Integer deleteflag;
 	private Integer i_uid;
 	private Timestamp i_time;
 

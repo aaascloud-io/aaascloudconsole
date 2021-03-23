@@ -7,11 +7,15 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
+import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_deviceRepository;
 import com.ifocus.aaascloud.entity.Cloud_groupEntity;
@@ -241,7 +245,9 @@ public class Cloud_projectService {
 	 */
 	public Integer registerProject(Cloud_projectDetailModel model) throws Exception {
 
-
+		// 削除済行を物理削除する
+		cloud_projectRepository.deleteProjectMarked(model.getLoginInfo().getLoginuserid(),model.getProjectname(),model.getProductid());
+		
 		////////////////////////////////////////////////////////
 		// プロジェクト登録
 		////////////////////////////////////////////////////////
@@ -310,6 +316,7 @@ public class Cloud_projectService {
 			for (Cloud_deviceEntity entity:entityList) {
 				// プロジェクトIDを設定する
 				entity.setProjectid(model.getProjectid());
+				entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 				entity.setU_uid(model.getLoginInfo().getLoginuserid());
 				entity.setU_time(systemTime);
 			}
@@ -409,10 +416,18 @@ public class Cloud_projectService {
 		cloud_groupService.deleteGroupsForProject(model);
 
 		////////////////////////////////////////////////////////
-		// プロジェクト削除
-		////////////////////////////////////////////////////////
-		if (cloud_projectRepository.existsById(model.getProjectid())) {
-			cloud_projectRepository.deleteById(model.getProjectid());
+		// プロジェクト削除	
+		Optional<Cloud_projectEntity> project = cloud_projectRepository.findById(model.getProjectid());
+		if (project != null && project.isPresent()) {
+
+			Cloud_projectEntity entity = project.get();
+
+			// プロジェクト論理削除
+			entity.setDeleteflag(DeleteFlagConstant.DELETED);
+			entity.setU_uid(model.getLoginInfo().getLoginuserid());
+			entity.setU_time(new Timestamp(System.currentTimeMillis()));
+			// DB更新
+			cloud_projectRepository.save(entity);
 		}
 		return ;
 
@@ -455,6 +470,7 @@ public class Cloud_projectService {
 		entity.setProductid(model.getProductid());
 		entity.setProjectsummary(model.getProjectsummary());
 		entity.setAlive(AliveConstant.ALIVE);
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());

@@ -146,7 +146,7 @@ export class DeviceComponent implements OnInit {
   Init() {
       var param = {};
       this.getDropdownList();
-      this.httpService.usePost('/getUnderUserDevices',param).then(item => {
+      this.httpService.usePost('/searchUnderUserDevices',param).then(item => {
         try {
           if (item != null) {
             this.pageModel.deviceList = item;
@@ -297,7 +297,7 @@ export class DeviceComponent implements OnInit {
             if (item.resultCode == "0000") {
               // $("#addinfo").hide();
               // $('.modal-backdrop').remove();
-        this.showAlert("error", "デバイス情報を登録しました");
+        this.showAlert("info", "デバイス情報を登録しました");
 
               if (addDeviceForm.valid === true) {
                 addDeviceForm.reset();
@@ -344,12 +344,14 @@ export class DeviceComponent implements OnInit {
       return;
     }
     //tel number 位数チェック　 value, name, templateForm: ElementRef
-    if (this.selectedDevice['sim_tel'].length > 0 && this.selectedDevice['sim_tel'].length < 10) {
-      this.showAlert("error", "SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
-
-      this.setFocus('simtel', editForm)
-      return;
+    if(this.selectedDevice['sim_tel']!==null){
+      if (this.selectedDevice['sim_tel'].length > 0 && this.selectedDevice['sim_tel'].length < 10) {
+        this.showAlert("error", "SIMカード電話番号：ハイフンなしの10桁または11桁の半角数字で入力してください");
+        this.setFocus('simtel', editForm)
+        return;
+      }
     }
+
       this.pageModel.deviceDetailEdit.deviceid = deviceid
       this.pageModel.deviceDetailEdit.devicename = this.selectedDevice['devicename'];
       this.pageModel.deviceDetailEdit.sim_iccid = this.selectedDevice['sim_iccid'];
@@ -373,7 +375,7 @@ export class DeviceComponent implements OnInit {
             this.Init();
             // $("#addinfo").hide();
             // $('.modal-backdrop').remove();
-            this.showAlert("error", "デバイス情報を改修しました");
+            this.showAlert("info", "デバイス情報を改修しました");
 
             if (editDeviceForm.valid === true) {
               editDeviceForm.reset();
@@ -471,7 +473,7 @@ export class DeviceComponent implements OnInit {
               // $("#addinfo").hide();
               // $('.modal-backdrop').remove();
 
-          this.showAlert("error", " デバイスを削除しました");
+          this.showAlert("info", " デバイスを削除しました");
 
             } else {
 
@@ -522,7 +524,7 @@ export class DeviceComponent implements OnInit {
         this.httpService.useRpDelete('deleteDevices', param).then(item => {
           try {
             if (item.resultCode == "0000") {
-      this.showAlert("error", " 選択したデバイスを削除しました。");
+      this.showAlert("info", " 選択したデバイスを削除しました。");
 
               this.Init();
             } else {

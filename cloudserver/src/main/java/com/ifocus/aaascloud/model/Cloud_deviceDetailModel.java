@@ -40,4 +40,5 @@ public class Cloud_deviceDetailModel {
 	private Integer lastprojectId;
 	private Integer lastgroupid;
 	private Integer alive;
+	private Integer deleteflag;
 }

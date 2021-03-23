@@ -12,11 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.AliveConstant;
+import com.ifocus.aaascloud.constant.DeleteFlagConstant;
+import com.ifocus.aaascloud.entity.Cloud_companyEntity;
+import com.ifocus.aaascloud.entity.Cloud_deviceEntity;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.entity.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_versionEntity;
 import com.ifocus.aaascloud.entity.Cloud_versionRepository;
 import com.ifocus.aaascloud.model.Cloud_versionModel;
+import com.ifocus.aaascloud.model.LoginInfo;
+import com.ifocus.aaascloud.util.Util;
 
 @SpringBootApplication
 @RestController
@@ -80,6 +85,8 @@ public class Cloud_versionService {
 	 *
 	 */
 	public Cloud_versionModel registerVersion(Cloud_versionModel model) throws Exception {
+		// 削除済行を物理削除する
+		cloud_versionRepository.deleteVersionMarked(model.getProductid(),model.getVersioncode(),model.getVersionname());
 		Cloud_versionEntity insertedEntity = cloud_versionRepository.save(getEntitByModel(model));
 		return getCloud_versionModel(insertedEntity);
 
@@ -102,8 +109,18 @@ public class Cloud_versionService {
 	 * @param entity Cloud_versionEntity バージョンEntity
 	 *
 	 */
-	public void deleteVersion(Integer versionId) throws Exception {
-		cloud_versionRepository.deleteById(versionId);
+	public void deleteVersion(LoginInfo loginInfo,Integer versionId) throws Exception {
+//		cloud_versionRepository.deleteById(versionId);
+		Optional<Cloud_versionEntity> value = cloud_versionRepository.findById(versionId);
+		Cloud_versionEntity getEntity = value.get();
+		if (getEntity != null ) {
+			getEntity.setDeleteflag(DeleteFlagConstant.DELETED);
+			getEntity.setU_uid(loginInfo.getLoginuserid());
+			getEntity.setU_time(new Timestamp(System.currentTimeMillis()));
+		}
+		
+	    cloud_versionRepository.save(getEntity);
+		return ;	
 	}
 
 	/*
@@ -111,9 +128,14 @@ public class Cloud_versionService {
 	 * @param versionId List<Integer> バージョンIDリスト
 	 *
 	 */
-	public void deleteVersions(List<Integer> versionIdList) throws Exception {
-		for (Integer versionId:versionIdList) {
-			cloud_versionRepository.deleteById(versionId);
+	public void deleteVersions(LoginInfo loginInfo,List<Integer> versionIdList) throws Exception {	
+		if (versionIdList != null ) {
+			for (Integer deviceid:versionIdList) {
+				////////////////////////////////////////////////////////
+				// バージョン削除
+				////////////////////////////////////////////////////////
+				deleteVersion(loginInfo,deviceid);
+			}
 		}
 	}
 
@@ -176,6 +198,7 @@ public class Cloud_versionService {
 		entity.setDownloadurl(model.getDownloadurl());
 		entity.setDescription(model.getDescription());
 		entity.setAlive(AliveConstant.ALIVE);
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setI_uid(model.getLoginInfo().getLoginuserid());
 		entity.setI_time(systemTime);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
@@ -205,6 +228,7 @@ public class Cloud_versionService {
 		entity.setVersionname(model.getVersionname());
 		entity.setDownloadurl(model.getDownloadurl());
 		entity.setDescription(model.getDescription());
+		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
 
