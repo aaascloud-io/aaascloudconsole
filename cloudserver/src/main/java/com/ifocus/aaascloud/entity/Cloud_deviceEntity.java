@@ -64,9 +64,9 @@ public class Cloud_deviceEntity implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "project")
 	private Cloud_projectEntity project;
-	@ManyToOne
-	@JoinColumn(name = "company")
-	private Cloud_companyEntity company;
+//	@ManyToOne
+//	@JoinColumn(name = "company")
+//	private Cloud_companyEntity company;
 	@ManyToOne
 	@JoinColumn(name = "groupentity")
 	private Cloud_groupEntity groupentity;

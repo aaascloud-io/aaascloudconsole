@@ -39,7 +39,7 @@ public class Cloud_productEntity {
 	private Timestamp u_time;
 	@OneToMany(mappedBy = "product")
 	private List<Cloud_deviceEntity> devicedetailList;
-	@OneToMany(mappedBy = "projects")
-	private List<Cloud_projectEntity> projects;
+//	@OneToMany(mappedBy = "projects")
+//	private List<Cloud_projectEntity> projects;
 
 }

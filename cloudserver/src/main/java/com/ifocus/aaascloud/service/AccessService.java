@@ -103,7 +103,8 @@ public class AccessService {
 	public List<Integer> getAccessUsers(Integer userid) throws Exception {
 		List<Integer> returnList = new ArrayList<Integer>();
 		returnList.add(userid);
-		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
+//		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
+		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuseridDelete(userid);
 		if (list.isEmpty()) {
 			return returnList;
 		} else {

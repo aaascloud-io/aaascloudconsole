@@ -51,6 +51,14 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	 */
 	@Query(value = "SELECT c.* FROM cloud_user c WHERE c.deleteflag = 0 AND c.upperuserid = :upperuserid", nativeQuery = true)
 	public List<Cloud_userEntity> getUsersByUpperuserid(@Param("upperuserid") Integer upperuserid);
+	
+	/*
+	 * ユーザ一覧(削除ユーザも)
+	 *
+	 *
+	 */
+	@Query(value = "SELECT c.* FROM cloud_user c WHERE c.upperuserid = :upperuserid", nativeQuery = true)
+	public List<Cloud_userEntity> getUsersByUpperuseridDelete(@Param("upperuserid") Integer upperuserid);
 
 	/*
 	 * 配下ユーザの会社ID一覧取得

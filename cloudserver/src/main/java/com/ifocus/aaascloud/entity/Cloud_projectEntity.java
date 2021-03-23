@@ -59,10 +59,10 @@ public class Cloud_projectEntity {
 	@Setter
 	@OneToMany(mappedBy = "project")
 	private List<Cloud_deviceEntity> devicedetailList;
-	@Getter
-	@Setter
-	@ManyToOne
-	@JoinColumn(name = "projects")
-	private Cloud_productEntity projects;
+//	@Getter
+//	@Setter
+//	@ManyToOne
+//	@JoinColumn(name = "projects")
+//	private Cloud_productEntity projects;
 
 }

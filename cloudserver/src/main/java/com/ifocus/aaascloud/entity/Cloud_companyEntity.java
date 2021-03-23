@@ -65,9 +65,9 @@ public class Cloud_companyEntity {
 	@Getter
 	@Setter
 	private Timestamp u_time;
-	@Getter
-	@Setter
-	@OneToMany(mappedBy = "company")
-	private List<Cloud_deviceEntity> devicedetailList;
+//	@Getter
+//	@Setter
+//	@OneToMany(mappedBy = "company")
+//	private List<Cloud_deviceEntity> devicedetailList;
 
 }

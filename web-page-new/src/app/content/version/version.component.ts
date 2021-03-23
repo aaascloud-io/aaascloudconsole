@@ -165,7 +165,6 @@ export class VersionComponent implements OnInit {
           this.dataCount = item.length;
           this.rows = [...this.rows];
           this.getTabledata();
-          this.getProductNameList();
           console.log("rows");
           console.log(this.rows);
         }
@@ -173,6 +172,8 @@ export class VersionComponent implements OnInit {
         console.log('デバイスを検索APIエラー発生しました。');
       }
     })
+
+    this.getProductNameList();
     // var res = await this.httpService.post("/getAllVersions",param);
     // let jsonItem = typeof res.data == 'string' ? JSON.parse(res.data) : res.data;
     // jsonItem.forEach(element => {
