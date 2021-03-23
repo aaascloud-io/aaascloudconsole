@@ -104,6 +104,13 @@ public class Cloud_projectService {
 			model.setProjectid(s.getProjectid());
 			model.setProjectname(s.getProjectname());
 			model.setUserid(s.getUserid());
+			// ユーザフルネーム
+			if (s.getUserid() != null) {
+				Optional<Cloud_userEntity>  user = cloud_userRepository.findById(s.getUserid());
+				if (user.isPresent()) {
+					model.setUsername(user.get().getLastname() + " " + user.get().getFirstname());
+				}
+			}
 			model.setProductid(s.getProductid());
 			model.setProjectsummary(s.getProjectsummary());
 			/* 管理者情報取得 */
@@ -145,6 +152,13 @@ public class Cloud_projectService {
 			model.setProjectid(s.getProjectid());
 			model.setProjectname(s.getProjectname());
 			model.setUserid(s.getUserid());
+			// ユーザフルネーム
+			if (s.getUserid() != null) {
+				Optional<Cloud_userEntity>  user = cloud_userRepository.findById(s.getUserid());
+				if (user.isPresent()) {
+					model.setUsername(user.get().getLastname() + " " + user.get().getFirstname());
+				}
+			}
 			model.setProductid(s.getProductid());
 			model.setProjectsummary(s.getProjectsummary());
 			/* プロダクト情報取得 */

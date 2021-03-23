@@ -101,6 +101,7 @@
                             <i *ngIf="valueSortFlg.productNameUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.productNameDown" class="la la-sort-down"></i>
                           </th>
+                          <th scope="col" class="thcolor" >所有者</th>
                           <th scope="col" class="thcolor" >説明</th>
                           <th scope="col" class="thcolor" (click)="sortData('groupCounts')">グループ
                             <i *ngIf="valueSortFlg.groupCountsUp" class="la la-sort-up"></i>
@@ -130,6 +131,7 @@
                           </td>
                           <td nowrap>{{ element.projectname }}</td>
                           <td nowrap>{{ element.productname }}</td>
+                          <td nowrap>{{ element.username }}</td>
                           <td nowrap>{{ element.projectsummary }}</td>
                           <td nowrap>{{ element.groupCounts}}</td>
                           <td nowrap>
