@@ -163,7 +163,7 @@ export class VersionComponent implements OnInit {
             this.rows.push(element);
           });
           this.dataCount = item.length;
-          this.rows = [...this.rows];
+          // this.rows = [...this.rows];
           this.getTabledata();
           console.log("rows");
           console.log(this.rows);
@@ -184,6 +184,7 @@ export class VersionComponent implements OnInit {
     // this.getProductNameList();
     // console.log("rows");
     // console.log(this.rows);
+    // this.sortData("productname");
   }
 
 
@@ -265,7 +266,7 @@ export class VersionComponent implements OnInit {
         jsonItem.forEach(element => {
           this.rows.push(element);
         });
-        this.rows = [...this.rows];
+        // this.rows = [...this.rows];
         this.getTabledata();
       });
     }

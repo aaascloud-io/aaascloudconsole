@@ -161,7 +161,7 @@ export class ProjectComponent implements OnInit {
           this.rows.push(element);
         });
         this.dataCount = item.length;
-        this.rows = [...this.rows];
+        // this.rows = [...this.rows];
         this.getTabledata();
         this.getProductNameList();
         console.log("rows 数据");
@@ -246,7 +246,7 @@ export class ProjectComponent implements OnInit {
         jsonItem.forEach(element => {
           this.rows.push(element);
         });
-        this.rows = [...this.rows];
+        // this.rows = [...this.rows];
         this.getTabledata();
       });
     }

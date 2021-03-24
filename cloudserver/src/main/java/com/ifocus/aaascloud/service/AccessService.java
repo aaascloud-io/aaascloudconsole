@@ -114,6 +114,20 @@ public class AccessService {
 			return returnList;
 		}
 	}
+	
+	public List<Integer> getNotDelAccessUsers(Integer userid) throws Exception {
+		List<Integer> returnList = new ArrayList<Integer>();
+		returnList.add(userid);
+		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
+		if (list.isEmpty()) {
+			return returnList;
+		} else {
+			for (Cloud_userEntity entity:list) {
+				returnList.addAll(getAccessUsers(entity.getUserid()));
+			}
+			return returnList;
+		}
+	}
 
 	/*
 	 * アクセス権限ユーザ一覧を取得する(本ユーザーと一層子ユーザー)
