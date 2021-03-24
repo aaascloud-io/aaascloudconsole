@@ -84,6 +84,7 @@ export class UserComponent implements OnInit {
   jsonUsers: any[] = [];
   selectedContact: any;
   addSelectedContact: any;
+  addSelectedCompanyUserContact: any;
   addCompanyName: any;
   contactFlag: boolean;
   addContact: any;
@@ -93,6 +94,7 @@ export class UserComponent implements OnInit {
   addCompanyModal = null;
   addMyModal = null;
   addProxyModal = null;
+  addProxyCompanyModal = null;
   updateModal = null;
   value: any;
   loadingIndicator: true;
@@ -140,6 +142,17 @@ export class UserComponent implements OnInit {
       },
     },
     addTargetUserInfo: {
+      username: '',
+      lastname: '',
+      firstname: '',
+      password: '',
+      newPassword: '',
+      role: null,
+      email: '',
+      companyid: null,
+      upperuserid: null,
+    },
+    addTargetCompanyUserInfo: {
       username: '',
       lastname: '',
       firstname: '',
@@ -246,371 +259,15 @@ export class UserComponent implements OnInit {
     this.companyId = item.company;
 
     this.cols = [
-      { field: 'userid', header: 'ユーザーID' },
-      { field: 'username', header: 'ユーザー名' },
+      // { field: 'userid', header: 'ユーザーID' },
+      // { field: 'username', header: 'ユーザー名' },
+      { field: 'lastname', header: '姓' },
+      { field: 'firstname', header: '名' },
       { field: 'companyName', header: '会社名' },
-      { field: 'role', header: '権限' },
+      { field: 'role', header: '管理権限' },
+      { field: 'userCount', header: 'ユーザー数' },
       { field: 'email', header: 'メール' },
-      { field: 'userfullname', header: '作成者' },
     ];
-
-    this.files = <TreeNode[]>[
-      {
-        "data": {
-          "companyName": "アイフォーカス",
-          "companyid": 1,
-          "email": "ifocus@ifocus",
-          "firstname": "wang",
-          "lastname": "wang",
-          "projectCount": 4,
-          "role": 1,
-          "upperuserid": 0,
-          "userCount": 7,
-          "userfullname": "wang wang",
-          "userid": 1,
-          "username": "wang",
-        },
-        "children": [
-          {
-            "data": {
-              "companyName": "アイフォーカス",
-              "companyid": 1,
-              "email": "ifocus@ifocus",
-              "firstname": "wang",
-              "lastname": "wang",
-              "projectCount": 4,
-              "role": 1,
-              "upperuserid": 0,
-              "userCount": 7,
-              "userfullname": "wang wang",
-              "userid": 1,
-              "username": "wang",
-            },
-            "children": [
-              {
-                "data": {
-                  "companyName": "アイフォーカス",
-                  "companyid": 1,
-                  "email": "ifocus@ifocus",
-                  "firstname": "wang",
-                  "lastname": "wang",
-                  "projectCount": 4,
-                  "role": 1,
-                  "upperuserid": 0,
-                  "userCount": 7,
-                  "userfullname": "wang wang",
-                  "userid": 1,
-                  "username": "wang",
-                }
-              },
-              {
-                "data": {
-                  "companyName": "アイフォーカス",
-                  "companyid": 1,
-                  "email": "ifocus@ifocus",
-                  "firstname": "wang",
-                  "lastname": "wang",
-                  "projectCount": 4,
-                  "role": 1,
-                  "upperuserid": 0,
-                  "userCount": 7,
-                  "userfullname": "wang wang",
-                  "userid": 1,
-                  "username": "wang",
-                }
-              },
-              {
-                "data": {
-                  "companyName": "アイフォーカス",
-                  "companyid": 1,
-                  "email": "ifocus@ifocus",
-                  "firstname": "wang",
-                  "lastname": "wang",
-                  "projectCount": 4,
-                  "role": 1,
-                  "upperuserid": 0,
-                  "userCount": 7,
-                  "userfullname": "wang wang",
-                  "userid": 1,
-                  "username": "wang",
-                }
-              }
-            ]
-          },
-          {
-            "data": {
-              "companyName": "アイフォーカス",
-              "companyid": 1,
-              "email": "ifocus@ifocus",
-              "firstname": "wang",
-              "lastname": "wang",
-              "projectCount": 4,
-              "role": 1,
-              "upperuserid": 0,
-              "userCount": 7,
-              "userfullname": "wang wang",
-              "userid": 1,
-              "username": "wang",
-            }
-          },
-          {
-            "data": {
-              "userid": "1",
-              "username": "王3",
-              "companyName": "王3会社",
-            }
-          }
-        ]
-      },
-      {
-        "data": {
-          "userid": "1",
-          "username": "i-focus2",
-          "companyName": "アイフォーカス２",
-        },
-        "children": [
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            }
-          },
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang1",
-              "companyName": "王1会社",
-            }
-          }
-        ]
-      },
-      {
-        "data": {
-          "userid": "1",
-          "username": "i-focus3",
-          "companyName": "アイフォーカス3",
-        },
-        "children": [
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            }
-          },
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            }
-          }
-        ]
-      },
-      {
-        "data": {
-          "userid": "1",
-          "username": "i-focus4",
-          "companyName": "アイフォーカス4",
-        },
-        "children": [
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            },
-            "children": [
-              {
-                "data": {
-                  "userid": "1",
-                  "username": "wang2",
-                  "companyName": "王2会社",
-                }
-              },
-              {
-                "data": {
-                  "userid": "1",
-                  "username": "wang3",
-                  "companyName": "王3会社",
-                }
-              }
-            ]
-          },
-          {
-            "data": {
-              "userid": "1",
-              "username": "i-focus4",
-              "companyName": "アイフォーカス２",
-            },
-            "children": [
-              {
-                "data": {
-                  "userid": "1",
-                  "username": "wang",
-                  "companyName": "王会社",
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "data": {
-          "userid": "1",
-          "username": "wang",
-          "companyName": "王会社",
-        },
-        "children": [
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            },
-            "children": [
-              {
-                "data": {
-                  "userid": "1",
-                  "username": "wang",
-                  "companyName": "王会社",
-                }
-              },
-              {
-                "data": {
-                  "userid": "1",
-                  "username": "wang",
-                  "companyName": "王会社",
-                }
-              }
-            ]
-          },
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            },
-            "children": [
-              {
-                "data": {
-                  "userid": "1",
-                  "username": "wang",
-                  "companyName": "王会社",
-                }
-              },
-              {
-                "data": {
-                  "userid": "1",
-                  "username": "wang",
-                  "companyName": "王会社",
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "data": {
-          "userid": "1",
-          "username": "wang",
-          "companyName": "王会社",
-        },
-        "children": [
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            }
-          },
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            }
-          },
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            }
-          }
-        ]
-      },
-      {
-        "data": {
-          "userid": "1",
-          "username": "wang",
-          "companyName": "王会社",
-        },
-        "children": [
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            }
-          },
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            }
-          }
-        ]
-      },
-      {
-        "data": {
-          "userid": "1",
-          "username": "wang",
-          "companyName": "王会社",
-        },
-        "children": [
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            }
-          },
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            },
-          }
-        ],
-      },
-      {
-        "data": {
-          "userid": "1",
-          "username": "wang",
-          "companyName": "王会社",
-        },
-        "children": [
-          {
-            "data": {
-              "userid": "1",
-              "username": "wang",
-              "companyName": "王会社",
-            }
-          },
-          {
-            "data": {
-              "name": "intro.avi",
-              "size": "500mb",
-              "type": "Video"
-            }
-          }
-        ]
-      }
-    ]
 
     this.addUserInfo = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -651,7 +308,7 @@ export class UserComponent implements OnInit {
     this.addCompanyModal = this.modal.open(addNewCompanyModalContent, {
       windowClass: 'animated fadeInDown'
     });
-    this.pageModel.addTargetUserInfo.newCompanyInfo.mail = this.pageModel.addTargetUserInfo.username;
+    this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.mail = this.pageModel.addTargetCompanyUserInfo.username;
     this.contactFlag = true;
   }
 
@@ -683,19 +340,33 @@ export class UserComponent implements OnInit {
   }
 
   /**
-     * 代理店の新規ユーザーを呼び出し
+     * 請求者会社ユーザー新規を呼び出し
      *
      * @param editTableDataModalContent     Id of the edit contact model.
      * @param row     The row which needs to be edited.
      */
   addRowTableDataModal(addTableNewDataModalContent, row) {
     this.addSelectedContact = Object.assign({}, row);
-    this.addCompanyName = row.companyName;
     this.addProxyModal = this.modal.open(addTableNewDataModalContent, {
       windowClass: 'animated fadeInDown '
     });
     this.contactFlag = false;
   }
+
+  /**
+   * 請求者会社配下ユーザー新規を呼び出し
+   *
+   * @param editTableDataModalContent     Id of the edit contact model.
+   * @param row     The row which needs to be edited.
+   */
+  addNewCompanyUserModal(addNewCompanyUserModal, row) {
+    this.addSelectedCompanyUserContact = Object.assign({}, row);
+    this.addProxyCompanyModal = this.modal.open(addNewCompanyUserModal, {
+      windowClass: 'animated fadeInDown '
+    });
+    this.contactFlag = false;
+  }
+
 
   /**
    * Selected contact
@@ -741,6 +412,12 @@ export class UserComponent implements OnInit {
    * @param row     Selected row for delete contact
    */
   deleteRow(row) {
+
+    // 配下ユーザーがある場合、削除不可
+    if (row.userCount > 1) {
+      this.showAlert("warn", "配下のユーザーが存在している場合、削除不可です。");
+      return
+    }
 
     this.confirmationService.confirm({
       message: row.username + "を削除します。よろしいですか？",
@@ -838,6 +515,8 @@ export class UserComponent implements OnInit {
       "userid": this.selectedContact.userid,
       "role": this.selectedContact.role,
       "username": this.selectedContact.username,
+      "lastName": this.selectedContact.lastname,
+      "firstName": this.selectedContact.firstname,
       "companyid": this.pageModel.updataUserInfo.companyid,
       "corporatenumber": this.pageModel.updataUserInfo.corporatenumber,
       "companyname": this.pageModel.updataUserInfo.companyname,
@@ -857,7 +536,7 @@ export class UserComponent implements OnInit {
           console.log(item);
           this.ngOnInit();
           this.getResultMs(item);
-          alert('更新成功です。');
+          this.showAlert("success", "ユーザーを更新しました。");
           if (editUpdateForm.valid === true) {
             editUpdateForm.reset();
             this.updateModal.close(editUpdateForm.resetForm);
@@ -866,10 +545,10 @@ export class UserComponent implements OnInit {
           // this.editModal(editUpdateForm.resetForm);
         } else {
           this.getResultMs(item);
-          alert('ユーザー情報は更新失敗です。');
+          this.showAlert("error", "更新失敗、ご確認してください。");
         }
       } catch (e) {
-        alert('ユーザー情報は更新失敗です。');
+        this.showAlert("error", e);
       }
     });
   }
@@ -937,18 +616,19 @@ export class UserComponent implements OnInit {
         "username": username,
         "password": password,
         "newPassword": newPassword,
-        "lastname": lastname,
-        "firstname": firstname,
+        "lastName": lastname,
+        "firstName": firstname,
         "role": role,
+        "email": username,
         "upperuserid": upperuserid,
         "companyid": companyid,
       }
-      // this.registerUser(query, addForm);
+      this.registerUser(query, addForm);
     }
   }
 
   /**
-   * ユーザー新規登録（代理会社のユーザー新規・自社）
+   * 代理会の本社ユーザーを新規する
    *
    * @param 
    */
@@ -958,34 +638,10 @@ export class UserComponent implements OnInit {
     var newPassword = this.pageModel.addTargetUserInfo.newPassword;
     var lastname = this.pageModel.addTargetUserInfo.lastname;
     var firstname = this.pageModel.addTargetUserInfo.firstname;
-    var role = this.pageModel.addTargetUserInfo.role;
-
-    // 請求者（会社管理者）
-    if (this.addSelectedContact === 0) {
-
-      // 請求者（管理者）  
-    } else if (this.addSelectedContact === 1) {
-
-      // 請求者（使用者）  
-    } else {
-
-    }
-    var upperuserid = "請求者会社の会社管理者";
-    var companyname = this.pageModel.addTargetUserInfo.newCompanyInfo.companyname;
-    var corporatenumber = this.pageModel.addTargetUserInfo.newCompanyInfo.corporatenumber;
-    //　新規会社の場合（子会社の会社管理者の新規）
-    if (companyname && corporatenumber) {
-      upperuserid = this.addSelectedContact.userid;
-      role = 0;
-    }
-
+    var email = this.pageModel.addTargetUserInfo.username;
+    var role = this.pageModel.addTargetUserInfo.role; // 会社管理者
+    var upperuserid = this.addSelectedContact.userid;
     var companyid = this.addSelectedContact.companyid;
-    var loginrole = this.addSelectedContact.role;
-
-    // 会社管理者の場合
-    if (loginrole === 0) {
-      upperuserid = this.pageModel.loginUser.loginuserid;
-    }
 
     var flg = true;
 
@@ -1029,17 +685,102 @@ export class UserComponent implements OnInit {
         "username": username,
         "password": password,
         "newPassword": newPassword,
-        "lastname": lastname,
-        "firstname": firstname,
+        "lastName": lastname,
+        "firstName": firstname,
+        "email": email,
         "role": role,
         "upperuserid": upperuserid,
         "companyid": companyid,
       }
-      // this.registerUser(query, addForm);
+      this.registerUser(query, addForm);
     }
-    // addForm.reset();
-    // this.addModal.close(addForm.resetForm);
+  }
 
+  /**
+   * 代理会の配下のユーザーを新規する
+   *
+   * @param 
+   */
+  addTargetCompanyUserDate(addForm: NgForm) {
+    var username = this.pageModel.addTargetCompanyUserInfo.username;
+    var password = this.pageModel.addTargetCompanyUserInfo.password;
+    var newPassword = this.pageModel.addTargetCompanyUserInfo.newPassword;
+    var lastname = this.pageModel.addTargetCompanyUserInfo.lastname;
+    var firstname = this.pageModel.addTargetCompanyUserInfo.firstname;
+    var email = this.pageModel.addTargetCompanyUserInfo.username;
+    var role = 0; // 会社管理者
+    var upperuserid = this.addSelectedCompanyUserContact.userid;
+
+    var companyname = this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.companyname;
+    var corporatenumber = this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.corporatenumber;
+    var fax = this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.fax;
+    var CompanyEmail = this.pageModel.addTargetCompanyUserInfo.username;
+    var tel = this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.tel;
+    var address = this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.address;
+    var industry = this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.industry;
+
+    var flg = true;
+
+    if (flg && !username) {
+      this.showAlert("warn", "ログインID（メール）を入力してください。");
+      flg = false;
+    }
+
+    if (flg && !password) {
+      this.showAlert("warn", "パスワードを入力してください。");
+      flg = false;
+    }
+
+    if (flg && !newPassword) {
+      this.showAlert("warn", "確認パスワードを入力してください。");
+      flg = false;
+    }
+
+    if (flg && !lastname) {
+      this.showAlert("warn", "姓を入力してください。");
+      flg = false;
+    }
+
+    if (flg && !firstname) {
+      this.showAlert("warn", "名を入力してください。");
+      flg = false;
+    }
+
+    if (flg && !companyname) {
+      this.showAlert("warn", "新規会社の会社名を入力してください。");
+      flg = false;
+    }
+
+    if (flg && !corporatenumber) {
+      this.showAlert("warn", "新規会社の法人番号を入力してください。");
+      flg = false;
+    }
+
+    if (flg && password !== newPassword) {
+      this.showAlert("warn", "新規パスワードと確認パスワードは不一致です。");
+      flg = false;
+    }
+
+    if (flg) {
+      var query = {
+        "username": username,
+        "password": password,
+        "newPassword": newPassword,
+        "lastName": lastname,
+        "firstName": firstname,
+        "email": email,
+        "role": role,
+        "upperuserid": upperuserid,
+        "companyname": companyname,
+        "corporatenumber": corporatenumber,
+        "fax": fax,
+        "mail": CompanyEmail,
+        "tel": tel,
+        "address": address,
+        "industry": industry,
+      }
+      this.registerUser(query, addForm);
+    }
   }
 
   /**
@@ -1047,8 +788,8 @@ export class UserComponent implements OnInit {
    * 
    */
   addNewCompany(addForm: NgForm) {
-    var companyname = this.pageModel.addTargetUserInfo.newCompanyInfo.companyname;
-    var corporatenumber = this.pageModel.addTargetUserInfo.newCompanyInfo.corporatenumber;
+    var companyname = this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.companyname;
+    var corporatenumber = this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.corporatenumber;
     var flg = true;
 
     if (flg && !companyname) {
@@ -1062,9 +803,9 @@ export class UserComponent implements OnInit {
     }
 
     if (flg) {
-      this.addCompanyName = this.pageModel.addTargetUserInfo.newCompanyInfo.companyname;
+      this.addCompanyName = this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.companyname;
       this.confirmationService.confirm({
-        message: "新規会社：" + this.pageModel.addTargetUserInfo.newCompanyInfo.companyname + "保存しますか",
+        message: "新規会社：" + this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.companyname + "の情報を保存しますか",
         header: "会社情報保存確認",
         accept: () => {
           let routeif: RouteIdIF = this.dataFatoryService.getRouteIdIF();
@@ -1072,30 +813,9 @@ export class UserComponent implements OnInit {
             this.showAlert("success", "会社情報が保存されました。");
             // addForm.reset();
             this.addCompanyModal.close(addForm.resetForm);
-            this.addProxyModal.refresh();
           }
         }
       });
-
-      // var query = {
-      //   "loginInfo": this.pageModel.userInfoParame.loginInfo,
-      //   "targetUserInfo": {
-      //     "targetuserid": this.pageModel.loginUser.loginuserid,
-      //   },
-
-      //   "username": this.pageModel.adduserInfo.username,
-      //   "upperuserid": this.pageModel.loginUser.loginuserid,
-      //   "corporatenumber": this.pageModel.adduserInfo.newCompanyInfo.corporatenumber,
-      //   "role": this.pageModel.adduserInfo.role,
-      //   "companyname": this.pageModel.adduserInfo.newCompanyInfo.companyname,
-      //   "address": this.pageModel.adduserInfo.newCompanyInfo.address,
-      //   "industry": this.pageModel.adduserInfo.newCompanyInfo.industry,
-      //   "mail": this.pageModel.adduserInfo.newCompanyInfo.mail,
-      //   "tel": this.pageModel.adduserInfo.newCompanyInfo.tel,
-      //   "fax": this.pageModel.adduserInfo.newCompanyInfo.fax,
-      // };
-
-      // this.registerUser(query, addForm);
     }
   }
 
@@ -1109,18 +829,24 @@ export class UserComponent implements OnInit {
       try {
         if (item.resultCode === "0000") {
           this.ngOnInit();
-          alert('ユーザー情報は登録成功です。');
+          this.showAlert("success", "ユーザーを登録しました。");
           if (addForm.valid === true) {
             addForm.reset();
-            this.addModal.close(addForm.resetForm);
+            if (this.addProxyModal) {
+              this.addProxyModal.close(addForm.resetForm);
+            }
+            if (this.addModal) {
+              this.addModal.close(addForm.resetForm);
+            }
+            if (this.addProxyCompanyModal) {
+              this.addProxyCompanyModal.close(addForm.resetForm);
+            }
           }
-        } else if (item.resultCode === "0013") {
-          alert('管理者を追加するには、上位会社に依頼してください。');
         } else {
-          alert('登録失敗です。');
+          this.showAlert("error", "登録失敗、ご確認してください。");
         }
       } catch (e) {
-        console.log('登録失敗です。');
+        this.showAlert("error", e);
       }
     });
   }
@@ -1135,18 +861,16 @@ export class UserComponent implements OnInit {
       try {
         if (item.resultCode === "0000") {
           this.ngOnInit();
-          alert('ユーザー情報は登録成功です。');
+          this.showAlert("success", "ユーザーを登録しました。");
           if (addForm.valid === true) {
             addForm.reset();
             this.addModal.close(addForm.resetForm);
           }
-        } else if (item.resultCode === "0013") {
-          alert('管理者を追加するには、上位会社に依頼してください。');
         } else {
-          alert('登録失敗です。');
+          this.showAlert("error", "登録失敗、ご確認してください。");
         }
       } catch (e) {
-        console.log('登録失敗です。');
+        this.showAlert("error", e);
       }
     });
   }
@@ -1554,9 +1278,13 @@ export class UserComponent implements OnInit {
       this.updateModal.close(openForm.resetForm);
     }
     if (this.addProxyModal != null) {
-      this.cliarCompanyInfo();
       openForm.reset();
       this.addProxyModal.close(openForm.resetForm);
+    }
+    if (this.addProxyCompanyModal != null) {
+      this.cliarCompanyInfo();
+      openForm.reset();
+      this.addProxyCompanyModal.close(openForm.resetForm);
     }
   }
 
@@ -1576,13 +1304,13 @@ export class UserComponent implements OnInit {
    * 新規会社情報のクリア
    */
   cliarCompanyInfo() {
-    this.pageModel.addTargetUserInfo.newCompanyInfo.corporatenumber = '';
-    this.pageModel.addTargetUserInfo.newCompanyInfo.companyname = '';
-    this.pageModel.addTargetUserInfo.newCompanyInfo.address = '';
-    this.pageModel.addTargetUserInfo.newCompanyInfo.industry = '';
-    this.pageModel.addTargetUserInfo.newCompanyInfo.tel = '';
-    this.pageModel.addTargetUserInfo.newCompanyInfo.mail = '';
-    this.pageModel.addTargetUserInfo.newCompanyInfo.fax = '';
+    this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.corporatenumber = '';
+    this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.companyname = '';
+    this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.address = '';
+    this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.industry = '';
+    this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.tel = '';
+    this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.mail = '';
+    this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.fax = '';
   }
 
   getResultMs(item) {
@@ -1607,10 +1335,14 @@ export class UserComponent implements OnInit {
    * @param role 
    */
   setRole(role) {
-    if (role) {
-      this.pageModel.addTargetUserInfo.role = 1;
-    } else {
-      this.pageModel.addTargetUserInfo.role = 2;
-    }
+    this.pageModel.addTargetUserInfo.role = role.defaultValue;
+  }
+
+  /**
+ * 
+ * @param role 
+ */
+  setMyUserRole(role) {
+    this.pageModel.adduserInfo.role = role.defaultValue;
   }
 }

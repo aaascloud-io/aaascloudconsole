@@ -3,7 +3,7 @@
     <div class="content-header row mb-1"></div>
     <div class="content-detached">
       <div class="content-body">
-        <div>
+        <!-- <div>
           <label for="switch">条件検索：</label>
           <input id="switch" name="switch" type="checkbox" [(ngModel)]="showSearch" />
         </div>
@@ -55,7 +55,7 @@
               </div>
             </div>
           </div>
-        </section>
+        </section> -->
         <div class="row">
           <div class="col-sm-12">
             <div class="card">
@@ -69,10 +69,10 @@
                         <i class="d-md-none d-block feather ft-plus white"></i>
                         <span class="d-md-block d-none">新　規</span></button>
                     </ng-container>
-                    <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
+                    <!-- <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
                       (click)="deleteCheckedRow()">
                       <i class="d-md-none d-block feather ft-plus white"></i>
-                      <span class="d-md-block d-none">削　除</span></button>
+                      <span class="d-md-block d-none">削　除</span></button> -->
                   </div>
                 </div>
               </div>
@@ -142,7 +142,7 @@
                       <!-- <th scope="col" class="thcolor"><input type="checkbox" [checked]="isAllChecked()"
                           (change)="checkAll($event)">
                       </th> -->
-                      <th></th>
+                      <!-- <th></th> -->
                       <th>
                         <a>操作</a>
                       </th>
@@ -164,20 +164,23 @@
                   </ng-template>
                   <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
                     <tr>
-                      <td>
+                      <!-- <td>
                         <input type="checkbox" [checked]="rowData.isSelected" (change)="checkChange($event,rowData)">
-                      </td>
+                      </td> -->
                       <td>
                         <a class="primary edit mr-1 mrless" title="編集"
                           (click)="editTableDataModal(editTableDataModalContent, rowData)"><i class="la la-pencil"></i>
                         </a>
                         <a class="danger delete mr-1 mrless" title="削除"><i class="la la-trash-o"
                             (click)="deleteRow(rowData)"></i></a>
-                        <a class="primary add mr-1 mrless" title="新規"
+                        <a class="primary add mr-1 mrless" title="請求者会社配下ユーザー新規"
+                          (click)="addNewCompanyUserModal(addNewCompanyUserModalContent, rowData)">
+                          <i class="feather ft-plus-square"></i></a>
+                        <a class="primary add mr-1 mrless" title="請求者会社ユーザー新規" *ngIf="rowData.role === 0"
                           (click)="addRowTableDataModal(addTableNewDataModalContent, rowData)">
-                          <i class="feather ft-plus"></i></a>
+                          <i class="feather ft-plus-circle"></i></a>
                       </td>
-                      <td *ngFor="let col of cols; let i = index">
+                      <td *ngFor="let col of cols; let i = index" nowrap>
                         <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
                         {{rowData[col.field]}}
                       </td>
@@ -231,25 +234,21 @@
         </div>
         <div class="form-group col-lg-3 col-md-12">
           <h6>姓<code>＊</code></h6>
-          <input type="text" [(ngModel)]="selectedContact.name" #editname="ngModel" name="name" id="name"
-            class="name form-control" placeholder="" maxlength="50">
+          <input type="text" [(ngModel)]="selectedContact.lastname" #editlastname="ngModel" name="lastname"
+            id="lastname" class="name form-control" placeholder="" maxlength="50">
         </div>
         <div class="form-group col-lg-3 col-md-12">
           <h6>名<code>＊</code></h6>
-          <input type="text" [(ngModel)]="selectedContact.name" #editname="ngModel" name="name" id="name"
-            class="name form-control" placeholder="" maxlength="50">
+          <input type="text" [(ngModel)]="selectedContact.firstname" #editfirstname="ngModel" name="firstname"
+            id="firstname" class="name form-control" placeholder="" maxlength="50">
         </div>
         <div class="form-group col-lg-6 col-md-12">
-          <h6>権限<code>＊</code></h6>
-          <!-- <select class="form-control" id="role" name="role" [(ngModel)]="selectedContact.role" #editrole="ngModel"
+          <h6>管理権限<code>＊</code></h6>
+          <select class="form-control" id="role" name="role" [(ngModel)]="selectedContact.role" #editrole="ngModel"
             class="name form-control">
             <option [value]=1>管理者</option>
             <option [value]=2>使用者</option>
-          </select> -->
-          <input type="checkbox">
-          <input type="checkbox">
-          <input type="checkbox">
-          <input type="checkbox">
+          </select>
         </div>
         <div class="form-group col-lg-6 col-md-12">
 
@@ -370,18 +369,18 @@
         </div>
         <div class="form-group col-lg-2 col-md-12"> </div>
         <div class="form-group col-lg-10 col-md-12">
-          <h6>権限<code>＊</code></h6>
+          <h6>管理権限<code>＊</code></h6>
           <div class="card-content">
             <div class="card-body">
               <div class="d-inline-block custom-control custom-radio mr-1">
-                <input type="radio" class="custom-control-input" name="colorRadio" id="radio4" #addRole
-                  (click)="setRole(addRole)">
-                <label class="custom-control-label" for="radio4">管理者</label>
+                <input type="radio" class="custom-control-input" name="userRadio" id="radio1" value=1 #addRole1
+                  (click)="setMyUserRole(addRole1)">
+                <label class="custom-control-label" for="radio1">管理者</label>
               </div>
               <div class="d-inline-block custom-control custom-radio mr-1">
-                <input type="radio" class="custom-control-input" name="colorRadio" id="radio3" #addRole1
-                  (click)="setRole(addRole1)">
-                <label class="custom-control-label" for="radio3">使用者</label>
+                <input type="radio" class="custom-control-input" name="userRadio" id="radio2" value=2 #addRole2
+                  (click)="setMyUserRole(addRole2)">
+                <label class="custom-control-label" for="radio2">使用者</label>
               </div>
             </div>
           </div>
@@ -404,10 +403,175 @@
   </form>
 </ng-template>
 
+<!-- 代理会社新規と会社管理者新規 -->
+<ng-template #addNewCompanyUserModalContent let-c="close" let-d="dismiss">
+  <form (ngSubmit)="addTargetCompanyUserDate(addTargetCompanyForm)" #addTargetCompanyForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">新規会社（会社管理者ユーザー）</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="form-group col-lg-12 col-md-12">
+          <h6>ログインID（メール）<code>＊</code></h6>
+          <input type="email" [(ngModel)]="pageModel.addTargetCompanyUserInfo.username" #addLoginid="ngModel"
+            name="loginid" id="loginid" class="name form-control" placeholder="メールアドレス" maxlength="50"
+            [ngClass]="{ 'is-invalid': addTargetCompanyForm.submitted && addLoginid.invalid }" required>
+          <div *ngIf="addTargetCompanyForm.submitted && addLoginid.invalid" class="invalid-feedback">
+            <div *ngIf="addLoginid.errors.required">ログインIDを入力してください</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+          <h6>パスワード<code>＊</code></h6>
+          <input type="password" [(ngModel)]="pageModel.addTargetCompanyUserInfo.password" #addpassword="ngModel"
+            name="password" id="password" class="name form-control" placeholder="" maxlength="50"
+            [ngClass]="{ 'is-invalid': addTargetCompanyForm.submitted && addpassword.invalid }" required>
+          <div *ngIf="addTargetCompanyForm.submitted && addpassword.invalid" class="invalid-feedback">
+            <div *ngIf="addpassword.errors.required">パスワードを入力してください</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+          <h6>確認パスワード<code>＊</code></h6>
+          <input type="password" [(ngModel)]="pageModel.addTargetCompanyUserInfo.newPassword" #addNewPassword="ngModel"
+            name="newPassword" id="newPassword" class="name form-control" placeholder="" maxlength="50"
+            [ngClass]="{ 'is-invalid': addTargetCompanyForm.submitted && addNewPassword.invalid }" required>
+          <div *ngIf="addTargetCompanyForm.submitted && addNewPassword.invalid" class="invalid-feedback">
+            <div *ngIf="addNewPassword.errors.required">確認パスワードを入力してください</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-5 col-md-12">
+          <h6>姓<code>＊</code></h6>
+          <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.lastname" #addLastname="ngModel"
+            name="lastname" id="lastname" class="name form-control" placeholder="" maxlength="50"
+            [ngClass]="{ 'is-invalid': addTargetCompanyForm.submitted && addLastname.invalid }" required>
+        </div>
+        <div *ngIf="addTargetCompanyForm.submitted && addLastname.invalid" class="invalid-feedback">
+          <div *ngIf="addLastname.errors.required">姓を入力してください</div>
+        </div>
+        <div class="form-group col-lg-5 col-md-12">
+          <h6>名<code>＊</code></h6>
+          <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.firstname" #addFirstname="ngModel"
+            name="firstname" id="firstname" class="name form-control" placeholder="" maxlength="50"
+            [ngClass]="{ 'is-invalid': addTargetCompanyForm.submitted && addFirstname.invalid }" required>
+          <div *ngIf="addTargetCompanyForm.submitted && addFirstname.invalid" class="invalid-feedback">
+            <div *ngIf="addFirstname.errors.required">名を入力してください</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+          <h6>管理権限</h6>
+          <div class="card-content">
+            <div class="d-inline-block custom-control custom-radio mr-1">
+              <label>会社管理者</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+          会社名：<input type="text" [(ngModel)]="addCompanyName" #addcompanyname="ngModel" name="companyName"
+            id="companyName" class="name form-control" placeholder="" maxlength="50" disabled>
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+          <button type="button" class="btn btn-primary" (click)="addCompanyDataModal(addNewCompanyModalContent)">
+            <i class="feather ft-plus"></i> 新規会社
+          </button><a style="color: blue;">（新規代理会社の場合、ご利用ください）</a>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="submit" class="btn btn-secondary cancel-btn mr-1" (click)="cancleModel(addTargetCompanyForm)">
+          <span class="d-sm-inline d-none">取消</span>
+        </button>
+      </div>
+      <div class="form-group position-relative has-icon-left mb-0">
+        <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<!-- 新規会社 -->
+<ng-template #addNewCompanyModalContent let-c="close" let-d="dismiss">
+  <form #addCompanyForm="ngForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">新規会社（代理）</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="form-group col-lg-6 col-md-12">
+          <h6 style="width: 410px;">会社名<code>＊</code></h6>
+          <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.newCompanyInfo.companyname"
+            #addCompanyName="ngModel" name="companyname" id="companyname" class="name form-control" placeholder="会社名"
+            [ngClass]="{ 'is-invalid': addCompanyForm.submitted && addCompanyName.invalid }" required>
+          <div *ngIf="addCompanyForm.submitted && addCompanyName.invalid" class="invalid-feedback">
+            <div *ngIf="addCompanyName.errors.required">会社名を入力してください</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>法人番号<code>＊</code></h6>
+          <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.newCompanyInfo.corporatenumber"
+            #addcorporatenumber="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
+            placeholder="法人番号" [ngClass]="{ 'is-invalid': addCompanyForm.submitted && addcorporatenumber.invalid }"
+            required>
+          <div *ngIf="addCompanyForm.submitted && addcorporatenumber.invalid" class="invalid-feedback" maxlength="13">
+            <div *ngIf="addcorporatenumber.errors.required">法人番号を入力してください</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+          <h6>住所</h6>
+          <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.newCompanyInfo.address" #editversion="ngModel"
+            name="address" id="address" class="name form-control" placeholder="住所" maxlength="100">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>業種</h6>
+          <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.newCompanyInfo.industry" #editversion="ngModel"
+            name="industry" id="industry" class="name form-control" placeholder="業種" maxlength="50">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>メール(ログインID)</h6>
+          <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.newCompanyInfo.mail" #editversion="ngModel"
+            name="mail" id="mail" class="name form-control" placeholder="メール" maxlength="50" disabled>
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>電話</h6>
+          <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.newCompanyInfo.tel" #editversion="ngModel"
+            name="tel" id="tel" class="name form-control" placeholder="電話" maxlength="13">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+          <h6>Fax</h6>
+          <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.newCompanyInfo.fax" #editversion="ngModel"
+            name="fax" id="fax" class="name form-control" placeholder="Fax" maxlength="13">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="form-group position-relative has-icon-left mb-0">
+          <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleCompanyModel(addCompanyForm)">
+            <!-- <i class='ficon feather ft-x mr-25'></i> -->
+            <span class="d-sm-inline d-none">取消</span>
+          </button>
+        </div>
+        <div class="form-group position-relative has-icon-right mb-0">
+          <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"
+            data-dismiss="modal"><span class="d-none d-lg-block" (click)="addNewCompany(addCompanyForm)"
+              aria-label="Close">保存</span></button>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<!-- 代理会の本社ユーザー新規 -->
 <ng-template #addTableNewDataModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="addTargetUserDate(addTargetForm)" #addTargetForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">新規ユーザー（代理）</h5>
+      <h5 class="modal-title" id="exampleModalLabel">代理会社ユーザー新規</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -460,38 +624,25 @@
           </div>
         </div>
         <div class="form-group col-lg-12 col-md-12">
-          <h6>権限<code>＊</code></h6>
+          <h6>管理権限<code>＊</code></h6>
           <div class="card-content">
             <div class="card-body">
-              <ng-container *ngIf="addSelectedContact.role === 2; else elseTemplate">
-                <div class="d-inline-block custom-control custom-radio mr-1">
-                  <label class="custom-control-label">会社管理者</label>
-                </div>
-              </ng-container>
-              <ng-template #elseTemplate>
-                <div class="d-inline-block custom-control custom-radio mr-1">
-                  <input type="radio" class="custom-control-input" name="colorRadio" id="radio4" #addRole
-                    (click)="setRole(addRole)">
-                  <label class="custom-control-label" for="radio4">管理者</label>
-                </div>
-                <div class="d-inline-block custom-control custom-radio mr-1">
-                  <input type="radio" class="custom-control-input" name="colorRadio" id="radio3" #addRole1
-                    (click)="setRole(addRole1)">
-                  <label class="custom-control-label" for="radio3">使用者</label>
-                </div>
-              </ng-template>
-
+              <div class="d-inline-block custom-control custom-radio mr-1">
+                <input type="radio" class="custom-control-input" name="userRadio" id="radio1" value=1 #addRole1
+                  (click)="setRole(addRole1)">
+                <label class="custom-control-label" for="radio1">管理者</label>
+              </div>
+              <div class="d-inline-block custom-control custom-radio mr-1">
+                <input type="radio" class="custom-control-input" name="userRadio" id="radio2" value=2 #addRole2
+                  (click)="setRole(addRole2)">
+                <label class="custom-control-label" for="radio2">使用者</label>
+              </div>
             </div>
           </div>
         </div>
         <div class="form-group col-lg-12 col-md-12">
-          会社名：<input type="text" [(ngModel)]="addCompanyName" #addcompanyname="ngModel" name="companyName"
-            id="companyName" class="name form-control" placeholder="" maxlength="50" disabled>
-        </div>
-        <div class="form-group col-lg-12 col-md-12">
-          <button type="button" class="btn btn-primary" (click)="addCompanyDataModal(addNewCompanyModalContent)">
-            <i class="feather ft-plus"></i> 新規会社
-          </button><a style="color: blue;">（新規代理会社の場合、ご利用ください）</a>
+          会社名：<input type="text" [(ngModel)]="addSelectedContact.companyName" #addcompanyname="ngModel"
+            name="companyName" id="companyName" class="name form-control" placeholder="" maxlength="50" disabled>
         </div>
       </div>
     </div>
@@ -504,81 +655,6 @@
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
             class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
-      </div>
-    </div>
-  </form>
-</ng-template>
-
-<!-- 新規会社 -->
-<ng-template #addNewCompanyModalContent let-c="close" let-d="dismiss">
-  <form #addCompanyForm="ngForm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">新規会社（代理）</h5>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="row">
-        <div class="form-group col-lg-6 col-md-12">
-          <h6 style="width: 410px;">会社名<code>＊</code></h6>
-          <input type="text" [(ngModel)]="pageModel.addTargetUserInfo.newCompanyInfo.companyname"
-            #addCompanyName="ngModel" name="companyname" id="companyname" class="name form-control" placeholder="会社名"
-            [ngClass]="{ 'is-invalid': addCompanyForm.submitted && addCompanyName.invalid }" required>
-          <div *ngIf="addCompanyForm.submitted && addCompanyName.invalid" class="invalid-feedback">
-            <div *ngIf="addCompanyName.errors.required">会社名を入力してください</div>
-          </div>
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>法人番号<code>＊</code></h6>
-          <input type="text" [(ngModel)]="pageModel.addTargetUserInfo.newCompanyInfo.corporatenumber"
-            #addcorporatenumber="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
-            placeholder="法人番号" [ngClass]="{ 'is-invalid': addCompanyForm.submitted && addcorporatenumber.invalid }"
-            required>
-          <div *ngIf="addCompanyForm.submitted && addcorporatenumber.invalid" class="invalid-feedback" maxlength="13">
-            <div *ngIf="addcorporatenumber.errors.required">法人番号を入力してください</div>
-          </div>
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>住所</h6>
-          <input type="text" [(ngModel)]="pageModel.addTargetUserInfo.newCompanyInfo.address" #editversion="ngModel"
-            name="address" id="address" class="name form-control" placeholder="住所" maxlength="100">
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>業種</h6>
-          <input type="text" [(ngModel)]="pageModel.addTargetUserInfo.newCompanyInfo.industry" #editversion="ngModel"
-            name="industry" id="industry" class="name form-control" placeholder="業種" maxlength="50">
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>メール(ログインID)</h6>
-          <input type="text" [(ngModel)]="pageModel.addTargetUserInfo.newCompanyInfo.mail" #editversion="ngModel"
-            name="mail" id="mail" class="name form-control" placeholder="メール" maxlength="50" disabled>
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>電話</h6>
-          <input type="text" [(ngModel)]="pageModel.addTargetUserInfo.newCompanyInfo.tel" #editversion="ngModel"
-            name="tel" id="tel" class="name form-control" placeholder="電話" maxlength="13">
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-          <h6>Fax</h6>
-          <input type="text" [(ngModel)]="pageModel.addTargetUserInfo.newCompanyInfo.fax" #editversion="ngModel"
-            name="fax" id="fax" class="name form-control" placeholder="Fax" maxlength="13">
-        </div>
-        <div class="form-group col-lg-6 col-md-12">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <div class="form-group position-relative has-icon-left mb-0">
-          <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="cancleCompanyModel(addCompanyForm)">
-            <!-- <i class='ficon feather ft-x mr-25'></i> -->
-            <span class="d-sm-inline d-none">取消</span>
-          </button>
-        </div>
-        <div class="form-group position-relative has-icon-right mb-0">
-          <button type="submit" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"
-            data-dismiss="modal"><span class="d-none d-lg-block" (click)="addNewCompany(addCompanyForm)"
-              aria-label="Close">保存</span></button>
-        </div>
       </div>
     </div>
   </form>
