@@ -135,7 +135,7 @@
                     <div style="text-align: right">
                       <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
                       <input type="text" pInputText size="50" placeholder="グローバル検索"
-                        (input)="tt.filterGlobal($event.target.value, 'contains')" (click)="d('Cross click')">
+                        (input)="tt.filterGlobal($event.target.value, 'contains')" (keyup)="openData($event.target.value)">
                     </div>
                   </ng-template>
                   <ng-template pTemplate="header" let-columns>

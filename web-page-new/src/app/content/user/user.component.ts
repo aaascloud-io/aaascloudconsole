@@ -38,6 +38,7 @@ class Contact {
     public tel: string,
     public fax: string,
     public name: string,
+     public expanded: boolean,
     // public Contact: any,
   ) { }
 }
@@ -1003,10 +1004,13 @@ export class UserComponent implements OnInit {
               elem.tel,
               elem.fax,
               elem.lastname + ' ' + elem.firstname,
+               elem.expanded
             ));
             index++;
+             elem.expanded=false;
           });
           console.log(this.rows);
+            this.users=item
           let parents = item.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
           let childrens = item.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
           this.jsonUsers = this.translator(parents, childrens);
@@ -1388,6 +1392,20 @@ export class UserComponent implements OnInit {
       let parents = this.users.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
       let childrens = this.users.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
       this.jsonUsers = this.translatorFilter(parents, childrens);
+      this.jsonUsers.sort(function(a, b){
+        // チームで並び替え
+        if(a.companyid !== b.companyid){
+          // 文字列は大小で比較する必要がある
+          if(a.companyid > b.companyid) return 1
+          if(a.companyid < b.companyid) return -1
+        }
+        // スコアで並び替え
+        if(a.userCount !== b.userCount){
+          // -1 かけて降順にする
+          return (a.userCount - b.userCount) * -1
+        }
+        return 0
+      });
     }
   }
 
