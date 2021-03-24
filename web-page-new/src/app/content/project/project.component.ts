@@ -21,6 +21,7 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class ProjectComponent implements OnInit {
 
+  bigSize=true; //windowサイズflg
   name = 'Angular';
   selectedContact: any;
   addContact: any;
@@ -145,7 +146,7 @@ export class ProjectComponent implements OnInit {
         // "targetuserCompanyid": item.company,
       };
     this.initData();
-
+    this.onResize();
   }
 
   initData() {
@@ -154,7 +155,7 @@ export class ProjectComponent implements OnInit {
       // "loginInfo":this.pageModel.loginInfo,
       // "targetUserInfo":this.pageModel.targetUserInfo,
     };
-    this.httpService.usePost('/getProjects', param).then(item => {
+    this.httpService.usePost('/searchProjects', param).then(item => {
       try {
         item.forEach(element => {
           this.rows.push(element);
@@ -813,5 +814,14 @@ export class ProjectComponent implements OnInit {
       detail: alertDetail,
       life: 2000
     });
+  }
+
+  onResize(){
+    //col-md最大値
+    if(innerWidth<992){
+      this.bigSize=false;
+    }else{
+      this.bigSize=true;
+    }
   }
 }

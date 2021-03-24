@@ -36,7 +36,7 @@ const selectData = require('../../../assets/data/forms/form-elements/select.json
   providers: [MessageService, ConfirmationService],
 })
 export class ProductComponent implements OnInit {
-
+  bigSize=true; //windowサイズflg
   userInfo: UserInfo;
 
   columns: any = [];
@@ -154,6 +154,7 @@ export class ProductComponent implements OnInit {
 
     this.getUnderUsers();
     this.searchMyProduct();
+    this.onResize();
   }
 
   /**
@@ -685,5 +686,14 @@ export class ProductComponent implements OnInit {
       detail: alertDetail,
       life: 2000
     });
+  }
+
+  onResize(){
+    //col-md最大値
+    if(innerWidth<992){
+      this.bigSize=false;
+    }else{
+      this.bigSize=true;
+    }
   }
 }

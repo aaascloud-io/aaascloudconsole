@@ -318,7 +318,7 @@ public class Cloud_groupService {
 
 		// プロジェクト情報取得&設定
 		Optional<Cloud_projectEntity> project  = cloud_projectRepository.findById(entity.getProjectid());
-		if (!project.isPresent()) {
+		if (project.isPresent()) {
 			model.setProjectname(project.get().getProjectname());
 		}
 

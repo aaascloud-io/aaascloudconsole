@@ -4,6 +4,8 @@
       <!-- <h4>プロジェクト管理</h4> -->
     </div>
     <div class="">
+      <div (window:resize)="onResize()" >
+      </div>
       <div class="content-body">
         <div>
           <label for="switch">条件検索：</label>
@@ -97,13 +99,14 @@
                             <i *ngIf="valueSortFlg.projectNameUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.projectNameDown" class="la la-sort-down"></i>
                           </th>
+                          <th scope="col" class="thcolor">プロダクトID</th>
                           <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト名
                             <i *ngIf="valueSortFlg.productNameUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.productNameDown" class="la la-sort-down"></i>
                           </th>
                           <th scope="col" class="thcolor" >所有者</th>
                           <th scope="col" class="thcolor" >説明</th>
-                          <th scope="col" class="thcolor" (click)="sortData('groupCounts')">グループ
+                          <th scope="col" class="thcolor" (click)="sortData('groupCounts')">グループ数
                             <i *ngIf="valueSortFlg.groupCountsUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.groupCountsDown" class="la la-sort-down"></i>
                           </th>
@@ -129,6 +132,7 @@
                               <a class="danger delete" (click)="deleteRow(element)"><i class="la la-trash-o" title="削除"></i></a>
                             </div>
                           </td>
+                          <td nowrap>{{ element.projectid }}</td>
                           <td nowrap>{{ element.projectname }}</td>
                           <td nowrap>{{ element.productname }}</td>
                           <td nowrap>{{ element.username }}</td>
@@ -148,7 +152,7 @@
                         </tr>
                       </tbody>
                     </table>
-                    <div class="d-flex justify-content-between p-2">
+                    <!-- <div class="d-flex justify-content-between p-2">
                       <div *ngIf="dataCount === 0">{{ dataCount }} 件</div>
                       <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">{{dataCount}} 件中{{(page-1) * pageSize + 1}} ~ {{page * pageSize}} を表示</div>
                       <div *ngIf="dataCount<pageSize*page"> {{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~ {{dataCount}} を表示</div>
@@ -160,6 +164,29 @@
                         <option [ngValue]="50">50 items per page</option>
                         <option [ngValue]="100">100 items per page</option>
                       </select>
+                    </div> -->
+                    <div class="row">
+                      <div class="col-lg-4 col-md-12">
+                        <div *ngIf="dataCount === 0">{{dataCount}} 件</div>
+                        <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">
+                          {{dataCount}} 件中 {{(page-1) * pageSize + 1}} ~ {{page * pageSize}} を表示
+                        </div>
+                        <div *ngIf="dataCount !== 0 && dataCount<pageSize*page">
+                          {{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~ {{dataCount}}を表示
+                        </div>
+                      </div>
+                      <div class="col-lg-4 col-md-12 " [ngClass]="{'justify-content-center': bigSize}">
+                          <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [maxSize]="3" [rotate]="true" [boundaryLinks]="true">
+                          </ngb-pagination>
+                      </div>
+                        <div class="col-lg-4 col-md-12" [ngClass]="{'alignRight': bigSize}">
+                          <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                            <option [ngValue]="10">10 items per page</option>
+                            <option [ngValue]="20">20 items per page</option>
+                            <option [ngValue]="50">50 items per page</option>
+                            <option [ngValue]="100">100 items per page</option>
+                          </select>
+                        </div>
                     </div>
                   </div>
 

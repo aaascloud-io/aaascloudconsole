@@ -2,6 +2,8 @@
   <div class="content-wrapper">
     <div class="content-header row mb-1"></div>
     <div class="content-detached">
+      <div (window:resize)="onResize()" >
+      </div>
       <div class="content-body">
         <div>
           <label for="switch">条件検索：</label>
@@ -69,6 +71,7 @@
                       </th>
                       <th scope="col" class="thcolor">No.</th>
                       <th scope="col" class="thcolor">操作</th>
+                      <th scope="col" class="thcolor">グループID</th>
                       <th scope="col" class="thcolor" (click)="sortData('groupname')">グループ名
                         <i *ngIf="pageModel.sort.groupnameUp" class="la la-sort-up"></i>
                         <i *ngIf="pageModel.sort.groupnameDown"class="la la-sort-down"></i>
@@ -95,6 +98,7 @@
                         <a class="danger delete mr-1 mrless"><i class="la la-trash-o"
                             (click)="deleteRow(element)"></i></a>
                       </td>
+                      <td nowrap>{{ element.groupid }}</td>
                       <td nowrap>{{ element.groupname }}</td>
                       <td nowrap>{{ element.projectname}}</td>
                       <td nowrap>
@@ -115,20 +119,28 @@
                     </tr>
                   </tbody>
                 </table>
-                <div class="d-flex justify-content-between p-2">
-                  <div *ngIf="dataCount === 0">{{ dataCount }} 件</div>
-                  <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">{{dataCount}} 件中{{(page-1) * pageSize +
-                    1}} ~ {{page * pageSize}} を表示</div>
-                  <div *ngIf="dataCount<pageSize*page"> {{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~ {{dataCount}}
-                    を表示</div>
-                  <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
-                  </ngb-pagination>
-                  <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
-                    <option [ngValue]="10">10 items per page</option>
-                    <option [ngValue]="20">20 items per page</option>
-                    <option [ngValue]="50">50 items per page</option>
-                    <option [ngValue]="100">100 items per page</option>
-                  </select>
+                <div class="row">
+                  <div class="col-lg-4 col-md-12">
+                    <div *ngIf="dataCount === 0">{{dataCount}} 件</div>
+                    <div *ngIf="dataCount !== 0 && dataCount >= pageSize * page">
+                      {{dataCount}} 件中 {{(page-1) * pageSize + 1}} ~ {{page * pageSize}} を表示
+                    </div>
+                    <div *ngIf="dataCount !== 0 && dataCount<pageSize*page">
+                      {{dataCount}} 件中 {{page * pageSize-pageSize+1}} ~ {{dataCount}}を表示
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-12 " [ngClass]="{'justify-content-center': bigSize}">
+                      <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [maxSize]="3" [rotate]="true" [boundaryLinks]="true">
+                      </ngb-pagination>
+                  </div>
+                    <div class="col-lg-4 col-md-12" [ngClass]="{'alignRight': bigSize}">
+                      <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                        <option [ngValue]="10">10 items per page</option>
+                        <option [ngValue]="20">20 items per page</option>
+                        <option [ngValue]="50">50 items per page</option>
+                        <option [ngValue]="100">100 items per page</option>
+                      </select>
+                    </div>
                 </div>
               </div>
             </div>

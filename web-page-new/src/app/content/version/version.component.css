@@ -373,3 +373,21 @@
   background-color: #6b6f82 !important;
   color:aliceblue; 
 }
+
+.table th{
+  background-color: #6b6f82 !important;
+  color:aliceblue; 
+}
+
+.alignLeft{
+  text-align: left;
+}
+
+.alignRight{
+  text-align: right;
+}
+
+.justify-content-center {
+  display: flex !important;
+  justify-content: center !important;
+}

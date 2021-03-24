@@ -141,6 +141,7 @@ export class DeviceComponent implements OnInit {
   ngOnInit(): void {
     this.pageSize = 10
     this.Init();
+    this.onResize()
   }
 
   Init() {
@@ -154,6 +155,7 @@ export class DeviceComponent implements OnInit {
             this.getTabledata();
           }
         } catch (e) {
+        this.showAlert("error", "デバイスを検索APIエラー発生しました。");
           console.log('デバイスを検索APIエラー発生しました。');
         }
       })
@@ -194,7 +196,7 @@ export class DeviceComponent implements OnInit {
           this.companySelectArray = item;
         }
       } catch (e) {
-        console.log('配下会社一覧を取得API エラー　発生しました。');
+        console.log('配下会社一覧を取得APIエラー発生しました。');
       }
     })
 
@@ -204,7 +206,7 @@ export class DeviceComponent implements OnInit {
           this.productSelectArray = item;
         }
       } catch (e) {
-        console.log('プロダクト一覧を取得API エラー　発生しました。');
+        console.log('プロダクト一覧を取得APIエラー発生しました。');
       }
     });
 
@@ -214,7 +216,7 @@ export class DeviceComponent implements OnInit {
           this.underUsersSelectArray = item;
         }
       } catch (e) {
-        console.log('プロダクト一覧を取得API エラー　発生しました。');
+        console.log('プロダクト一覧を取得APIエラー発生しました。');
       }
     });
 
@@ -324,6 +326,8 @@ export class DeviceComponent implements OnInit {
             }
           }
         } catch (e) {
+        this.showAlert("error", "登録失敗しました");
+
           console.log(e);
         }
       });
@@ -402,6 +406,7 @@ export class DeviceComponent implements OnInit {
 
           }
         } catch (e) {
+          this.showAlert("error", "更新失敗しました。");
           console.log(e);
         }
       });
@@ -425,30 +430,33 @@ export class DeviceComponent implements OnInit {
           this.Init();
           // $("#addinfo").hide();
           // $('.modal-backdrop').remove();
-          this.showAlert("error", "一括登録を成功しました");
-
-          /**
- * Add contact if valid addform value
- */
+          this.showAlert("info", "一括登録を成功しました");
           if (addExeclForm.valid === true) {
             addExeclForm.reset();
             this.addsModal.close(addExeclForm.resetForm);
           }
         } else if (item.resultCode == "0002") {
-          this.showAlert("error", item.resultMsg);
-
+          this.showAlertSetlife("error", item.resultMsg+"登録できません。",10000);
           this.pageModel.addDeviceDetailList = JSON.parse(item.data);
         } else if (item.resultCode == "0003") {
-          this.showAlert("error", " エラーデータを参考して添付ファイルを修正ください。");
-
+          this.showAlertSetlife("error", item.resultMsg,10000);
+          this.showAlertSetlife("error", "登録不可のデータを表示しました、参考して添付ファイルを修正してください。",10000);
           this.pageModel.addDeviceDetailList = JSON.parse(item.data);
         } else if (item.resultCode == "0007") {
-
-          this.showAlert("error", item.resultMsg);
-
+          this.showAlertSetlife("error", item.resultMsg,10000);
+          this.showAlertSetlife("error", "登録不可のデータを表示しました、参考して添付ファイルを修正してください。",10000);
           this.pageModel.addDeviceDetailList = JSON.parse(item.data);
+        }else if(item.resultCode == "0100"){
+          if(item.resultMsg.indexOf("cloud_device.device_UNIQUE")>-1){
+            this.showAlertSetlife("error", "添付ファイルに重複デバイスがありますので。登録できません。",10000);
+          }else{
+            this.showAlertSetlife("error", "登録失敗しました。",3000);
+          }
+        }else{
+          this.showAlertSetlife("error", "登録失敗しました。",3000);
         }
       } catch (e) {
+        this.showAlertSetlife("error", "登録失敗しました。",3000);
         console.log(e);
       }
     });
@@ -482,6 +490,8 @@ export class DeviceComponent implements OnInit {
             }
           } catch (e) {
             console.log(e);
+        this.showAlert("error", "デバイス削除APIエラーを発生しました。");
+
           }
         }
         );
@@ -533,6 +543,7 @@ export class DeviceComponent implements OnInit {
             }
           } catch (e) {
             console.log(e);
+        this.showAlert("error", "デバイス削除APIエラーを発生しました。");
           }
         }
         );
@@ -797,16 +808,24 @@ export class DeviceComponent implements OnInit {
         this.OpenFileName='';
     }
   }
-
   showAlert(alertType, alertDetail) {
+    this.showAlertSetlife(alertType, alertDetail,null)
+  }
+
+
+  showAlertSetlife(alertType, alertDetail,plife) {
+    var lifeValue=2000;
+    if(plife!==null||plife!=='')
+    {
+      lifeValue=plife
+    }
     this.messageService.add({
       key : 'alertModal', 
       severity : alertType, 
       summary : alertType, 
       detail : alertDetail,
-      life : 2000});
+      life : lifeValue});
   }
-
 
   onResize(){
     //col-md最大値

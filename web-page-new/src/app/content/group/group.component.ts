@@ -29,7 +29,7 @@ const selectData = require('../../../assets/data/forms/form-elements/select.json
   styleUrls: ['./group.component.css']
 })
 export class GroupComponent implements OnInit {
-
+  bigSize=true; //windowサイズflg
   userInfo: UserInfo;
 
   columns: any = [];
@@ -136,6 +136,7 @@ export class GroupComponent implements OnInit {
 
     this.getProjects();
     this.searchGroups();
+    this.onResize();
   }
 
   /**
@@ -415,18 +416,18 @@ export class GroupComponent implements OnInit {
           this.dataCount = item.length;
           item.forEach((elem) => {
             console.log(elem);
-            var projectname = ""
-            // プロジェクト名の検索
-            for (const project of this.projects) {
-              if (project.projectid === elem.projectid) {
-                projectname = project.projectname;
-              }
-            }
+            // var projectname = ""
+            // // プロジェクト名の検索
+            // for (const project of this.projects) {
+            //   if (project.projectid === elem.projectid) {
+            //     projectname = project.projectname;
+            //   }
+            // }
             this.rows.push(new Contact(
               elem.groupid,
               elem.groupname,
               elem.projectid,
-              projectname,
+              elem.projectname,
               elem.summary,
               elem.groupDeviceCounts,
             ));
@@ -792,5 +793,14 @@ export class GroupComponent implements OnInit {
       detail: alertDetail,
       life: 2000
     });
+  }
+
+  onResize(){
+    //col-md最大値
+    if(innerWidth<992){
+      this.bigSize=false;
+    }else{
+      this.bigSize=true;
+    }
   }
 }

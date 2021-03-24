@@ -20,7 +20,7 @@ import {ConfirmationService} from 'primeng/api';
   providers: [MessageService, ConfirmationService],
 })
 export class ErrorlistComponent implements OnInit {
-
+  bigSize=true; //windowサイズflg
   //　errorlist 
   rows: any[] = [];
   tableDisplayData:any;
@@ -91,6 +91,7 @@ export class ErrorlistComponent implements OnInit {
       "targetuserCompanyid": item.company,
     };
     this.initData();
+    this.onResize();
   }
 
   // errorlist データ取得
@@ -326,5 +327,14 @@ export class ErrorlistComponent implements OnInit {
       summary : alertType, 
       detail : alertDetail,
       life : 2000});
+  }
+
+  onResize(){
+    //col-md最大値
+    if(innerWidth<992){
+      this.bigSize=false;
+    }else{
+      this.bigSize=true;
+    }
   }
 }

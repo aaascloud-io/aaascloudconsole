@@ -22,7 +22,7 @@ import {ConfirmationService} from 'primeng/api';
 })
 export class VersionComponent implements OnInit {
 
-  
+  bigSize=true; //windowサイズflg
   name = 'Angular';
   selectedContact: any;
   contactFlag: boolean;
@@ -144,7 +144,7 @@ export class VersionComponent implements OnInit {
       "targetuserCompanyid": item.company,
     };
     this.initData();
-
+    this.onResize();
   }
 
   initData(){
@@ -156,7 +156,7 @@ export class VersionComponent implements OnInit {
       // "username": this.pageModel.loginInfo["loginusername"],
     };
 
-    this.httpService.usePost('/getAllVersions',param).then(item => {
+    this.httpService.usePost('/searchVersions',param).then(item => {
       try {
         if (item != null) {
           item.forEach(element => {
@@ -600,5 +600,14 @@ export class VersionComponent implements OnInit {
       summary : alertType, 
       detail : alertDetail,
       life : 2000});
+  }
+
+  onResize(){
+    //col-md最大値
+    if(innerWidth<992){
+      this.bigSize=false;
+    }else{
+      this.bigSize=true;
+    }
   }
 }
