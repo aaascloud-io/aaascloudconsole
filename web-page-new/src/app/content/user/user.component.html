@@ -129,7 +129,7 @@
                     </tr>
                   </tbody>
                 </table> -->
-                <p-treeTable #tt [value]="jsonUsers" [columns]="cols" sortMode="multiple" selectionMode="checkbox">
+                <p-treeTable #tt [value]="jsonUsers" [columns]="cols" [reorderableColumns]="true" styleClass="p-treetable-sm">
                   <ng-template pTemplate="caption">
                     <div style="text-align: right">
                       <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
@@ -162,7 +162,7 @@
                       </th>
                     </tr> -->
                   </ng-template>
-                  <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                  <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                     <tr>
                       <!-- <td>
                         <input type="checkbox" [checked]="rowData.isSelected" (change)="checkChange($event,rowData)">
