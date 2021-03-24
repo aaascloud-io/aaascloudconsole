@@ -260,13 +260,15 @@ export class UserComponent implements OnInit {
 
     this.cols = [
       // { field: 'userid', header: 'ユーザーID' },
-      // { field: 'username', header: 'ユーザー名' },
-      { field: 'lastname', header: '姓' },
-      { field: 'firstname', header: '名' },
+      
+      { field: 'companyid', header: '会社ID' },
       { field: 'companyName', header: '会社名' },
+      { field: 'username', header: 'ログインID' },
+      { field: 'lastname', header: '管理者姓' },
+      { field: 'firstname', header: '管理者名' },  
       { field: 'role', header: '管理権限' },
       { field: 'userCount', header: 'ユーザー数' },
-      { field: 'email', header: 'メール' },
+      { field: 'email', header: '管理者メール' },
     ];
 
     this.addUserInfo = this.formBuilder.group({
