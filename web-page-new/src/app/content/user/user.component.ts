@@ -267,7 +267,7 @@ export class UserComponent implements OnInit {
       { field: 'lastname', header: '管理者姓' },
       { field: 'firstname', header: '管理者名' },
       { field: 'role', header: '管理権限' },
-      { field: 'userCount', header: 'ユーザー数' },
+      // { field: 'userCount', header: 'ユーザー数' },
       { field: 'email', header: '管理者メール' },
     ];
 

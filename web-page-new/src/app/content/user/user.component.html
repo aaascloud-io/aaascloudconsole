@@ -203,12 +203,19 @@
                       <td>
                         {{rowData.firstname}}
                       </td>
-                      <td>
-                        {{rowData.role}}
+                      <td *ngIf="rowData.role === 0 ">
+                        会社管理者
                       </td>
-                      <td>
+                      <td *ngIf="rowData.role === 1 ">
+                        管理者
+                      </td>
+                      <td *ngIf="rowData.role === 2 ">
+                        使用者
+                      </td>
+
+                      <!-- <td>
                         {{rowData.userCount}}
-                      </td>
+                      </td> -->
                       <td>
                         {{rowData.email}}
                       </td>
