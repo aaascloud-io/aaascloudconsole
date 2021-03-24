@@ -260,12 +260,12 @@ export class UserComponent implements OnInit {
 
     this.cols = [
       // { field: 'userid', header: 'ユーザーID' },
-      
+
       { field: 'companyid', header: '会社ID' },
       { field: 'companyName', header: '会社名' },
       { field: 'username', header: 'ログインID' },
       { field: 'lastname', header: '管理者姓' },
-      { field: 'firstname', header: '管理者名' },  
+      { field: 'firstname', header: '管理者名' },
       { field: 'role', header: '管理権限' },
       { field: 'userCount', header: 'ユーザー数' },
       { field: 'email', header: '管理者メール' },
@@ -1009,6 +1009,31 @@ export class UserComponent implements OnInit {
           let parents = item.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
           let childrens = item.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
           this.jsonUsers = this.translator(parents, childrens);
+          this.jsonUsers.sort();
+          // this.jsonUsers.sort((a: any, b: any) => {
+          //   if (a["companyName"] > b["companyName"]) {
+          //     return -1;
+          //   } else if (a["companyName"] < b["companyName"]) {
+          //     return 1;
+          //   } else {
+          //     return 0;
+          //   }
+          // });
+
+          this.jsonUsers.sort(function(a, b){
+            // チームで並び替え
+            if(a.companyid !== b.companyid){
+              // 文字列は大小で比較する必要がある
+              if(a.companyid > b.companyid) return 1
+              if(a.companyid < b.companyid) return -1
+            }
+            // スコアで並び替え
+            if(a.userCount !== b.userCount){
+              // -1 かけて降順にする
+              return (a.userCount - b.userCount) * -1
+            }
+            return 0
+          });
 
           console.log("==========取得JSONUSERS=============");
           console.log(this.jsonUsers);

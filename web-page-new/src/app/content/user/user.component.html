@@ -130,7 +130,7 @@
                   </tbody>
                 </table> -->
                 <p-treeTable #tt [value]="jsonUsers" [columns]="cols" [reorderableColumns]="true"
-                  styleClass="p-treetable-sm">
+                  columnResizeMode="expand" scrollHeight="200px" [style]="{width:'120%'}">
                   <ng-template pTemplate="caption">
                     <div style="text-align: right">
                       <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
@@ -140,10 +140,6 @@
                   </ng-template>
                   <ng-template pTemplate="header" let-columns>
                     <tr>
-                      <!-- <th scope="col" class="thcolor"><input type="checkbox" [checked]="isAllChecked()"
-                          (change)="checkAll($event)">
-                      </th> -->
-                      <!-- <th></th> -->
                       <th>
                         <a>操作</a>
                       </th>
@@ -151,7 +147,6 @@
                         {{col.header}}
                         <p-treeTableSortIcon [field]="col.field"></p-treeTableSortIcon>
                       </th>
-
                     </tr>
                     <!-- <tr>
                       <th *ngFor="let col of cols">
@@ -167,9 +162,8 @@
                     <tr>
                       <ng-container *ngIf="rowData.deleteflag === 1; else elseTemplate">
                         <td>
-                        <a title="削除済み" 
-                        style="background-color:gray;color:rgb(14, 13, 13);">削除済み</a>
-                      </td>
+                          <a title="削除済み" style="background-color:gray;color:rgb(14, 13, 13);">削除済み</a>
+                        </td>
                       </ng-container>
                       <ng-template #elseTemplate>
                         <td>
@@ -187,9 +181,36 @@
                             <i class="feather ft-plus-circle"></i></a>
                         </td>
                       </ng-template>
-                      <td *ngFor="let col of cols; let i = index" nowrap [ngClass]="{'kb-row':rowData.deleteflag === 1}">
+                      <!-- <td *ngFor="let col of cols; let i = index" nowrap [ngClass]="{'kb-row':rowData.deleteflag === 1}"
+                        style="width:auto">
                         <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
                         {{rowData[col.field]}}
+                      </td> -->
+                      <td>
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        {{rowData.companyid}}
+                        <span class="badge badge-primary badge-pill float-right">{{rowData.userCount+"件"}}</span>
+                      </td>
+                      <td>
+                        {{rowData.companyName}}
+                      </td>
+                      <td style="width: auto;" nowrap>
+                        {{rowData.username}}
+                      </td>
+                      <td>
+                        {{rowData.lastname}}
+                      </td>
+                      <td>
+                        {{rowData.firstname}}
+                      </td>
+                      <td>
+                        {{rowData.role}}
+                      </td>
+                      <td>
+                        {{rowData.userCount}}
+                      </td>
+                      <td>
+                        {{rowData.email}}
                       </td>
                     </tr>
                   </ng-template>
@@ -199,16 +220,6 @@
                     </tr>
                   </ng-template>
                 </p-treeTable>
-                <div class="d-flex justify-content-between p-2">
-                  <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
-                  </ngb-pagination>
-                  <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
-                    <option [ngValue]="10">10 items per page</option>
-                    <option [ngValue]="20">20 items per page</option>
-                    <option [ngValue]="50">50 items per page</option>
-                    <option [ngValue]="100">100 items per page</option>
-                  </select>
-                </div>
               </div>
             </div>
           </div>
