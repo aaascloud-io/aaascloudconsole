@@ -395,3 +395,13 @@
   border-bottom-right-radius: 0.35rem;
   border-bottom-left-radius: 0.35rem;
 }
+
+.kb-row {
+  background-color: rgba(0,0,0,.15) !important;
+}
+
+.kb-cell {
+  font-weight: 700;
+  color: #FF5252;
+  text-decoration: line-through;
+}

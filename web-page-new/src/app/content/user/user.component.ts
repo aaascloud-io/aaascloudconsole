@@ -1005,7 +1005,7 @@ export class UserComponent implements OnInit {
             ));
             index++;
           });
-
+          console.log(this.rows);
           let parents = item.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
           let childrens = item.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
           this.jsonUsers = this.translator(parents, childrens);
@@ -1037,7 +1037,8 @@ export class UserComponent implements OnInit {
         "upperuserid": parent.upperuserid,
         "userCount": parent.userCount,
         "userid": parent.userid,
-        "username": parent.username
+        "username": parent.username,
+        "deleteflag": parent.deleteflag
       };
       childrens.forEach((child, index) => {
         child.data = child;
