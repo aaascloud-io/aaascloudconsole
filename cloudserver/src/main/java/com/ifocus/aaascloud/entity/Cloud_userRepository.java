@@ -81,7 +81,7 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	@Query(value = "SELECT u.* "
 			+ "FROM cloud_user u "
 			+ "INNER JOIN cloud_company c ON c.companyid = u.companyid "
-			+ "WHERE u.deleteflag = 0 AND u.userid IN :userids "
+			+ "WHERE u.userid IN :userids "
 			+ "AND c.companyname LIKE :companyname "
 			+ "AND u.firstname LIKE :firstname "
 			+ "AND u.lastname LIKE :lastname "
