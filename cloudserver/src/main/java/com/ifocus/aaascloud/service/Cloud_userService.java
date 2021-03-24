@@ -562,7 +562,7 @@ public class Cloud_userService {
 
 		// fullname設定
 		model.setFullName(model.getLastName() + " " + model.getFirstName());
-
+		model.setDeleteflag(entity.getDeleteflag());
 		return model;
 
 	}

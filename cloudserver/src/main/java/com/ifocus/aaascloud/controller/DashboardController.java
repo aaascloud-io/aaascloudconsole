@@ -120,9 +120,12 @@ public class DashboardController {
 				// デバイス数（オンライン数）を取得する todo
 				// デバイス数（オンライン数）を設定する
 				dashboardModel.setOnlineDeviceCount(0);
-
+				
+				
+				// アクセス権限ユーザ一覧を取得する
+				List<Integer> notDelList = accessService.getNotDelAccessUsers(loginUserEntity.getUserid());
 				// ユーザ一覧を取得する
-				List<Cloud_userEntity> userList = (List<Cloud_userEntity>) cloud_userRepository.findAllById(list);
+				List<Cloud_userEntity> userList = (List<Cloud_userEntity>) cloud_userRepository.findAllById(notDelList);
 
 				List<Cloud_userModel> cloud_userModelList =cloud_userService.getModelsByEntitys(userList);
 //				List<UserModel> userModelList = new ArrayList<UserModel>();

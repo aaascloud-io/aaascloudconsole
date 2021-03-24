@@ -46,7 +46,7 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_user c WHERE c.deleteflag = 0 AND c.upperuserid = :upperuserid", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_user c WHERE c.deleteflag = 0 AND c.upperuserid = :upperuserid ORDER BY c.username", nativeQuery = true)
 	public List<Cloud_userEntity> getUsersByUpperuserid(@Param("upperuserid") Integer upperuserid);
 	
 	/*
@@ -54,7 +54,7 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	 *
 	 *
 	 */
-	@Query(value = "SELECT c.* FROM cloud_user c WHERE c.upperuserid = :upperuserid", nativeQuery = true)
+	@Query(value = "SELECT c.* FROM cloud_user c WHERE c.upperuserid = :upperuserid  ORDER BY c.username", nativeQuery = true)
 	public List<Cloud_userEntity> getUsersByUpperuseridDelete(@Param("upperuserid") Integer upperuserid);
 
 	/*
@@ -81,7 +81,7 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	@Query(value = "SELECT u.* "
 			+ "FROM cloud_user u "
 			+ "INNER JOIN cloud_company c ON c.companyid = u.companyid "
-			+ "WHERE u.deleteflag = 0 AND u.userid IN :userids "
+			+ "WHERE u.userid IN :userids "
 			+ "AND c.companyname LIKE :companyname "
 			+ "AND u.firstname LIKE :firstname "
 			+ "AND u.lastname LIKE :lastname "

@@ -43,7 +43,7 @@ public interface  Cloud_projectRepository extends CrudRepository<Cloud_projectEn
 			+ " WHERE c.deleteflag = 0 AND c.userid = :userid "
 			+ " AND c.projectname LIKE :projectname "
 			+ " AND d.productname LIKE :productname "
-			+ " ORDER BY c.projectname", nativeQuery = true)
+			+ " ORDER BY c.projectid,c.projectname", nativeQuery = true)
 	public List<Cloud_projectEntity> searchByUseridAndProjectnameLikeAndProductnameLike(@Param("userid") Integer userid, @Param("projectname") String projectname, @Param("productname") String productname);
 
 	/*

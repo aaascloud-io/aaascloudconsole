@@ -78,6 +78,8 @@ export class DashboardComponent implements OnInit {
           this.pageModel.products = item.productList;
           this.pageModel.productLength = this.pageModel.products.length;
           this.pageModel.userList = item.userList;
+
+          this.pageModel.userList.sort(this.alphabetically(true, "username"));
           this.pageModel.userLength = this.pageModel.userList.length;
           this.pageModel.errlogList = item.errlogList;
           this.pageModel.errlogLength = this.pageModel.errlogList.length;
@@ -90,6 +92,30 @@ export class DashboardComponent implements OnInit {
         console.log('ユーザー数数を検索API エラー　発生しました。');
       }
     })
+  }
+
+  alphabetically(ascending, nm) {
+    return function (a, b) {
+      // equal items sort equally
+      if (a[nm] === b[nm]) {
+        return 0;
+      }
+      // nulls sort after anything else
+      else if (a[nm] === null) {
+        return 1;
+      }
+      else if (b[nm] === null) {
+        return -1;
+      }
+      // otherwise, if we're ascending, lowest sorts first
+      else if (ascending) {
+        return a[nm] < b[nm] ? -1 : 1;
+      }
+      // if descending, highest sorts first
+      else {
+        return a[nm] < b[nm] ? 1 : -1;
+      }
+    };
   }
 
   onResize() {
