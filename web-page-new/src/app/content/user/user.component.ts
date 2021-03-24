@@ -53,6 +53,7 @@ const selectData = require('../../../assets/data/forms/form-elements/select.json
 @Injectable()
 export class UserComponent implements OnInit {
 
+  users:any;
   userInfo: UserInfo;
   files: TreeNode[];
   files1: TreeNode[];
@@ -1372,5 +1373,64 @@ export class UserComponent implements OnInit {
  */
   setMyUserRole(role) {
     this.pageModel.adduserInfo.role = role.defaultValue;
+  }
+
+  openData(pvalue: any){
+    console.log("click");
+    if(pvalue!==null||pvalue!==''){
+
+      this.users.forEach((elem) => {
+
+        elem.expanded=true;
+   
+      });
+      this.jsonUsers=null;
+      let parents = this.users.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
+      let childrens = this.users.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
+      this.jsonUsers = this.translatorFilter(parents, childrens);
+    }
+  }
+
+  translatorFilter(parents, childrens) {
+    parents.forEach(parent => {
+      parent.data = {
+        "companyName": parent.companyName,
+        "companyid": parent.companyid,
+        "deviceCount": parent.deviceCount,
+        "email": parent.email,
+        "firstname": parent.firstname,
+        "lastname": parent.lastname,
+        "projectCount": parent.projectCount,
+        "role": parent.role,
+        "upperuserid": parent.upperuserid,
+        "userCount": parent.userCount,
+        "userid": parent.userid,
+        "username": parent.username
+      };
+      childrens.forEach((child, index) => {
+        child.data = child;
+        if (parent.userid == child.upperuserid) {
+          let temp = [];
+          childrens.forEach(element => {
+            if (element.data) {
+              temp.push(element.data)
+            } else {
+              temp.push(element)
+            }
+          });
+          // let temp = childrens;
+          temp.splice(index, 1);
+          this.translatorFilter([child], temp);
+          if (typeof parent.children !== "undefined") {
+            // parent.children.push(child);
+            // parent.data.push(child);
+          } else {
+            parent.children = [child]
+            // parent.data = data;
+          }
+        }
+      });
+    });
+    return parents;
   }
 }
