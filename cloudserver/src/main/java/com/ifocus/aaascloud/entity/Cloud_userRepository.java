@@ -20,11 +20,8 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	@Transactional
 	@Query(value = " DELETE FROM cloud_user "
 			+ " WHERE deleteflag = 1 "
-			+ " AND username = :username"
-			+ "AND lastname LIKE :lastname "
-			+ "AND firstname LIKE :firstname "
-			+ "AND email LIKE :email ", nativeQuery = true)
-	public void deleteUserMarked(@Param("username") String username,@Param("lastname") String lastname,@Param("firstname") String firstname,@Param("email") String email);
+			+ " AND username = :username" , nativeQuery = true)
+	public void deleteUserMarked(@Param("username") String username);
 
 	/*
 	 * ユーザ取得

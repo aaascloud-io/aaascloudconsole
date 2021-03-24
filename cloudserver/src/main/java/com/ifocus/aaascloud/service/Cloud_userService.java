@@ -326,7 +326,7 @@ public class Cloud_userService {
 		}
 
 		// 削除済行を物理削除する
-		cloud_userRepository.deleteUserMarked(model.getUsername(),model.getLastName(),model.getFirstName(),model.getEmail());
+		cloud_userRepository.deleteUserMarked(model.getUsername());
 		// 情報設定
 		Cloud_userEntity entity = new Cloud_userEntity();
 		/* システム日時 */
@@ -338,7 +338,7 @@ public class Cloud_userService {
 		entity.setFirstname(model.getFirstName());
 		entity.setEmail(model.getEmail());
 		entity.setRole(model.getRole());
-		entity.setUpperuserid(model.getTargetUserInfo().getTargetuserid());
+		entity.setUpperuserid(model.getUpperuserid());
 		entity.setToken("");
 		entity.setAlive(AliveConstant.ALIVE);
 		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
@@ -394,6 +394,8 @@ public class Cloud_userService {
 		entity.setUserid(model.getUserid());
 		entity.setCompanyid(model.getCompanyid());
 		entity.setUsername(model.getUsername());
+		entity.setFirstname(model.getFirstName());
+		entity.setLastname(model.getLastName());
 		entity.setRole(model.getRole());
 		entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 		entity.setU_uid(loginInfo.getLoginuserid());
