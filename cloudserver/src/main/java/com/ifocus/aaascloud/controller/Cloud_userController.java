@@ -257,6 +257,7 @@ public class Cloud_userController {
 				resJasonObj.put("role", model.getRole());
 				resJasonObj.put("upperuserid", model.getUpperuserid());
 				resJasonObj.put("companyName", model.getCompanyname());
+				resJasonObj.put("deleteflag", model.getDeleteflag());
 //				resJasonObj.put("devicecount", model.getDevicecount());
 
 
