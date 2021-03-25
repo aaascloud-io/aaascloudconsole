@@ -42,14 +42,15 @@ export class ConstantsHandler {
 
     // static environment = 'development179'; // products
     // static environment = 'development33'; //
-    static environment = 'Devdevelopment'; //
+    // static environment = 'Devdevelopment'; //localhost
+    static environment = 'development'; //
 
     static environmentCfg = {
         development: {
-            protocal: 'http',
-            host: '47.245.13.208',
-            port: '8080',
-            root: 'pfweb.api',
+            protocal: 'https',
+            host: 'console.aaascloud.io',
+            port: '443',
+            root: 'aaascloud',
         },
         development179: {
             protocal: 'http',

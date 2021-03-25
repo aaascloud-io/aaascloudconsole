@@ -6,9 +6,10 @@ export class UrlHandler {
   static getApiUrlRocalTest(uri : string) : string{
     let path:any = ConstantsHandler.getEnvCfg();
     // サーバー
-    // let url : string = path.protocal + '://' +  path.host  + ':' + path.port + '/' +  path.root + '/' +  uri;
+    let url : string = path.protocal + '://' +  path.host  + ':' + path.port + '/' +  path.root + '/' +  uri;
     // rocal
-    let url : string = path.protocal + '://' +  path.host  + ':' + path.port + '/' +  uri;
+    // let url : string = path.protocal + '://' +  path.host  + ':' + path.port + '/' +  uri;
+
       return url;
   }
 
