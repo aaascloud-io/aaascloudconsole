@@ -12,6 +12,8 @@ import { Logger } from 'src/app/_common/_utils/logger';
 import { tap } from 'rxjs/operators';
 import { AlertService } from '../_services/alert.service';
 import { UserInfo } from 'src/app/_common/_interface/UserInfo';
+import { codes } from 'src/app/_common/_utils/codes-utils';
+
 
 @Injectable()
 export class HttpService {
@@ -60,7 +62,11 @@ export class HttpService {
         return this._http.post(this.baseService.getPath(path), JSON.stringify(data), this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
-                return JSON.parse(result.data);
+                if (result.resultCode === codes.RETCODE.ERROR_TOKEN) {
+                    this.clearLogin()
+                } else {
+                    return JSON.parse(result.data);
+                }
             })
             .catch((err) => {
                 if (err.status === 401 && err.error.result === false) {
@@ -74,7 +80,11 @@ export class HttpService {
         return this._http.get(this.baseService.getPath(path), this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
-                return JSON.parse(result.data);
+                if (result.resultCode === codes.RETCODE.ERROR_TOKEN) {
+                    this.clearLogin()
+                } else {
+                    return JSON.parse(result.data);
+                }
             }).catch((err) => {
                 if (err.status === 401 && err.error.result === false) {
                     this.loginFail(err);
@@ -84,22 +94,26 @@ export class HttpService {
     }
 
     useRpPut(path: string, data: any): Promise<any> {
-            let item: UserInfo = this.getLoginUser();
-            data.loginInfo = {
-                "loginuserid": item.uid,
-                "loginusername": item.login_id,
-                "loginrole": item.role,
-                "logincompanyid": item.company,
-                "access_token": item.access_token
-            };
-            data.targetUserInfo = {
-                "targetuserid": item.uid,
-                "targetuserCompanyid": item.company,
-            };
+        let item: UserInfo = this.getLoginUser();
+        data.loginInfo = {
+            "loginuserid": item.uid,
+            "loginusername": item.login_id,
+            "loginrole": item.role,
+            "logincompanyid": item.company,
+            "access_token": item.access_token
+        };
+        data.targetUserInfo = {
+            "targetuserid": item.uid,
+            "targetuserCompanyid": item.company,
+        };
         return this._http.put(this.baseService.getPath(path), JSON.stringify(data), this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
-                return result;
+                if (result.resultCode === codes.RETCODE.ERROR_TOKEN) {
+                    this.clearLogin()
+                } else {
+                    return result;
+                }
             })
             .catch((err) => {
                 if (err.status === 401 && err.error.result === false) {
@@ -125,7 +139,11 @@ export class HttpService {
         return this._http.post(this.baseService.getPath(path), datas, this.baseService.getHeader())
             .toPromise()
             .then((result: any) => {
-                return result;
+                if (result.resultCode === codes.RETCODE.ERROR_TOKEN) {
+                    this.clearLogin()
+                } else {
+                    return result;
+                }
             })
             .catch((err) => {
                 if (err.status === 401 && err.error.result === false) {
@@ -158,7 +176,11 @@ export class HttpService {
         return this._http.delete(this.baseService.getPath(path), options)
             .toPromise()
             .then((result: any) => {
-                return result;
+                if (result.resultCode === codes.RETCODE.ERROR_TOKEN) {
+                    this.clearLogin()
+                } else {
+                    return result;
+                }
             })
             .catch((err) => {
                 if (err.status === 401 && err.error.result === false) {

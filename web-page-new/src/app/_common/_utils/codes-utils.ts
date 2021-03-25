@@ -7,7 +7,8 @@ export var codes = {
 
     ERROR_COMMUNICATION: '0101',
 
-    ERROR_NO_INPUT: '0201'
+    ERROR_NO_INPUT: '0201',
+    ERROR_TOKEN: '0300',
 
   }
 };
