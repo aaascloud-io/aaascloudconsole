@@ -417,14 +417,14 @@ public class Cloud_userService {
 		////////////////////////////////////////////////////////
 		// KeyCloakに削除を行う
 		////////////////////////////////////////////////////////
-//		try {
-//			// 選択されるユーザを削除する
-//			for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
-//				keyCloakUserService.deleteUser(cloud_userModelInfo.getUsername());
-//			}
-//		} catch (Exception e) {
-//			throw e;
-//		}
+		try {
+			// 選択されるユーザを削除する
+			for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
+				keyCloakUserService.deleteUser(cloud_userModelInfo.getUsername());
+			}
+		} catch (Exception e) {
+			throw e;
+		}
 
 		////////////////////////////////////////////////////////
 		// DB削除を行う

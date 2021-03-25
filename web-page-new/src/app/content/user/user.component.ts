@@ -428,7 +428,7 @@ export class UserComponent implements OnInit {
       header: 'ユーザー削除確認',
       accept: () => {
 
-        this.selectedUserid.push({ "userid": row.userid });
+        this.selectedUserid.push({ "userid": row.userid, "username": row.username });
         var query = {
           "cloud_userModelList": this.selectedUserid,
         }

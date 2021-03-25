@@ -643,13 +643,6 @@ public class Cloud_userController {
 			return response;
 		}
 
-		// プロジェクトがある場合、削除しないこと。ToDo
-//		if () {
-//			response.setStatus(200);
-//			response.setResultCode("0003");
-//			response.setResultMsg("プロジェクトがある。プロジェクトを削除してから再実施してください。");
-//			return response;
-//		}
 
 		try {
 
