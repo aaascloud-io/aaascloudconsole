@@ -1014,31 +1014,9 @@ export class UserComponent implements OnInit {
           let parents = item.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
           let childrens = item.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
           this.jsonUsers = this.translator(parents, childrens);
-          this.jsonUsers.sort();
-          // this.jsonUsers.sort((a: any, b: any) => {
-          //   if (a["companyName"] > b["companyName"]) {
-          //     return -1;
-          //   } else if (a["companyName"] < b["companyName"]) {
-          //     return 1;
-          //   } else {
-          //     return 0;
-          //   }
-          // });
 
-          this.jsonUsers.sort(function(a, b){
-            // チームで並び替え
-            if(a.companyid !== b.companyid){
-              // 文字列は大小で比較する必要がある
-              if(a.companyid > b.companyid) return 1
-              if(a.companyid < b.companyid) return -1
-            }
-            // スコアで並び替え
-            if(a.userCount !== b.userCount){
-              // -1 かけて降順にする
-              return (a.userCount - b.userCount) * -1
-            }
-            return 0
-          });
+          // 会社名とユーザー数でソート
+          this.jsonUsers = this.sort(this.jsonUsers);
 
           console.log("==========取得JSONUSERS=============");
           console.log(this.jsonUsers);
@@ -1198,71 +1176,6 @@ export class UserComponent implements OnInit {
     }
   }
 
-  sortData(nm) {
-    if (this.sortOn == 1) {
-      this.userList.sort(this.alphabetically(true, nm));
-      this.sortOn = 2;
-    } else {
-      this.userList.sort(this.alphabetically(false, nm));
-      this.sortOn = 1;
-    }
-    this.pageModel.sort.usernameUp = false;
-    this.pageModel.sort.usernameDown = false;
-    this.pageModel.sort.companyNameUp = false;
-    this.pageModel.sort.companyNameDown = false;
-    this.pageModel.sort.addressUp = false;
-    this.pageModel.sort.addressDown = false;
-    this.pageModel.sort.nameUp = false;
-    this.pageModel.sort.nameDown = false;
-
-    switch (nm) {
-      case 'username':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.usernameUp = true
-        } else {
-          this.pageModel.sort.usernameDown = true
-        }
-        break;
-      case 'companyName':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.companyNameUp = true
-        } else {
-          this.pageModel.sort.companyNameDown = true
-        }
-        break;
-      case 'address':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.addressUp = true
-        } else {
-          this.pageModel.sort.addressDown = true
-        }
-        break;
-      case 'name':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.nameUp = true
-        } else {
-          this.pageModel.sort.nameDown = true
-        }
-        break;
-    }
-  }
-
-  alphabetically(ascending, nm) {
-    return function (a, b) {
-      if (a[nm] === b[nm]) {
-        return 0;
-      } else if (a[nm] === null) {
-        return 1;
-      } else if (b[nm] === null) {
-        return -1;
-      } else if (ascending) {
-        return a[nm] < b[nm] ? -1 : 1;
-      } else {
-        return a[nm] < b[nm] ? 1 : -1;
-      }
-    };
-  }
-
   checkAll(ev) {
     this.userList.forEach(x => x.isSelected = ev.target.checked)
     this.userSelected = ev.target.checked;
@@ -1364,15 +1277,15 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * 
+   * 権限を設定する
    * @param role 
    */
   setRole(role) {
     this.pageModel.addTargetUserInfo.role = role.defaultValue;
   }
 
-  /**
- * 
+/**
+ * 権限を設定する
  * @param role 
  */
   setMyUserRole(role) {
@@ -1392,20 +1305,7 @@ export class UserComponent implements OnInit {
       let parents = this.users.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
       let childrens = this.users.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
       this.jsonUsers = this.translatorFilter(parents, childrens);
-      this.jsonUsers.sort(function(a, b){
-        // チームで並び替え
-        if(a.companyid !== b.companyid){
-          // 文字列は大小で比較する必要がある
-          if(a.companyid > b.companyid) return 1
-          if(a.companyid < b.companyid) return -1
-        }
-        // スコアで並び替え
-        if(a.userCount !== b.userCount){
-          // -1 かけて降順にする
-          return (a.userCount - b.userCount) * -1
-        }
-        return 0
-      });
+      this.jsonUsers = this.sort(this.jsonUsers);
     }
   }
 
@@ -1423,7 +1323,8 @@ export class UserComponent implements OnInit {
         "upperuserid": parent.upperuserid,
         "userCount": parent.userCount,
         "userid": parent.userid,
-        "username": parent.username
+        "username": parent.username,
+        "deleteflag": parent.deleteflag
       };
       childrens.forEach((child, index) => {
         child.data = child;
@@ -1450,5 +1351,27 @@ export class UserComponent implements OnInit {
       });
     });
     return parents;
+  }
+
+  /**
+   * ソートをする
+   * @param data 
+   */
+  sort(data) {
+    data.sort(function(a, b){
+      // チームで並び替え
+      if(a.companyid !== b.companyid){
+        // 文字列は大小で比較する必要がある
+        if(a.companyid > b.companyid) return 1
+        if(a.companyid < b.companyid) return -1
+      }
+      // スコアで並び替え
+      if(a.userCount !== b.userCount){
+        // -1 かけて降順にする
+        return (a.userCount - b.userCount) * -1
+      }
+      return 0
+    });
+    return data;
   }
 }
