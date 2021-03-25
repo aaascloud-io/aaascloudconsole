@@ -1294,12 +1294,21 @@ export class UserComponent implements OnInit {
 
   openData(pvalue: any){
     console.log("click");
-    if(pvalue!==null||pvalue!==''){
+    if(pvalue!==null&&pvalue!==''){
 
       this.users.forEach((elem) => {
 
         elem.expanded=true;
    
+      });
+      this.jsonUsers=null;
+      let parents = this.users.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
+      let childrens = this.users.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
+      this.jsonUsers = this.translatorFilter(parents, childrens);
+      this.jsonUsers = this.sort(this.jsonUsers);
+    }else if(pvalue===''){
+      this.users.forEach((elem) => {
+        elem.expanded=false;
       });
       this.jsonUsers=null;
       let parents = this.users.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
