@@ -18,7 +18,7 @@ export class AuthSignListener implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         var obj = this;
         if (!obj.httpService.verify()) {
-            obj.router.navigate(["login"]);
+            obj.router.navigate([""]);
         }
         this.routeToPage(this);
         return true;

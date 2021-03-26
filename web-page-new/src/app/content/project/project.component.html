@@ -213,7 +213,7 @@
 <ng-template #editProjectDataModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="projectDataUpdate(projectEditForm,selectedProject.projectid)" #projectEditForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">説明</h5>
+      <h5 class="modal-title" id="exampleModalLabel">プロジェクト詳細</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -231,16 +231,8 @@
 
       <div class="form-group col-12">
         <h6>プロダクト名<code>＊</code></h6>
-        <select class="form-control" id="productName" name="productName" [(ngModel)]="selectedProject.productid"
-          #porductname="ngModel" name="producttypeid" id="producttypeid"
-          [ngClass]="{ 'is-invalid': projectEditForm.submitted && porductname.invalid }" required maxlength="50">
-          <option *ngFor="let type of productNameList; let i = index" [ngValue]="type.productid">
-            {{type.productname}}
-          </option>
-        </select>
-        <div *ngIf="projectEditForm.submitted && porductname.invalid" class="invalid-feedback">
-          <div *ngIf="porductname.errors.required">プロダクト名を選択してください。</div>
-        </div>
+        <input type="text" [(ngModel)]="selectedProject.productname" name="productName" class="form-control"
+        placeholder="" required readonly="readonly">
       </div>
 
       <div class="form-group col-12">
@@ -269,7 +261,7 @@
 <ng-template #addNewProject let-c="close" let-d="dismiss">
   <form (ngSubmit)="addNewProjectForm(NewProjectForm)" #NewProjectForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">プロジェクト新規追加</h5>
+      <h5 class="modal-title" id="exampleModalLabel">登録</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>

@@ -220,7 +220,7 @@ export class HttpService {
     private loginFail(err: any): void {
         this.cookieService.delete(ConstantsHandler.GLOBAL_TOKEN.id);
         this.dataFatoryService.clearLoginUser();
-        this._router.navigate(['login'], { queryParams: { message: ConstantsHandler.GLOBAL_TOKEN.errMsg.userTokenInvalid, userName: err.error.userName } });
+        this._router.navigate([''], { queryParams: { message: ConstantsHandler.GLOBAL_TOKEN.errMsg.userTokenInvalid, userName: err.error.userName } });
     }
 
 
@@ -329,7 +329,7 @@ export class HttpService {
         if (tokenStatus == ConstantsHandler.tokenStatus.refresh_token_expired) {
             // expired
             // route to login
-            this._router.navigate(["login"]);
+            this._router.navigate([""]);
             return false;
         }
         if (tokenStatus == ConstantsHandler.tokenStatus.refresh_token_valid) {
@@ -361,7 +361,7 @@ export class HttpService {
                     } else if (err.status == 401) {
                         alert("ユーザー登録情報無効です。再登録してください。");
                         obj.clearLogin();
-                        obj._router.navigate(['login']);
+                        obj._router.navigate(['']);
                     }
                     throw err;
                 });
@@ -379,7 +379,7 @@ export class HttpService {
                 } else if (err.status == 401) {
                     // obj.alertService.danger("ユーザー登録情報無効です。再登録してください。");
                     obj.clearLogin();
-                    obj._router.navigate(['login']);
+                    obj._router.navigate(['']);
                 }
                 throw err;
             });
@@ -398,7 +398,7 @@ export class HttpService {
                     // obj.alertService.danger("この操作の権限がございません。管理員へ確認してください。");
                 } else if (err.status == 401) {
                     // obj.alertService.danger("ユーザー登録情報無効です。再登録してください。");
-                    obj._router.navigate(['login']);
+                    obj._router.navigate(['']);
                 }
                 if (errorCallback != null) {
                     errorCallback(err);
@@ -460,7 +460,7 @@ export class HttpService {
         if (this.tokenVerify()) {
             this.postToPFServer("/user/logout", {}, function () { });
         }
-        this._router.navigate(["login"]);
+        this._router.navigate([""]);
     }
 
     private fetchFromKeycloak(formData: string) {
@@ -582,7 +582,7 @@ export class HttpService {
         this.cookieService.delete(ConstantsHandler.GLOBAL_TOKEN.id);
         this.cookieService.delete(ConstantsHandler.TOKEN.cookieName);
         this.dataFatoryService.clearLoginUser();
-        this._router.navigate(['login']);
+        this._router.navigate(['']);
     }
 
     private doPost(path: string, data: any, serverType): Promise<any> {

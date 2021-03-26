@@ -47,7 +47,7 @@ export class ProfileComponent implements OnInit {
   logout() {
     if (localStorage.getItem('currentUser')) {
       this.authService.doLogout().then(res => {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
       }, err => {
         console.log(err);
       });
