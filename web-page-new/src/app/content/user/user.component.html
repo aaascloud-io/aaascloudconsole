@@ -393,7 +393,8 @@
           </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
-          <h6>法人番号<code>＊</code></h6>
+          <h6>法人番号<code>＊</code><a target="_blank" href="https://www.houjin-bangou.nta.go.jp/ "> <u style="size: 1;">法人番号検索</u></a>
+          </h6>
           <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.newCompanyInfo.corporatenumber"
             #addcorporatenumber="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
             placeholder="法人番号" [ngClass]="{ 'is-invalid': addCompanyForm.submitted && addcorporatenumber.invalid }"

@@ -418,8 +418,8 @@ export class UserComponent implements OnInit {
   deleteRow(row) {
 
     // 配下ユーザーがある場合、削除不可
-    if (row.userCount > 1) {
-      this.showAlert("warn", "配下のユーザーが存在している場合、削除不可です。");
+    if (row.notDelUserCount > 1) {
+      this.showAlert("warn", "配下ユーザーが存在してるため、削除不可です。");
       return
     }
 
@@ -1044,6 +1044,7 @@ export class UserComponent implements OnInit {
         "role": parent.role,
         "upperuserid": parent.upperuserid,
         "userCount": parent.userCount,
+        "notDelUserCount": parent.notDelUserCount,
         "userid": parent.userid,
         "username": parent.username,
         "deleteflag": parent.deleteflag
@@ -1331,6 +1332,7 @@ export class UserComponent implements OnInit {
         "role": parent.role,
         "upperuserid": parent.upperuserid,
         "userCount": parent.userCount,
+        "notDelUserCount": parent.notDelUserCount,
         "userid": parent.userid,
         "username": parent.username,
         "deleteflag": parent.deleteflag
