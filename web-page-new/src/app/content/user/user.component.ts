@@ -38,7 +38,7 @@ class Contact {
     public tel: string,
     public fax: string,
     public name: string,
-     public expanded: boolean,
+    public expanded: boolean,
     // public Contact: any,
   ) { }
 }
@@ -54,7 +54,7 @@ const selectData = require('../../../assets/data/forms/form-elements/select.json
 @Injectable()
 export class UserComponent implements OnInit {
 
-  users:any;
+  users: any;
   userInfo: UserInfo;
   files: TreeNode[];
   files1: TreeNode[];
@@ -81,8 +81,6 @@ export class UserComponent implements OnInit {
   contactImage: any;
   contactFavorite: boolean;
   contactactive: string;
-  rows: any[] = [];
-  userAll: any[] = [];
   jsonUsers: any[] = [];
   selectedContact: any;
   addSelectedContact: any;
@@ -103,7 +101,6 @@ export class UserComponent implements OnInit {
   selected = [];
   selectedUserid = [];
   temp = [];
-  temp2 = this.rows;
   singlebasicSelected: any;
 
   cols: any[];
@@ -189,7 +186,8 @@ export class UserComponent implements OnInit {
       loginusername: '',
       loginrole: null,
       logincompanyid: null,
-      loginupperuserid: null
+      loginupperuserid: null,
+      access_token: null,
     },
 
     query: {
@@ -218,6 +216,11 @@ export class UserComponent implements OnInit {
     },
     jsonUserList: [],
     jsonUsers: {},
+    roles: [
+      { role: 0, name: "会社管理者" },
+      { role: 1, name: "管理者" },
+      { role: 2, name: "使用者" },
+    ]
   }
 
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -258,6 +261,7 @@ export class UserComponent implements OnInit {
     this.pageModel.loginUser.loginrole = item.role;
     this.pageModel.loginUser.logincompanyid = item.company;
     this.pageModel.loginUser.loginupperuserid = item.upperuserid;
+    this.pageModel.loginUser.access_token = item.access_token;
     this.companyId = item.company;
 
     this.cols = [
@@ -282,9 +286,13 @@ export class UserComponent implements OnInit {
     console.log("サンプルデーター表示：");
     console.log(this.files);
     console.log("param情報：" + JSON.stringify(this.pageModel.loginUser));
-    this.getUnderCompanies()
-    this.searchMyUsers();
-    this.getUnderUsers();
+    this.getUnderCompanies();
+
+    if (this.pageModel.loginUser.loginrole === 1) {
+      this.searchMyUsers();
+    } else {
+      this.getUnderUsers();
+    }
   }
 
   get f() {
@@ -389,12 +397,11 @@ export class UserComponent implements OnInit {
    */
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
-    this.rows = [...this.temp2];
-    this.temp = [...this.rows];
-    const temp = this.rows.filter(function (d) {
+    this.temp = [...this.users];
+    const temp = this.users.filter(function (d) {
       return d.name.toLowerCase().indexOf(val) !== -1 || !val;
     });
-    this.rows = temp;
+    this.users = temp;
     this.table.offset = 0;
   }
 
@@ -957,62 +964,41 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * ユーザー一覧を取得する
+   * ユーザー一覧を取得する(管理者)
    * 
    */
   async searchMyUsers() {
     var query = {
+      "loginInfo": {
+        "loginuserid": this.pageModel.loginUser.loginupperuserid,
+        "loginusername": this.pageModel.loginUser.loginusername,
+        "loginrole": this.pageModel.loginUser.loginrole,
+        "logincompanyid": this.pageModel.loginUser.logincompanyid,
+        "access_token": this.pageModel.loginUser.access_token,
+      },
+      "targetUserInfo": {
+        "targetuserid": this.pageModel.loginUser.loginupperuserid,
+        "targetuserCompanyid": this.pageModel.loginUser.logincompanyid,
+      },
       "companyname": this.pageModel.query.companyname,
       "firstName": this.pageModel.query.firstname,
       "lastName": this.pageModel.query.lastname,
       "email": this.pageModel.query.email,
     }
-    this.httpService.usePost('searchUnderUsers', query).then(item => {
+    this.httpService.adminPost('searchUnderUsers', query).then(item => {
       try {
-        this.rows = [];
         if (item) {
-          var index = 1;
-          // this.pageModel.userList = item;
-          var companyname = '';
-          var address = '';
-          item.forEach((elem) => {
-            // 会社名の設定
-            for (const companyInfo of this.pageModel.companyInfoAll) {
-              if (elem.companyid === companyInfo.companyid) {
-                companyname = companyInfo.companyname
-                address = companyInfo.address
+          item.forEach(element => {
+            // element.userid
+            this.pageModel.roles.forEach(data => {
+              if (element.role === data.role) {
+                element.roleName = data.name;
               }
-            }
-            // rowsにデータを入れる
-            this.rows.push(new Contact(
-              index,
-              elem.userid,
-              elem.username,
-              elem.companyid,
-              elem.loginid,
-              elem.firstname,
-              elem.lastname,
-              elem.email,
-              elem.role,
-              elem.upperuserid,
-              companyname,
-              elem.deviceCount,
-              elem.userCount,
-              elem.projectCount,
-              address,
-              elem.mail,
-              elem.tel,
-              elem.fax,
-              elem.lastname + ' ' + elem.firstname,
-               elem.expanded
-            ));
-            index++;
-             elem.expanded=false;
+            });
           });
-          console.log(this.rows);
-            this.users=item
-          let parents = item.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
-          let childrens = item.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
+          this.users = item
+          let parents = item.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginupperuserid);
+          let childrens = item.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginupperuserid);
           this.jsonUsers = this.translator(parents, childrens);
 
           // 会社名とユーザー数でソート
@@ -1021,10 +1007,9 @@ export class UserComponent implements OnInit {
           console.log("==========取得JSONUSERS=============");
           console.log(this.jsonUsers);
           console.log("==========転換後のJSONUSERS=============");
+        } else {
+          this.showAlert("error", "データ取得：失敗です。");
         }
-        this.rows = [...this.rows];
-        this.getTabledata();
-
       } catch (e) {
         console.log('失敗');
       }
@@ -1042,6 +1027,7 @@ export class UserComponent implements OnInit {
         "lastname": parent.lastname,
         "projectCount": parent.projectCount,
         "role": parent.role,
+        "roleName": parent.roleName,
         "upperuserid": parent.upperuserid,
         "userCount": parent.userCount,
         "notDelUserCount": parent.notDelUserCount,
@@ -1077,7 +1063,7 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * ユーザー一覧を取得する(上位管理者)
+   * ユーザー一覧を取得する(ログイン者と配下ユーザー)
    * 
    */
   async getUnderUsers() {
@@ -1091,12 +1077,23 @@ export class UserComponent implements OnInit {
       try {
 
         item.forEach(element => {
-          element.userid
+          // element.userid
+          this.pageModel.roles.forEach(data => {
+            if (element.role === data.role) {
+              element.roleName = data.name;
+            }
+          });
         });
         if (item) {
-          console.log('上位管理者：');
-          console.log(item);
-          this.userAll = item;
+          this.users = item;
+          let parents = item.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
+          let childrens = item.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
+          this.jsonUsers = this.translator(parents, childrens);
+
+          // 会社名とユーザー数でソート
+          this.jsonUsers = this.sort(this.jsonUsers);
+        } else {
+          this.showAlert("error", "データ取得：失敗です。");
         }
       } catch (e) {
         console.log('');
@@ -1194,12 +1191,12 @@ export class UserComponent implements OnInit {
 
   }
 
-  getTabledata() {
-    this.userList = this.rows;
-    this.collectionSize = this.userList.length;
-    this.userList.forEach(x => x.isSelected = false)
-    // this.productList();
-  }
+  // getTabledata() {
+  //   this.userList = this.rows;
+  //   this.collectionSize = this.userList.length;
+  //   this.userList.forEach(x => x.isSelected = false)
+  //   // this.productList();
+  // }
 
   /**
 * Pagination table
@@ -1285,35 +1282,35 @@ export class UserComponent implements OnInit {
     this.pageModel.addTargetUserInfo.role = role.defaultValue;
   }
 
-/**
- * 権限を設定する
- * @param role 
- */
+  /**
+   * 権限を設定する
+   * @param role 
+   */
   setMyUserRole(role) {
     this.pageModel.adduserInfo.role = role.defaultValue;
   }
 
-  openData(pvalue: any){
+  openData(pvalue: any) {
     console.log("click");
-    if(pvalue!==null&&pvalue!==''){
+    if (pvalue !== null && pvalue !== '') {
 
       this.users.forEach((elem) => {
 
-        elem.expanded=true;
-   
+        elem.expanded = true;
+
       });
-      this.jsonUsers=null;
-      let parents = this.users.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
-      let childrens = this.users.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
+      this.jsonUsers = null;
+      let parents = this.users.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
+      let childrens = this.users.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
       this.jsonUsers = this.translatorFilter(parents, childrens);
       this.jsonUsers = this.sort(this.jsonUsers);
-    }else if(pvalue===''){
+    } else if (pvalue === '') {
       this.users.forEach((elem) => {
-        elem.expanded=false;
+        elem.expanded = false;
       });
-      this.jsonUsers=null;
-      let parents = this.users.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginuserid);
-      let childrens = this.users.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginuserid);
+      this.jsonUsers = null;
+      let parents = this.users.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
+      let childrens = this.users.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
       this.jsonUsers = this.translatorFilter(parents, childrens);
       this.jsonUsers = this.sort(this.jsonUsers);
     }
@@ -1330,6 +1327,7 @@ export class UserComponent implements OnInit {
         "lastname": parent.lastname,
         "projectCount": parent.projectCount,
         "role": parent.role,
+        "roleName": parent.roleName,
         "upperuserid": parent.upperuserid,
         "userCount": parent.userCount,
         "notDelUserCount": parent.notDelUserCount,
@@ -1369,15 +1367,15 @@ export class UserComponent implements OnInit {
    * @param data 
    */
   sort(data) {
-    data.sort(function(a, b){
+    data.sort(function (a, b) {
       // チームで並び替え
-      if(a.companyid !== b.companyid){
+      if (a.companyid !== b.companyid) {
         // 文字列は大小で比較する必要がある
-        if(a.companyid > b.companyid) return 1
-        if(a.companyid < b.companyid) return -1
+        if (a.companyid > b.companyid) return 1
+        if (a.companyid < b.companyid) return -1
       }
       // スコアで並び替え
-      if(a.userCount !== b.userCount){
+      if (a.userCount !== b.userCount) {
         // -1 かけて降順にする
         return (a.userCount - b.userCount) * -1
       }

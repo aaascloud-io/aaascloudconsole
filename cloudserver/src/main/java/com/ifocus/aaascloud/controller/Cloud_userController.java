@@ -134,12 +134,18 @@ public class Cloud_userController {
 				resJasonObj.put("companyName", model.getCompanyname());
 				resJasonObj.put("devicecount", model.getDevicecount());
 				resJasonObj.put("userfullname", model.getFullName());
+				resJasonObj.put("deleteflag", model.getDeleteflag());
 
 
 				// アクセス権限ユーザ一覧を取得する
 				List<Integer> underUserList = accessService.getAccessUsers(model.getUserid());
 				// 配下ユーザ数
 				resJasonObj.put("userCount", underUserList.size());
+				
+				// アクセス権限ユーザ一覧を取得する(削除以外)
+				List<Integer> notDelUserList = accessService.getNotDelAccessUsers(model.getUserid());
+				// 配下ユーザ数(削除以外)
+				resJasonObj.put("notDelUserCount", notDelUserList.size());
 
 				// プロジェクト一覧を取得する
 				List<Cloud_projectModel> projectList = cloud_projectService.getMyUnderProjects(underUserList);

@@ -14,8 +14,12 @@
                       <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
                         (click)="addTableDataModal(addTableDataModalContent)">
                         <i class="d-md-none d-block feather ft-plus white"></i>
-                        <span class="d-md-block d-none">新　規</span></button>
+                        <span class="d-md-block d-none">新規</span></button>
                     </ng-container>
+                    <!-- <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
+                      (click)="addNewCompanyUserModal(addNewCompanyUserModalContent, null)">
+                      <i class="d-md-none d-block feather ft-plus white"></i>
+                      <span class="d-md-block d-none">配下会社新規</span></button> -->
                   </div>
                 </div>
               </div>
@@ -26,7 +30,8 @@
                     <div style="text-align: left">
                       <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
                       <input type="text" pInputText size="50" placeholder="グローバル検索"
-                        (input)="tt.filterGlobal($event.target.value, 'contains')" (keyup)="openData($event.target.value)">
+                        (input)="tt.filterGlobal($event.target.value, 'contains')"
+                        (keyup)="openData($event.target.value)" disabled>
                     </div>
                   </ng-template>
                   <ng-template pTemplate="header" let-columns>
@@ -48,35 +53,48 @@
                         </td>
                       </ng-container>
                       <ng-template #elseTemplate>
-                        <td>
+                        <ng-container *ngIf="pageModel.loginUser.loginrole === 1
+                        && pageModel.loginUser.logincompanyid === rowData.companyid
+                        && pageModel.loginUser.loginuserid !== rowData.userid; else elseTemplate2">
+                        <td></td>
+                        </ng-container>
+                        <ng-template #elseTemplate2>
+                          <td>
                           <a class="primary edit mr-1 mrless" title="編集"
                             (click)="editTableDataModal(editTableDataModalContent, rowData)"><i
                               class="la la-pencil"></i>
                           </a>
                           <a class="danger delete mr-1 mrless" title="削除"><i class="la la-trash-o"
                               (click)="deleteRow(rowData)"></i></a>
-                          <a class="primary add mr-1 mrless" title="請求会社配下ユーザー新規"
+                          <a class="primary add mr-1 mrless" title="新規会社と会社管理者"
                             (click)="addNewCompanyUserModal(addNewCompanyUserModalContent, rowData)">
                             <i class="feather ft-plus-square"></i></a>
-                          <a class="primary add mr-1 mrless" title="請求会社ユーザー新規" *ngIf="rowData.role === 0"
+                          <a class="primary add mr-1 mrless" title="ユーザー新規" *ngIf="rowData.role === 0" 
                             (click)="addRowTableDataModal(addTableNewDataModalContent, rowData)">
                             <i class="feather ft-plus-circle"></i></a>
                         </td>
+                        </ng-template>
                       </ng-template>
                       <td>
                         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
                         {{rowData.companyid}}
                       </td>
                       <td>
-                        <span class="badge badge-primary badge-pill float-right" title="ユーザー数">{{rowData.userCount}}</span>
+                        <span class="badge badge-primary badge-pill float-right"
+                          title="ユーザー数">{{rowData.userCount}}</span>
                         {{rowData.companyName}}
                       </td>
                       <td style="width: auto;" nowrap>{{rowData.username}}</td>
                       <td>{{rowData.lastname}}</td>
                       <td>{{rowData.firstname}}</td>
-                      <td *ngIf="rowData.role === 0 ">会社管理者</td>
-                      <td *ngIf="rowData.role === 1 ">管理者</td>
-                      <td *ngIf="rowData.role === 2 ">使用者</td>
+                      <td>
+                        <span *ngIf="rowData.userid === pageModel.loginUser.loginuserid;"
+                          class="badge badge-primary" title="ログイン者">{{rowData.roleName}}
+                        </span>
+                        <span *ngIf="rowData.userid !== pageModel.loginUser.loginuserid;">
+                          {{rowData.roleName}}
+                        </span>
+                      </td>
                       <td>{{rowData.email}}</td>
                     </tr>
                   </ng-template>
@@ -127,52 +145,56 @@
             id="firstname" class="name form-control" placeholder="" maxlength="50">
         </div>
         <div class="form-group col-lg-6 col-md-12">
-          <h6>管理権限<code>＊</code></h6>
-          <select class="form-control" id="role" name="role" [(ngModel)]="selectedContact.role" #editrole="ngModel"
-            class="name form-control">
-            <option [value]=1>管理者</option>
-            <option [value]=2>使用者</option>
-          </select>
+          <h6>管理権限</h6>
+          <div class="card-content">
+            <div class="d-inline-block custom-control custom-radio mr-1">
+              <label>{{selectedContact.roleName}}</label>
+            </div>
+          </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
-
-        </div>
-        <div class="form-group col-lg-12 col-md-12">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>会社名<code>＊</code></h6>
           <input type="text" [(ngModel)]="pageModel.updataUserInfo.companyname" #editcompanyname="ngModel"
-            name="companyname" id="companyname" class="name form-control" placeholder="会社名" maxlength="50">
+            name="companyname" id="companyname" class="name form-control" placeholder="会社名" maxlength="50"
+            [disabled]="selectedContact.role === 2 ? true:false">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>法人番号<code>＊</code></h6>
           <input type="text" [(ngModel)]="pageModel.updataUserInfo.corporatenumber" #editcorporatenumber="ngModel"
-            name="corporatenumber" id="corporatenumber" class="name form-control" placeholder="法人番号" maxlength="13">
+            name="corporatenumber" id="corporatenumber" class="name form-control" placeholder="法人番号" maxlength="13"
+            [disabled]="selectedContact.role === 2 ? true:false">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>住所</h6>
           <input type="text" [(ngModel)]="pageModel.updataUserInfo.address" #editaddress="ngModel" name="address"
-            id="address" class="name form-control" placeholder="アドレス" maxlength="100">
+            id="address" class="name form-control" placeholder="アドレス" maxlength="100"
+            [disabled]="selectedContact.role === 2 ? true:false">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>業種</h6>
           <input type="text" [(ngModel)]="pageModel.updataUserInfo.industry" #editindustry="ngModel" name="industry"
-            id="industry" class="name form-control" placeholder="業種" maxlength="50">
+            id="industry" class="name form-control" placeholder="業種" maxlength="50"
+            [disabled]="selectedContact.role === 2 ? true:false">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>メール</h6>
           <input type="text" [(ngModel)]="pageModel.updataUserInfo.mail" #editmail="ngModel" name="mail" id="mail"
-            class="name form-control" placeholder="メール" maxlength="50">
+            class="name form-control" placeholder="メール" maxlength="50"
+            [disabled]="selectedContact.role === 2 ? true:false">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>電話</h6>
           <input type="text" [(ngModel)]="pageModel.updataUserInfo.tel" #edittel="ngModel" name="tel" id="tel"
-            class="name form-control" placeholder="電話" maxlength="13">
+            class="name form-control" placeholder="電話" maxlength="13"
+            [disabled]="selectedContact.role === 2 ? true:false">
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>Fax</h6>
           <input type="text" [(ngModel)]="pageModel.updataUserInfo.fax" #editfax="ngModel" name="fax" id="fax"
-            class="name form-control" placeholder="Fax" maxlength="13">
+            class="name form-control" placeholder="Fax" maxlength="13"
+            [disabled]="selectedContact.role === 2 ? true:false">
         </div>
       </div>
     </div>
@@ -283,11 +305,11 @@
   </form>
 </ng-template>
 
-<!-- 代理会社新規と会社管理者新規 -->
+<!-- 新規会社と会社管理者 -->
 <ng-template #addNewCompanyUserModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="addTargetCompanyUserDate(addTargetCompanyForm)" #addTargetCompanyForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">新規会社（会社管理者ユーザー）</h5>
+      <h5 class="modal-title" id="exampleModalLabel">新規会社と会社管理者</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -393,7 +415,8 @@
           </div>
         </div>
         <div class="form-group col-lg-6 col-md-12">
-          <h6>法人番号<code>＊</code><a target="_blank" href="https://www.houjin-bangou.nta.go.jp/ "> <u style="size: 1;">法人番号検索</u></a>
+          <h6>法人番号<code>＊</code><a target="_blank" href="https://www.houjin-bangou.nta.go.jp/ "> <u
+                style="size: 1;">法人番号検索</u></a>
           </h6>
           <input type="text" [(ngModel)]="pageModel.addTargetCompanyUserInfo.newCompanyInfo.corporatenumber"
             #addcorporatenumber="ngModel" name="corporatenumber" id="corporatenumber" class="name form-control"
@@ -450,11 +473,11 @@
   </form>
 </ng-template>
 
-<!-- 代理会の本社ユーザー新規 -->
+<!-- ユーザー新規 -->
 <ng-template #addTableNewDataModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="addTargetUserDate(addTargetForm)" #addTargetForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">代理会社ユーザー新規</h5>
+      <h5 class="modal-title" id="exampleModalLabel">ユーザー新規</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
