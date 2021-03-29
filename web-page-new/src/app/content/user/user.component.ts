@@ -1293,16 +1293,10 @@ export class UserComponent implements OnInit {
   openData(pvalue: any) {
     console.log("click");
     if (pvalue !== null && pvalue !== '') {
-
-      this.users.forEach((elem) => {
-
-        elem.expanded = true;
-
-      });
       this.jsonUsers = null;
       let parents = this.users.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
       let childrens = this.users.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
-      this.jsonUsers = this.translatorFilter(parents, childrens);
+      this.jsonUsers = this.translatorFilter(parents, childrens,pvalue);
       this.jsonUsers = this.sort(this.jsonUsers);
     } else if (pvalue === '') {
       this.users.forEach((elem) => {
@@ -1311,13 +1305,26 @@ export class UserComponent implements OnInit {
       this.jsonUsers = null;
       let parents = this.users.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
       let childrens = this.users.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
-      this.jsonUsers = this.translatorFilter(parents, childrens);
+      this.jsonUsers = this.translator(parents, childrens);
       this.jsonUsers = this.sort(this.jsonUsers);
     }
   }
 
-  translatorFilter(parents, childrens) {
+  translatorFilter(parents, childrens,pvalue) {
     parents.forEach(parent => {
+      childrens.forEach((child)=>{
+        if (parent.userid == child.upperuserid) {
+          if(child.companyid.toString().indexOf(pvalue)>-1
+          ||child.companyName.indexOf(pvalue)>-1
+          ||child.username.indexOf(pvalue)>-1
+          ||child.firstname.indexOf(pvalue)>-1
+          ||child.lastname.indexOf(pvalue)>-1
+          ||child.roleName.toString().indexOf(pvalue)>-1
+          ||child.email.indexOf(pvalue)>-1
+          ||child.userCount.toString().indexOf(pvalue)>-1)
+          parent.expanded=true;
+        }
+      });
       parent.data = {
         "companyName": parent.companyName,
         "companyid": parent.companyid,
@@ -1348,7 +1355,7 @@ export class UserComponent implements OnInit {
           });
           // let temp = childrens;
           temp.splice(index, 1);
-          this.translatorFilter([child], temp);
+          this.translatorFilter([child], temp,pvalue);
           if (typeof parent.children !== "undefined") {
             // parent.children.push(child);
             // parent.data.push(child);
