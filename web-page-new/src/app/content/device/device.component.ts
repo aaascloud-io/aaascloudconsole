@@ -10,6 +10,8 @@ import { NgBlockUI, BlockUI } from 'ng-block-ui';
 import {MessageService} from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 import {ConfirmationService} from 'primeng/api';
+import { format } from　'date-fns';
+
 
 @Component({
   selector: 'app-device',
@@ -257,6 +259,9 @@ export class DeviceComponent implements OnInit {
     this.selectedDevice = Object.assign({}, row);
     this.selectedDevice.sslChecked = this.selectedDevice["encryptedcommunications"] == 0 ? false : true;
     this.selectedDevice.bindingflagChecked = this.selectedDevice["bindingflag"] == 0 ? false : true;
+
+    const date = this.selectedDevice["versioncomfirmtime"];
+    this.selectedDevice["versioncomfirmtime"]=format(date, 'YYYY年MM月DD日 H:mm:ss');
     this.editModal = this.modal.open(editDeviceModel, {
       windowClass: 'animated fadeInDown'
       , size: 'lg'

@@ -1241,8 +1241,8 @@ public class Cloud_deviceService {
 		entity.setConnectserverurl(model.getConnectserverurl());
 		entity.setConnectserverport(model.getConnectserverport());
 		entity.setBindingflag(model.getBindingflag());
-//		entity.setFmlastestversion(model.getFmlastestversion());
-//		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
+		entity.setFmlastestversion(model.getFmlastestversion());
+		entity.setVersioncomfirmtime(model.getVersioncomfirmtime());
 //		entity.setLastprojectId(CommonConstant.PROJECT_NOT_SET);
 //		entity.setLastgroupid(CommonConstant.GROUP_NOT_SET);
 		entity.setAlive(AliveConstant.ALIVE);
