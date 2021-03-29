@@ -55,6 +55,7 @@ const selectData = require('../../../assets/data/forms/form-elements/select.json
 export class UserComponent implements OnInit {
 
   users: any;
+  loginusers: any[] = [];
   userInfo: UserInfo;
   files: TreeNode[];
   files1: TreeNode[];
@@ -290,6 +291,7 @@ export class UserComponent implements OnInit {
 
     if (this.pageModel.loginUser.loginrole === 1) {
       this.searchMyUsers();
+      this.loginuserFilte();
     } else {
       this.getUnderUsers();
     }
@@ -1238,8 +1240,8 @@ export class UserComponent implements OnInit {
  */
   cancleCompanyModel(openForm: NgForm) {
     if (this.addCompanyModal != null) {
-      this.cliarCompanyInfo();
-      openForm.reset();
+      // this.cliarCompanyInfo();
+      // openForm.reset();
       this.addCompanyModal.close(openForm.resetForm);
     }
   }
@@ -1255,6 +1257,8 @@ export class UserComponent implements OnInit {
     this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.tel = '';
     this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.mail = '';
     this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.fax = '';
+    this.pageModel.addTargetCompanyUserInfo.newCompanyInfo.fax = '';
+    this.pageModel.addTargetCompanyUserInfo.companyname = '';
   }
 
   getResultMs(item) {
@@ -1293,69 +1297,24 @@ export class UserComponent implements OnInit {
   openData(pvalue: any) {
     console.log("click");
     if (pvalue !== null && pvalue !== '') {
-      this.jsonUsers = null;
-      let parents = this.users.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
-      let childrens = this.users.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
-      this.jsonUsers = this.translatorFilter(parents, childrens,pvalue);
-      this.jsonUsers = this.sort(this.jsonUsers);
+      if (this.pageModel.loginUser.loginrole === 1) {
+        this.jsonUsers = null;
+        let parents = this.users.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginupperuserid);
+        let childrens = this.users.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginupperuserid);
+        this.jsonUsers = this.translatorFilter(parents, childrens,pvalue);
+        this.jsonUsers = this.sort(this.jsonUsers);
+      } else {
+        this.jsonUsers = null;
+        let parents = this.users.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
+        let childrens = this.users.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
+        this.jsonUsers = this.translatorFilter(parents, childrens,pvalue);
+        this.jsonUsers = this.sort(this.jsonUsers);
+      }
+
     } else if (pvalue === '') {
-      this.users.forEach((elem) => {
-        elem.expanded = false;
-      });
-      this.jsonUsers = null;
-      let parents = this.users.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
-      let childrens = this.users.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
-      this.jsonUsers = this.translatorFilterClose(parents, childrens);
-      this.jsonUsers = this.sort(this.jsonUsers);
+      
     }
   }
-
-  translatorFilterClose(parents, childrens) {
-    parents.forEach(parent => {
-      parent.data = {
-        "companyName": parent.companyName,
-        "companyid": parent.companyid,
-        "deviceCount": parent.deviceCount,
-        "email": parent.email,
-        "firstname": parent.firstname,
-        "lastname": parent.lastname,
-        "projectCount": parent.projectCount,
-        "role": parent.role,
-        "roleName": parent.roleName,
-        "upperuserid": parent.upperuserid,
-        "userCount": parent.userCount,
-        "notDelUserCount": parent.notDelUserCount,
-        "userid": parent.userid,
-        "username": parent.username,
-        "deleteflag": parent.deleteflag
-      };
-      childrens.forEach((child, index) => {
-        child.data = child;
-        if (parent.userid == child.upperuserid) {
-          let temp = [];
-          childrens.forEach(element => {
-            if (element.data) {
-              temp.push(element.data)
-            } else {
-              temp.push(element)
-            }
-          });
-          // let temp = childrens;
-          temp.splice(index, 1);
-          this.translator([child], temp);
-          if (typeof parent.children !== "undefined") {
-            // parent.children.push(child);
-            // parent.data.push(child);
-          } else {
-            parent.children = [child]
-            // parent.data = data;
-          }
-        }
-      });
-    });
-    return parents;
-  }
-
 
   translatorFilter(parents, childrens,pvalue) {
     parents.forEach(parent => {
@@ -1436,5 +1395,26 @@ export class UserComponent implements OnInit {
       return 0
     });
     return data;
+  }
+
+  /**
+   * ログイン者と配下ユーザーを取得する
+   */
+  loginuserFilte () {
+    var query = {
+    }
+    this.httpService.usePost('getUnderUsers', query).then(item => {
+      try {
+        if (item) {
+          item.forEach(element => {
+            this.loginusers.push(element.userid);
+          });
+        } else {
+          console.log('');
+        }
+      } catch (e) {
+        console.log('');
+      }
+    });
   }
 }
