@@ -1305,10 +1305,57 @@ export class UserComponent implements OnInit {
       this.jsonUsers = null;
       let parents = this.users.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
       let childrens = this.users.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
-      this.jsonUsers = this.translator(parents, childrens);
+      this.jsonUsers = this.translatorFilterClose(parents, childrens);
       this.jsonUsers = this.sort(this.jsonUsers);
     }
   }
+
+  translatorFilterClose(parents, childrens) {
+    parents.forEach(parent => {
+      parent.data = {
+        "companyName": parent.companyName,
+        "companyid": parent.companyid,
+        "deviceCount": parent.deviceCount,
+        "email": parent.email,
+        "firstname": parent.firstname,
+        "lastname": parent.lastname,
+        "projectCount": parent.projectCount,
+        "role": parent.role,
+        "roleName": parent.roleName,
+        "upperuserid": parent.upperuserid,
+        "userCount": parent.userCount,
+        "notDelUserCount": parent.notDelUserCount,
+        "userid": parent.userid,
+        "username": parent.username,
+        "deleteflag": parent.deleteflag
+      };
+      childrens.forEach((child, index) => {
+        child.data = child;
+        if (parent.userid == child.upperuserid) {
+          let temp = [];
+          childrens.forEach(element => {
+            if (element.data) {
+              temp.push(element.data)
+            } else {
+              temp.push(element)
+            }
+          });
+          // let temp = childrens;
+          temp.splice(index, 1);
+          this.translator([child], temp);
+          if (typeof parent.children !== "undefined") {
+            // parent.children.push(child);
+            // parent.data.push(child);
+          } else {
+            parent.children = [child]
+            // parent.data = data;
+          }
+        }
+      });
+    });
+    return parents;
+  }
+
 
   translatorFilter(parents, childrens,pvalue) {
     parents.forEach(parent => {
