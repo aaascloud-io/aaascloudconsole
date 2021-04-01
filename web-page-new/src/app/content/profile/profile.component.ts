@@ -7,6 +7,8 @@ import { UserInfo } from 'src/app/_common/_Interface/UserInfo';
 import { AlertService } from '../../_services/alert.service';
 import { NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/_services/auth.service';
+import {MessageService} from 'primeng/api';
+import {ConfirmationService} from 'primeng/api';
 
 @Component({
   selector: 'app-profile',
@@ -28,8 +30,13 @@ export class ProfileComponent implements OnInit {
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
     private alertService: AlertService,
+
+
     private authService: AuthService,
     private router: Router,
+    private messageService: MessageService, 
+    private confirmationService: ConfirmationService,
+
   ) { }
 
   ngOnInit(): void {
@@ -60,8 +67,7 @@ export class ProfileComponent implements OnInit {
       return;
     }
     if (this.profileForm.value.newpassword != this.profileForm.value.confirmpassword) {
-      alert('新規パスワードと新規パスワード（確認用）に同じパスワードを設定してください');
-      // this.alertService.error('新規パスワードと新規パスワード（確認用）に同じパスワードを設定してください');
+      this.showAlert("error", "新規パスワードと新規パスワード（確認用）に同じパスワードを設定してください");
       return;
     }
     try {
@@ -92,17 +98,17 @@ export class ProfileComponent implements OnInit {
             if (item != null) {
               if (item.resultCode === "0000") {
                 this.ngOnInit();
-                // $("#addinfo").hide();
-                // $('.modal-backdrop').remove();
-                alert('パスワードを変更しました、再ログインしてください');
+                this.showAlert("info", "パスワードを変更しました、再ログインしてください");
                 this.logout();
               } else {
-                alert('パスワードを変更APIエラー発生しました');
+                alert('');
+                this.showAlert("error", "パスワードを変更APIエラー発生しました");
                 //pageModel
                 this.clearControls();
               }
             }
           } catch (e) {
+            this.showAlert("error", "パスワードを変更APIエラー発生しました");
             console.log('パスワードを変更APIエラー発生しました');
             //pageModel
             this.clearControls();
@@ -114,13 +120,12 @@ export class ProfileComponent implements OnInit {
     } catch (err) {
       // this.handleError('操作失敗', err);
       if (err.status === 401) {
-        // this.alertService.error("パスワードが間違っています");
-        alert('パスワードが間違っています');
+        this.showAlert("error", "元のパスワードが間違っています");
         //pageModel
         this.clearControls();
       } else {
-        // this.alertService.error("パスワード変更失敗しました");
-        alert('パスワード変更失敗しました');
+        alert('');
+        this.showAlert("error", "元のパスワード変更失敗しました");
         //pageModel
         this.clearControls();
       }
@@ -135,5 +140,24 @@ export class ProfileComponent implements OnInit {
         this.pageModel[prop] = '';
       }
     }
+  }
+
+  showAlert(alertType, alertDetail) {
+    this.showAlertSetlife(alertType, alertDetail,null)
+  }
+
+
+  showAlertSetlife(alertType, alertDetail,plife) {
+    var lifeValue=2000;
+    if(plife!==null||plife!=='')
+    {
+      lifeValue=plife
+    }
+    this.messageService.add({
+      key : 'alertModal', 
+      severity : alertType, 
+      summary : alertType, 
+      detail : alertDetail,
+      life : lifeValue});
   }
 }

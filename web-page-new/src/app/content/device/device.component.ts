@@ -8,7 +8,6 @@ import { number } from 'ngx-custom-validators/src/app/number/validator';
 import { map, startWith } from 'rxjs/operators';
 import { NgBlockUI, BlockUI } from 'ng-block-ui';
 import {MessageService} from 'primeng/api';
-import { PrimeNGConfig } from 'primeng/api';
 import {ConfirmationService} from 'primeng/api';
 import { format } from　'date-fns';
 
@@ -40,6 +39,7 @@ export class DeviceComponent implements OnInit {
   page = 1;
   //sort
   sortOn: any;
+  lasort:any;
 //一括登録ファイル名
   OpenFileName = "";
   public pageModel = {
@@ -102,22 +102,15 @@ export class DeviceComponent implements OnInit {
       userid: ''
     },
     sort: {
-      snUp: false,
-      snDown: false,
-      imeiUp: false,
-      imeiDown: false,
-      iccidUp: false,
-      iccidDown: false,
-      devicenameUp: false,
-      devicenameDown: false,
-      companynameUp: false,
-      companynameDown: false,
-      productnameUp: false,
-      productnameDown: false,
-      projectnameUp: false,
-      projectnameDown: false,
-      groupnameUp: false,
-      groupnameDown: false,
+      sn: false,
+      imei: false,
+      iccid: false,
+      devicename: false,
+      companyname: false,
+      productname: false,
+      projectname: false,
+      groupname: false,
+      userfullname:false
     },
   }
 
@@ -136,7 +129,6 @@ export class DeviceComponent implements OnInit {
     private alertService: AlertService,
     private httpService: HttpService,
     private messageService: MessageService, 
-    private primengConfig: PrimeNGConfig,
     private confirmationService: ConfirmationService,
   ) { }
 
@@ -149,20 +141,12 @@ export class DeviceComponent implements OnInit {
   Init() {
       var param = {};
       this.getDropdownList();
-      this.httpService.usePost('/searchUnderUserDevices',param).then(item => {
-        try {
-          if (item != null) {
-            this.pageModel.deviceList = item;
-            this.dataCount = item.length;
-            this.getTabledata();
-          }
-        } catch (e) {
-        this.showAlert("error", "デバイスを検索APIエラー発生しました。");
-          console.log('デバイスを検索APIエラー発生しました。');
-        }
-      })
+      this.getUnderUserDevices(param);
   }
 
+  /**
+   * デバイス検索
+   */
   serachDevices() {
     //sortクリア
     for (var prop in this.pageModel.sort) {
@@ -177,17 +161,31 @@ export class DeviceComponent implements OnInit {
         "groupname": this.pageModel.query.group,
         "companyid": this.pageModel.query.companyid,
       }
-      this.httpService.usePost('/searchUnderUserDevices', param).then(item => {
-        try {
-          if (item != null) {
-            this.pageModel.deviceList = item;
-            this.dataCount = item.length;
-            this.getTabledata();
-          }
-        } catch (e) {
-          console.log('デバイスを検索APIエラー発生しました。');
+      this.getUnderUserDevices(param);
+  }
+
+  /**
+   * デバイス取得
+   * @param param 
+   */
+  getUnderUserDevices(param){
+    this.httpService.usePost('/searchUnderUserDevices', param).then(item => {
+      try {
+        if (item != null) {
+          item.forEach(x => {
+            x.sslChecked = x.encryptedcommunications==0 ? false : true;
+            x.bindingflagChecked=x.bindingflag== 0 ? false :  true;
+            x.versioncomfirmtime =  x.versioncomfirmtime == null ? '' : format(x.versioncomfirmtime , 'YYYY年MM月DD日 H:mm:ss')
+          })
+          this.pageModel.deviceList = item;
+          this.dataCount = item.length;
+
+          this.getTabledata();
         }
-      })
+      } catch (e) {
+        console.log('デバイスを検索APIエラー発生しました。');
+      }
+    })
   }
 
   getDropdownList() {
@@ -221,8 +219,6 @@ export class DeviceComponent implements OnInit {
         console.log('プロダクト一覧を取得APIエラー発生しました。');
       }
     });
-
-
   }
 
   /**
@@ -257,11 +253,6 @@ export class DeviceComponent implements OnInit {
    */
   openEditModal(editDeviceModel, row) {
     this.selectedDevice = Object.assign({}, row);
-    this.selectedDevice.sslChecked = this.selectedDevice["encryptedcommunications"] == 0 ? false : true;
-    this.selectedDevice.bindingflagChecked = this.selectedDevice["bindingflag"] == 0 ? false : true;
-
-    const date = this.selectedDevice["versioncomfirmtime"];
-    this.selectedDevice["versioncomfirmtime"]=format(date, 'YYYY年MM月DD日 H:mm:ss');
     this.editModal = this.modal.open(editDeviceModel, {
       windowClass: 'animated fadeInDown'
       , size: 'lg'
@@ -557,22 +548,7 @@ export class DeviceComponent implements OnInit {
         this.showAlert("info","削除操作を取消しました");
       },
     });
-    // if (confirm("選択したデバイスを全削除します。よろしいですか？")) {
-    //     var param = {
-    //       "deviceidlist": removedIndex
-    //     }
-    //     this.httpService.useRpDelete('deleteDevices', param).then(item => {
-    //       try {
-    //         if (item.resultCode == "0000") {
-    //           this.Init();
-    //         } else {
-    //         }
-    //       } catch (e) {
-    //         console.log(e);
-    //       }
-    //     }
-    //     );
-    // }
+
   }
 
   lengthCheck(value, name, templateForm: ElementRef) {
@@ -645,86 +621,22 @@ export class DeviceComponent implements OnInit {
   sortData(nm) {
     if (this.sortOn == 1) {
       this.pageModel.deviceList.sort(this.alphabetically(true, nm));
+      this.lasort="la la-sort-up"
       this.sortOn = 2;
     } else {
       this.pageModel.deviceList.sort(this.alphabetically(false, nm));
+      this.lasort="la la-sort-down"
       this.sortOn = 1;
     }
-    this.pageModel.sort.snUp = false;
-    this.pageModel.sort.snDown = false;
-    this.pageModel.sort.imeiUp = false;
-    this.pageModel.sort.imeiDown = false;
-    this.pageModel.sort.iccidUp = false;
-    this.pageModel.sort.iccidDown = false;
-    this.pageModel.sort.devicenameUp = false;
-    this.pageModel.sort.devicenameDown = false;
-    this.pageModel.sort.companynameUp = false;
-    this.pageModel.sort.companynameDown = false;
-    this.pageModel.sort.productnameUp = false;
-    this.pageModel.sort.productnameDown = false;
-    this.pageModel.sort.projectnameUp = false;
-    this.pageModel.sort.projectnameDown = false;
-    this.pageModel.sort.groupnameUp = false;
-    this.pageModel.sort.groupnameDown = false;
 
-    switch (nm) {
-      case 'sn':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.snUp = true
-        } else {
-          this.pageModel.sort.snDown = true
-        }
-        break;
-      case 'imei':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.imeiUp = true
-        } else {
-          this.pageModel.sort.imeiDown = true
-        }
-        break;
-      case 'sim_iccid':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.iccidUp = true
-        } else {
-          this.pageModel.sort.iccidDown = true
-        }
-        break;
-      case 'devicename':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.devicenameUp = true
-        } else {
-          this.pageModel.sort.devicenameDown = true
-        }
-        break;
-      case 'companyname':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.companynameUp = true
-        } else {
-          this.pageModel.sort.companynameDown = true
-        }
-        break;
-      case 'productname':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.productnameUp = true
-        } else {
-          this.pageModel.sort.productnameDown = true
-        }
-        break;
-      case 'projectname':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.projectnameUp = true
-        } else {
-          this.pageModel.sort.projectnameDown = true
-        }
-        break;
-      case 'groupname':
-        if (this.sortOn == 1) {
-          this.pageModel.sort.groupnameUp = true
-        } else {
-          this.pageModel.sort.groupnameDown = true
-        }
-        break;
+    //エイコンクリア
+    for (var prop in this.pageModel.sort) {
+      if (this.pageModel.sort.hasOwnProperty(prop)) {
+        this.pageModel.sort[prop] = false;
+      }
     }
+　　//エイコン追加
+    this.pageModel.sort[nm] = true
   }
 
   alphabetically(ascending, nm) {
@@ -831,7 +743,10 @@ export class DeviceComponent implements OnInit {
       detail : alertDetail,
       life : lifeValue});
   }
-
+/**
+ * bigSize page aglin right
+ * bigSize aslse aglin left
+ */
   onResize(){
     //col-md最大値
     if(innerWidth<992){

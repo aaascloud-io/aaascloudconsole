@@ -101,31 +101,35 @@
                       </th>
                       <th scope="col" class="thcolor">No.</th>
                       <th scope="col" class="thcolor">操作</th>
-                      <th scope="col" class="thcolor" (click)="sortData('sn')">SN<i *ngIf="pageModel.sort.snUp"
-                          class="la la-sort-up"></i><i *ngIf="pageModel.sort.snDown" class="la la-sort-down"></i></th>
-                      <th scope="col" class="thcolor" (click)="sortData('imei')">IMEI
-                        <i *ngIf="pageModel.sort.imeiUp" class="la la-sort-up"></i><i *ngIf="pageModel.sort.imeiDown"
-                          class="la la-sort-down"></i>
+                      <th scope="col" class="thcolor" (click)="sortData('sn')">SN<i
+                        *ngIf="pageModel.sort.sn" [ngClass]="lasort"></i></th>
+                      <th scope="col" class="thcolor" (click)="sortData('imei')">IMEI<i
+                        *ngIf="pageModel.sort.imei" [ngClass]="lasort"></i>
                       </th>
-                      <th scope="col" class="thcolor" (click)="sortData('sim_iccid')">ICCID<i
-                          *ngIf="pageModel.sort.iccidUp" class="la la-sort-up"></i><i *ngIf="pageModel.sort.iccidDown"
-                          class="la la-sort-down"></i></th>
+                      <th scope="col" class="thcolor" (click)="sortData('iccid')">ICCID<i
+                        *ngIf="pageModel.sort.iccid" [ngClass]="lasort"></i></th>
                       <!-- <th scope="col" class="thcolor">状態</th> -->
                       <th scope="col" class="thcolor" (click)="sortData('devicename')">デバイス名<i
-                          *ngIf="pageModel.sort.devicenameUp" class="la la-sort-up"></i><i
-                          *ngIf="pageModel.sort.devicenameDown" class="la la-sort-down"></i></th>
+                        *ngIf="pageModel.sort.devicename" [ngClass]="lasort"></i></th>
                       <th scope="col" class="thcolor" (click)="sortData('companyname')">会社名<i
-                          *ngIf="pageModel.sort.companynameUp" class="la la-sort-up"></i><i
-                          *ngIf="pageModel.sort.companynameDown" class="la la-sort-down"></i></th>
+                        *ngIf="pageModel.sort.companyname" [ngClass]="lasort"></i></th>
                       <th scope="col" class="thcolor" (click)="sortData('productname')">プロダクト<i
-                          *ngIf="pageModel.sort.productnameUp" class="la la-sort-up"></i><i
-                          *ngIf="pageModel.sort.productnameDown" class="la la-sort-down"></i></th>
+                        *ngIf="pageModel.sort.productname" [ngClass]="lasort"></i></th>
                       <th scope="col" class="thcolor" (click)="sortData('projectname')">プロジェクト<i
-                          *ngIf="pageModel.sort.projectnameUp" class="la la-sort-up"></i><i
-                          *ngIf="pageModel.sort.projectnameDown" class="la la-sort-down"></i></th>
+                        *ngIf="pageModel.sort.projectname" [ngClass]="lasort"></i></th>
                       <th scope="col" class="thcolor" (click)="sortData('groupname')">グループ<i
-                          *ngIf="pageModel.sort.groupnameUp" class="la la-sort-up"></i><i
-                          *ngIf="pageModel.sort.groupnameDown" class="la la-sort-down"></i></th>
+                          *ngIf="pageModel.sort.groupname" [ngClass]="lasort"></i></th>
+                      <th scope="col" class="thcolor"  (click)="sortData('userfullname')">所有者<i
+                        *ngIf="pageModel.sort.userfullname" [ngClass]="lasort"></i></th>
+                      <th scope="col" class="thcolor" >SIMカードIMSI</th>
+                      <th scope="col" class="thcolor" >SIMカード電話番号</th>
+                      <th scope="col" class="thcolor" >暗号化キー</th>
+                      <th scope="col" class="thcolor" >暗号化通信</th>
+                      <th scope="col" class="thcolor" >接続サーバーアドレス</th>
+                      <th scope="col" class="thcolor" >接続サーバーポート番号</th>
+                      <th scope="col" class="thcolor" >バンディング済み</th>
+                      <th scope="col" class="thcolor" >ファームウェア・最新バージョン</th>
+                      <th scope="col" class="thcolor" >ファームウェア・最新バージョン確認時刻</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -151,6 +155,28 @@
                       <td nowrap>{{ element.projectname}}</td>
                       <td nowrap>{{ element.groupname}}</td>
 
+                      <td nowrap>{{ element.userfullname}}</td>
+                      <td nowrap>{{ element.sim_imsi}}</td>
+                      <td nowrap>{{ element.sim_tel}}</td>
+                      <td nowrap>{{ element.encryptedkey}}</td>
+                      <td nowrap>
+                        <div> 
+                          <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" size="small" [checked]="element.sslChecked">
+                          </ui-switch>
+                          <label for="switcherySize2" class="font-medium-2 text-bold-600 ml-1"></label>
+                        </div>
+                      </td>
+                      <td nowrap>{{ element.connectserverurl}}</td>
+                      <td nowrap>{{ element.connectserverport}}</td>
+                      <td nowrap>
+                        <div> 
+                          <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" size="small" [checked]="element.bindingflagChecked">
+                          </ui-switch>
+                          <label for="switcherySize2" class="font-medium-2 text-bold-600 ml-1"></label>
+                        </div>
+                      </td>
+                      <td nowrap>{{ element.fmlastestversion}}</td>
+                      <td nowrap>{{ element.versioncomfirmtime}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -198,7 +224,7 @@
   <form (ngSubmit)="editDeviceDetail(editDeviceForm,selectedDevice.deviceid,editForm)" #editDeviceForm="ngForm"
     #editForm>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">デバイス詳細</h5>
+      <h5 class="modal-title" id="exampleModalLabel1">編集</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -324,7 +350,7 @@
 <ng-template #registerDeviceModal let-c="close" let-d="dismiss">
   <form (ngSubmit)="registerDeviceDetail(registerDeviceForm,registerForm)" #registerDeviceForm="ngForm" #registerForm>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel1">登録</h5>
+      <h5 class="modal-title" id="exampleModalLabel1">新規</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -432,7 +458,7 @@
       </div>
       <div class="form-group position-relative has-icon-left mb-0">
         <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i
-            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">保存</span></button>
+            class="la la-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">登録</span></button>
       </div>
     </div>
   </form>

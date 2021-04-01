@@ -90,9 +90,8 @@
                             <i *ngIf="valueSortFlg.versionNameUp" class="la la-sort-up"></i>
                             <i *ngIf="valueSortFlg.versionNameDown" class="la la-sort-down"></i>
                           </th>
-                          <th scope="col" class="thcolor">詳細</th>
                           <th scope="col" class="thcolor">ダウンロードURL</th>
-                          
+                          <th scope="col" class="thcolor">詳細</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -114,8 +113,8 @@
                           <td nowrap>{{ element.productname }}</td>
                           <td nowrap>{{ element.versioncode }}</td>
                           <td nowrap>{{ element.versionname }}</td>
-                          <td nowrap>{{ element.description}}</td>
                           <td nowrap>{{ element.downloadurl}}</td>
+                          <td nowrap>{{ element.description}}</td>
                           
                           
                         </tr>
@@ -170,7 +169,7 @@
 <ng-template #editVersionDataModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="versionDataUpdate(versionEditForm,selectedVersion.rowid)" #versionEditForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">バージョン詳細</h5>
+      <h5 class="modal-title" id="exampleModalLabel">編集</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -239,7 +238,7 @@
 <ng-template #addNewVersion let-c="close" let-d="dismiss">
   <form (ngSubmit)="addNewVersionForm(NewVersionForm)" #NewVersionForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">バージョン新規追加</h5>
+      <h5 class="modal-title" id="exampleModalLabel">新規</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>

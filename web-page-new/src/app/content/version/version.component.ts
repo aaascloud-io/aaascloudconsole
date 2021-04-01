@@ -59,7 +59,13 @@ export class VersionComponent implements OnInit {
   checkOn: 1;
   show = false;
   // 新規バージョンのデータ
-  addVersion = {};
+  addVersion = {
+    productid:'', 
+    versioncode:'', 
+    versionname:'', 
+    downloadurl:'', 
+    description:'', 
+  };
   // すべてのproductName
   productNameList = [];
 
@@ -231,7 +237,12 @@ export class VersionComponent implements OnInit {
         console.log(item);
         try{
           if(item.resultCode == "0000"){
-            this.addVersion={},
+            //addVersionクリア
+            for (var prop in this.addVersion) {
+              if (this.addVersion.hasOwnProperty(prop)) {
+                this.addVersion[prop] = '';
+              }
+            }
             this.ngOnInit();
             this.showAlert("success","バージョンを登録しました。");
           }else{
@@ -590,7 +601,12 @@ export class VersionComponent implements OnInit {
       productname:'',
       versionname:''
     };
-    this.addVersion = {};
+    //addVersionクリア
+    for (var prop in this.addVersion) {
+      if (this.addVersion.hasOwnProperty(prop)) {
+        this.addVersion[prop] = '';
+      }
+    }
     this.productNameList = [];
   }
 

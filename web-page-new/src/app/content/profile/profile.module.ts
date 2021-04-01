@@ -4,14 +4,20 @@ import { ProfileComponent } from './profile.component';
 import { RouterModule } from '@angular/router';
 // import { ProfileRoutingModule } from './profile-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
+import {ToastModule} from 'primeng/toast';
+import {ButtonModule} from 'primeng/button';
+import {RippleModule} from 'primeng/ripple';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    ToastModule,
+    ButtonModule,
+    RippleModule,
+    ConfirmDialogModule,
     RouterModule.forChild([
       {
         path: '',

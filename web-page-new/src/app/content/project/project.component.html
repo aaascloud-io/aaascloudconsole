@@ -213,7 +213,7 @@
 <ng-template #editProjectDataModalContent let-c="close" let-d="dismiss">
   <form (ngSubmit)="projectDataUpdate(projectEditForm,selectedProject.projectid)" #projectEditForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">プロジェクト詳細</h5>
+      <h5 class="modal-title" id="exampleModalLabel">編集</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -261,7 +261,7 @@
 <ng-template #addNewProject let-c="close" let-d="dismiss">
   <form (ngSubmit)="addNewProjectForm(NewProjectForm)" #NewProjectForm="ngForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">登録</h5>
+      <h5 class="modal-title" id="exampleModalLabel">新規</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
