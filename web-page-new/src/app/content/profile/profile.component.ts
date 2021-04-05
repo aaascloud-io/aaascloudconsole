@@ -9,6 +9,8 @@ import { NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/_services/auth.service';
 import {MessageService} from 'primeng/api';
 import {ConfirmationService} from 'primeng/api';
+import { CookieService } from 'ngx-cookie-service';
+import { ConstantsHandler, ServerType } from '../../_common/_constant/constants.handler';
 
 @Component({
   selector: 'app-profile',
@@ -30,13 +32,11 @@ export class ProfileComponent implements OnInit {
     private httpService: HttpService,
     private dataFatoryService: DataFatoryService,
     private alertService: AlertService,
-
-
     private authService: AuthService,
     private router: Router,
     private messageService: MessageService, 
     private confirmationService: ConfirmationService,
-
+    private cookieService: CookieService
   ) { }
 
   ngOnInit(): void {
@@ -97,11 +97,10 @@ export class ProfileComponent implements OnInit {
           try {
             if (item != null) {
               if (item.resultCode === "0000") {
-                this.ngOnInit();
-                this.showAlert("info", "パスワードを変更しました、再ログインしてください");
+                var timeout = new Date(new Date().getTime() + ConstantsHandler.GLOBAL_TOKEN.interval);
+                this.cookieService.set(ConstantsHandler.SUCCESS_INFO, JSON.stringify("パスワードを変更しました、再ログインしてください。"), timeout);
                 this.logout();
               } else {
-                alert('');
                 this.showAlert("error", "パスワードを変更APIエラー発生しました");
                 //pageModel
                 this.clearControls();
@@ -124,8 +123,7 @@ export class ProfileComponent implements OnInit {
         //pageModel
         this.clearControls();
       } else {
-        alert('');
-        this.showAlert("error", "元のパスワード変更失敗しました");
+        this.showAlert("error", "パスワード変更失敗しました");
         //pageModel
         this.clearControls();
       }

@@ -6,7 +6,8 @@ import { AlertService } from '../_services/alert.service';
 // import { HttpService } from '@service/HttpService';
 import { HttpService } from '../_services/HttpService';
 import { UserService } from '../_services/UserService';
-
+import { CookieService } from 'ngx-cookie-service';
+import { ConstantsHandler, ServerType } from '../_common/_constant/constants.handler';
 
 @Component({
   templateUrl: 'login.component.html',
@@ -32,7 +33,9 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private alertService: AlertService,
     public authService: AuthService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private cookieService: CookieService
+
   ) {
     this.route.queryParams.subscribe(params => {
       this.returnUrl = params['returnUrl'];
@@ -46,6 +49,12 @@ export class LoginComponent implements OnInit {
   }
 
   init() {
+    let SuccessCookie:string =  this.cookieService.get(ConstantsHandler.SUCCESS_INFO);
+    if(SuccessCookie != null && SuccessCookie != ''){
+        let SuccessInfo = JSON.parse(SuccessCookie);
+        this.alertService.success(SuccessInfo);
+    }
+    this.cookieService.delete(ConstantsHandler.SUCCESS_INFO)
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
@@ -60,6 +69,7 @@ export class LoginComponent implements OnInit {
   }
 
   async tryLogin() {
+
     this.submitted = true;
 
     // stop here if form is invalid

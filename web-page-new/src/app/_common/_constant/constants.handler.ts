@@ -39,11 +39,10 @@ export class ConstantsHandler {
     };
 
     static USER_TOKEN_INVALID = 'ユーザー安全認証トークンが無効になりました';
+    static SUCCESS_INFO = 'SUCCESS';
 
-    // static environment = 'development179'; // products
-    // static environment = 'development33'; //
-    // static environment = 'Devdevelopment'; //localhost
-    static environment = 'development'; //
+    // static environment = 'localhost'; //localhost
+    static environment = 'development'; 
 
     static environmentCfg = {
         development: {
@@ -52,28 +51,10 @@ export class ConstantsHandler {
             port: '443',
             root: 'aaascloud',
         },
-        development179: {
-            protocal: 'http',
-            host: '47.91.30.179',
-            port: '8080',
-            root: 'pfweb.api',
-        },
-        development33: {
-            protocal: 'https',
-            host: 'demo.trackun.jp',
-            port: '443',
-            root: 'pfweb.api',
-        },
-        // development33: {
-        //     protocal: 'http',
-        //     host: '47.74.9.33',
-        //     port: '8088',
-        //     root: 'pfweb.api',
-        // },
-        Devdevelopment: {
+        localhost: {
             protocal: 'http',
             host: 'localhost',
-            port: '9000',
+            port: '8080',
             root: '/',
         }
     };
