@@ -1,0 +1,5 @@
+:host ::ng-deep .badge-absolute{
+  position: absolute; 
+  margin-left: 3px;
+  margin-top: 3px;
+}

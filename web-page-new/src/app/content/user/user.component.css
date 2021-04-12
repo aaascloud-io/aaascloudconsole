@@ -405,3 +405,22 @@
   color: #FF5252;
   text-decoration: line-through;
 }
+
+::ng-deep table {
+  border-collapse: collapse;
+  table-layout:auto;
+  width: 100%;
+}
+
+::ng-deep td {
+  text-align: left;
+  border: 1px solid #e9ecef;
+  border-width: 0 0 1px 0;
+  padding: 0rem 0rem; 
+}
+
+ ._th {
+  border: 1px solid #e9ecef;
+  border-width: 0 0 1px 0;
+  padding: 0rem 0rem; 
+}

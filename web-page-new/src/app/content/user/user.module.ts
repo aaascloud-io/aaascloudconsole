@@ -23,7 +23,8 @@ import { MessageService } from 'primeng/api'; // 右角のERRメッセージ
 import { ButtonModule } from 'primeng/button';  // primgng ボタン様式
 import { RippleModule } from 'primeng/ripple'; // primgng ボタンの水様式
 import { ConfirmDialogModule } from 'primeng/confirmdialog'; // confirm ダイアログ
-import { ConfirmationService } from 'primeng/api'; // confirm ダイアログ 
+import { ConfirmationService } from 'primeng/api';
+import { TreeTableTogglerCustomizedComponent } from './tree-table-toggler-customized/tree-table-toggler-customized.component'; // confirm ダイアログ 
 
 @NgModule({
   imports: [
@@ -59,7 +60,7 @@ import { ConfirmationService } from 'primeng/api'; // confirm ダイアログ
     MessageService,
     ConfirmationService,
   ],
-  declarations: [UserComponent],
+  declarations: [UserComponent, TreeTableTogglerCustomizedComponent],
   exports: [RouterModule]
 
 })

@@ -1,16 +1,15 @@
-import { Component, OnInit, ViewChild, EventEmitter, Output, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, Output, Renderer2, ElementRef, ViewEncapsulation, Input } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { HttpService } from 'src/app/_services/HttpService';
-import { UserInfo } from '../../_common/_interface/userInfo'
+import { UserInfo } from '../../_common/_interface/userInfo';
 import { DataFatoryService } from 'src/app/_services/DataFatoryService';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { TreeNode } from 'primeng/api';
-import { TreeTableModule } from 'primeng/treetable';
 import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 import { RouteIdIF } from 'src/app/_common/_Interface/RouteIdIF';
@@ -266,16 +265,14 @@ export class UserComponent implements OnInit {
     this.companyId = item.company;
 
     this.cols = [
-      // { field: 'userid', header: 'ユーザーID' },
 
-      { field: 'companyid', header: '会社ID' },
-      { field: 'companyName', header: '会社名' },
       { field: 'username', header: 'ログインID' },
       { field: 'lastname', header: '管理者姓' },
       { field: 'firstname', header: '管理者名' },
+      { field: 'email', header: '管理者メール' },
       { field: 'role', header: '管理権限' },
       // { field: 'userCount', header: 'ユーザー数' },
-      { field: 'email', header: '管理者メール' },
+      { field: 'userid', header: 'ユーザーID' },
     ];
 
     this.addUserInfo = this.formBuilder.group({
@@ -999,12 +996,12 @@ export class UserComponent implements OnInit {
             });
           });
           this.users = item
-          let parents = item.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginupperuserid);
-          let childrens = item.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginupperuserid);
+          var parents = item.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginupperuserid);
+          var childrens = item.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginupperuserid);
+          // 取得したデータをtreeTebleに作成する
           this.jsonUsers = this.translator(parents, childrens);
 
           // 会社名とユーザー数でソート
-          this.jsonUsers = this.sort(this.jsonUsers);
 
           console.log("==========取得JSONUSERS=============");
           console.log(this.jsonUsers);
@@ -1018,6 +1015,13 @@ export class UserComponent implements OnInit {
     });
   }
 
+  /**
+   * 取得したユーザー情報をtreeTebleに作成する
+   * 
+   * @param parents 親（第一層）
+   * @param childrens 子
+   * @returns 
+   */
   translator(parents, childrens) {
     parents.forEach(parent => {
       parent.data = {
@@ -1048,18 +1052,77 @@ export class UserComponent implements OnInit {
               temp.push(element)
             }
           });
+          // childrens.forEach(element => {
+          //   if (element.companyid === parent.data.companyid) {
+          //     temp.push(element);
+          //   }
+          // });
+
+          // childrens.forEach(element => {
+          //   if (element.companyid !== parent.data.companyid) {
+          //     temp.push(element);
+          //   }
+          // });
+
           // let temp = childrens;
           temp.splice(index, 1);
           this.translator([child], temp);
           if (typeof parent.children !== "undefined") {
-            parent.children.push(child);
-            // parent.data.push(child);
+            parent.children.unshift(child);
+            // parent.children.sort(true, "");
           } else {
-            parent.children = [child]
-            // parent.data = data;
+            parent.children = [child];
           }
         }
       });
+
+      if (typeof parent.children !== "undefined") {
+        if (parent.role === 0) {
+          parent.children.unshift({
+            "data": {
+              "companyName": parent.companyName,
+              "companyid": parent.companyid,
+              "deviceCount": parent.deviceCount,
+              "email": parent.email,
+              "firstname": parent.firstname,
+              "lastname": parent.lastname,
+              "projectCount": parent.projectCount,
+              "role": parent.role,
+              "roleName": parent.roleName,
+              "upperuserid": parent.upperuserid,
+              "userCount": parent.userCount,
+              "notDelUserCount": parent.notDelUserCount,
+              "userid": parent.userid,
+              "username": parent.username,
+              "deleteflag": parent.deleteflag,
+              "noTitle": 1,
+            }
+          });
+        }
+      } else {
+        if (parent.role === 0) {
+          parent.children = [{
+            "data": {
+              "companyName": parent.companyName,
+              "companyid": parent.companyid,
+              "deviceCount": parent.deviceCount,
+              "email": parent.email,
+              "firstname": parent.firstname,
+              "lastname": parent.lastname,
+              "projectCount": parent.projectCount,
+              "role": parent.role,
+              "roleName": parent.roleName,
+              "upperuserid": parent.upperuserid,
+              "userCount": parent.userCount,
+              "notDelUserCount": parent.notDelUserCount,
+              "userid": parent.userid,
+              "username": parent.username,
+              "deleteflag": parent.deleteflag,
+              "noTitle": 1,
+            }
+          }]
+        }
+      }
     });
     return parents;
   }
@@ -1088,12 +1151,13 @@ export class UserComponent implements OnInit {
         });
         if (item) {
           this.users = item;
-          let parents = item.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
-          let childrens = item.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
+          var parents = item.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
+          var childrens = item.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
           this.jsonUsers = this.translator(parents, childrens);
+          console.log("==========取得JSONUSERS=============");
+          console.log(this.jsonUsers);
+          console.log("==========転換後のJSONUSERS=============");
 
-          // 会社名とユーザー数でソート
-          this.jsonUsers = this.sort(this.jsonUsers);
         } else {
           this.showAlert("error", "データ取得：失敗です。");
         }
@@ -1301,34 +1365,31 @@ export class UserComponent implements OnInit {
         this.jsonUsers = null;
         let parents = this.users.filter(value => value.upperuserid == 'undefined' || value.upperuserid == this.pageModel.loginUser.loginupperuserid);
         let childrens = this.users.filter(value => value.upperuserid !== 'undefined' && value.upperuserid != this.pageModel.loginUser.loginupperuserid);
-        this.jsonUsers = this.translatorFilter(parents, childrens,pvalue);
-        this.jsonUsers = this.sort(this.jsonUsers);
+        this.jsonUsers = this.translatorFilter(parents, childrens, pvalue);
       } else {
         this.jsonUsers = null;
         let parents = this.users.filter(value => value.userid == 'undefined' || value.userid == this.pageModel.loginUser.loginuserid);
         let childrens = this.users.filter(value => value.userid !== 'undefined' && value.userid != this.pageModel.loginUser.loginuserid);
-        this.jsonUsers = this.translatorFilter(parents, childrens,pvalue);
-        this.jsonUsers = this.sort(this.jsonUsers);
+        this.jsonUsers = this.translatorFilter(parents, childrens, pvalue);
       }
-
     } else if (pvalue === '') {
-      
+
     }
   }
 
-  translatorFilter(parents, childrens,pvalue) {
+  translatorFilter(parents, childrens, pvalue) {
     parents.forEach(parent => {
-      childrens.forEach((child)=>{
+      childrens.forEach((child) => {
         if (parent.userid == child.upperuserid) {
-          if(child.companyid.toString().indexOf(pvalue)>-1
-          ||child.companyName.indexOf(pvalue)>-1
-          ||child.username.indexOf(pvalue)>-1
-          ||child.firstname.indexOf(pvalue)>-1
-          ||child.lastname.indexOf(pvalue)>-1
-          ||child.roleName.toString().indexOf(pvalue)>-1
-          ||child.email.indexOf(pvalue)>-1
-          ||child.userCount.toString().indexOf(pvalue)>-1)
-          parent.expanded=true;
+          if (child.companyid.toString().indexOf(pvalue) > -1
+            || child.companyName.indexOf(pvalue) > -1
+            || child.username.indexOf(pvalue) > -1
+            || child.firstname.indexOf(pvalue) > -1
+            || child.lastname.indexOf(pvalue) > -1
+            || child.roleName.toString().indexOf(pvalue) > -1
+            || child.email.indexOf(pvalue) > -1
+            || child.userCount.toString().indexOf(pvalue) > -1)
+            parent.expanded = true;
         }
       });
       parent.data = {
@@ -1361,9 +1422,9 @@ export class UserComponent implements OnInit {
           });
           // let temp = childrens;
           temp.splice(index, 1);
-          this.translatorFilter([child], temp,pvalue);
+          this.translatorFilter([child], temp, pvalue);
           if (typeof parent.children !== "undefined") {
-            // parent.children.push(child);
+              // parent.children.unshift(child);
             // parent.data.push(child);
           } else {
             parent.children = [child]
@@ -1371,36 +1432,61 @@ export class UserComponent implements OnInit {
           }
         }
       });
+      if (typeof parent.children !== "undefined") {
+        if (parent.role === 0 && parent.userid !== parent.children[0].data.userid) {
+          parent.children.unshift({
+            "data": {
+              "companyName": parent.companyName,
+              "companyid": parent.companyid,
+              "deviceCount": parent.deviceCount,
+              "email": parent.email,
+              "firstname": parent.firstname,
+              "lastname": parent.lastname,
+              "projectCount": parent.projectCount,
+              "role": parent.role,
+              "roleName": parent.roleName,
+              "upperuserid": parent.upperuserid,
+              "userCount": parent.userCount,
+              "notDelUserCount": parent.notDelUserCount,
+              "userid": parent.userid,
+              "username": parent.username,
+              "deleteflag": parent.deleteflag,
+              "noTitle": 1,
+            }
+          });
+        }
+      } else {
+        if (parent.role === 0) {
+          parent.children = [{
+            "data": {
+              "companyName": parent.companyName,
+              "companyid": parent.companyid,
+              "deviceCount": parent.deviceCount,
+              "email": parent.email,
+              "firstname": parent.firstname,
+              "lastname": parent.lastname,
+              "projectCount": parent.projectCount,
+              "role": parent.role,
+              "roleName": parent.roleName,
+              "upperuserid": parent.upperuserid,
+              "userCount": parent.userCount,
+              "notDelUserCount": parent.notDelUserCount,
+              "userid": parent.userid,
+              "username": parent.username,
+              "deleteflag": parent.deleteflag,
+              "noTitle": 1,
+            }
+          }]
+        }
+      }
     });
     return parents;
   }
 
   /**
-   * ソートをする
-   * @param data 
-   */
-  sort(data) {
-    data.sort(function (a, b) {
-      // チームで並び替え
-      if (a.companyid !== b.companyid) {
-        // 文字列は大小で比較する必要がある
-        if (a.companyid > b.companyid) return 1
-        if (a.companyid < b.companyid) return -1
-      }
-      // スコアで並び替え
-      if (a.userCount !== b.userCount) {
-        // -1 かけて降順にする
-        return (a.userCount - b.userCount) * -1
-      }
-      return 0
-    });
-    return data;
-  }
-
-  /**
    * ログイン者と配下ユーザーを取得する
    */
-  loginuserFilte () {
+  loginuserFilte() {
     var query = {
     }
     this.httpService.usePost('getUnderUsers', query).then(item => {

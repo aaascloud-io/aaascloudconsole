@@ -1,0 +1,29 @@
+<div *ngIf="rowNode.node.data['companyid']" (click)="onClick($event)">
+  <button type="button" class="p-treetable-toggler p-link" tabindex="-1" pRipple
+    [style.visibility]="rowNode.node.leaf === false || (rowNode.node.children && rowNode.node.children.length) ? 'visible' : 'hidden'"
+    [style.marginLeft]="rowNode.level * 30 + 'px'">
+    <i [ngClass]="rowNode.node.expanded ? 'pi pi-fw pi-chevron-down' : 'pi pi-fw pi-chevron-right'"></i>
+  </button>
+  <ng-container *ngIf="rowNode.node.data.role === 0 && !rowNode.node.data.noTitle; else elseTemplate">
+    <div style="display: inline;" class="treetable-toggler">
+      <span><a target="_blank">
+          <font color="blue"><strong>{{rowNode.node.data.companyName}}(会社ID：{{rowNode.node.data.companyid}})　ユーザー数：</strong>
+          </font>
+          　<font style="font-family:fantasy;">{{rowNode.node.children.length}}</font>
+        </a>
+      </span>
+    </div>
+
+  </ng-container>
+  <ng-template #elseTemplate>
+    <ng-container *ngIf="rowNode.node.data.userCount > 1 && rowNode.node.data.role !== 0; else elseTemplate1">
+      <div style="display: inline;" class="treetable-toggler">
+        <span><a target="_blank"><strong>{{rowNode.node.data.username}}</strong></a>
+        </span>
+      </div>
+    </ng-container>
+    <ng-template #elseTemplate1>
+      {{rowNode.node.data.username}}
+    </ng-template>
+  </ng-template>
+</div>
