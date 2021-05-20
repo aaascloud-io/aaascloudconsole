@@ -926,6 +926,11 @@ export const MenuSettingsConfig: MenuConfig = {
         page: '/user'
       },
       {
+        title: 'SIMカード管理',
+        icon: 'la-link',
+        page: '/simcard'
+      },
+      {
         title: 'エラー管理',
         icon: 'la-bell',
         page: '/errorlist'

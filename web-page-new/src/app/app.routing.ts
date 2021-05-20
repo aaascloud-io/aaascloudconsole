@@ -60,6 +60,7 @@ const appRoutes: Routes = [
       , canActivate: [AuthGuard] },
       { path: 'user', loadChildren: () => import('../app/content/user/user.module').then(m => m.UserModule)
       , canActivate: [AuthGuard] },
+      { path: 'simcard', loadChildren: () => import('../app/content/simcard/simcard.module').then(m => m.SimcardModule), canActivate: [AuthGuard] },
       {
         path: 'components', loadChildren: () => import('../app/content/ngbbootstrap/components.module').then(m => m.ComponentsModule),
         canActivate: [AuthGuard]
