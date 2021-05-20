@@ -9,7 +9,7 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-12">
-                    <!-- 本社の使用者は使用不可-->
+                    <!-- 本社の担当者は使用不可-->
                     <ng-container *ngIf="this.pageModel.loginUser.loginrole !== 2">
                       <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
                         (click)="addTableDataModal(addTableDataModalContent)">
@@ -285,7 +285,12 @@
               <div class="d-inline-block custom-control custom-radio mr-1">
                 <input type="radio" class="custom-control-input" name="userRadio" id="radio2" value=2 #addRole2
                   (click)="setMyUserRole(addRole2)">
-                <label class="custom-control-label" for="radio2">使用者</label>
+                <label class="custom-control-label" for="radio2">担当者</label>
+              </div>
+              <div class="d-inline-block custom-control custom-radio mr-1">
+                <input type="radio" class="custom-control-input" name="userRadio" id="radio9" value=9 #addRole9
+                       (click)="setMyUserRole(addRole9)">
+                <label class="custom-control-label" for="radio9">顧客</label>
               </div>
             </div>
           </div>
@@ -544,7 +549,11 @@
               <div class="d-inline-block custom-control custom-radio mr-1">
                 <input type="radio" class="custom-control-input" name="userRadio" id="radio2" value=2 #addRole2
                   (click)="setRole(addRole2)">
-                <label class="custom-control-label" for="radio2">使用者</label>
+                <label class="custom-control-label" for="radio2">担当者</label>
+              </div>
+              <div class="d-inline-block custom-control custom-radio mr-1">
+                <input type="radio" class="custom-control-input" name="userRadio" id="radio9" value=2 #addRole9 (click)="setRole(addRole9)">
+                <label class="custom-control-label" for="radio9">顧客</label>
               </div>
             </div>
           </div>

@@ -33,14 +33,15 @@ CREATE TABLE `cloud_user` (
   `upperUserId` int(8) DEFAULT NULL,
   `token` text,
   `alive` tinyint(4) DEFAULT NULL,
-    `deleteFlag` tinyint(4) NOT NULL,
+  `firebaseUid` varchar(255),
+  `deleteFlag` tinyint(4) NOT NULL,
   `i_uid` int(8) DEFAULT NULL,
   `i_time` datetime DEFAULT NULL,
   `u_uid` int(8) DEFAULT NULL,
   `u_time` datetime DEFAULT NULL,
   PRIMARY KEY (`userId`) USING BTREE,
   UNIQUE KEY `userName_UNIQUE` (`userName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ユーザーテーブル';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,3 +63,5 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2020-12-04 16:06:44
+
+/* Comments */

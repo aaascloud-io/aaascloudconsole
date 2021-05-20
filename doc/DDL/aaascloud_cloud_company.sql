@@ -31,7 +31,7 @@ CREATE TABLE `cloud_company` (
   `mail` varchar(50) DEFAULT NULL,
   `tel` varchar(13) DEFAULT NULL,
   `fax` varchar(13) DEFAULT NULL,
-  `level` int(1) DEFAULT NULL,
+  `level` int(1) DEFAULT 0,
   `alive` tinyint(4) NOT NULL,
   `deleteFlag` tinyint(4) NOT NULL,
   `i_uid` int(8) NOT NULL,

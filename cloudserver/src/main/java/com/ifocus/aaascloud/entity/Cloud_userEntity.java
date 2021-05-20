@@ -7,11 +7,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @Entity
 @javax.persistence.Table(name="cloud_user")
 public class Cloud_userEntity {
@@ -27,6 +27,7 @@ public class Cloud_userEntity {
 	private Integer upperuserid;
 	private String token;
 	private Integer alive;
+	private String firebaseuid;
 	private Integer deleteflag;
 	private Integer i_uid;
 	private Timestamp i_time;

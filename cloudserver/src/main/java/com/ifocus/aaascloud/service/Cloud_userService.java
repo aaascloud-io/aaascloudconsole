@@ -1,11 +1,9 @@
 package com.ifocus.aaascloud.service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import com.ifocus.aaascloud.constant.division.RoleDivision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
@@ -289,6 +287,12 @@ public class Cloud_userService {
 
 			/* システム日時 */
 			Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+			// レベル
+			Integer level = myEntity.get().getLevel();
+			if(Objects.isNull(level)){
+				level = 0;
+			}
+
 			// 情報設定
 			Cloud_companyEntity entity = new Cloud_companyEntity();
 			entity.setCorporatenumber(model.getCorporatenumber());
@@ -298,7 +302,7 @@ public class Cloud_userService {
 			entity.setMail(model.getMail());
 			entity.setTel(model.getTel());
 			entity.setFax(model.getFax());
-			entity.setLevel(myEntity.get().getLevel() + 1);   	// レベルアップ
+			entity.setLevel(level + 1);   	// レベルアップ
 			entity.setAlive(AliveConstant.ALIVE);
 			entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
 			entity.setI_uid(model.getLoginInfo().getLoginuserid());
@@ -315,6 +319,8 @@ public class Cloud_userService {
 
 		// 削除済行を物理削除する
 		cloud_userRepository.deleteUserMarked(model.getUsername());
+		// 権限
+		Integer role = model.getRole();
 		// 情報設定
 		Cloud_userEntity entity = new Cloud_userEntity();
 		/* システム日時 */
@@ -335,7 +341,23 @@ public class Cloud_userService {
 		entity.setU_uid(model.getLoginInfo().getLoginuserid());
 		entity.setU_time(systemTime);
 
-		Cloud_userEntity cloud_userEntity = cloud_userRepository.save(entity);
+		// 顧客の場合、Firebaseに登録する
+		if(Objects.equals(RoleDivision.CLIENT.getValue(), role.toString())){
+			////////////////////////////////////////////////////////
+			// Firebaseに登録を行う
+			////////////////////////////////////////////////////////
+			String firebaseuid = "UID_xxx";
+			entity.setFirebaseuid(firebaseuid);
+		}
+
+		// ユーザー登録結果
+		Cloud_userEntity cloud_userEntity = null;
+		try {
+			cloud_userEntity = cloud_userRepository.save(entity);
+		}catch (Exception e){
+			// TODO Firebase登録失敗の場合、ロールバック処理が必要
+			throw e;
+		}
 
 		////////////////////////////////////////////////////////
 		// KeyCloakに登録を行う
@@ -343,14 +365,15 @@ public class Cloud_userService {
 		try {
 			String retrunCode = keyCloakUserService.addUser(model.getUsername(), model.getPassword());
 			if (!ErrorConstant.ERROR_CODE_0000.equals(retrunCode)) {
+				// TODO Firebase登録失敗の場合、ロールバック処理が必要
 				return -1;
 			}
 		} catch (Exception e) {
+			// TODO Firebase登録失敗の場合、ロールバック処理が必要
 			throw e;
 		}
 
 		return cloud_userEntity.getUserid();
-
 	}
 
 	/*

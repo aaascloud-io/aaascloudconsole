@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Repository;
 
-//@Repository
+@Repository
 public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, Integer> {
 	
 	/*
@@ -17,7 +17,6 @@ public interface  Cloud_userRepository extends CrudRepository<Cloud_userEntity, 
 	 *
 	 */
 	@Modifying
-	@Transactional
 	@Query(value = " DELETE FROM cloud_user "
 			+ " WHERE deleteflag = 1 "
 			+ " AND username = :username" , nativeQuery = true)

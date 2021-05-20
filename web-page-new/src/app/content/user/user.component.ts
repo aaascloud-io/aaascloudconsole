@@ -219,7 +219,8 @@ export class UserComponent implements OnInit {
     roles: [
       { role: 0, name: "会社管理者" },
       { role: 1, name: "管理者" },
-      { role: 2, name: "使用者" },
+      { role: 2, name: "担当者" },
+      { role: 9, name: "顧客" },
     ]
   }
 
