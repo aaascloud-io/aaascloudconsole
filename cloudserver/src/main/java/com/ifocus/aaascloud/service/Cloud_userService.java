@@ -275,18 +275,6 @@ public class Cloud_userService {
 	public Integer registerSonUser(Cloud_userModel model) throws Exception {
 
 		////////////////////////////////////////////////////////
-		// KeyCloakに登録を行う
-		////////////////////////////////////////////////////////
-		try {
-			String retrunCode = keyCloakUserService.addUser(model.getUsername(), model.getPassword());
-			if (!ErrorConstant.ERROR_CODE_0000.equals(retrunCode)) {
-				return -1;
-			}
-		} catch (Exception e) {
-			throw e;
-		}
-
-		////////////////////////////////////////////////////////
 		// DB登録を行う
 		////////////////////////////////////////////////////////
 
@@ -348,6 +336,19 @@ public class Cloud_userService {
 		entity.setU_time(systemTime);
 
 		Cloud_userEntity cloud_userEntity = cloud_userRepository.save(entity);
+
+		////////////////////////////////////////////////////////
+		// KeyCloakに登録を行う
+		////////////////////////////////////////////////////////
+		try {
+			String retrunCode = keyCloakUserService.addUser(model.getUsername(), model.getPassword());
+			if (!ErrorConstant.ERROR_CODE_0000.equals(retrunCode)) {
+				return -1;
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+
 		return cloud_userEntity.getUserid();
 
 	}
