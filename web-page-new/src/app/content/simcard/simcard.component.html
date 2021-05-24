@@ -2,8 +2,68 @@
     <div class="content-wrapper">
         <div class="content-header row mb-1"></div>
         <div class="content-detached">
-            <B>SIMカード管理 ダミー画面</B>
+            <div class="content-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <ng-container>
+                                            <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px">
+                                                <i class="d-md-none d-block feather ft-plus white"></i>
+                                                <span class="d-md-block d-none">新規</span></button>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive card-body">
+                                <p-treeTable [value]="cardinofs" [columns]="cols" styleClass="p-treetable-sm" autoLayout=true>
+                                    <ng-template pTemplate="caption">
+                                        <div style="text-align: left">
+                                            <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                                            <input type="text" pInputText size="50" placeholder="グローバル検索">
+                                        </div>
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of cols">
+                                                {{col.header}}
+                                            </th>
+                                            <th style="width: 150px;">
+                                                <a>操作</a>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowNode let-rowData="rowData"
+                                                 let-columns="columns">
+                                        <tr style="border: 1px; border-color: black;">
+                                            <td>{{rowData.no}}</td>
+                                            <td>{{rowData.ukeirebi}}</td>
+                                            <td>{{rowData.kubun}}</td>
+                                            <td>{{rowData.imei}}</td>
+                                            <td>{{rowData.kanribango}}</td>
+                                            <td>{{rowData.tenwabango}}</td>
+                                            <td>{{rowData.hakkotanto}}</td>
+                                            <td>{{rowData.hakkobi}}</td>
+                                            <td>{{rowData.hakkosaki}}</td>
+                                            <td>{{rowData.hakkosakitantosha}}</td>
+                                            <td>{{rowData.renrakusen}}</td>
+                                            <td>{{rowData.riyokaishibi}}</td>
+                                            <td>{{rowData.riyomokuteki}}</td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td [attr.colspan]="cols.length">No data found.</td>
+                                        </tr>
+                                    </ng-template>
+                                </p-treeTable>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
 </div>
