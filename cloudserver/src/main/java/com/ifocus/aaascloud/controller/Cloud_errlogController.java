@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
-import com.ifocus.aaascloud.entity.Cloud_userRepository;
+import com.ifocus.aaascloud.repository.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_deviceModel;
 import com.ifocus.aaascloud.model.Cloud_errlogModel;
 import com.ifocus.aaascloud.model.Cloud_userModel;

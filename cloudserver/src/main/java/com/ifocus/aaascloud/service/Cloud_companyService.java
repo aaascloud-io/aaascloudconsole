@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.entity.Cloud_companyEntity;
-import com.ifocus.aaascloud.entity.Cloud_companyRepository;
+import com.ifocus.aaascloud.repository.Cloud_companyRepository;
 import com.ifocus.aaascloud.model.Cloud_companyModel;
 import com.ifocus.aaascloud.model.LoginInfo;
 

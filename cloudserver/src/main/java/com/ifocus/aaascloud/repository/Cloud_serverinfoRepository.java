@@ -1,5 +1,6 @@
-package com.ifocus.aaascloud.entity;
+package com.ifocus.aaascloud.repository;
 
+import com.ifocus.aaascloud.entity.Cloud_serverinfoEntity;
 import org.springframework.data.repository.CrudRepository;
 
 //@Repository

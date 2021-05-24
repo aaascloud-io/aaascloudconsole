@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ifocus.aaascloud.constant.CommonConstant;
 import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
-import com.ifocus.aaascloud.entity.Cloud_productRepository;
+import com.ifocus.aaascloud.repository.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
-import com.ifocus.aaascloud.entity.Cloud_userRepository;
+import com.ifocus.aaascloud.repository.Cloud_userRepository;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 
 @SpringBootApplication

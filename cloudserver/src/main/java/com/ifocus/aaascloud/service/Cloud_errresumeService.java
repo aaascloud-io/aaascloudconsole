@@ -15,9 +15,9 @@ import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.constant.StatusFlagConstant;
 import com.ifocus.aaascloud.entity.Cloud_errlogEntity;
-import com.ifocus.aaascloud.entity.Cloud_errlogRepository;
+import com.ifocus.aaascloud.repository.Cloud_errlogRepository;
 import com.ifocus.aaascloud.entity.Cloud_errresumeEntity;
-import com.ifocus.aaascloud.entity.Cloud_errresumeRepository;
+import com.ifocus.aaascloud.repository.Cloud_errresumeRepository;
 import com.ifocus.aaascloud.model.Cloud_errresumeModel;
 
 @SpringBootApplication

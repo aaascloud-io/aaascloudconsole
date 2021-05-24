@@ -1,7 +1,8 @@
-package com.ifocus.aaascloud.entity;
+package com.ifocus.aaascloud.repository;
 
 import java.util.List;
 
+import com.ifocus.aaascloud.entity.Cloud_companyEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

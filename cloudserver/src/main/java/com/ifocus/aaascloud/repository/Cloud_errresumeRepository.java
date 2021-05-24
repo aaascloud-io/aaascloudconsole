@@ -1,7 +1,8 @@
-package com.ifocus.aaascloud.entity;
+package com.ifocus.aaascloud.repository;
 
 import java.util.List;
 
+import com.ifocus.aaascloud.entity.Cloud_errresumeEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

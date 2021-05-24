@@ -17,7 +17,7 @@ import com.ifocus.aaascloud.constant.AliveConstant;
 import com.ifocus.aaascloud.constant.DeleteFlagConstant;
 import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.entity.Cloud_productEntity;
-import com.ifocus.aaascloud.entity.Cloud_productRepository;
+import com.ifocus.aaascloud.repository.Cloud_productRepository;
 import com.ifocus.aaascloud.model.Cloud_productModel;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_productService;
