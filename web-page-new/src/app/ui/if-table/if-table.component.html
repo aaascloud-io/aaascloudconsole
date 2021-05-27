@@ -1,0 +1,75 @@
+<div class="ui-table-headerTemplate u-isHidden">
+    <ng-content select=".header"></ng-content>
+</div>
+
+<div class="table-responsive card-body">
+    <table class="table grid-breakpoints" id="devicesTable">
+        <!-- ヘッダー -->
+        <thead>
+        <tr>
+            <th *ngIf="checkable" scope="col" class="thcolor">
+                <input type="checkbox" [(ngModel)]="_allChecked" (change)="onAllCheckChange($event)">
+            </th>
+            <th *ngFor="let header of HeaderItems; let i = index" scope="col" class="thcolor">
+                <span>{{header.label}}</span>
+            </th>
+        </tr>
+        </thead>
+
+        <!-- データ -->
+        <tbody>
+        <tr *ngFor="let item of list">
+            <td *ngIf="checkable">
+                <input type="checkbox" [checked]="item.selected" (change)="onCheckChange($event,item)">
+            </td>
+            <td *ngFor="let header of HeaderItems" nowrap>
+                <!-- カスタマイズ属性 -->
+                <span *ngIf="header.custom">
+                                <!-- カスタマイズ属性アイテム取得 -->
+                                <ng-container *ngFor="let ctm of customItems">
+                                    <!-- カスタマイズ属性アイテム有り -->
+                                    <ng-container *ngIf="header.columnName === ctm.column">
+                                        <!-- 編集ボタン -->
+                                        <a *ngIf="ctm.edit" class="primary edit mr-1 mrless"
+                                           (click)="onEditRow($event,item)"><i class="la la-pencil"></i></a>
+                                        <!-- 削除ボタン -->
+                                        <a *ngIf="ctm.delete" class="danger delete mr-1 mrless"
+                                           (click)="onDeleteRow($event,item)"><i class="la la-trash-o"></i></a>
+                                    </ng-container>
+                                </ng-container>
+                            </span>
+                <span *ngIf="!header.custom">{{ item[header.columnName] }}</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- ページ処理 -->
+    <div class="row" *ngIf="pageable">
+        <div class="col-lg-4 col-md-12">
+            <div *ngIf="_count === 0">{{_count}} 件</div>
+            <div *ngIf="_count !== 0">
+                {{_count}} 件中 {{startPage}} ~ {{endPage}} を表示
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-12 " [ngClass]="{'justify-content-center': _bigSize}">
+            <ngb-pagination [collectionSize]="_count" [(page)]="_page" [pageSize]="_size"
+                            [maxSize]="3" [rotate]="true" [boundaryLinks]="true"
+                            (pageChange)="onPageChange($event)">
+            </ngb-pagination>
+        </div>
+        <div class="col-lg-4 col-md-12" [ngClass]="{'alignRight': _bigSize}">
+            <select class="custom-select" style="width: auto" [(ngModel)]="_size">
+                <option [ngValue]="10">10 items per page</option>
+                <option [ngValue]="20">20 items per page</option>
+                <option [ngValue]="50">50 items per page</option>
+                <option [ngValue]="100">100 items per page</option>
+            </select>
+        </div>
+    </div>
+    <!-- page -->
+
+</div>
+<!-- table -->
+
+

@@ -28,7 +28,7 @@ public class Cloud_scCardInformationController {
     public BaseHttpResponse<Cloud_scCardInformationModel> cardList() {
         BaseHttpResponse<Cloud_scCardInformationModel> response = new BaseHttpResponse<>();
 
-        List<TreeNode<CardInformation>> list = cloud_scCardInformationService.findCardList();
+        List<CardInformation> list = cloud_scCardInformationService.findCardList();
         System.out.println(list.size());
         Cloud_scCardInformationModel model = new Cloud_scCardInformationModel();
         model.setList(list);

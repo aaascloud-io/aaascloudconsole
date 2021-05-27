@@ -35,6 +35,8 @@
     "@types/googlemaps": "^3.39.2",
     "@types/highlight.js": "^9.12.3",
     "@webcomponents/webcomponentsjs": "^2.0.0",
+    "@types/jquery": "^3.2.12",
+    "jquery": "^3.2.1",
     "agm-direction": "^0.7.9",
     "angular-archwizard": "^3.0.0",
     "angular-calendar": "^0.26.11",

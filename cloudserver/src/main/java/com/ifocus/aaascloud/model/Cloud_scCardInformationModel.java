@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class Cloud_scCardInformationModel {
-    private List<TreeNode<CardInformation>> list;
+    private List<CardInformation> list;
 
     @Data
     public static class CardInformation{
