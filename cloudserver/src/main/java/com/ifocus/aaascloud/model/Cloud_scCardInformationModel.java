@@ -10,21 +10,21 @@ public class Cloud_scCardInformationModel {
 
     @Data
     public static class CardInformation{
-        public Integer no;
-        public String ukeirebi;
-        public String kubun;
-        public String imei;
-        public String kanribango;
-        public String tenwabango;
-        public String hakkotanto;
-        public String hakkobi;
-        public String hakkosaki;
-        public String hakkosakitantosha;
-        public String renrakusen;
-        public String riyokaishibi;
-        public String riyomokuteki;
-        public String gaiyo;
-        public String biko;
+        private Integer no;
+        private String ukeirebi;
+        private String kubun;
+        private String imei;
+        private String kanribango;
+        private String tenwabango;
+        private String hakkotanto;
+        private String hakkobi;
+        private String hakkosaki;
+        private String hakkosakitantosha;
+        private String renrakusen;
+        private String riyokaishibi;
+        private String riyomokuteki;
+        private String gaiyo;
+        private String biko;
     }
 
 }
