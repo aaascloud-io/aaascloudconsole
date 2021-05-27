@@ -23,22 +23,26 @@
                 <input type="checkbox" [checked]="item.selected" (change)="onCheckChange($event,item)">
             </td>
             <td *ngFor="let header of HeaderItems" nowrap>
-                <!-- カスタマイズ属性 -->
-                <span *ngIf="header.custom">
-                                <!-- カスタマイズ属性アイテム取得 -->
-                                <ng-container *ngFor="let ctm of customItems">
-                                    <!-- カスタマイズ属性アイテム有り -->
-                                    <ng-container *ngIf="header.columnName === ctm.column">
-                                        <!-- 編集ボタン -->
-                                        <a *ngIf="ctm.edit" class="primary edit mr-1 mrless"
-                                           (click)="onEditRow($event,item)"><i class="la la-pencil"></i></a>
-                                        <!-- 削除ボタン -->
-                                        <a *ngIf="ctm.delete" class="danger delete mr-1 mrless"
-                                           (click)="onDeleteRow($event,item)"><i class="la la-trash-o"></i></a>
-                                    </ng-container>
-                                </ng-container>
-                            </span>
-                <span *ngIf="!header.custom">{{ item[header.columnName] }}</span>
+                <!-- カスタマイズ項目 -->
+                <span *ngIf="header.type === 'custom'">
+                    <!-- カスタマイズ属性アイテム取得 -->
+                    <ng-container *ngFor="let ctm of customItems">
+                        <!-- カスタマイズ属性アイテム有り -->
+                        <ng-container *ngIf="header.columnName === ctm.column">
+                            <!-- 編集ボタン -->
+                            <a *ngIf="ctm.edit" class="primary edit mr-1 mrless" (click)="onEditRow($event,item)"><i class="la la-pencil"></i></a>
+                            <!-- 削除ボタン -->
+                            <a *ngIf="ctm.delete" class="danger delete mr-1 mrless" (click)="onDeleteRow($event,item)"><i class="la la-trash-o"></i></a>
+                        </ng-container>
+                    </ng-container>
+                </span>
+                <!-- 選択項目 -->
+                <div *ngIf="header.type === 'switch'">
+                    <ui-switch class="switchery" switchColor="white" color="rgb(55, 188, 155)" size="small"
+                               [checked]="item[header.columnName] == 'true'" disabled="true"></ui-switch>
+                </div>
+                <!-- 普通項目 -->
+                <span *ngIf="header.type === 'normal'">{{ item[header.columnName] }}</span>
             </td>
         </tr>
         </tbody>

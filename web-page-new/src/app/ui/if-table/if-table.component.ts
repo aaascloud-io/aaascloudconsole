@@ -15,7 +15,7 @@ import {IfTableCustomItem} from './if-table.customItem';
 interface HeaderItem {
     columnName: string;
     label: string;
-    custom: boolean;
+    type: string;
     // align: string;
 }
 
@@ -27,6 +27,18 @@ interface RowItem {
     selected: string | undefined;
 
     [key: string]: string | undefined;
+}
+
+/**
+ * カラム種類
+ */
+class ItemType {
+    // 普通
+    public static NORMAL: string = "normal";
+    // カスタマイズ（編集・削除ボタンを付ける）
+    public static CUSTOM: string = "custom";
+    // 選択項目
+    public static SWITCH: string = "switch";
 }
 
 @Component({
@@ -238,7 +250,7 @@ export class IfTableComponent implements OnInit, AfterViewInit {
             headerItems.push({
                 columnName: $(el).data('col'),
                 label: $(el).data('text'),
-                custom: $(el).data('custom') ? $(el).data('custom') : false,
+                type: $(el).data('type') ? $(el).data('type') : ItemType.NORMAL,
             });
 
         });

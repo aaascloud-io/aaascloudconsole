@@ -27,6 +27,8 @@
                                 </div>
                             </div>
                             <!------- テーブル ---------->
+                            <!-- data-type="custom" -->
+                            <!-- data-type="switch" -->
                             <app-if-table [list]="cardInfos" [pageable]="true" [checkable]="true"
                                           (deleteRowEvent)="onDeleteRow($event)"
                                           (editRowEvent)="onEditRow($event)"
@@ -35,7 +37,7 @@
                                           {column: 'opt', edit: false, delete: true}]">
                                 <ul class="header">
                                     <li data-col="no" data-text="番号"></li>
-                                    <li data-col="opt" data-text="操作" data-custom="true"></li>
+                                    <li data-col="opt" data-text="操作" data-type="custom"></li>
                                     <li data-col="ukeirebi" data-text="受入日"></li>
                                     <li data-col="kubun" data-text="区分"></li>
                                     <li data-col="imei" data-text="IMEI"></li>
