@@ -5,11 +5,12 @@ import {IfTableComponent} from './if-table.component';
 import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
 import {RouterModule} from "@angular/router";
 import {UiSwitchModule} from "ngx-ui-switch";
+import {IfSupperLinkModule} from "../if-supper-link/if-supper-link.module";
 
 
 @NgModule({
     declarations: [IfTableComponent],
-    imports: [CommonModule, FormsModule, NgbPaginationModule, RouterModule, UiSwitchModule],
+    imports: [CommonModule, FormsModule, NgbPaginationModule, RouterModule, UiSwitchModule, IfSupperLinkModule],
     exports: [FormsModule, IfTableComponent],
 })
 export class IfTableModule {

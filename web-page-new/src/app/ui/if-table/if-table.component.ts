@@ -7,7 +7,8 @@ import {
     EventEmitter,
 } from '@angular/core';
 import * as $ from 'jquery'
-import {IfTableCustomItem} from './if-table.customItem';
+import {IfTableColumnCustom} from './if-table.columnCustom';
+import {IfTableColumnSupperLink} from "./if-table.columnSupperLink";
 
 /**
  * テーブルヘッダー（TH）
@@ -39,6 +40,8 @@ class ItemType {
     public static CUSTOM: string = "custom";
     // 選択項目
     public static SWITCH: string = "switch";
+    // スーパー項目
+    public static SUPPER: string = "supper";
 }
 
 @Component({
@@ -56,7 +59,9 @@ export class IfTableComponent implements OnInit, AfterViewInit {
     // 行選択機能可否
     private _checkable: boolean = false;
     // カスタマイズカラム情報
-    private _customItems: IfTableCustomItem[];
+    private _columnCustoms: IfTableColumnCustom[];
+    // スーパーカラム情報
+    private _columnSuppers: IfTableColumnSupperLink[];
 
     // ページング関連
     _count: number = 0;
@@ -66,6 +71,7 @@ export class IfTableComponent implements OnInit, AfterViewInit {
 
     // 行選択（全部）
     _allChecked = false;
+
 
     // @Input() pageable;
 
@@ -140,15 +146,31 @@ export class IfTableComponent implements OnInit, AfterViewInit {
      * @param v 指定したカスタマイズカラム情報
      */
     @Input()
-    set customItems(v: IfTableCustomItem[]) {
-        this._customItems = v;
+    set columnCustoms(v: IfTableColumnCustom[]) {
+        this._columnCustoms = v;
     }
 
     /**
      * カスタマイズカラム取得
      */
-    get customItems() {
-        return this._customItems;
+    get columnCustoms() {
+        return this._columnCustoms;
+    }
+
+    /**
+     * スーパーカラム属性
+     * @param v 指定したスーパーカラム情報
+     */
+    @Input()
+    set columnSuppers(v: IfTableColumnSupperLink[]) {
+        this._columnSuppers = v;
+    }
+
+    /**
+     * スーパーカラム取得
+     */
+    get columnSuppers() {
+        return this._columnSuppers;
     }
 
     /**
@@ -169,7 +191,7 @@ export class IfTableComponent implements OnInit, AfterViewInit {
      * 行削除イベント定義
      */
     @Output() deleteRowEvent = new EventEmitter<RowItem>();
-    
+
     /**
      * 行編集イベント定義
      */

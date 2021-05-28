@@ -18,7 +18,6 @@ export class SimcardComponent implements OnInit {
     cardInfos: TreeNode[];
 
 
-
     constructor(
         private httpService: HttpService,
     ) {
@@ -43,6 +42,13 @@ export class SimcardComponent implements OnInit {
     onEditRow(item): void {
         alert('edit');
         console.log(item);
+    }
+
+    onTest(event, row, option) {
+        alert(option);
+        console.log(event);
+        console.log(row);
+        console.log(option);
     }
 
     // private testData(): void {

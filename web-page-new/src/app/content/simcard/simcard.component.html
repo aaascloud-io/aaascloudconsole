@@ -28,16 +28,35 @@
                             </div>
                             <!------- テーブル ---------->
                             <!-- data-type="custom" -->
+                            <!-- サンプル-->
+                            <!-- [columnCustoms]="[-->
+                            <!--   {column: 'opt', edit: true, delete: false},-->
+                            <!--   {column: 'opt', edit: false, delete: true}]"-->
+
                             <!-- data-type="switch" -->
+
+                            <!-- data-type="supper" -->
+                            <!-- サンプル-->
+                            <!-- [columnSuppers]="[{column: 'spr',-->
+                            <!--                    class: 'primary edit mr-1 mrless la la-plus-square',-->
+                            <!--                    title: 'タイトル',-->
+                            <!--                    text: 'テスト',-->
+                            <!--                    onClicked: {event: onTest, option: 'パラメータテスト'}}]-->
                             <app-if-table [list]="cardInfos" [pageable]="true" [checkable]="true"
                                           (deleteRowEvent)="onDeleteRow($event)"
                                           (editRowEvent)="onEditRow($event)"
-                                          [customItems]="[
+                                          [columnCustoms]="[
                                           {column: 'opt', edit: true, delete: false},
-                                          {column: 'opt', edit: false, delete: true}]">
+                                          {column: 'opt', edit: false, delete: true}]"
+                                          [columnSuppers]="[{column: 'spr',
+                                                             class: 'primary info mr-1 d-inline-block',
+                                                             title: 'タイトル',
+                                                             text: 'テスト',
+                                                             onClicked: {event: onTest, option: 'パラメータテスト'}}]">
                                 <ul class="header">
                                     <li data-col="no" data-text="番号"></li>
                                     <li data-col="opt" data-text="操作" data-type="custom"></li>
+                                    <li data-col="spr" data-text="supper" data-type="supper"></li>
                                     <li data-col="ukeirebi" data-text="受入日"></li>
                                     <li data-col="kubun" data-text="区分"></li>
                                     <li data-col="imei" data-text="IMEI"></li>

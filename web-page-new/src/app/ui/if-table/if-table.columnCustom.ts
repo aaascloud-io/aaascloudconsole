@@ -1,7 +1,7 @@
 /**
  * カスタマイズカラム情報
  */
-export interface IfTableCustomItem {
+export interface IfTableColumnCustom {
     // 列名
     column: string;
     // 編集可否
