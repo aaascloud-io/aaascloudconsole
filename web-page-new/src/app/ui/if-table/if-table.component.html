@@ -48,7 +48,8 @@
                 <!-- スーパー項目 -->
                 <span *ngIf="header.type === 'supper'">
                     <ng-container *ngFor="let spr of columnSuppers">
-                        <app-if-supper-link [title]="spr.title" [class]="spr.class"
+                        <app-if-supper-link [title]="spr.title"
+                                            [class]="spr.class"
                                             [text]="item[header.columnName] ? item[header.columnName] : spr.text"
                                             (click)="spr.onClicked.event($event, item, spr.onClicked.option)"></app-if-supper-link>
                     </ng-container>
@@ -70,8 +71,12 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-12 " [ngClass]="{'justify-content-center': _bigSize}">
-            <ngb-pagination [collectionSize]="_count" [(page)]="_page" [pageSize]="_size"
-                            [maxSize]="3" [rotate]="true" [boundaryLinks]="true"
+            <ngb-pagination [collectionSize]="_count"
+                            [(page)]="_page"
+                            [pageSize]="_size"
+                            [maxSize]="3"
+                            [rotate]="true"
+                            [boundaryLinks]="true"
                             (pageChange)="onPageChange($event)">
             </ngb-pagination>
         </div>
