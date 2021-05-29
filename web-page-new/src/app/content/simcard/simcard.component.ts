@@ -1,10 +1,13 @@
 import {
-    Component,
+    AfterViewInit,
+    Component, ElementRef,
     Injectable,
-    OnInit
+    OnInit, TemplateRef, ViewChild
 } from '@angular/core';
 import {TreeNode} from 'primeng/api';
 import {HttpService} from 'src/app/_services/HttpService';
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {IfModalService} from "../../ui/if-modal/if-modal.service";
 
 
 @Component({
@@ -14,12 +17,16 @@ import {HttpService} from 'src/app/_services/HttpService';
 })
 
 @Injectable()
-export class SimcardComponent implements OnInit {
+export class SimcardComponent implements OnInit, AfterViewInit {
     cardInfos: TreeNode[];
+    @ViewChild('registerDeviceModal') public templateref: TemplateRef<any>;
 
 
     constructor(
+        private modal: NgbModal,
+        private elementRef: ElementRef,
         private httpService: HttpService,
+        private modalService: IfModalService,
     ) {
     }
 
@@ -34,6 +41,9 @@ export class SimcardComponent implements OnInit {
 
     }
 
+    ngAfterViewInit(): void {
+    }
+
     onDeleteRow(item): void {
         alert('delete');
         console.log(item);
@@ -44,12 +54,47 @@ export class SimcardComponent implements OnInit {
         console.log(item);
     }
 
+    openNewModal() {
+        this.modalService.open("modalA");
+    }
+
+    onAddDialogOKClick(event) {
+        const control = document.querySelector("#contact-phone");
+        const input: HTMLInputElement = control as HTMLInputElement;
+        input.focus();
+        input.select();
+
+        if (this.test1 === "123456") {
+            this.modalService.close("modalA");
+        }
+
+        // setTimeout(()=>{ // this will make the execution after the above boolean has changed
+        //     this.test2F.nativeElement.focus();
+        // },0);
+    }
+
+    openExcelModal() {
+        this.modalService.open("modalB");
+    }
+
+    onExcelDialogOKClick(event){
+        this.modalService.close("modalB");
+    }
+
+
+    /////////////////////////////////////////////////////////////
+    test1: string;
+    test2: string;
+
     onTest(event, row, option) {
         alert(option);
         console.log(event);
         console.log(row);
         console.log(option);
     }
+
+    /////////////////////////////////////////////////////////////
+
 
     // private testData(): void {
     //     this.cardInfos = [

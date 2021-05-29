@@ -81,6 +81,7 @@ import {ToastModule} from 'primeng/toast';
 import {RippleModule} from 'primeng/ripple';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
+import {IfModalService} from './ui/if-modal/if-modal.service';
 
 
 
@@ -164,6 +165,7 @@ import {ConfirmationService} from 'primeng/api';
         BaseService,
         MessageService,
         ConfirmationService,
+        IfModalService,
     ],
     bootstrap: [AppComponent],
     exports: [RouterModule]

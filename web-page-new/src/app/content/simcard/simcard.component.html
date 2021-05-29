@@ -11,11 +11,13 @@
                                 <!------- ボタン ---------->
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <button class="btn btn-primary btn-sm gap_contact">
+                                        <button class="btn btn-primary btn-sm gap_contact"
+                                                (click)="openNewModal()">
                                             <i class="d-md-none d-block feather ft-plus white"></i>
                                             <span class="d-md-block d-none">新　規</span>
                                         </button>
-                                        <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px">
+                                        <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
+                                                (click)="openExcelModal()">
                                             <i class="d-md-none d-block feather ft-plus white"></i>
                                             <span class="d-md-block d-none">一括登録</span>
                                         </button>
@@ -83,3 +85,68 @@
         </div>
     </div>
 </div>
+
+<!--トースト-->
+<p-toast position="top-right" key="alertModal" baseZIndex="999"></p-toast>
+<!--確認ダイアログ-->
+<p-confirmDialog
+        [baseZIndex]="10000" rejectButtonStyleClass="p-button-secondary"
+        icon="pi pi-exclamation-triangle"
+        acceptLabel="確認"
+        rejectLabel="取消">
+</p-confirmDialog>
+
+<!--新規ダイアログ-->
+<app-if-modal [modalId]="'modalA'"
+              [title]="'新規'"
+              [cancelBtnText]="'取消'"
+              [okBtnText]="'登録'"
+              (okClick)="onAddDialogOKClick($event)">
+    <div class="modalBody">
+
+        <div class="row">
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>デバイス名</h6>
+                <input type="text" name="devicename" class="form-control" [(ngModel)]="test1"
+                       maxlength="50" placeholder="">
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>SN<code>＊</code></h6>
+                <input type="text" name="sn" id="contact-phone" [(ngModel)]="test2"
+                       maxlength="20" class="contact-phone form-control" placeholder="SN"
+                       required>
+            </div>
+        </div>
+
+    </div>
+</app-if-modal>
+
+<!--一括登録ダイアログ-->
+<app-if-modal [modalId]="'modalB'"
+              [title]="'一括登録'"
+              [cancelBtnText]="'取消'"
+              [okBtnText]="'登録'"
+              (okClick)="onExcelDialogOKClick($event)" >
+    <div class="modalBody">
+                <h5>Check First Paragraph</h5>
+                <p>Oat cake ice cream candy chocolate cake chocolate cake cotton candy dragée apple
+                    pie.
+                    Brownie carrot
+                    cake candy canes bonbon fruitcake topping halvah. Cake sweet roll cake cheesecake
+                    cookie
+                    chocolate cake
+                    liquorice. Apple pie sugar plum powder donut soufflé.</p>
+                <p>Sweet roll biscuit donut cake gingerbread. Chocolate cupcake chocolate bar ice
+                    cream.
+                    Danish candy
+                    cake.</p>
+                <hr>
+                <h5>Some More Text</h5>
+                <p>Cupcake sugar plum dessert tart powder chocolate fruitcake jelly. Tootsie roll
+                    bonbon
+                    toffee danish.
+                    Biscuit sweet cake gummies danish. Tootsie roll cotton candy tiramisu lollipop
+                    candy
+                    cookie biscuit pie.</p>
+    </div>
+</app-if-modal>

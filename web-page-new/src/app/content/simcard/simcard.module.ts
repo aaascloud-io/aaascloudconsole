@@ -16,6 +16,7 @@ import {RippleModule} from 'primeng/ripple';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {TreeTableModule} from 'primeng/treetable';
 import {IfTableModule} from "../../ui/if-table/if-table.module";
+import {IfModalModule} from "../../ui/if-modal/if-modal.module";
 
 @NgModule({
     imports: [
@@ -40,6 +41,7 @@ import {IfTableModule} from "../../ui/if-table/if-table.module";
         ]),
         TreeTableModule,
         IfTableModule,
+        IfModalModule,
     ],
     declarations: [SimcardComponent],
     exports: [RouterModule]
