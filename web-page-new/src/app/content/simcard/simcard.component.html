@@ -102,7 +102,8 @@
               [title]="'新規'"
               [cancelBtnText]="'取消'"
               [okBtnText]="'登録'"
-              (okClick)="onAddDialogOKClick($event)">
+              (okClick)="onAddDialogOKClick($event)"
+              (cancelClicked)="onAddDialogCloseClick()">
     <div class="modalBody">
 
         <div class="row">

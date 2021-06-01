@@ -73,6 +73,10 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         // },0);
     }
 
+    onAddDialogCloseClick(){
+        console.log("onAddDialogCloseClick");
+    }
+
     openExcelModal() {
         this.modalService.open("modalB");
     }

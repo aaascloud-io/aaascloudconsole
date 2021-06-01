@@ -8,7 +8,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {IfModalService} from "./if-modal.service";
 
 
@@ -18,6 +18,7 @@ import {IfModalService} from "./if-modal.service";
     styleUrls: ['./if-modal.component.css']
 })
 export class IfModalComponent implements OnInit, AfterViewInit {
+
     @ViewChild('defaultModelContent') private defaultModelContent: TemplateRef<any>;
 
     /**
@@ -44,6 +45,11 @@ export class IfModalComponent implements OnInit, AfterViewInit {
      * OKボタンクリックイベント処理
      */
     @Output() okClick = new EventEmitter<MouseEvent>();
+
+    /**
+     * 閉じる／キャンセルボタンがクリックされるイベント処理
+     */
+    @Output() cancelClicked = new EventEmitter<void>();
 
 
     constructor(
@@ -87,6 +93,13 @@ export class IfModalComponent implements OnInit, AfterViewInit {
         this.modal.open(this.defaultModelContent, {
             windowClass: 'animated fadeInDown'
             , size: 'lg'
+        }).result.then((result) => {
+            // Close modal
+            // console.log(result);
+            this.cancelClicked.emit();
+        }, (reason) => {
+            // Cross click
+            // console.log(reason);
         });
     }
 
