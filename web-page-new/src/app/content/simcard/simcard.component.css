@@ -1,0 +1,8 @@
+.c-required:after {
+    margin-left: 5px;
+    color: #db0f30;
+    content: "*";
+    /*font-size: x-large;*/
+    font-size: large;
+    text-align: center;
+}

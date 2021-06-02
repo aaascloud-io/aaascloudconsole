@@ -48,8 +48,7 @@
                                           (deleteRowEvent)="onDeleteRow($event)"
                                           (editRowEvent)="onEditRow($event)"
                                           [columnCustoms]="[
-                                          {column: 'opt', edit: true, delete: false},
-                                          {column: 'opt', edit: false, delete: true}]"
+                                          {column: 'opt', edit: true, delete: true}]"
                                           [columnSuppers]="[{column: 'spr',
                                                              class: 'primary info mr-1 d-inline-block',
                                                              title: 'タイトル',
@@ -108,6 +107,116 @@
 
         <div class="row">
             <div class="form-group col-lg-6 col-md-12">
+                <h6 class="c-required">受入日</h6>
+                <input type="date" name="ukeirebi" class="form-control" [(ngModel)]="pageModel.simCard.ukeirebi"
+                       maxlength="20" placeholder="">
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>発行日<code>＊</code></h6>
+                <input type="date" name="hakkobi" class="form-control" [(ngModel)]="pageModel.simCard.hakkobi"
+                       maxlength="20"  placeholder="" required>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>利用開始日</h6>
+                <input type="date" name="riyokaishibi" class="form-control" [(ngModel)]="pageModel.simCard.riyokaishibi"
+                       maxlength="20" placeholder="">
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>区分</h6>
+                <select type="text" name="kubun" class="form-control" [(ngModel)]="pageModel.simCard.kubun"
+                        maxlength="20" required>
+                    <option value="Tracker">Tracker</option>
+                    <option value="SimCard">SimCard</option>
+                </select>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>IMEI</h6>
+                <input type="text" name="imei" class="form-control" [(ngModel)]="pageModel.simCard.imei"
+                       maxlength="20" placeholder="">
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>管理番号</h6>
+                <input type="text" name="kanribango" class="form-control" [(ngModel)]="pageModel.simCard.kanribango"
+                       maxlength="20" placeholder="">
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>電話番号</h6>
+                <input type="text" name="tenwabango" class="form-control" [(ngModel)]="pageModel.simCard.tenwabango"
+                       maxlength="20" placeholder="">
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>発行担当</h6>
+                <input type="text" name="hakkotanto" class="form-control" [(ngModel)]="pageModel.simCard.hakkotanto"
+                       maxlength="20" placeholder="">
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>発行先</h6>
+                <input type="text" name="hakkosaki" class="form-control" [(ngModel)]="pageModel.simCard.hakkosaki"
+                       maxlength="20" placeholder="">
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>発行先担当者</h6>
+                <input type="text" name="hakkosakitantosha" class="form-control" [(ngModel)]="pageModel.simCard.hakkosakitantosha"
+                       maxlength="20" placeholder="">
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>連絡先</h6>
+                <input type="text" name="renrakusen" class="form-control" [(ngModel)]="pageModel.simCard.renrakusen"
+                       maxlength="20" placeholder="">
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>利用目的</h6>
+                <textarea name="riyomokuteki" class="form-control" [(ngModel)]="pageModel.simCard.riyomokuteki"
+                       maxlength="500" placeholder="" rows="3">
+                </textarea>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>案件概要</h6>
+                <textarea name="gaiyo" class="form-control" [(ngModel)]="pageModel.simCard.gaiyo"
+                          maxlength="500" placeholder="" rows="3">
+                </textarea>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <h6>備考</h6>
+                <textarea name="biko" class="form-control" [(ngModel)]="pageModel.simCard.biko"
+                          maxlength="500" placeholder="" rows="3">
+                </textarea>
+            </div>
+
+
+
+            <!-- ------------------------------------------------------------ -->
+            <div class="input-group">
+                <input class="form-control" placeholder="Date yyyy-mm-dd" name="dp"
+                       ngbDatepicker #d2="ngbDatepicker">
+                <div class="input-group-append">
+                    <div class="input-group-text" (click)="d2.toggle()">
+                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <label class="card-title" for="DefaultSelect">Default Select</label>
+                    </div>
+<!--                    <div class="card-block">-->
+<!--                        <div class="card-body">-->
+                            <div class="form-group position-relative">
+                                <select class="form-control" id="DefaultSelect">
+                                    <option selected>Default select options</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-12">
                 <h6>デバイス名</h6>
                 <input type="text" name="devicename" class="form-control" [(ngModel)]="test1"
                        maxlength="50" placeholder="">
@@ -118,6 +227,10 @@
                        maxlength="20" class="contact-phone form-control" placeholder="SN"
                        required>
             </div>
+            <!-- ------------------------------------------------------------ -->
+
+
+
         </div>
 
     </div>

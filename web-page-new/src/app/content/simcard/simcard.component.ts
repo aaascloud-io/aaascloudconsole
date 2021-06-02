@@ -18,8 +18,27 @@ import {IfModalService} from "../../ui/if-modal/if-modal.service";
 
 @Injectable()
 export class SimcardComponent implements OnInit, AfterViewInit {
-    cardInfos: TreeNode[];
     @ViewChild('registerDeviceModal') public templateref: TemplateRef<any>;
+    cardInfos: TreeNode[];
+
+    pageModel = {
+        simCard: {
+            ukeirebi: '',
+            hakkobi: '',
+            riyokaishibi: '',
+            kubun: '',
+            imei: '',
+            kanribango: '',
+            tenwabango: '',
+            hakkotanto: '',
+            hakkosaki: '',
+            hakkosakitantosha: '',
+            renrakusen: '',
+            riyomokuteki: '',
+            gaiyo: '',
+            biko: '',
+        },
+    }
 
 
     constructor(
