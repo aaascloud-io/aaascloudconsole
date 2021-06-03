@@ -9,7 +9,6 @@ import {HttpService} from 'src/app/_services/HttpService';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {IfModalService} from "../../ui/if-modal/if-modal.service";
 
-
 @Component({
     selector: 'app-simcard',
     templateUrl: './simcard.component.html',
@@ -78,12 +77,15 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     }
 
     onAddDialogOKClick(event) {
-        const control = document.querySelector("#contact-phone");
+        // const control = document.querySelector("app-if-input[name='imei']");
+        // const control = document.querySelector("#imei");
+        const control = document.querySelector("#imei").querySelector("input");
         const input: HTMLInputElement = control as HTMLInputElement;
         input.focus();
-        input.select();
+        // input.select();
 
-        if (this.test1 === "123456") {
+        // imei
+        if (this.pageModel.simCard.imei === "123456") {
             this.modalService.close("modalA");
         }
 
@@ -92,7 +94,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         // },0);
     }
 
-    onAddDialogCloseClick(){
+    onAddDialogCloseClick() {
         console.log("onAddDialogCloseClick");
     }
 
@@ -100,14 +102,20 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.modalService.open("modalB");
     }
 
-    onExcelDialogOKClick(event){
+    onExcelDialogOKClick(event) {
         this.modalService.close("modalB");
+    }
+
+    onTextValueChange(event) {
+        console.log("onTextValueChange " + event);
+    }
+
+    onSelValueChange(event) {
+        console.log(event);
     }
 
 
     /////////////////////////////////////////////////////////////
-    test1: string;
-    test2: string;
 
     onTest(event, row, option) {
         alert(option);

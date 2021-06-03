@@ -17,6 +17,10 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {TreeTableModule} from 'primeng/treetable';
 import {IfTableModule} from "../../ui/if-table/if-table.module";
 import {IfModalModule} from "../../ui/if-modal/if-modal.module";
+import {IfInputModule} from "../../ui/if-input/if-input.module";
+import {IfDateModule} from "../../ui/if-date/if-date.module";
+import {IfTextareaModule} from "../../ui/if-textarea/if-textarea.module";
+import {IfSelectModule} from "../../ui/if-select/if-select.module";
 
 @NgModule({
     imports: [
@@ -42,6 +46,10 @@ import {IfModalModule} from "../../ui/if-modal/if-modal.module";
         TreeTableModule,
         IfTableModule,
         IfModalModule,
+        IfInputModule,
+        IfDateModule,
+        IfTextareaModule,
+        IfSelectModule,
     ],
     declarations: [SimcardComponent],
     exports: [RouterModule]
