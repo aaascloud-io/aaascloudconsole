@@ -86,10 +86,11 @@ export class IfTextareaComponent implements OnInit, ControlValueAccessor {
      */
     @Input('value')
     set value(text: string) {
-        if (this._value !== text) {
-            this._value = text;
-            this.onChangeCallback(text);
+        if (this._value === text) {
+            return;
         }
+        this._value = text;
+        this.onChangeCallback(text);
     }
 
 
