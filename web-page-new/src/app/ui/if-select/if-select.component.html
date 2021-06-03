@@ -1,0 +1,9 @@
+<h6>{{label}}<code *ngIf="required">＊</code></h6>
+<select type="text" class="form-control" id="{{iid}}"
+        [(ngModel)]="value"
+        required="{{required}}" maxlength="{{maxlength}}"
+        [ngClass]="class">
+    <ng-container *ngFor="let item of list">
+        <option value="{{ item[bindValue] }}">{{item[bindLabel]}}</option>
+    </ng-container>
+</select>
