@@ -96,7 +96,7 @@ export class IfInputComponent implements OnInit, ControlValueAccessor {
         if (!type) {
             this.type = "text";
         }
-        console.log(this.type);
+        // console.log(this.type);
     }
 
     /**
