@@ -1,6 +1,6 @@
 <h6>{{label}}<code *ngIf="required">＊</code></h6>
-<textarea class="form-control info" id="{{iid}}"
+<textarea class="form-control" id="{{iid}}"
           [(ngModel)]="value" placeholder="{{placeholder}}"
           required="{{required}}" maxlength="{{maxlength}}"
-          rows="{{rows}}">
+          rows="{{rows}}" [ngClass]="class">
 </textarea>

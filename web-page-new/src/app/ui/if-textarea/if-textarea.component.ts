@@ -64,6 +64,11 @@ export class IfTextareaComponent implements OnInit, ControlValueAccessor {
     @Input() maxlength: number;
 
     /**
+     * スタイル
+     */
+    @Input() class: string | string[] | Set<string> | { [klass: string]: any; }
+
+    /**
      * 入力値
      */
     private _value: any;

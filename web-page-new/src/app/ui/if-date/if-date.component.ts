@@ -53,6 +53,11 @@ export class IfDateComponent implements OnInit, ControlValueAccessor {
     @Input() required: boolean;
 
     /**
+     * スタイル
+     */
+    @Input() class: string | string[] | Set<string> | { [klass: string]: any; }
+
+    /**
      * 入力値
      */
     private _value: any;
