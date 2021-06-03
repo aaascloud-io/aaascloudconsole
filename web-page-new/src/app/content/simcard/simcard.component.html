@@ -107,35 +107,34 @@
 
         <div class="row">
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-date name="ukeirebi" label="受入日" required="true" class="info"
+                <app-if-date name="ukeirebi" label="受入日" required="true"
                              [(ngModel)]="pageModel.simCard.ukeirebi"></app-if-date>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-date name="hakkobi" label="発行日" required="true"
-                             [(ngModel)]="pageModel.simCard.hakkobi"></app-if-date>
+                <app-if-select name="kubun" label="区分" placeholder="" required="true"
+                               [list]="[{key: 'Tracker', val: '1'},{key: 'SimCard', val: '2'}]"
+                               bindLabel="key" bindValue="val" (ngModelChange)="onSelValueChange($event)"
+                               [(ngModel)]="pageModel.simCard.kubun" maxlength="10"></app-if-select>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <app-if-input name="imei" label="IMEI" id="imei" placeholder="" class="info" required="true"
+                              [(ngModel)]="pageModel.simCard.imei"
+                              maxlength="20" (ngModelChange)="onTextValueChange($event)"></app-if-input>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <app-if-input name="kanribango" label="管理番号" placeholder="" required="true"
+                              [(ngModel)]="pageModel.simCard.kanribango" maxlength="15"></app-if-input>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <app-if-date name="hakkobi" label="発行日" [(ngModel)]="pageModel.simCard.hakkobi"></app-if-date>
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <app-if-date name="riyokaishibi" label="利用開始日"
                              [(ngModel)]="pageModel.simCard.riyokaishibi"></app-if-date>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-select name="kubun" label="区分" placeholder=""
-                               [list]="[{key: 'Tracker', val: '1'},{key: 'SimCard', val: '2'}]"
-                               bindLabel="key" bindValue="val" (ngModelChange)="onSelValueChange($event)"
-                               [(ngModel)]="pageModel.simCard.kubun"></app-if-select>
-            </div>
-            <div class="form-group col-lg-6 col-md-12">
-                <app-if-input name="imei" label="IMEI" id="imei" placeholder="" class="info"
-                              [(ngModel)]="pageModel.simCard.imei"
-                              maxlength="20" (ngModelChange)="onTextValueChange($event)"></app-if-input>
-            </div>
-            <div class="form-group col-lg-6 col-md-12">
-                <app-if-input name="kanribango" label="管理番号" placeholder="" [(ngModel)]="pageModel.simCard.kanribango"
-                              maxlength="20"></app-if-input>
-            </div>
-            <div class="form-group col-lg-6 col-md-12">
                 <app-if-input name="tenwabango" label="電話番号" placeholder="" [(ngModel)]="pageModel.simCard.tenwabango"
-                              maxlength="20"></app-if-input>
+                              maxlength="11"></app-if-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <app-if-input name="hakkotanto" label="発行担当" placeholder="" [(ngModel)]="pageModel.simCard.hakkotanto"
@@ -143,7 +142,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <app-if-input name="hakkosaki" label="発行先" placeholder="" [(ngModel)]="pageModel.simCard.hakkosaki"
-                              maxlength="20"></app-if-input>
+                              maxlength="200"></app-if-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <app-if-input name="hakkosakitantosha" label="発行先担当者" placeholder=""
@@ -155,15 +154,15 @@
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <app-if-textarea name="riyomokuteki" label="利用目的" placeholder="" class="info"
-                                 [(ngModel)]="pageModel.simCard.riyomokuteki" maxlength="500"></app-if-textarea>
+                                 [(ngModel)]="pageModel.simCard.riyomokuteki" maxlength="400"></app-if-textarea>
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <app-if-textarea name="riyomokuteki" label="案件概要" placeholder=""
-                                 [(ngModel)]="pageModel.simCard.gaiyo" maxlength="500"></app-if-textarea>
+                                 [(ngModel)]="pageModel.simCard.gaiyo" maxlength="400"></app-if-textarea>
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <app-if-textarea name="riyomokuteki" label="備考" placeholder=""
-                                 [(ngModel)]="pageModel.simCard.biko" maxlength="500"></app-if-textarea>
+                                 [(ngModel)]="pageModel.simCard.biko" maxlength="400"></app-if-textarea>
             </div>
 
 
