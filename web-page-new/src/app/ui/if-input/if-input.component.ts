@@ -43,10 +43,10 @@ export class IfInputComponent implements OnInit, ControlValueAccessor {
      */
     @Input() type: string;
 
-    /**
-     * Id
-     */
-    @Input() iid: string;
+    // /**
+    //  * Id
+    //  */
+    // @Input() iid: string;
 
     /**
      * ヒント
