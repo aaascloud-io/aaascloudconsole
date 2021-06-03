@@ -24,22 +24,27 @@ export class IfModalComponent implements OnInit, AfterViewInit {
     /**
      * ダイアログId
      */
-    @Input() modalId;
+    @Input() modalId: string;
 
     /**
      * タイトル
      */
-    @Input() title;
+    @Input() title: string;
 
     /**
      * OKボタン表示内容
      */
-    @Input() okBtnText;
+    @Input() okBtnText: string;
 
     /**
      * Cancelボタン表示内容
      */
-    @Input() cancelBtnText;
+    @Input() cancelBtnText: string;
+
+    /**
+     * OKボタン種類（ディフォルト：button）
+     */
+    @Input() okBtnType: string;
 
     /**
      * OKボタンクリックイベント処理
@@ -69,6 +74,9 @@ export class IfModalComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        if (!this.okBtnType) {
+            this.okBtnType = "button";
+        }
     }
 
     ngAfterViewInit(): void {

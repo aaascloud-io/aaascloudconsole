@@ -15,7 +15,7 @@
         <button type="button" class="btn grey btn-outline-secondary" (click)="c('Close modal')" ngbAutofocus>
             {{cancelBtnText ? cancelBtnText : "Close"}}
         </button>
-        <button type="button" class="btn btn-outline-primary" (click)="onClick($event)">
+        <button type="{{okBtnType}}" class="btn btn-outline-primary" (click)="onClick($event)">
             {{okBtnText ? okBtnText : "Save changes"}}
         </button>
     </div>
