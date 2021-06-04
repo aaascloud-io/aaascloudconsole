@@ -4,3 +4,7 @@
        required="{{required}}" maxlength="{{maxlength}}"
        [ngClass]="class">
 <!--id="{{iid}}"-->
+<div *ngIf="hasError" class="invalid-feedback d-block">
+    <div *ngIf="errors.required">{{label}}を入力してください</div>
+    <div *ngIf="errors.email">入力されたメールアドレスは有効ではありません</div>
+</div>

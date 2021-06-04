@@ -2,41 +2,29 @@ import {
     Component,
     forwardRef,
     Input,
-    OnInit,
-    Output
+    OnInit, Optional,
+    Output, Self
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {
+    ControlValueAccessor,
+    NG_VALUE_ACCESSOR,
+    NgControl
+} from "@angular/forms";
+import {IfInputBaseComponent} from "../if-base/if-input.base.component";
 
 @Component({
     selector: 'app-if-input',
     templateUrl: './if-input.component.html',
     styleUrls: ['./if-input.component.css'],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            multi: true,
-            useExisting: forwardRef(() => IfInputComponent),
-        },
-    ],
+    // providers: [
+    //     {
+    //         provide: NG_VALUE_ACCESSOR,
+    //         multi: true,
+    //         useExisting: forwardRef(() => IfInputComponent),
+    //     },
+    // ],
 })
-export class IfInputComponent implements OnInit, ControlValueAccessor {
-
-    /**
-     * イベント
-     */
-    private onTouchedCallback: () => void = () => {
-    };
-
-    /**
-     * Changeイベント
-     */
-    private onChangeCallback: (_: any) => void = () => {
-    };
-
-    /**
-     * ラベル
-     */
-    @Input() label: string;
+export class IfInputComponent extends IfInputBaseComponent implements OnInit {
 
     /**
      * インプット種類（text）
@@ -54,47 +42,13 @@ export class IfInputComponent implements OnInit, ControlValueAccessor {
     @Input() placeholder: string;
 
     /**
-     * 必須可否
-     */
-    @Input() required: boolean;
-
-    /**
      * 長さ
      */
     @Input() maxlength: number;
 
-    /**
-     * スタイル
-     */
-    @Input() class: string | string[] | Set<string> | { [klass: string]: any; }
 
-    /**
-     * 入力値
-     */
-    private _value: any;
-
-    /**
-     * 入力値取得
-     */
-    get value(): string {
-        return this._value;
-    }
-
-    /**
-     * 入力値設定
-     * @param text 指定した値
-     */
-    @Input('value')
-    set value(text: string) {
-        if (this._value === text) {
-            return;
-        }
-        this._value = text;
-        this.onChangeCallback(text);
-    }
-
-
-    constructor() {
+    constructor(@Self() @Optional() public control: NgControl) {
+        super(control);
     }
 
     ngOnInit(): void {
@@ -103,32 +57,6 @@ export class IfInputComponent implements OnInit, ControlValueAccessor {
             this.type = "text";
         }
         // console.log(this.type);
-    }
-
-    /**
-     * イベントレジスター
-     * @param fn イベント処理関数
-     */
-    registerOnChange(fn: any): void {
-        this.onChangeCallback = fn;
-    }
-
-    /**
-     * イベントレジスター
-     * @param fn イベント処理関数
-     */
-    registerOnTouched(fn: any): void {
-        this.onTouchedCallback = fn;
-    }
-
-    /**
-     * 入力値書き込み
-     * @param obj 入力値
-     */
-    writeValue(obj: any): void {
-        if (obj !== this.value) {
-            this.value = obj;
-        }
     }
 
 }

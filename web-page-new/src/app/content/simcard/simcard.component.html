@@ -111,7 +111,7 @@
                              [(ngModel)]="pageModel.simCard.ukeirebi"></app-if-date>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-select name="kubun" label="区分" placeholder="" required="true"
+                <app-if-select name="kubun" label="区分" required="true"
                                [list]="[{key: 'Tracker', val: '1'},{key: 'SimCard', val: '2'}]"
                                bindLabel="key" bindValue="val" (ngModelChange)="onSelValueChange($event)"
                                [(ngModel)]="pageModel.simCard.kubun" maxlength="10"></app-if-select>

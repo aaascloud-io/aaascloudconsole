@@ -1,4 +1,9 @@
 <h6>{{label}}<code *ngIf="required">＊</code></h6>
-<input class="form-control" type="date" id="{{iid}}"
-       [(ngModel)]="value" placeholder="{{placeholder}}"
+<input class="form-control" type="date"
+       [(ngModel)]="value"
        required="{{required}}" [ngClass]="class">
+<!--id="{{iid}}"-->
+<!--placeholder="{{placeholder}}"-->
+<div *ngIf="hasError" class="invalid-feedback d-block">
+    <div *ngIf="errors.required">{{label}}を入力してください</div>
+</div>

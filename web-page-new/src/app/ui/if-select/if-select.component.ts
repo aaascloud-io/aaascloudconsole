@@ -2,10 +2,11 @@ import {
     Component,
     forwardRef,
     Input,
-    OnInit,
-    Output
+    OnInit, Optional,
+    Output, Self
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
+import {IfInputBaseComponent} from "../if-base/if-input.base.component";
 
 /**
  * セレクターアイテム種類
@@ -20,32 +21,9 @@ interface SelectItem {
     selector: 'app-if-select',
     templateUrl: './if-select.component.html',
     styleUrls: ['./if-select.component.css'],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            multi: true,
-            useExisting: forwardRef(() => IfSelectComponent),
-        },
-    ],
 })
-export class IfSelectComponent implements OnInit, ControlValueAccessor {
+export class IfSelectComponent extends IfInputBaseComponent implements OnInit {
 
-    /**
-     * イベント
-     */
-    private onTouchedCallback: () => void = () => {
-    };
-
-    /**
-     * Changeイベント
-     */
-    private onChangeCallback: (_: any) => void = () => {
-    };
-
-    /**
-     * ラベル
-     */
-    @Input() label: string;
 
     /**
      * Id
@@ -58,19 +36,9 @@ export class IfSelectComponent implements OnInit, ControlValueAccessor {
     // @Input() placeholder: string;
 
     /**
-     * 必須可否
-     */
-    @Input() required: boolean;
-
-    /**
      * 長さ
      */
     @Input() maxlength: number;
-
-    /**
-     * スタイル
-     */
-    @Input() class: string | string[] | Set<string> | { [klass: string]: any; }
 
     /**
      * セレクターの表示内容
@@ -82,22 +50,12 @@ export class IfSelectComponent implements OnInit, ControlValueAccessor {
      */
     @Input() bindValue: string;
 
-    /**
-     * 入力値
-     */
-    private _value: any;
 
     /**
      * セレクターデータ
      */
     private _list: SelectItem[];
 
-    /**
-     * 入力値取得
-     */
-    get value(): string {
-        return this._value;
-    }
 
     /**
      * 入力値設定
@@ -136,36 +94,12 @@ export class IfSelectComponent implements OnInit, ControlValueAccessor {
     }
 
 
-    constructor() {
+    constructor(@Self() @Optional() public control: NgControl) {
+        super(control);
     }
 
     ngOnInit(): void {
     }
 
-    /**
-     * イベントレジスター
-     * @param fn イベント処理関数
-     */
-    registerOnChange(fn: any): void {
-        this.onChangeCallback = fn;
-    }
-
-    /**
-     * イベントレジスター
-     * @param fn イベント処理関数
-     */
-    registerOnTouched(fn: any): void {
-        this.onTouchedCallback = fn;
-    }
-
-    /**
-     * 入力値書き込み
-     * @param obj 入力値
-     */
-    writeValue(obj: any): void {
-        if (obj !== this.value) {
-            this.value = obj;
-        }
-    }
 
 }

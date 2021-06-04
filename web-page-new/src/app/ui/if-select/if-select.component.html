@@ -7,3 +7,6 @@
         <option value="{{ item[bindValue] }}">{{item[bindLabel]}}</option>
     </ng-container>
 </select>
+<div *ngIf="hasError" class="invalid-feedback d-block">
+    <div *ngIf="errors.required">{{label}}を入力してください</div>
+</div>
