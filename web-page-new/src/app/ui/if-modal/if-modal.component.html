@@ -1,5 +1,7 @@
 <ng-template #defaultModelContent let-c="close" let-d="dismiss">
 
+    <!--    <form #form="ngForm">-->
+
     <div class="modal-header">
         <h4 class="modal-title" id="myModalLabel1">{{title ? title : "Basic Modal"}}</h4>
         <button type="button" class="close" aria-label="Close" (click)="c('Cross click')">
@@ -16,9 +18,13 @@
             {{cancelBtnText ? cancelBtnText : "Close"}}
         </button>
         <button type="{{okBtnType}}" class="btn btn-outline-primary" (click)="onClick($event)">
+            <!--        <button type="{{okBtnType}}" class="btn btn-outline-primary" (click)="onClick($event)"-->
+            <!--                [disabled]="form.invalid">-->
             {{okBtnText ? okBtnText : "Save changes"}}
         </button>
     </div>
+
+    <!--    </form>-->
 
     <!--    <div class="modal-footer">-->
     <!--        <div class="form-group position-relative has-icon-left mb-0">-->
