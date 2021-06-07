@@ -97,7 +97,7 @@
 </p-confirmDialog>
 
 <!--新規ダイアログ-->
-<app-if-modal [modalId]="'modalA'"
+<app-if-modal [modalId]="'newCardModal'"
               [title]="'新規'"
               [cancelBtnText]="'取消'"
               [okBtnText]="'登録'"
@@ -114,7 +114,7 @@
                 <app-if-select name="kubun" label="区分" required="true"
                                [list]="[{key: 'Tracker', val: '1'},{key: 'SimCard', val: '2'}]"
                                bindLabel="key" bindValue="val" (ngModelChange)="onSelValueChange($event)"
-                               [(ngModel)]="pageModel.simCard.kubun" maxlength="10"></app-if-select>
+                               [(ngModel)]="selected" maxlength="10"></app-if-select>
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <app-if-input name="imei" label="IMEI" id="imei" placeholder="" class="info" required="true"

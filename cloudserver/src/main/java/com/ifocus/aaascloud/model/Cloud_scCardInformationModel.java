@@ -2,29 +2,26 @@ package com.ifocus.aaascloud.model;
 
 import lombok.Data;
 
-import java.util.List;
+import java.io.Serializable;
 
 @Data
-public class Cloud_scCardInformationModel {
-    private List<CardInformation> list;
+public class Cloud_scCardInformationModel implements Serializable {
 
-    @Data
-    public static class CardInformation{
-        private Integer no;
-        private String ukeirebi;
-        private String kubun;
-        private String imei;
-        private String kanribango;
-        private String tenwabango;
-        private String hakkotanto;
-        private String hakkobi;
-        private String hakkosaki;
-        private String hakkosakitantosha;
-        private String renrakusen;
-        private String riyokaishibi;
-        private String riyomokuteki;
-        private String gaiyo;
-        private String biko;
-    }
+    private Integer no;
+    private String ukeirebi;
+    private String kubun;
+    private String imei;
+    private String kanribango;
+    private String tenwabango;
+    private String hakkotanto;
+    private String hakkobi;
+    private String hakkosaki;
+    private String hakkosakitantosha;
+    private String renrakusen;
+    private String riyokaishibi;
+    private String riyomokuteki;
+    private String gaiyo;
+    private String biko;
+    private Integer deleteflg;
 
 }

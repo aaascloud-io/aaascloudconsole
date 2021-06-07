@@ -4,7 +4,7 @@ import {
     Injectable,
     OnInit, TemplateRef, ViewChild
 } from '@angular/core';
-import {TreeNode} from 'primeng/api';
+import {ConfirmationService, MessageService, TreeNode} from 'primeng/api';
 import {HttpService} from 'src/app/_services/HttpService';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {IfModalService} from "../../ui/if-modal/if-modal.service";
@@ -38,6 +38,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
             biko: '',
         },
     }
+    selected: { key: string, val: string };
 
 
     constructor(
@@ -45,26 +46,46 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         private elementRef: ElementRef,
         private httpService: HttpService,
         private modalService: IfModalService,
+        private messageService: MessageService,
+        private confirmationService: ConfirmationService,
     ) {
     }
 
     ngOnInit(): void {
-        let param = {};
-        this.httpService.usePostII('card/list', param).then((result) => {
-            console.log(result);
-            this.cardInfos = result.list;
-        }).catch((err) => {
-            console.error(err);
-        });
-
+        this.getList();
     }
 
     ngAfterViewInit(): void {
     }
 
-    onDeleteRow(item): void {
-        alert('delete');
-        console.log(item);
+    /**
+     * 削除イベント
+     * @param row 指定した行
+     */
+    onDeleteRow(row): void {
+        this.confirmationService.confirm({
+            message: row.kanribango + "を削除します。よろしいですか？",
+            header: 'SIMカードを削除確認',
+            accept: () => {
+                this.httpService.usePostII('card/del', row).then((result) => {
+                    console.log(result);
+                    if (result) {
+                        this.getList();
+                        this.showAlert("info", "SIMカードを削除しました。");
+                    } else {
+                        this.showAlert("error", "削除APIエラーを発生しました。");
+                    }
+                }).catch((err) => {
+                    console.error(err);
+                    this.showAlert("error", "削除APIエラーを発生しました。");
+                });
+            },
+            reject: () => {
+                this.showAlert("info", "削除操作を取消しました");
+
+            },
+        });
+
     }
 
     onEditRow(item): void {
@@ -72,30 +93,82 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         console.log(item);
     }
 
+    /**
+     * 新規ダイアログを開く
+     */
     openNewModal() {
-        this.modalService.open("modalA");
+        this.modalService.open("newCardModal");
     }
 
+    /**
+     * 新規イベント
+     * @param event イベント
+     */
     onAddDialogOKClick(event) {
-        // const control = document.querySelector("app-if-input[name='imei']");
-        // const control = document.querySelector("#imei");
-        const control = document.querySelector("#imei").querySelector("input");
-        const input: HTMLInputElement = control as HTMLInputElement;
-        input.focus();
-        // input.select();
+        this.pageModel.simCard.kubun = this.selected.key;
+        let param = this.pageModel.simCard;
+        this.httpService.usePostII('card/add', param).then((result) => {
+            console.log(result);
+            if (result) {
+                this.clear();
+                this.modalService.close("newCardModal");
+                this.getList();
+                this.showAlert("info", "新規登録しました。");
+            } else {
+                this.showAlert("error", "登録APIエラーを発生しました。");
+            }
+        }).catch((err) => {
+            console.error(err);
+            this.showAlert("error", "登録APIエラーを発生しました。");
+        });
 
-        // imei
-        if (this.pageModel.simCard.imei === "123456") {
-            this.modalService.close("modalA");
-        }
-
-        // setTimeout(()=>{ // this will make the execution after the above boolean has changed
-        //     this.test2F.nativeElement.focus();
-        // },0);
+        // this.test();
     }
 
+    /**
+     * キャンセルイベント
+     */
     onAddDialogCloseClick() {
-        console.log("onAddDialogCloseClick");
+        this.clear();
+    }
+
+    /**
+     * 一覧取得
+     */
+    private getList(): void {
+        let param = {};
+        this.httpService.usePostII('card/list', param).then((result) => {
+            console.log(result);
+            this.cardInfos = result;
+        }).catch((err) => {
+            console.error(err);
+        });
+    }
+
+    /**
+     * クリア
+     */
+    private clear(): void {
+        for (let key in this.pageModel.simCard) {
+            this.pageModel.simCard[key] = null;
+        }
+    }
+
+    /**
+     * 確認ダイアログを開く
+     * @param alertType 種類
+     * @param alertDetail メッセージ
+     */
+    private showAlert(alertType, alertDetail): void {
+        let lifeValue = 2000;
+        let summary: string = alertType === "error" ? "エラー" : (alertType === "info" ? "情報" : "");
+        this.messageService.add({
+            key: 'alertModal',
+            severity: alertType,
+            summary: summary,
+            detail: alertDetail,
+            life: lifeValue
+        });
     }
 
     openExcelModal() {
@@ -122,6 +195,23 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         console.log(event);
         console.log(row);
         console.log(option);
+    }
+
+    test() {
+        // const control = document.querySelector("app-if-input[name='imei']");
+        const control = document.querySelector("#imei").querySelector("input");
+        const input: HTMLInputElement = control as HTMLInputElement;
+        input.focus();
+        // input.select();
+
+        // imei
+        if (this.pageModel.simCard.imei === "123456") {
+            this.modalService.close("newCardModal");
+        }
+
+        // setTimeout(()=>{ // this will make the execution after the above boolean has changed
+        //     this.test2F.nativeElement.focus();
+        // },0);
     }
 
     /////////////////////////////////////////////////////////////
