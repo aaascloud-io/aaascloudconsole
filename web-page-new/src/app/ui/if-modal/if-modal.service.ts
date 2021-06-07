@@ -18,7 +18,7 @@ export class IfModalService {
      * ダイアログを開く
      * @param modalId ダイアログId
      */
-    public open(modalId: string) {
+    public open(modalId: string): void {
         this.modalOpenCallSource.next(modalId);
     }
 
@@ -26,8 +26,10 @@ export class IfModalService {
      * ダイアログを閉じる
      * @param modalId ダイアログId
      */
-    public close(modalId: string) {
+    public close(modalId: string): void {
         this.modalCloseCallSource.next(modalId);
     }
+
+    // listenerFn: (e?: any) => any
 
 }

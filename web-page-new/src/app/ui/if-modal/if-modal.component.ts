@@ -94,7 +94,7 @@ export class IfModalComponent implements OnInit, AfterViewInit {
      * ダイアログを開く
      * @param modalId ダイアログId
      */
-    private openModal(modalId: string) {
+    private openModal(modalId: string): void {
         if (this.modalId !== modalId) {
             return;
         }
@@ -115,7 +115,7 @@ export class IfModalComponent implements OnInit, AfterViewInit {
      * ダイアログを閉じる
      * @param modalId ダイアログId
      */
-    private closeModal(modalId: string) {
+    private closeModal(modalId: string): void {
         if (this.modalId !== modalId) {
             return;
         }

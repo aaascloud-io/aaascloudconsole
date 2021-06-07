@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -48,6 +49,13 @@ public class Cloud_scCardInformationService {
         Cloud_scCardInformationEntity result = cloud_scCardInformationRepository.save(entity);
         Cloud_scCardInformationModel modelResult = CardInformationAppMapper.MAPPER.toCardInformationModel(result);
         return modelResult;
+    }
+
+    public Cloud_scCardInformationModel findSimCardById(Integer id){
+        Optional<Cloud_scCardInformationEntity> opt = cloud_scCardInformationRepository.findById(id);
+        Cloud_scCardInformationEntity entity = opt.orElse(new Cloud_scCardInformationEntity());
+        Cloud_scCardInformationModel model = CardInformationAppMapper.MAPPER.toCardInformationModel(entity);
+        return model;
     }
 
 }

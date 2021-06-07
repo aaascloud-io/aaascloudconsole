@@ -39,6 +39,24 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         },
     }
     selected: { key: string, val: string };
+    newCardModalTitle: string;
+    newCardModalOkButtonText: string;
+    // optFlag: string;
+
+    // 定数定義
+    NEW_CARD_MODAL = "newCardModal";
+    static DEL_CONFIRM_MSG = "を削除します。よろしいですか？";
+    static DEL_CONFIRM_HER = 'SIMカードを削除確認';
+    static DEL_INFO_MSG = "SIMカードを削除しました。";
+    static DEL_ERR_MSG = "削除APIエラーを発生しました。";
+    static DEL_CNL_MSG = "削除操作を取消しました";
+    static MOD_EDIT_TITLE = '修正';
+    static MOD_EDIT_OK_BUTTON = '変更';
+    static MOD_NEW_TITLE = '新規';
+    static MOD_NEW_OK_BUTTON = '登録';
+    static NEW_INFO_MSG_1 = "SIMカードを";
+    static NEW_INFO_MSG_2 = "しました。";
+    static NEW_ERR_MSG = "APIエラーを発生しました。";
 
 
     constructor(
@@ -64,40 +82,48 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      */
     onDeleteRow(row): void {
         this.confirmationService.confirm({
-            message: row.kanribango + "を削除します。よろしいですか？",
-            header: 'SIMカードを削除確認',
+            message: row.kanribango + SimcardComponent.DEL_CONFIRM_MSG,
+            header: SimcardComponent.DEL_CONFIRM_HER,
             accept: () => {
                 this.httpService.usePostII('card/del', row).then((result) => {
                     console.log(result);
                     if (result) {
                         this.getList();
-                        this.showAlert("info", "SIMカードを削除しました。");
+                        this.showAlert("info", SimcardComponent.DEL_INFO_MSG);
                     } else {
-                        this.showAlert("error", "削除APIエラーを発生しました。");
+                        this.showAlert("error", SimcardComponent.DEL_ERR_MSG);
                     }
                 }).catch((err) => {
                     console.error(err);
-                    this.showAlert("error", "削除APIエラーを発生しました。");
+                    this.showAlert("error", SimcardComponent.DEL_ERR_MSG);
                 });
             },
             reject: () => {
-                this.showAlert("info", "削除操作を取消しました");
+                this.showAlert("info", SimcardComponent.DEL_CNL_MSG);
 
             },
         });
 
     }
 
-    onEditRow(item): void {
-        alert('edit');
-        console.log(item);
+    onEditRow(row): void {
+        this.getCardInfo(row);
+        this.newCardModalTitle = SimcardComponent.MOD_EDIT_TITLE;
+        this.newCardModalOkButtonText = SimcardComponent.MOD_EDIT_OK_BUTTON;
+        this.modalService.open(this.NEW_CARD_MODAL);
     }
 
     /**
      * 新規ダイアログを開く
      */
     openNewModal() {
-        this.modalService.open("newCardModal");
+        this.newCardModalTitle = SimcardComponent.MOD_NEW_TITLE;
+        this.newCardModalOkButtonText = SimcardComponent.MOD_NEW_OK_BUTTON;
+        this.modalService.open(this.NEW_CARD_MODAL);
+    }
+
+    onDeleteSelectedAll() {
+       alert("onDeleteSelectedAll");
     }
 
     /**
@@ -105,21 +131,23 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      * @param event イベント
      */
     onAddDialogOKClick(event) {
-        this.pageModel.simCard.kubun = this.selected.key;
+        if (this.selected) {
+            this.pageModel.simCard.kubun = this.selected.key;
+        }
         let param = this.pageModel.simCard;
         this.httpService.usePostII('card/add', param).then((result) => {
             console.log(result);
             if (result) {
                 this.clear();
-                this.modalService.close("newCardModal");
+                this.modalService.close(this.NEW_CARD_MODAL);
                 this.getList();
-                this.showAlert("info", "新規登録しました。");
+                this.showAlert("info", SimcardComponent.NEW_INFO_MSG_1 + this.newCardModalTitle + SimcardComponent.NEW_INFO_MSG_2);
             } else {
-                this.showAlert("error", "登録APIエラーを発生しました。");
+                this.showAlert("error", SimcardComponent.NEW_ERR_MSG);
             }
         }).catch((err) => {
             console.error(err);
-            this.showAlert("error", "登録APIエラーを発生しました。");
+            this.showAlert("error", SimcardComponent.NEW_ERR_MSG);
         });
 
         // this.test();
@@ -140,6 +168,15 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.httpService.usePostII('card/list', param).then((result) => {
             console.log(result);
             this.cardInfos = result;
+        }).catch((err) => {
+            console.error(err);
+        });
+    }
+
+    private getCardInfo(param): void {
+        this.httpService.usePostII('card/info', param).then((result) => {
+            console.log(result);
+            this.pageModel.simCard = result;
         }).catch((err) => {
             console.error(err);
         });
@@ -206,7 +243,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
 
         // imei
         if (this.pageModel.simCard.imei === "123456") {
-            this.modalService.close("newCardModal");
+            this.modalService.close(this.NEW_CARD_MODAL);
         }
 
         // setTimeout(()=>{ // this will make the execution after the above boolean has changed

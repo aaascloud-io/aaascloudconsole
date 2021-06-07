@@ -21,7 +21,8 @@
                                             <i class="d-md-none d-block feather ft-plus white"></i>
                                             <span class="d-md-block d-none">一括登録</span>
                                         </button>
-                                        <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px">
+                                        <button class="btn btn-danger btn-sm gap_contact" style="margin-left:5px"
+                                                (click)="onDeleteSelectedAll()">
                                             <i class="d-md-none d-block feather ft-plus white"></i>
                                             <span class="d-md-block d-none">削　除</span>
                                         </button>
@@ -97,10 +98,10 @@
 </p-confirmDialog>
 
 <!--新規ダイアログ-->
-<app-if-modal [modalId]="'newCardModal'"
-              [title]="'新規'"
+<app-if-modal [modalId]="NEW_CARD_MODAL"
+              [title]="newCardModalTitle"
               [cancelBtnText]="'取消'"
-              [okBtnText]="'登録'"
+              [okBtnText]="newCardModalOkButtonText"
               (okClick)="onAddDialogOKClick($event)"
               (cancelClicked)="onAddDialogCloseClick()">
     <div class="modalBody">
