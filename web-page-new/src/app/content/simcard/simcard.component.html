@@ -17,7 +17,7 @@
                                             <span class="d-md-block d-none">新　規</span>
                                         </button>
                                         <button class="btn btn-primary btn-sm gap_contact" style="margin-left:5px"
-                                                (click)="openExcelModal()">
+                                                (click)="openNewAllModal()">
                                             <i class="d-md-none d-block feather ft-plus white"></i>
                                             <span class="d-md-block d-none">一括登録</span>
                                         </button>
@@ -173,12 +173,42 @@
 </app-if-modal>
 
 <!--一括登録ダイアログ-->
-<app-if-modal [modalId]="'modalB'"
-              [title]="'一括登録'"
+<app-if-modal [modalId]="NEW_ALL_CARD_MODAL"
+              [title]="newAllCardModalTitle"
               [cancelBtnText]="'取消'"
-              [okBtnText]="'登録'"
-              (okClick)="onExcelDialogOKClick($event)">
+              [okBtnText]="newAllCardModalOkButtonText"
+              (okClick)="onNewAllDialogOKClick($event)">
     <div class="modalBody">
+        <div class="form-group col-12">
+            <a class="feather ft-download info" name="sampoo">サンプルファイルをダウンロード</a>
+        </div>
+        <div class="custom-file form-group col-12">
+            <input type="file" class="custom-file-input" accept='contactImage/*'
+                   onclick="this.value = null" id="customFile" name="selectFile">
+            <label class="custom-file-label" name="selectFileLe">test</label>
+        </div>
+
+        <div class="table-responsive form-group col-12">
+            <app-if-table [tblId]="'qqq'">
+                <ul class="header">
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                    <li data-col="no" data-text="番号"></li>
+                </ul>
+            </app-if-table>
+        </div>
+
+
         <h5>Check First Paragraph</h5>
         <p>Oat cake ice cream candy chocolate cake chocolate cake cotton candy dragée apple
             pie.

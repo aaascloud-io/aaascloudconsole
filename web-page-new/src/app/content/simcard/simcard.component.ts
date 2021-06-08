@@ -46,13 +46,17 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     newCardModalTitle: string;
     // 新規ダイアログのOKボタン
     newCardModalOkButtonText: string;
-    // optFlag: string;
+    // 一括登録ダイアログのタイトル
+    newAllCardModalTitle: string;
+    // 一括登録ダイアログのOKボタン
+    newAllCardModalOkButtonText: string;
     // 区分設定値
     selDivision = [{key: 'Tracker', val: '1'}, {key: 'SimCard', val: '2'}];
 
     // 定数定義
     TBL_LIST_ID = "tblListId";
     NEW_CARD_MODAL = "newCardModal";
+    NEW_ALL_CARD_MODAL = "newAllCardModal";
     static DEL_CONFIRM_MSG = "を削除します。よろしいですか？";
     static DEL_CONFIRM_HER = 'SIMカードを削除確認';
     static DEL_INFO_MSG = "SIMカードを削除しました。";
@@ -66,6 +70,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     static NEW_INFO_MSG_2 = "しました。";
     static NEW_ERR_MSG = "APIエラーを発生しました。";
     static DEL_ALL_CONFIRM_MSG = "選択したSIMカードを削除します。よろしいですか？";
+    static MOD_NEW_ALL_TITLE = '一括登録';
 
 
     constructor(
@@ -202,6 +207,18 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.clear();
     }
 
+    openNewAllModal() {
+        // ダイアログのタイトルとボタン名を設定する
+        this.newAllCardModalTitle = SimcardComponent.MOD_NEW_ALL_TITLE;
+        this.newAllCardModalOkButtonText = SimcardComponent.MOD_NEW_OK_BUTTON;
+        // 開く
+        this.modalService.open(this.NEW_ALL_CARD_MODAL);
+    }
+
+    onNewAllDialogOKClick(event) {
+        this.modalService.close(this.NEW_ALL_CARD_MODAL);
+    }
+
     /**
      * 一覧取得
      */
@@ -268,13 +285,9 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         });
     }
 
-    openExcelModal() {
-        this.modalService.open("modalB");
-    }
 
-    onExcelDialogOKClick(event) {
-        this.modalService.close("modalB");
-    }
+
+
 
     onTextValueChange(event) {
         console.log("onTextValueChange " + event);
