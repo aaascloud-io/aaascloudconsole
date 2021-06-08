@@ -65,6 +65,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     static NEW_INFO_MSG_1 = "SIMカードを";
     static NEW_INFO_MSG_2 = "しました。";
     static NEW_ERR_MSG = "APIエラーを発生しました。";
+    static DEL_ALL_CONFIRM_MSG = "選択したSIMカードを削除します。よろしいですか？";
 
 
     constructor(
@@ -90,11 +91,65 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      * @param row 指定した行
      */
     onDeleteRow(row): void {
-        this.confirmationService.confirm({
-            message: row.kanribango + SimcardComponent.DEL_CONFIRM_MSG,
-            header: SimcardComponent.DEL_CONFIRM_HER,
-            accept: () => {
+        // 削除処理
+        this.doProcessByConfirm(row.kanribango + SimcardComponent.DEL_CONFIRM_MSG,
+            SimcardComponent.DEL_CONFIRM_HER,
+            () => {
                 this.httpService.usePostII('card/del', row).then((result) => {
+                    if (result) {
+                        this.getList();
+                        this.showAlert("info", SimcardComponent.DEL_INFO_MSG);
+                    } else {
+                        this.showAlert("error", SimcardComponent.DEL_ERR_MSG);
+                    }
+                }).catch((err) => {
+                    console.error(err);
+                    this.showAlert("error", SimcardComponent.DEL_ERR_MSG);
+                });
+            },
+            () => {
+                this.showAlert("info", SimcardComponent.DEL_CNL_MSG);
+            }
+        );
+    }
+
+    /**
+     * 編集ダイアログを開く
+     * @param row 選択した行データ
+     */
+    onEditRow(row): void {
+        // 選択したSIMカード情報を取得
+        this.getCardInfo(row);
+        // ダイアログのタイトルとボタン名を設定する
+        this.newCardModalTitle = SimcardComponent.MOD_EDIT_TITLE;
+        this.newCardModalOkButtonText = SimcardComponent.MOD_EDIT_OK_BUTTON;
+        // 開く
+        this.modalService.open(this.NEW_CARD_MODAL);
+    }
+
+    /**
+     * 新規ダイアログを開く
+     */
+    openNewModal() {
+        // ダイアログのタイトルとボタン名を設定する
+        this.newCardModalTitle = SimcardComponent.MOD_NEW_TITLE;
+        this.newCardModalOkButtonText = SimcardComponent.MOD_NEW_OK_BUTTON;
+        // 開く
+        this.modalService.open(this.NEW_CARD_MODAL);
+    }
+
+    /**
+     * 削除イベント（複数）
+     */
+    onDeleteSelectedAll() {
+        // 削除データ取得
+        let rows = this.tableService.current(this.TBL_LIST_ID);
+        // 選択した行データ
+        let checkedList = rows.filter(row => row.selected);
+        // 削除処理
+        this.doProcessByConfirm(SimcardComponent.DEL_ALL_CONFIRM_MSG, SimcardComponent.DEL_CONFIRM_HER,
+            () => {
+                this.httpService.usePostII('card/delAll', checkedList).then((result) => {
                     console.log(result);
                     if (result) {
                         this.getList();
@@ -107,43 +162,11 @@ export class SimcardComponent implements OnInit, AfterViewInit {
                     this.showAlert("error", SimcardComponent.DEL_ERR_MSG);
                 });
             },
-            reject: () => {
+            () => {
                 this.showAlert("info", SimcardComponent.DEL_CNL_MSG);
+            }
+        );
 
-            },
-        });
-
-    }
-
-    /**
-     * 編集ダイアログを開く
-     * @param row 選択した行データ
-     */
-    onEditRow(row): void {
-        this.getCardInfo(row);
-        this.newCardModalTitle = SimcardComponent.MOD_EDIT_TITLE;
-        this.newCardModalOkButtonText = SimcardComponent.MOD_EDIT_OK_BUTTON;
-        this.modalService.open(this.NEW_CARD_MODAL);
-    }
-
-    /**
-     * 新規ダイアログを開く
-     */
-    openNewModal() {
-        this.newCardModalTitle = SimcardComponent.MOD_NEW_TITLE;
-        this.newCardModalOkButtonText = SimcardComponent.MOD_NEW_OK_BUTTON;
-        this.modalService.open(this.NEW_CARD_MODAL);
-    }
-
-    /**
-     * 削除イベント（複数）
-     */
-    onDeleteSelectedAll() {
-        let rows = this.tableService.current(this.TBL_LIST_ID);
-        console.log(rows);
-        let checkedList = rows.filter(row => row.selected);
-        console.log(checkedList);
-        alert("onDeleteSelectedAll");
     }
 
     /**
@@ -151,7 +174,9 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      * @param event イベント
      */
     onAddDialogOKClick(event) {
+        // 入力したSIMカード情報を取得
         let param = this.pageModel.simCard;
+        // 新規追加処理
         this.httpService.usePostII('card/add', param).then((result) => {
             console.log(result);
             if (result) {
@@ -183,7 +208,6 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     private getList(): void {
         let param = {};
         this.httpService.usePostII('card/list', param).then((result) => {
-            // console.log(result);
             this.cardInfos = result;
         }).catch((err) => {
             console.error(err);
@@ -196,10 +220,25 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      */
     private getCardInfo(param): void {
         this.httpService.usePostII('card/info', param).then((result) => {
-            // console.log(result);
             this.pageModel.simCard = result;
         }).catch((err) => {
             console.error(err);
+        });
+    }
+
+    /**
+     * 削除操作を確認して、削除処理を行う
+     * @param message メッセージ
+     * @param header タイトル
+     * @param accept 削除処理
+     * @param reject 取消処理
+     */
+    private doProcessByConfirm(message: string, header: string, accept: Function, reject: Function): void {
+        this.confirmationService.confirm({
+            message: message,
+            header: header,
+            accept: accept,
+            reject: reject,
         });
     }
 

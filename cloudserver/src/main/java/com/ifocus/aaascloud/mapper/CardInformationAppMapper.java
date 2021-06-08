@@ -27,6 +27,8 @@ public interface CardInformationAppMapper {
 
     Cloud_scCardInformationEntity toCardInformationEntity(Cloud_scCardInformationModel model);
 
+    List<Cloud_scCardInformationEntity> toCardInformationEntities(List<Cloud_scCardInformationModel> models);
+
     default Timestamp map(String date) {
         if (StringUtil.isEmpty(date)) {
             return null;
