@@ -2,8 +2,11 @@ import {
     Component,
     forwardRef,
     Input,
-    OnInit, Optional,
-    Output, Self
+    OnInit,
+    Optional,
+    Output,
+    Self,
+    EventEmitter
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
 import {IfInputBaseComponent} from "../if-base/if-input.base.component";
@@ -50,6 +53,11 @@ export class IfSelectComponent extends IfInputBaseComponent implements OnInit {
      */
     @Input() bindValue: string;
 
+    /**
+     * 値変更イベント
+     */
+    @Output() valueChange = new EventEmitter<any>();
+
 
     /**
      * セレクターデータ
@@ -67,8 +75,9 @@ export class IfSelectComponent extends IfInputBaseComponent implements OnInit {
             return;
         }
         this._value = text;
+        this.onChangeCallback(text);
         let selected = this._list.find((item) => item[this.bindValue] === text);
-        this.onChangeCallback(selected);
+        this.valueChange.emit(selected);
     }
 
     /**

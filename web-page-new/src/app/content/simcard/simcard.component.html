@@ -113,9 +113,10 @@
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <app-if-select name="kubun" label="区分" required="true"
-                               [list]="[{key: 'Tracker', val: '1'},{key: 'SimCard', val: '2'}]"
-                               bindLabel="key" bindValue="val" (ngModelChange)="onSelValueChange($event)"
-                               [(ngModel)]="selected" maxlength="10"></app-if-select>
+                               [list]="selDivision" bindLabel="key" bindValue="val"
+                               (ngModelChange)="onModelChange($event)"
+                               (valueChange)="onSelValueChange($event)"
+                               [(ngModel)]="pageModel.simCard.kubun" maxlength="10"></app-if-select>
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <app-if-input name="imei" label="IMEI" id="imei" placeholder="" class="info" required="true"
@@ -165,12 +166,6 @@
                 <app-if-textarea name="riyomokuteki" label="備考" placeholder=""
                                  [(ngModel)]="pageModel.simCard.biko" maxlength="400"></app-if-textarea>
             </div>
-
-
-            <!-- ------------------------------------------------------------ -->
-
-            <!-- ------------------------------------------------------------ -->
-
 
         </div>
 

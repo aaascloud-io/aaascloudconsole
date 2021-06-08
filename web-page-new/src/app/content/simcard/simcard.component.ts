@@ -12,6 +12,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {IfModalService} from "../../ui/if-modal/if-modal.service";
 import {IfTableService} from "../../ui/if-table/if-table.service";
 
+
 @Component({
     selector: 'app-simcard',
     templateUrl: './simcard.component.html',
@@ -41,10 +42,13 @@ export class SimcardComponent implements OnInit, AfterViewInit {
             biko: '',
         },
     }
-    selected: { key: string, val: string };
+    // 新規ダイアログのタイトル
     newCardModalTitle: string;
+    // 新規ダイアログのOKボタン
     newCardModalOkButtonText: string;
     // optFlag: string;
+    // 区分設定値
+    selDivision = [{key: 'Tracker', val: '1'}, {key: 'SimCard', val: '2'}];
 
     // 定数定義
     TBL_LIST_ID = "tblListId";
@@ -111,6 +115,10 @@ export class SimcardComponent implements OnInit, AfterViewInit {
 
     }
 
+    /**
+     * 編集ダイアログを開く
+     * @param row 選択した行データ
+     */
     onEditRow(row): void {
         this.getCardInfo(row);
         this.newCardModalTitle = SimcardComponent.MOD_EDIT_TITLE;
@@ -143,9 +151,6 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      * @param event イベント
      */
     onAddDialogOKClick(event) {
-        if (this.selected) {
-            this.pageModel.simCard.kubun = this.selected.key;
-        }
         let param = this.pageModel.simCard;
         this.httpService.usePostII('card/add', param).then((result) => {
             console.log(result);
@@ -178,16 +183,20 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     private getList(): void {
         let param = {};
         this.httpService.usePostII('card/list', param).then((result) => {
-            console.log(result);
+            // console.log(result);
             this.cardInfos = result;
         }).catch((err) => {
             console.error(err);
         });
     }
 
+    /**
+     * SIMカード情報取得
+     * @param param 行データ
+     */
     private getCardInfo(param): void {
         this.httpService.usePostII('card/info', param).then((result) => {
-            console.log(result);
+            // console.log(result);
             this.pageModel.simCard = result;
         }).catch((err) => {
             console.error(err);
@@ -233,7 +242,11 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     }
 
     onSelValueChange(event) {
-        console.log(event);
+        console.log("onSelValueChange " + event);
+    }
+
+    onModelChange(event) {
+        console.log("onModelChange " + event);
     }
 
 
