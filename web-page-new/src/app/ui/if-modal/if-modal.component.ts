@@ -32,6 +32,11 @@ export class IfModalComponent implements OnInit, AfterViewInit {
     @Input() title: string;
 
     /**
+     * スタイル
+     */
+    @Input() class: string | string[] | Set<string> | { [klass: string]: any; }
+
+    /**
      * OKボタン表示内容
      */
     @Input() okBtnText: string;

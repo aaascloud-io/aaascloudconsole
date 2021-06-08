@@ -1,9 +1,9 @@
-<ng-template #defaultModelContent let-c="close" let-d="dismiss">
+<ng-template #defaultModelContent let-c="close" let-d="dismiss" [ngClass]="class">
 
     <!--    <form #form="ngForm">-->
 
     <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel1">{{title ? title : "Basic Modal"}}</h4>
+        <h4 class="modal-title">{{title ? title : "Basic Modal"}}</h4>
         <button type="button" class="close" aria-label="Close" (click)="c('Cross click')">
             <span aria-hidden="true">×</span>
         </button>
@@ -25,19 +25,5 @@
     </div>
 
     <!--    </form>-->
-
-    <!--    <div class="modal-footer">-->
-    <!--        <div class="form-group position-relative has-icon-left mb-0">-->
-    <!--            <button type="reset" class="btn btn-secondary cancel-btn mr-1" (click)="d('Close modal')">-->
-    <!--                <span class="d-sm-inline d-none">取消</span>-->
-    <!--            </button>-->
-    <!--        </div>-->
-    <!--        <div class="form-group position-relative has-icon-left mb-0">-->
-    <!--            <button type="submit" id="add-contact-item" class="btn btn-info add-contact-item"><i-->
-    <!--                    class="la la-paper-plane-o d-lg-none" (click)="onClick($event)">-->
-    <!--            </i><span class="d-none d-lg-block">登録</span>-->
-    <!--            </button>-->
-    <!--        </div>-->
-    <!--    </div>-->
 
 </ng-template>
