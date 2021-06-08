@@ -45,7 +45,7 @@
                             <!--                    title: 'タイトル',-->
                             <!--                    text: 'テスト',-->
                             <!--                    onClicked: {event: onTest, option: 'パラメータテスト'}}]-->
-                            <app-if-table [list]="cardInfos" [pageable]="true" [checkable]="true"
+                            <app-if-table [tblId]="TBL_LIST_ID" [list]="cardInfos" [pageable]="true" [checkable]="true"
                                           (deleteRowEvent)="onDeleteRow($event)"
                                           (editRowEvent)="onEditRow($event)"
                                           [columnCustoms]="[

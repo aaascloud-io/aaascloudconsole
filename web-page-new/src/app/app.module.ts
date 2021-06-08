@@ -82,6 +82,7 @@ import {RippleModule} from 'primeng/ripple';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
 import {IfModalService} from './ui/if-modal/if-modal.service';
+import {IfTableService} from "./ui/if-table/if-table.service";
 
 
 
@@ -166,6 +167,7 @@ import {IfModalService} from './ui/if-modal/if-modal.service';
         MessageService,
         ConfirmationService,
         IfModalService,
+        IfTableService,
     ],
     bootstrap: [AppComponent],
     exports: [RouterModule]

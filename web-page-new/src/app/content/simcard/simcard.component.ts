@@ -2,12 +2,15 @@ import {
     AfterViewInit,
     Component, ElementRef,
     Injectable,
-    OnInit, TemplateRef, ViewChild
+    OnInit,
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
 import {ConfirmationService, MessageService, TreeNode} from 'primeng/api';
 import {HttpService} from 'src/app/_services/HttpService';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {IfModalService} from "../../ui/if-modal/if-modal.service";
+import {IfTableService} from "../../ui/if-table/if-table.service";
 
 @Component({
     selector: 'app-simcard',
@@ -44,6 +47,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     // optFlag: string;
 
     // 定数定義
+    TBL_LIST_ID = "tblListId";
     NEW_CARD_MODAL = "newCardModal";
     static DEL_CONFIRM_MSG = "を削除します。よろしいですか？";
     static DEL_CONFIRM_HER = 'SIMカードを削除確認';
@@ -64,6 +68,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         private elementRef: ElementRef,
         private httpService: HttpService,
         private modalService: IfModalService,
+        private tableService: IfTableService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
     ) {
@@ -77,7 +82,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * 削除イベント
+     * 削除イベント（単数）
      * @param row 指定した行
      */
     onDeleteRow(row): void {
@@ -122,8 +127,15 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.modalService.open(this.NEW_CARD_MODAL);
     }
 
+    /**
+     * 削除イベント（複数）
+     */
     onDeleteSelectedAll() {
-       alert("onDeleteSelectedAll");
+        let rows = this.tableService.current(this.TBL_LIST_ID);
+        console.log(rows);
+        let checkedList = rows.filter(row => row.selected);
+        console.log(checkedList);
+        alert("onDeleteSelectedAll");
     }
 
     /**

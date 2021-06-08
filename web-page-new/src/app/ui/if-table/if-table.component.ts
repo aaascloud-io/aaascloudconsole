@@ -1,14 +1,15 @@
 import {
-    Component,
-    OnInit,
-    Input,
     AfterViewInit,
-    Output,
+    Component,
     EventEmitter,
+    Input,
+    OnInit,
+    Output,
 } from '@angular/core';
 import * as $ from 'jquery'
 import {IfTableColumnCustom} from './if-table.columnCustom';
 import {IfTableColumnSupperLink} from "./if-table.columnSupperLink";
+import {IfTableService} from "./if-table.service";
 
 /**
  * テーブルヘッダー（TH）
@@ -28,6 +29,14 @@ interface RowItem {
     selected: string | undefined;
 
     [key: string]: string | undefined;
+}
+
+/**
+ * 該当行（TR）
+ */
+interface CurrentItem {
+    tblId: string;
+    rows: RowItem[];
 }
 
 /**
@@ -74,6 +83,10 @@ export class IfTableComponent implements OnInit, AfterViewInit {
 
 
     // @Input() pageable;
+    /**
+     * テーブルId
+     */
+    @Input() tblId: string;
 
     /**
      * ヘッダー情報取得
@@ -198,7 +211,15 @@ export class IfTableComponent implements OnInit, AfterViewInit {
     @Output() editRowEvent = new EventEmitter<RowItem>();
 
 
-    constructor() {
+    constructor(
+        private tableService: IfTableService,
+    ) {
+        // テーブルIdにより、該当なページのデータを取得
+        this.tableService.currentDataCalled$.subscribe(
+            (param: CurrentItem) => {
+                this.current(param);
+            }
+        );
     }
 
     ngOnInit(): void {
@@ -324,6 +345,18 @@ export class IfTableComponent implements OnInit, AfterViewInit {
             allChecked = false;
         }
         return allChecked;
+    }
+
+    /**
+     * カレントページのデータ
+     * @param tblId 該当テーブルId
+     */
+    private current(param: CurrentItem): void {
+        if (this.tblId !== param.tblId) {
+            param.rows = [];
+        }
+        let rows = this._currentData();
+        param.rows = rows;
     }
 
 }
