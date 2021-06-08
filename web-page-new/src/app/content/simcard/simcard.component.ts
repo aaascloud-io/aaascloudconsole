@@ -59,7 +59,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     TBL_ALL_LIST_ID = "newAllList";
     NEW_ALL_CARD_MODAL = "newAllCardModal";
     static DEL_CONFIRM_MSG = "を削除します。よろしいですか？";
-    static DEL_CONFIRM_HER = 'SIMカードを削除確認';
+    static DEL_CONFIRM_HER = '削除確認';
     static DEL_INFO_MSG = "SIMカードを削除しました。";
     static DEL_ERR_MSG = "削除APIエラーを発生しました。";
     static DEL_CNL_MSG = "削除操作を取消しました";
@@ -70,7 +70,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     static NEW_INFO_MSG_1 = "SIMカードを";
     static NEW_INFO_MSG_2 = "しました。";
     static NEW_ERR_MSG = "APIエラーを発生しました。";
-    static DEL_ALL_CONFIRM_MSG = "選択したSIMカードを削除します。よろしいですか？";
+    static DEL_ALL_CONFIRM_MSG = "選択済みアイテムを削除します。よろしいですか？";
     static MOD_NEW_ALL_TITLE = '一括登録';
 
 
@@ -287,9 +287,6 @@ export class SimcardComponent implements OnInit, AfterViewInit {
             life: lifeValue
         });
     }
-
-
-
 
 
     onTextValueChange(event) {
