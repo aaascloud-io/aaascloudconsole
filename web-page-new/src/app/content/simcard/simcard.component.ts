@@ -214,6 +214,8 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.newAllCardModalOkButtonText = SimcardComponent.MOD_NEW_OK_BUTTON;
         // 開く
         this.modalService.open(this.NEW_ALL_CARD_MODAL);
+        // 再描画処理
+        this.tableService.repaint(this.TBL_ALL_LIST_ID);
     }
 
     onNewAllDialogOKClick(event) {

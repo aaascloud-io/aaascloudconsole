@@ -220,6 +220,12 @@ export class IfTableComponent implements OnInit, AfterViewInit {
                 this.current(param);
             }
         );
+        // テーブルIdにより、該当なテーブルを再描画する
+        this.tableService.paintCalled$.subscribe(
+            (tblId: string) => {
+                this.repaint(tblId);
+            }
+        );
     }
 
     ngOnInit(): void {
@@ -287,8 +293,14 @@ export class IfTableComponent implements OnInit, AfterViewInit {
      * @private
      */
     private _getHeaderItems(): HeaderItem[] {
-        // const $list = this._find(".ui-table-headerTemplate > ul > li");
-        const $list = this._find("." + this.tblId + " > li");
+        // Idによって、ヘッダー情報を取得する
+        let header = this._find("." + this.tblId + " > li");
+        // 取得しなかった場合、class従って、再取得する
+        if(!header || header.length <= 0){
+            header = this._find(".ui-table-headerTemplate > ul > li");
+        }
+        // ヘッダー情報を解析する
+        const $list = header;
         const headerItems: HeaderItem[] = [];
         $list.each((i: number, el: Element) => {
             headerItems.push({
@@ -358,6 +370,17 @@ export class IfTableComponent implements OnInit, AfterViewInit {
         }
         let rows = this._currentData();
         param.rows = rows;
+    }
+
+    /**
+     * 再描画
+     * @param tblId 該当テーブルId
+     */
+    private repaint(tblId: string): void {
+        if (this.tblId !== tblId) {
+            return;
+        }
+        this.ngOnInit();
     }
 
 }
