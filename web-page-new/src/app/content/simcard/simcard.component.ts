@@ -13,6 +13,10 @@ import {IfModalService} from "../../ui/if-modal/if-modal.service";
 import {IfTableService} from "../../ui/if-table/if-table.service";
 
 
+interface ListData {
+    [key: string]: string | undefined;
+}
+
 @Component({
     selector: 'app-simcard',
     templateUrl: './simcard.component.html',
@@ -22,7 +26,7 @@ import {IfTableService} from "../../ui/if-table/if-table.service";
 @Injectable()
 export class SimcardComponent implements OnInit, AfterViewInit {
     @ViewChild('registerDeviceModal') public templateref: TemplateRef<any>;
-    cardInfos: TreeNode[];
+    cardInfos: ListData[];
 
     pageModel = {
         simCard: {
@@ -58,6 +62,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     NEW_CARD_MODAL = "newCardModal";
     TBL_ALL_LIST_ID = "newAllList";
     NEW_ALL_CARD_MODAL = "newAllCardModal";
+    DOWNLOAD_SAMPLE_MSG = "サンプルファイルをダウンロード";
     static DEL_CONFIRM_MSG = "を削除します。よろしいですか？";
     static DEL_CONFIRM_HER = '削除確認';
     static DEL_INFO_MSG = "SIMカードを削除しました。";
@@ -136,7 +141,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     /**
      * 新規ダイアログを開く
      */
-    openNewModal() {
+    openNewModal(): void {
         // ダイアログのタイトルとボタン名を設定する
         this.newCardModalTitle = SimcardComponent.MOD_NEW_TITLE;
         this.newCardModalOkButtonText = SimcardComponent.MOD_NEW_OK_BUTTON;
@@ -147,7 +152,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     /**
      * 削除イベント（複数）
      */
-    onDeleteSelectedAll() {
+    onDeleteSelectedAll(): void {
         // 削除データ取得
         let rows = this.tableService.current(this.TBL_LIST_ID);
         // 選択した行データ
@@ -179,7 +184,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      * 新規イベント
      * @param event イベント
      */
-    onAddDialogOKClick(event) {
+    onAddDialogOKClick(event): void {
         // 入力したSIMカード情報を取得
         let param = this.pageModel.simCard;
         // 新規追加処理
@@ -189,7 +194,8 @@ export class SimcardComponent implements OnInit, AfterViewInit {
                 this.clear();
                 this.modalService.close(this.NEW_CARD_MODAL);
                 this.getList();
-                this.showAlert("info", SimcardComponent.NEW_INFO_MSG_1 + this.newCardModalTitle + SimcardComponent.NEW_INFO_MSG_2);
+                this.showAlert("info", SimcardComponent.NEW_INFO_MSG_1
+                    + this.newCardModalTitle + SimcardComponent.NEW_INFO_MSG_2);
             } else {
                 this.showAlert("error", SimcardComponent.NEW_ERR_MSG);
             }
@@ -204,11 +210,11 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     /**
      * キャンセルイベント
      */
-    onAddDialogCloseClick() {
+    onAddDialogCloseClick(): void {
         this.clear();
     }
 
-    openNewAllModal() {
+    openNewAllModal(): void {
         // ダイアログのタイトルとボタン名を設定する
         this.newAllCardModalTitle = SimcardComponent.MOD_NEW_ALL_TITLE;
         this.newAllCardModalOkButtonText = SimcardComponent.MOD_NEW_OK_BUTTON;
@@ -218,8 +224,12 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.tableService.repaint(this.TBL_ALL_LIST_ID);
     }
 
-    onNewAllDialogOKClick(event) {
+    onNewAllDialogOKClick(event): void {
         this.modalService.close(this.NEW_ALL_CARD_MODAL);
+    }
+
+    onDownloadSample(event): void {
+        console.log(event);
     }
 
     /**
@@ -253,7 +263,8 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      * @param accept 削除処理
      * @param reject 取消処理
      */
-    private doProcessByConfirm(message: string, header: string, accept: Function, reject: Function): void {
+    private doProcessByConfirm(message: string, header: string,
+                               accept: Function, reject: Function): void {
         this.confirmationService.confirm({
             message: message,
             header: header,

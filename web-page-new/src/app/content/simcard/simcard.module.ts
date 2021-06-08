@@ -21,6 +21,7 @@ import {IfInputModule} from "../../ui/if-input/if-input.module";
 import {IfDateModule} from "../../ui/if-date/if-date.module";
 import {IfTextareaModule} from "../../ui/if-textarea/if-textarea.module";
 import {IfSelectModule} from "../../ui/if-select/if-select.module";
+import {IfLinkModule} from "../../ui/if-link/if-link.module";
 
 @NgModule({
     imports: [
@@ -50,6 +51,7 @@ import {IfSelectModule} from "../../ui/if-select/if-select.module";
         IfDateModule,
         IfTextareaModule,
         IfSelectModule,
+        IfLinkModule,
     ],
     declarations: [SimcardComponent],
     exports: [RouterModule]
