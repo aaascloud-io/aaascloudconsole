@@ -287,7 +287,8 @@ export class IfTableComponent implements OnInit, AfterViewInit {
      * @private
      */
     private _getHeaderItems(): HeaderItem[] {
-        const $list = this._find(".ui-table-headerTemplate > ul > li");
+        // const $list = this._find(".ui-table-headerTemplate > ul > li");
+        const $list = this._find("." + this.tblId + " > li");
         const headerItems: HeaderItem[] = [];
         $list.each((i: number, el: Element) => {
             headerItems.push({

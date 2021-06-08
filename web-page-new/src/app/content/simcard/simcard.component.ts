@@ -56,6 +56,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     // 定数定義
     TBL_LIST_ID = "tblListId";
     NEW_CARD_MODAL = "newCardModal";
+    TBL_ALL_LIST_ID = "newAllList";
     NEW_ALL_CARD_MODAL = "newAllCardModal";
     static DEL_CONFIRM_MSG = "を削除します。よろしいですか？";
     static DEL_CONFIRM_HER = 'SIMカードを削除確認';

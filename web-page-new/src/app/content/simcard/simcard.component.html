@@ -55,7 +55,7 @@
                                                              title: 'タイトル',
                                                              text: 'テスト',
                                                              onClicked: {event: onTest, option: 'パラメータテスト'}}]">
-                                <ul class="header">
+                                <ul class="header tblListId">
                                     <li data-col="no" data-text="番号"></li>
                                     <li data-col="opt" data-text="操作" data-type="custom"></li>
                                     <li data-col="spr" data-text="supper" data-type="supper"></li>
@@ -189,8 +189,8 @@
         </div>
 
         <div class="table-responsive form-group col-12">
-            <app-if-table [tblId]="'qqq'">
-                <ul class="header">
+            <app-if-table [tblId]="TBL_ALL_LIST_ID">
+                <ul class="header newAllList">
                     <li data-col="no" data-text="番号"></li>
                     <li data-col="no" data-text="番号"></li>
                     <li data-col="no" data-text="番号"></li>
