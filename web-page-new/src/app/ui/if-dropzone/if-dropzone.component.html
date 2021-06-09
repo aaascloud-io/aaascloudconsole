@@ -1,0 +1,12 @@
+<ngx-dropzone class="_dropzone drop_h" (change)="changeMultipleFile($event)">
+    <ngx-dropzone-label>
+        <div class="dz-default dz-message">
+            <span class="dz-default">{{label}}</span>
+        </div>
+    </ngx-dropzone-label>
+    <ngx-dropzone-preview class="dropzone height" *ngFor="let f of files" [removable]="true"
+                          (removed)="removeMultipleFile(f)">
+        <ngx-dropzone-label>{{ f.name }}</ngx-dropzone-label>
+<!--        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>-->
+    </ngx-dropzone-preview>
+</ngx-dropzone>

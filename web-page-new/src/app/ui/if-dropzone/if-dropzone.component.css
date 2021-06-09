@@ -1,0 +1,10 @@
+.height {
+    height: 30px !important;
+    min-height: 20px !important;
+    font-size: small;
+}
+
+.drop_h {
+    height: 55px !important;
+    min-height: 55px !important;
+}
