@@ -34,9 +34,20 @@ interface RowItem {
 /**
  * 該当行（TR）
  */
-interface CurrentItem {
+interface CurrentInfo {
     tblId: string;
     rows: RowItem[];
+}
+
+/**
+ * ヘッダー（TH）
+ */
+interface HeaderInfo {
+    tblId: string;
+    header: {
+        names: string[];
+        labels: string[];
+    }
 }
 
 /**
@@ -216,7 +227,7 @@ export class IfTableComponent implements OnInit, AfterViewInit {
     ) {
         // テーブルIdにより、該当なページのデータを取得
         this.tableService.currentDataCalled$.subscribe(
-            (param: CurrentItem) => {
+            (param: CurrentInfo) => {
                 this.current(param);
             }
         );
@@ -224,6 +235,12 @@ export class IfTableComponent implements OnInit, AfterViewInit {
         this.tableService.paintCalled$.subscribe(
             (tblId: string) => {
                 this.repaint(tblId);
+            }
+        );
+        // テーブルIdにより、該当なテーブルのヘッダーを取得
+        this.tableService.headerCalled$.subscribe(
+            (param: HeaderInfo) => {
+                this.headers(param);
             }
         );
     }
@@ -296,7 +313,7 @@ export class IfTableComponent implements OnInit, AfterViewInit {
         // Idによって、ヘッダー情報を取得する
         let header = this._find("." + this.tblId + " > li");
         // 取得しなかった場合、class従って、再取得する
-        if(!header || header.length <= 0){
+        if (!header || header.length <= 0) {
             header = this._find(".ui-table-headerTemplate > ul > li");
         }
         // ヘッダー情報を解析する
@@ -362,9 +379,9 @@ export class IfTableComponent implements OnInit, AfterViewInit {
 
     /**
      * カレントページのデータ
-     * @param tblId 該当テーブルId
+     * @param param 該当行データのパラメータ
      */
-    private current(param: CurrentItem): void {
+    private current(param: CurrentInfo): void {
         if (this.tblId !== param.tblId) {
             param.rows = [];
         }
@@ -381,6 +398,20 @@ export class IfTableComponent implements OnInit, AfterViewInit {
             return;
         }
         this.ngOnInit();
+    }
+
+    /**
+     * ヘッダー取得
+     * @param param 該当テーブルのパラメータ
+     */
+    private headers(param: HeaderInfo): void {
+        if (this.tblId !== param.tblId) {
+            param.header.names = [];
+            param.header.labels = [];
+        }
+        let items: HeaderItem[] = this._getHeaderItems();
+        param.header.names = items.map((v, i, a) => v.columnName);
+        param.header.labels = items.map(v => v.label);
     }
 
 }

@@ -11,11 +11,14 @@ export class IfTableService {
     // 再描画
     private paint = new Subject<any>();
     public paintCalled$ = this.paint.asObservable();
+    // ヘッダー
+    private header = new Subject<any>();
+    public headerCalled$ = this.header.asObservable();
 
 
     /**
      * 行データ
-     * @param modalId テーブルId
+     * @param tblId テーブルId
      */
     public current(tblId: string): any {
         let param = {
@@ -32,6 +35,22 @@ export class IfTableService {
      */
     public repaint(tblId: string): any {
         this.paint.next(tblId);
+    }
+
+    /**
+     * ヘッダー
+     * @param tblId テーブルId
+     */
+    public headers(tblId: string): { names: string[], labels: string[] } {
+        let param = {
+            tblId: tblId,
+            header: {
+                names: [],
+                labels: []
+            }
+        }
+        this.header.next(param);
+        return param.header;
     }
 
 
