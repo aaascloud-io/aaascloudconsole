@@ -45,6 +45,17 @@ public class Cloud_scCardInformationController {
     }
 
     /**
+     * SIMカード追加（選択したもの）
+     */
+    @RequestMapping(value = "/addAll", method = RequestMethod.POST)
+    @ResponseBody
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    public BaseHttpResponse<List<Cloud_scCardInformationModel>> addAll(@RequestBody List<Cloud_scCardInformationModel> models) {
+        List<Cloud_scCardInformationModel> result = cloud_scCardInformationService.addAll(models);
+        return responseData(result);
+    }
+
+    /**
      * SIMカード削除
      */
     @RequestMapping(value = "/del", method = RequestMethod.POST)

@@ -66,13 +66,13 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     NEW_CARD_MODAL = "newCardModal";
     TBL_ALL_LIST_ID = "newAllList";
     NEW_ALL_CARD_MODAL = "newAllCardModal";
-    DOWNLOAD_SAMPLE_MSG = "サンプルファイルをダウンロード";
+    DOWNLOAD_SAMPLE_MSG = "サンプルファイルをダウンロードしてください。";
     EXCEL_FILE_IMPORT_MSG = "エクセルファイルをご選択ください。";
     static DEL_CONFIRM_MSG = "を削除します。よろしいですか？";
     static DEL_CONFIRM_HER = '削除確認';
     static DEL_INFO_MSG = "SIMカードを削除しました。";
     static DEL_ERR_MSG = "削除APIエラーを発生しました。";
-    static DEL_CNL_MSG = "削除操作を取消しました";
+    static DEL_CNL_MSG = "削除操作を取消しました。";
     static MOD_EDIT_TITLE = '修正';
     static MOD_EDIT_OK_BUTTON = '変更';
     static MOD_NEW_TITLE = '新規';
@@ -83,6 +83,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     static DEL_ALL_CONFIRM_MSG = "選択済みアイテムを削除します。よろしいですか？";
     static MOD_NEW_ALL_TITLE = '一括登録';
     static EXCEL_FILE_IMPORT_ERR_MSG = "ファイル読み込み失敗しました。";
+    static NEW_ALL_INFO_MSG = "一括登録をしました。";
 
 
     constructor(
@@ -167,7 +168,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.doProcessByConfirm(SimcardComponent.DEL_ALL_CONFIRM_MSG, SimcardComponent.DEL_CONFIRM_HER,
             () => {
                 this.httpService.usePostII('card/delAll', checkedList).then((result) => {
-                    console.log(result);
+                    // console.log(result);
                     if (result) {
                         this.getList();
                         this.showAlert("info", SimcardComponent.DEL_INFO_MSG);
@@ -195,7 +196,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         let param = this.pageModel.simCard;
         // 新規追加処理
         this.httpService.usePostII('card/add', param).then((result) => {
-            console.log(result);
+            // console.log(result);
             if (result) {
                 this.clear();
                 this.modalService.close(this.NEW_CARD_MODAL);
@@ -220,6 +221,9 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.clear();
     }
 
+    /**
+     * 一括登録ダイアログを開く
+     */
     openNewAllModal(): void {
         // ダイアログのタイトルとボタン名を設定する
         this.newAllCardModalTitle = SimcardComponent.MOD_NEW_ALL_TITLE;
@@ -230,8 +234,27 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.tableService.repaint(this.TBL_ALL_LIST_ID);
     }
 
+    /**
+     * 一括登録イベント
+     * @param event イベント
+     */
     onNewAllDialogOKClick(event): void {
-        this.modalService.close(this.NEW_ALL_CARD_MODAL);
+        let param = this.importData;
+        // 一括登録処理
+        this.httpService.usePostII('card/addAll', param).then((result) => {
+            // console.log(result);
+            if (result) {
+                // ダイアログを閉じる
+                this.modalService.close(this.NEW_ALL_CARD_MODAL);
+                this.getList();
+                this.showAlert("info", SimcardComponent.NEW_ALL_INFO_MSG);
+            } else {
+                this.showAlert("error", SimcardComponent.NEW_ERR_MSG);
+            }
+        }).catch((err) => {
+            console.error(err);
+            this.showAlert("error", SimcardComponent.NEW_ERR_MSG);
+        });
     }
 
     /**
@@ -253,7 +276,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.readExcelData(file,
             (jsonData) => {
                 this.importData = jsonData['sheet1'].splice(1);
-                console.log(this.importData);
+                // console.log(this.importData);
             },
             (err) => {
                 this.showAlert("error", SimcardComponent.EXCEL_FILE_IMPORT_ERR_MSG);
@@ -435,7 +458,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
             const sheet = workBook.Sheets[name];
             // JSONデータに変換する
             // header: 1
-            initial[name] = XLSX.utils.sheet_to_json(sheet, {raw: false, dateNF: 'yyyy/mm/dd'});
+            initial[name] = XLSX.utils.sheet_to_json(sheet, {raw: false, dateNF: 'yyyy-mm-dd'});
             return initial;
         }, {});
 
@@ -464,6 +487,8 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     }
 
 
+    /////////////////////// テスト 削除可 //////////////////////////
+
     onTextValueChange(event) {
         console.log("onTextValueChange " + event);
     }
@@ -475,9 +500,6 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     onModelChange(event) {
         console.log("onModelChange " + event);
     }
-
-
-    /////////////////////////////////////////////////////////////
 
     onTest(event, row, option) {
         alert(option);
@@ -503,6 +525,6 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         // },0);
     }
 
-    /////////////////////////////////////////////////////////////
+    /////////////////////// テスト 削除可 //////////////////////////
 
 }

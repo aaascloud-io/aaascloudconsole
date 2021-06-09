@@ -86,6 +86,18 @@ public class Cloud_scCardInformationService {
     }
 
     /**
+     * SIMカード情報リストを追加する
+     *
+     * @param models SIMカード情報リスト
+     * @return 追加したSIMカード情報
+     */
+    public List<Cloud_scCardInformationModel> addAll(List<Cloud_scCardInformationModel> models){
+        List<Cloud_scCardInformationEntity> entities = CardInformationAppMapper.MAPPER.toCardInformationEntities(models);
+        entities.stream().forEach(item -> item.setDeleteflg(DeleteFlagConstant.NOT_DELETED));
+        return this.saveSimCardList(entities);
+    }
+
+    /**
      * 結果リスト（Iterable）からモデルリストに変換する
      *
      * @param list 結果リスト
