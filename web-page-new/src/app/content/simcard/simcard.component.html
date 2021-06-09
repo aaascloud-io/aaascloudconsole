@@ -180,15 +180,14 @@
               (okClick)="onNewAllDialogOKClick($event)">
     <div class="modalBody">
         <div class="form-group col-12">
-<!--            <app-if-link [class]="'ft-download'" [label]="DOWNLOAD_SAMPLE_MSG" (clickEvent)="onDownloadSample($event)" [download]="'href.xlsx'" [href]="url">-->
-<!--            </app-if-link>-->
-            <button type="button" class="btn btn1" (click)="onDownloadSample($event)">CSV出力</button>
+            <app-if-link [label]="DOWNLOAD_SAMPLE_MSG" (clickEvent)="onDownloadSample($event)"
+                         linkClass="btn btn-social btn-block mb-1 btn-outline-vimeo"
+                         iconClass="la la-cloud-download"></app-if-link>
         </div>
         <div class="custom-file form-group col-12">
-            <input type="file" class="custom-file-input" accept='contactImage/*'
-                   onclick="this.value = null" id="customFile" name="selectFile"
-                   (change)="onImportDataButton($event)">
-            <label class="custom-file-label" name="selectFileLe">test</label>
+            <app-if-dropzone [label]="EXCEL_FILE_IMPORT_MSG" (onChangeEvent)="onImportDataButton($event)"
+                             (onRemoveEvent)="onRemoveFile($event)">
+            </app-if-dropzone>
         </div>
         <div class="table-responsive form-group col-12">
             <app-if-table [tblId]="TBL_ALL_LIST_ID" [list]="importData">

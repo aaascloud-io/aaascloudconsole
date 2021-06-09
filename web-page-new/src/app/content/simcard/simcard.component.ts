@@ -1,6 +1,7 @@
 import {
     AfterViewInit,
-    Component, ElementRef,
+    Component,
+    ElementRef,
     Injectable,
     OnInit,
     TemplateRef,
@@ -57,6 +58,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     newAllCardModalOkButtonText: string;
     // 区分設定値
     selDivision = [{key: 'Tracker', val: '1'}, {key: 'SimCard', val: '2'}];
+    // インポートデータ
     importData: {};
 
     // 定数定義
@@ -65,6 +67,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     TBL_ALL_LIST_ID = "newAllList";
     NEW_ALL_CARD_MODAL = "newAllCardModal";
     DOWNLOAD_SAMPLE_MSG = "サンプルファイルをダウンロード";
+    EXCEL_FILE_IMPORT_MSG = "エクセルファイルをご選択ください。";
     static DEL_CONFIRM_MSG = "を削除します。よろしいですか？";
     static DEL_CONFIRM_HER = '削除確認';
     static DEL_INFO_MSG = "SIMカードを削除しました。";
@@ -79,6 +82,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     static NEW_ERR_MSG = "APIエラーを発生しました。";
     static DEL_ALL_CONFIRM_MSG = "選択済みアイテムを削除します。よろしいですか？";
     static MOD_NEW_ALL_TITLE = '一括登録';
+    static EXCEL_FILE_IMPORT_ERR_MSG = "ファイル読み込み失敗しました。";
 
 
     constructor(
@@ -240,11 +244,11 @@ export class SimcardComponent implements OnInit, AfterViewInit {
 
     /**
      * インポートイベント
-     * @param event イベント
+     * @param files インポートファイル
      */
-    onImportDataButton(event): void {
+    onImportDataButton(files): void {
         // ファイル
-        let file = event.target.files[0];
+        let file = files[0];
         // ファイル読み込み
         this.readExcelData(file,
             (jsonData) => {
@@ -252,8 +256,16 @@ export class SimcardComponent implements OnInit, AfterViewInit {
                 console.log(this.importData);
             },
             (err) => {
-                this.showAlert("error", "ファイル読み込み失敗しました");
+                this.showAlert("error", SimcardComponent.EXCEL_FILE_IMPORT_ERR_MSG);
             });
+    }
+
+    /**
+     * インポートファイル削除
+     * @param files インポートファイル
+     */
+    onRemoveFile(files): void {
+        this.importData = [];
     }
 
     /**
@@ -323,6 +335,11 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         });
     }
 
+    /**
+     * エクセルデータを作成する
+     * @param data 指定したデータ
+     * @param sheetName エクセルのシート名
+     */
     private excelData(data: string[][], sheetName: string): any {
         // シート作成
         let ws = XLSX.utils.aoa_to_sheet(data);
@@ -352,7 +369,12 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         return blob;
     }
 
-    private exportExcel(fileName, sheetName: string): void {
+    /**
+     * エクセルファイルをエクスポートする
+     * @param fileName ファイル名
+     * @param sheetName シート名
+     */
+    private exportExcel(fileName: string, sheetName: string): void {
         // テーブルによって、ヘッダー情報取得
         let header = this.tableService.headers(this.TBL_ALL_LIST_ID);
         // ヘッダー情報をデータに設定する
@@ -368,9 +390,16 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         link.click();
     }
 
+    /**
+     * エクセルファイルを読み込む
+     * @param file 指定したファイル
+     * @param loadCallback 読み込んだ通知関数
+     * @param errorCallback　エラー通知関数
+     */
     private readExcelData(file: File,
                           loadCallback: ((_d: {}) => any | null | void),
                           errorCallback: ((_e: {}) => any | null | void)): void {
+        // ファイルなしの場合
         if (!file) {
             return;
         }
@@ -388,6 +417,12 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         reader.readAsBinaryString(file);
     }
 
+    /**
+     * エクセルファイルをロードする
+     * @param reader reader
+     * @param event イベント
+     * @param loadCallback 読み込んだ通知関数
+     */
     private loadingFile(reader: FileReader, event: ProgressEvent<FileReader>,
                         loadCallback: ((_d: {}) => any | null | void)): any {
         const data = reader.result;
@@ -412,6 +447,12 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         loadCallback(jsonData);
     }
 
+    /**
+     * ロードエラー処理
+     * @param reader reader
+     * @param event イベント
+     * @param errorCallback エラー通知関数
+     */
     private loadError(reader: FileReader, event: ProgressEvent<FileReader>,
                       errorCallback: ((_e: {}) => any | null | void)): any {
         // コールバックなしの場合
@@ -462,110 +503,6 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         // },0);
     }
 
-
-    // export() {
-    //     // let header = this.tableService.headers(this.TBL_ALL_LIST_ID);
-    //     // // let data = [['no', 'ukeirebi', 'c', 'd', 'e'], ['番号', '受入日', 3, 4, 5]];
-    //     // let data = [header.names, header.labels];
-    //     // // create an excel worksheet from an array of arrays (aoa) of survey data
-    //     // let worksheet1 = XLSX.utils.aoa_to_sheet(data);
-    //     // // instantiate new excel workbook
-    //     // let workbook = XLSX.utils.book_new();
-    //     //
-    //     // XLSX.utils.book_append_sheet(workbook, worksheet1, 'Worksheet1');
-    //     // let excelFile = XLSX.write(workbook, {type: 'binary'});
-    //     //
-    //     // let stringToArrayBuffer = function (s) {
-    //     //     let buffer = new ArrayBuffer(s.length);
-    //     //     let bufferView = new Uint8Array(buffer);
-    //     //     for (let i = 0; i != s.length; ++i) {
-    //     //         bufferView[i] = s.charCodeAt(i) & 0xFF;
-    //     //     }
-    //     //     return buffer;
-    //     // }
-    //     // let blob = new Blob([stringToArrayBuffer(excelFile)], {
-    //     //         type: 'text/csv'
-    //     //     }
-    //     // );
-    //
-    //
-    //     // let url = window.URL || window.webkitURL;
-    //     // $scope.fileUrl = url.createObjectURL(blob);
-    //     // this.url = url.createObjectURL(blob);
-    //
-    //     // // const blob = new Blob([bom, csv], { type: 'text/csv' });
-    //     // const url = window.URL.createObjectURL(blob);
-    //     // const link: HTMLAnchorElement = document.querySelector('#csv-donwload') as HTMLAnchorElement;
-    //     // link.href = url;
-    //     // link.download = "sample.xlsx";
-    //     // link.click();
-    //
-    //
-    //     // const url = window.URL.createObjectURL(blob);
-    //     // let link = document.createElement("a");
-    //     // link.download = "deviceInsert.xlsx";
-    //     // link.href = url;
-    //     // link.click();
-    // }
-    //
-    //
-    // import(file: File) {
-    //     // Logger.info(this, `got target file. name:[${file.name}]`);
-    //     if (file) {
-    //         var reader = new FileReader();
-    //         reader.onload = (event) => {
-    //             const data = reader.result;
-    //             // var workBook = XLSX.read(data, { type: 'binary', cellDates: true, dateNF: 'yyyy/mm/dd;@' });
-    //             var workBook = XLSX.read(data, {type: 'binary', cellDates: true, cellNF: false, cellText: false});
-    //             var jsonData = workBook.SheetNames.reduce((initial, name) => {
-    //                 const sheet = workBook.Sheets[name];
-    //                 // initial[name] = XLSX.utils.sheet_to_json(sheet);
-    //                 // initial[name] = XLSX.utils.sheet_to_json(sheet, {header: 1, dateNF: 'yyyy-mm-dd'});
-    //                 initial[name] = XLSX.utils.sheet_to_json(sheet, {raw: false, dateNF: 'yyyy/mm/dd'});
-    //                 return initial;
-    //             }, {});
-    //             // this.pageModel.addDeviceDetailList = jsonData['rawData'].splice(1);
-    //             // Logger.info(this, `loaded. size:[${this.pageModel.dataAll.length}]`);
-    //             let xx = jsonData['Worksheet1'].splice(1);
-    //         }
-    //         reader.onerror = (event) => {
-    //             this.showAlert("error", "ファイル読み込み失敗しました");
-    //
-    //         }
-    //         ///読み込み実施
-    //         reader.readAsBinaryString(file);
-    //         // fileInput.nativeElement.value = '';
-    //
-    //     }
-    // }
-
     /////////////////////////////////////////////////////////////
-
-
-    // private testData(): void {
-    //     this.cardInfos = [
-    //         {
-    //             data: {
-    //                 no: '1', ukeirebi: '2021-05-24',
-    //                 kubun: '1', imei: 'imei',
-    //                 kanribango: '01', tenwabango: '08012345678',
-    //                 hakkotanto: '01', hakkobi: '2021-05-24',
-    //                 hakkosaki: '01', hakkosakitantosha: 'A01',
-    //                 renrakusen: 'test', riyokaishibi: '2021-05-24'
-    //             },
-    //         },
-    //         {
-    //             data: {
-    //                 no: '2', ukeirebi: '2021-05-24',
-    //                 kubun: '1', imei: 'imei2',
-    //                 kanribango: '02', tenwabango: '08012345678',
-    //                 hakkotanto: '02', hakkobi: '2021-05-24',
-    //                 hakkosaki: '02', hakkosakitantosha: 'A02',
-    //                 renrakusen: 'test02', riyokaishibi: '2021-05-24'
-    //             },
-    //         },
-    //     ];
-    // }
-
 
 }
