@@ -62,7 +62,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     // 区分設定値
     selDivision = [{key: 'Tracker', val: '1'}, {key: 'SimCard', val: '2'}];
     // インポートデータ
-    importData: {};
+    importData: [];
 
     // 定数定義
     TBL_LIST_ID = "tblListId";
@@ -105,6 +105,13 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+    }
+
+    /**
+     * 計算属性：一括登録画面の登録ボタンの活性／非活性
+     */
+    get isOkBtnDisabled() {
+        return this.importData ? this.importData.length === 0 : true;
     }
 
     /**

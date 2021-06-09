@@ -52,6 +52,11 @@ export class IfModalComponent implements OnInit, AfterViewInit {
     @Input() okBtnType: string;
 
     /**
+     * OKボタン活性／非活性（ディフォルト：false）
+     */
+    @Input() okBtnDisabled: boolean;
+
+    /**
      * OKボタンクリックイベント処理
      */
     @Output() okClick = new EventEmitter<MouseEvent>();
