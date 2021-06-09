@@ -22,7 +22,12 @@ export class IfLinkComponent implements OnInit {
     /**
      * スタイル
      */
-    @Input() class: string | string[] | Set<string> | { [klass: string]: any; }
+    @Input() linkClass: string | string[] | Set<string> | { [klass: string]: any; }
+
+    /**
+     * イコンスタイル
+     */
+    @Input() iconClass: string | string[] | Set<string> | { [klass: string]: any; }
 
     /**
      * クリックイベント
