@@ -7,7 +7,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import {ConfirmationService, MessageService, TreeNode} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {HttpService} from 'src/app/_services/HttpService';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {IfModalService} from "../../ui/if-modal/if-modal.service";
@@ -15,6 +15,9 @@ import {IfTableService} from "../../ui/if-table/if-table.service";
 import * as XLSX from 'xlsx';
 
 
+/**
+ * 一覧データ種類
+ */
 interface ListData {
     [key: string]: string | undefined;
 }
@@ -298,6 +301,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         let param = {};
         this.httpService.usePostII('card/list', param).then((result) => {
             this.cardInfos = result;
+            this.code2Name();
         }).catch((err) => {
             console.error(err);
         });
@@ -329,6 +333,20 @@ export class SimcardComponent implements OnInit, AfterViewInit {
             header: header,
             accept: accept,
             reject: reject,
+        });
+    }
+
+    /**
+     * 区分情報をコードから名称に変換する
+     */
+    private code2Name(): void {
+        this.cardInfos.forEach(item => {
+            let div = item.kubun;
+            item.kubunName = div;
+            let find = this.selDivision.find(d => d.val === div);
+            if (find) {
+                item.kubunName = find.key;
+            }
         });
     }
 
