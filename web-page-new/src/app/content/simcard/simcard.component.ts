@@ -11,6 +11,7 @@ import {HttpService} from 'src/app/_services/HttpService';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {IfModalService} from "../../ui/if-modal/if-modal.service";
 import {IfTableService} from "../../ui/if-table/if-table.service";
+import * as XLSX from 'xlsx';
 
 
 interface ListData {
@@ -56,6 +57,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     newAllCardModalOkButtonText: string;
     // 区分設定値
     selDivision = [{key: 'Tracker', val: '1'}, {key: 'SimCard', val: '2'}];
+    importData: {};
 
     // 定数定義
     TBL_LIST_ID = "tblListId";
@@ -228,8 +230,30 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.modalService.close(this.NEW_ALL_CARD_MODAL);
     }
 
+    /**
+     * インポートフォーマットをダウンロードする
+     * @param event イベント
+     */
     onDownloadSample(event): void {
-        console.log(event);
+        this.exportExcel("sample.xlsx", "sheet1");
+    }
+
+    /**
+     * インポートイベント
+     * @param event イベント
+     */
+    onImportDataButton(event): void {
+        // ファイル
+        let file = event.target.files[0];
+        // ファイル読み込み
+        this.readExcelData(file,
+            (jsonData) => {
+                this.importData = jsonData['sheet1'].splice(1);
+                console.log(this.importData);
+            },
+            (err) => {
+                this.showAlert("error", "ファイル読み込み失敗しました");
+            });
     }
 
     /**
@@ -299,6 +323,105 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         });
     }
 
+    private excelData(data: string[][], sheetName: string): any {
+        // シート作成
+        let ws = XLSX.utils.aoa_to_sheet(data);
+        // ワークブック作成
+        let workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, ws, sheetName);
+
+        // ファイル作成
+        let excelFile = XLSX.write(workbook, {type: 'binary'});
+
+        // バイナリデータに変換する
+        let stringToArrayBuffer = function (s) {
+            let buffer = new ArrayBuffer(s.length);
+            let bufferView = new Uint8Array(buffer);
+            for (let i = 0; i != s.length; ++i) {
+                bufferView[i] = s.charCodeAt(i) & 0xFF;
+            }
+            return buffer;
+        }
+
+        // エクセルデータ作成
+        let blob = new Blob([stringToArrayBuffer(excelFile)], {
+                type: 'text/csv'
+                // application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+            }
+        );
+        return blob;
+    }
+
+    private exportExcel(fileName, sheetName: string): void {
+        // テーブルによって、ヘッダー情報取得
+        let header = this.tableService.headers(this.TBL_ALL_LIST_ID);
+        // ヘッダー情報をデータに設定する
+        let data = [header.names, header.labels];
+        // エクセルデータ作成
+        let blob = this.excelData(data, sheetName);
+
+        // ダウンロード
+        const url = window.URL.createObjectURL(blob);
+        let link = document.createElement("a");
+        link.download = fileName;
+        link.href = url;
+        link.click();
+    }
+
+    private readExcelData(file: File,
+                          loadCallback: ((_d: {}) => any | null | void),
+                          errorCallback: ((_e: {}) => any | null | void)): void {
+        if (!file) {
+            return;
+        }
+        // 読み込み準備
+        let reader = new FileReader();
+        // 読み込みメソッドを設定する
+        reader.onload = (event) => {
+            this.loadingFile(reader, event, loadCallback);
+        }
+        // エラーメソッドを設定する
+        reader.onerror = (event) => {
+            this.loadError(reader, event, errorCallback);
+        };
+        // 読み込み
+        reader.readAsBinaryString(file);
+    }
+
+    private loadingFile(reader: FileReader, event: ProgressEvent<FileReader>,
+                        loadCallback: ((_d: {}) => any | null | void)): any {
+        const data = reader.result;
+
+        // エクセルファイルのワークブックを作成
+        // dateNF: 'yyyy/mm/dd;@'
+        let workBook = XLSX.read(data, {type: 'binary', cellDates: true, cellNF: false, cellText: false});
+        // シート名によって、エクセルデータを読み込む
+        let jsonData = workBook.SheetNames.reduce((initial, name) => {
+            const sheet = workBook.Sheets[name];
+            // JSONデータに変換する
+            // header: 1
+            initial[name] = XLSX.utils.sheet_to_json(sheet, {raw: false, dateNF: 'yyyy/mm/dd'});
+            return initial;
+        }, {});
+
+        // コールバックなしの場合
+        if (!loadCallback) {
+            return;
+        }
+        // 読み込んだ後で、コールバック関数を呼び出す
+        loadCallback(jsonData);
+    }
+
+    private loadError(reader: FileReader, event: ProgressEvent<FileReader>,
+                      errorCallback: ((_e: {}) => any | null | void)): any {
+        // コールバックなしの場合
+        if (!errorCallback) {
+            return;
+        }
+        // エラーのコールバック関数を呼び出す
+        errorCallback(reader);
+    }
+
 
     onTextValueChange(event) {
         console.log("onTextValueChange " + event);
@@ -338,6 +461,83 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         //     this.test2F.nativeElement.focus();
         // },0);
     }
+
+
+    // export() {
+    //     // let header = this.tableService.headers(this.TBL_ALL_LIST_ID);
+    //     // // let data = [['no', 'ukeirebi', 'c', 'd', 'e'], ['番号', '受入日', 3, 4, 5]];
+    //     // let data = [header.names, header.labels];
+    //     // // create an excel worksheet from an array of arrays (aoa) of survey data
+    //     // let worksheet1 = XLSX.utils.aoa_to_sheet(data);
+    //     // // instantiate new excel workbook
+    //     // let workbook = XLSX.utils.book_new();
+    //     //
+    //     // XLSX.utils.book_append_sheet(workbook, worksheet1, 'Worksheet1');
+    //     // let excelFile = XLSX.write(workbook, {type: 'binary'});
+    //     //
+    //     // let stringToArrayBuffer = function (s) {
+    //     //     let buffer = new ArrayBuffer(s.length);
+    //     //     let bufferView = new Uint8Array(buffer);
+    //     //     for (let i = 0; i != s.length; ++i) {
+    //     //         bufferView[i] = s.charCodeAt(i) & 0xFF;
+    //     //     }
+    //     //     return buffer;
+    //     // }
+    //     // let blob = new Blob([stringToArrayBuffer(excelFile)], {
+    //     //         type: 'text/csv'
+    //     //     }
+    //     // );
+    //
+    //
+    //     // let url = window.URL || window.webkitURL;
+    //     // $scope.fileUrl = url.createObjectURL(blob);
+    //     // this.url = url.createObjectURL(blob);
+    //
+    //     // // const blob = new Blob([bom, csv], { type: 'text/csv' });
+    //     // const url = window.URL.createObjectURL(blob);
+    //     // const link: HTMLAnchorElement = document.querySelector('#csv-donwload') as HTMLAnchorElement;
+    //     // link.href = url;
+    //     // link.download = "sample.xlsx";
+    //     // link.click();
+    //
+    //
+    //     // const url = window.URL.createObjectURL(blob);
+    //     // let link = document.createElement("a");
+    //     // link.download = "deviceInsert.xlsx";
+    //     // link.href = url;
+    //     // link.click();
+    // }
+    //
+    //
+    // import(file: File) {
+    //     // Logger.info(this, `got target file. name:[${file.name}]`);
+    //     if (file) {
+    //         var reader = new FileReader();
+    //         reader.onload = (event) => {
+    //             const data = reader.result;
+    //             // var workBook = XLSX.read(data, { type: 'binary', cellDates: true, dateNF: 'yyyy/mm/dd;@' });
+    //             var workBook = XLSX.read(data, {type: 'binary', cellDates: true, cellNF: false, cellText: false});
+    //             var jsonData = workBook.SheetNames.reduce((initial, name) => {
+    //                 const sheet = workBook.Sheets[name];
+    //                 // initial[name] = XLSX.utils.sheet_to_json(sheet);
+    //                 // initial[name] = XLSX.utils.sheet_to_json(sheet, {header: 1, dateNF: 'yyyy-mm-dd'});
+    //                 initial[name] = XLSX.utils.sheet_to_json(sheet, {raw: false, dateNF: 'yyyy/mm/dd'});
+    //                 return initial;
+    //             }, {});
+    //             // this.pageModel.addDeviceDetailList = jsonData['rawData'].splice(1);
+    //             // Logger.info(this, `loaded. size:[${this.pageModel.dataAll.length}]`);
+    //             let xx = jsonData['Worksheet1'].splice(1);
+    //         }
+    //         reader.onerror = (event) => {
+    //             this.showAlert("error", "ファイル読み込み失敗しました");
+    //
+    //         }
+    //         ///読み込み実施
+    //         reader.readAsBinaryString(file);
+    //         // fileInput.nativeElement.value = '';
+    //
+    //     }
+    // }
 
     /////////////////////////////////////////////////////////////
 
