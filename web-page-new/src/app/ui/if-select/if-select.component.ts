@@ -58,12 +58,24 @@ export class IfSelectComponent extends IfInputBaseComponent implements OnInit {
      */
     @Output() valueChange = new EventEmitter<any>();
 
+    /**
+     * 選択変更イベント
+     */
+    @Output() selectChangedEvent = new EventEmitter<any>();
+
 
     /**
      * セレクターデータ
      */
     private _list: SelectItem[];
 
+
+    /**
+     * 入力値取得
+     */
+    get value(): string {
+        return this._value;
+    }
 
     /**
      * 入力値設定
@@ -75,9 +87,15 @@ export class IfSelectComponent extends IfInputBaseComponent implements OnInit {
             return;
         }
         this._value = text;
-        this.onChangeCallback(text);
+        this.onChangeCallback(this._value);
+        this.valueChange.emit(this._value);
+
+        // 選択されたデータを取得する
         let selected = this._list.find((item) => item[this.bindValue] === text);
-        this.valueChange.emit(selected);
+        if (!selected) {
+            selected = null;
+        }
+        this.selectChangedEvent.emit(selected);
     }
 
     /**

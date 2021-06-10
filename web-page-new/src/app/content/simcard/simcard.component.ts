@@ -573,7 +573,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     }
 
     onModelChange(event) {
-        console.log("onModelChange " + event);
+        console.log(event);
     }
 
     onTest(event, row, option) {
