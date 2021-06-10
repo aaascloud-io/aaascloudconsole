@@ -23,6 +23,7 @@ import {IfTextareaModule} from "../../ui/if-textarea/if-textarea.module";
 import {IfSelectModule} from "../../ui/if-select/if-select.module";
 import {IfLinkModule} from "../../ui/if-link/if-link.module";
 import {IfDropzoneModule} from "../../ui/if-dropzone/if-dropzone.module";
+import {IfInputGroupModule} from "../../ui/if-input-group/if-input-group.module";
 
 @NgModule({
     imports: [
@@ -54,6 +55,7 @@ import {IfDropzoneModule} from "../../ui/if-dropzone/if-dropzone.module";
         IfSelectModule,
         IfLinkModule,
         IfDropzoneModule,
+        IfInputGroupModule,
     ],
     declarations: [SimcardComponent],
     exports: [RouterModule]

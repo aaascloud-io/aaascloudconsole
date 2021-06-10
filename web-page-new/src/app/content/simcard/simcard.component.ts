@@ -31,8 +31,15 @@ interface ListData {
 @Injectable()
 export class SimcardComponent implements OnInit, AfterViewInit {
     @ViewChild('registerDeviceModal') public templateref: TemplateRef<any>;
-    cardInfos: ListData[];
 
+    // 一覧を一時に保存する
+    private cardInfosBackup: ListData[];
+    // 一覧
+    cardInfos: ListData[];
+    // 検索キー
+    searchValue: string;
+
+    // 画面入力項目
     pageModel = {
         simCard: {
             ukeirebi: '',
@@ -71,6 +78,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     NEW_ALL_CARD_MODAL = "newAllCardModal";
     DOWNLOAD_SAMPLE_MSG = "サンプルファイルをダウンロードしてください。";
     EXCEL_FILE_IMPORT_MSG = "エクセルファイルをご選択ください。";
+    SEARCH_TEXT_MSG = "ご検索ください";
     static DEL_CONFIRM_MSG = "を削除します。よろしいですか？";
     static DEL_CONFIRM_HER = '削除確認';
     static DEL_INFO_MSG = "SIMカードを削除しました。";
@@ -302,6 +310,28 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     }
 
     /**
+     * 検索ボタン処理
+     * @param event イベント
+     */
+    onSearchClick(event): void {
+        console.log(this.searchValue);
+    }
+
+    /**
+     * 検索キー変更処理
+     * @param value 変更値
+     */
+    onSearchChange(value): void {
+        // 変更キーなしの場合、一覧を全て表示する
+        this.cardInfos = this.cardInfosBackup;
+        if (!value) {
+            return;
+        }
+        // 検索の場合
+        this.cardInfos = this.doSearch(this.cardInfos, value);
+    }
+
+    /**
      * 一覧取得
      */
     private getList(): void {
@@ -309,6 +339,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         this.httpService.usePostII('card/list', param).then((result) => {
             this.cardInfos = result;
             this.code2Name();
+            this.cardInfosBackup = this.cardInfos;
         }).catch((err) => {
             console.error(err);
         });
@@ -509,6 +540,25 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         }
         // エラーのコールバック関数を呼び出す
         errorCallback(reader);
+    }
+
+    /**
+     * 検索キーによって、指定した配列から検索処理を行う
+     * @param data 指定した配列
+     * @param search 検索キー
+     */
+    private doSearch<T>(data: Array<T>, search: any): Array<T> {
+        let result = data.filter(item => {
+            let rst = false;
+            for (let key in item) {
+                if (item[key] === search) {
+                    rst = true;
+                    break;
+                }
+            }
+            return rst;
+        });
+        return result;
     }
 
 

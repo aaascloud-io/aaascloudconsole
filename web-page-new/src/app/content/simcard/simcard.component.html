@@ -29,6 +29,19 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-sm-12" style="margin-left: 20px">
+                                    <app-if-input-group prepend="true" prependClass="la-search"
+                                                        append="true" appendLabel="Go!" style="width: 500px"
+                                                        [(value)]="searchValue"
+                                                        [placeholder]="SEARCH_TEXT_MSG"
+                                                        (clickAppendEvent)="onSearchClick($event)"
+                                                        (changeValueEvent)="onSearchChange($event)">
+                                    </app-if-input-group>
+                                </div>
+                            </div>
+
                             <!------- テーブル ---------->
                             <!-- data-type="custom" -->
                             <!-- サンプル-->
