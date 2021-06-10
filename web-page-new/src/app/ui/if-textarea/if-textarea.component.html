@@ -1,4 +1,4 @@
-<h6>{{label}}<code *ngIf="required">＊</code></h6>
+<h6 *ngIf="label">{{label}}<code *ngIf="required">＊</code></h6>
 <textarea class="form-control" id="{{iid}}"
           [(ngModel)]="value" placeholder="{{placeholder}}"
           required="{{required}}" maxlength="{{maxlength}}"

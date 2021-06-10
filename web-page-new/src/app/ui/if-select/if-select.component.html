@@ -1,12 +1,12 @@
-<h6>{{label}}<code *ngIf="required">＊</code></h6>
-<select type="text" class="form-control" id="{{iid}}"
-        [(ngModel)]="value"
+<h6 *ngIf="label">{{label}}<code *ngIf="required">＊</code></h6>
+<select type="text" class="form-control" #self="ngModel"
+        [(ngModel)]="value" id="{{iid}}"
         required="{{required}}" maxlength="{{maxlength}}"
         [ngClass]="class">
     <ng-container *ngFor="let item of list">
         <option value="{{ item[bindValue] }}">{{item[bindLabel]}}</option>
     </ng-container>
 </select>
-<div *ngIf="hasError" class="invalid-feedback d-block">
-    <div *ngIf="errors.required">{{label}}を入力してください</div>
+<div *ngIf="self.invalid" class="invalid-feedback d-block">
+    <div *ngIf="self.errors.required">{{label}}を入力してください</div>
 </div>
