@@ -181,8 +181,10 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      * 削除イベント（複数）
      */
     onDeleteSelectedAll(): void {
-        // 削除データ取得
-        let rows = this.ifcsTable.getCurrentData(this.TBL_LIST_ID);
+        // // 削除データ取得（コンポーネント）
+        // let rows = this.ifcsTable.getCurrentData(this.TBL_LIST_ID);
+        // 削除データ取得（サービス）
+        let rows = this.tableService.current(this.TBL_LIST_ID);
         // 選択した行データ
         let checkedList = rows.filter(row => row.selected);
         // 削除処理

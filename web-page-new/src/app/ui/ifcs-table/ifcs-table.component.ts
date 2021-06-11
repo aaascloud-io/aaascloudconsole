@@ -84,8 +84,9 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
     private _columnSuppers: IfcsTableColumnSupperLink[];
 
     // ページング関連
+    private _pageData: RowItem[][] = [];
+    private _size: number = 10;
     _count: number = 0;
-    _size: number = 10;
     _page: number = 1;
     _bigSize = true;
 
@@ -117,6 +118,9 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
         }
         this._list = v;
         this._count = this._list.length;
+
+        // ページサイズによって、ページ毎にデータを設定する
+        this.pageData();
     }
 
     /**
@@ -188,6 +192,22 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
     @Input()
     set columnSuppers(v: IfcsTableColumnSupperLink[]) {
         this._columnSuppers = v;
+    }
+
+    /**
+     * ページサイズ設定
+     * @param v 設定値
+     */
+    set size(v: number) {
+        this._size = v;
+        this.pageData();
+    }
+
+    /**
+     * ページサイズ取得
+     */
+    get size(): number {
+        return this._size;
     }
 
     /**
@@ -346,11 +366,7 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
      * @private
      */
     private _start(): number {
-        if (this._count < this._size * this._page) {
-            return this._page * this._size - this._size + 1;
-        } else {
-            return (this._page - 1) * this._size + 1;
-        }
+        return this._startByPage(this._page);
     }
 
     /**
@@ -358,11 +374,7 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
      * @private
      */
     private _end(): number {
-        if (this._count < this._size * this._page) {
-            return this._count;
-        } else {
-            return this._page * this._size;
-        }
+        return this._endByPage(this._page);
     }
 
     /**
@@ -373,9 +385,13 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
         if (!this._list) {
             return [];
         }
-        let s = this._start() - 1;
-        let e = this._end();
-        return this._list.slice(s, e);
+        
+        // let s = this._start() - 1;
+        // let e = this._end();
+        // return this._list.slice(s, e);
+
+        // ページ数によって、ページデータからデータを取得する
+        return this._pageData[this._page - 1];
     }
 
     /**
@@ -397,7 +413,8 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
      */
     private current(param: CurrentInfo): void {
         if (this.tblId !== param.tblId) {
-            param.rows = [];
+            // param.rows = [];
+            return;
         }
         let rows = this._currentData();
         param.rows = rows;
@@ -420,13 +437,53 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
      */
     private headers(param: HeaderInfo): void {
         if (this.tblId !== param.tblId) {
-            param.header.names = [];
-            param.header.labels = [];
+            // param.header.names = [];
+            // param.header.labels = [];
             return;
         }
         let items: HeaderItem[] = this._getHeaderItems();
         param.header.names = items.map((v, i, a) => v.columnName);
         param.header.labels = items.map(v => v.label);
+    }
+
+    /**
+     * ページサイズによって、ページ毎にデータを設定する
+     */
+    private pageData(): void {
+        this._pageData = [];
+        let p = (this._count + this._size) / this._size;
+        for (let idx = 0; idx < p; idx++) {
+            let s = this._startByPage(idx + 1);
+            let e = this._endByPage(idx + 1);
+            let d = this._list.slice(s, e);
+            this._pageData.push(d);
+        }
+    }
+
+    /**
+     * ページの開始データインデックス取得
+     * @param p ページ
+     * @private
+     */
+    private _startByPage(p: number): number {
+        if (this._count < this._size * p) {
+            return p * this._size - this._size;
+        } else {
+            return (p - 1) * this._size;
+        }
+    }
+
+    /**
+     * ページの終了データインデックス取得
+     * @param p ページ
+     * @private
+     */
+    private _endByPage(p: number): number {
+        if (this._count < this._size * p) {
+            return this._count;
+        } else {
+            return p * this._size;
+        }
     }
 
 }

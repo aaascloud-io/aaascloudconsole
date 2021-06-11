@@ -73,7 +73,7 @@
         <div class="col-lg-4 col-md-12 " [ngClass]="{'justify-content-center': _bigSize}">
             <ngb-pagination [collectionSize]="_count"
                             [(page)]="_page"
-                            [pageSize]="_size"
+                            [pageSize]="size"
                             [maxSize]="3"
                             [rotate]="true"
                             [boundaryLinks]="true"
@@ -81,7 +81,7 @@
             </ngb-pagination>
         </div>
         <div class="col-lg-4 col-md-12" [ngClass]="{'alignRight': _bigSize}">
-            <select class="custom-select" style="width: auto" [(ngModel)]="_size">
+            <select class="custom-select" style="width: auto" [(ngModel)]="size">
                 <option [ngValue]="10">10 items per page</option>
                 <option [ngValue]="20">20 items per page</option>
                 <option [ngValue]="50">50 items per page</option>
