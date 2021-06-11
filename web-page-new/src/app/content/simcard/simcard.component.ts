@@ -548,10 +548,12 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      * @param search 検索キー
      */
     private doSearch<T>(data: Array<T>, search: any): Array<T> {
+        let text = search.toString().toLowerCase();
         let result = data.filter(item => {
             let rst = false;
             for (let key in item) {
-                if (item[key] === search) {
+                let itemText = String(item[key]).toLowerCase();
+                if (itemText.includes(text)) {
                     rst = true;
                     break;
                 }
