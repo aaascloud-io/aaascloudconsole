@@ -297,6 +297,17 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
     }
 
     /**
+     * カレントページのデータ
+     * @param tblId
+     */
+    public getCurrentData(tblId: string): RowItem[] {
+        if (this.tblId !== tblId) {
+            return [];
+        }
+        return this._currentData();
+    }
+
+    /**
      * JQueryセレクター取得
      * @param selector
      * @private
@@ -359,6 +370,9 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
      * @private
      */
     private _currentData(): RowItem[] {
+        if (!this._list) {
+            return [];
+        }
         let s = this._start() - 1;
         let e = this._end();
         return this._list.slice(s, e);
@@ -408,6 +422,7 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
         if (this.tblId !== param.tblId) {
             param.header.names = [];
             param.header.labels = [];
+            return;
         }
         let items: HeaderItem[] = this._getHeaderItems();
         param.header.names = items.map((v, i, a) => v.columnName);

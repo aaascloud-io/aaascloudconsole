@@ -13,6 +13,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {IfcsModalService} from "../../ui/ifcs-modal/ifcs-modal.service";
 import {IfcsTableService} from "../../ui/ifcs-table/ifcs-table.service";
 import * as XLSX from 'xlsx';
+import {IfcsTableComponent} from "../../ui/ifcs-table/ifcs-table.component";
 
 
 /**
@@ -31,6 +32,7 @@ interface ListData {
 @Injectable()
 export class SimcardComponent implements OnInit, AfterViewInit {
     @ViewChild('registerDeviceModal') public templateref: TemplateRef<any>;
+    @ViewChild(IfcsTableComponent, {static: false}) private ifcsTable: IfcsTableComponent;
 
     // 一覧を一時に保存する
     private cardInfosBackup: ListData[];
@@ -180,7 +182,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      */
     onDeleteSelectedAll(): void {
         // 削除データ取得
-        let rows = this.tableService.current(this.TBL_LIST_ID);
+        let rows = this.ifcsTable.getCurrentData(this.TBL_LIST_ID);
         // 選択した行データ
         let checkedList = rows.filter(row => row.selected);
         // 削除処理
