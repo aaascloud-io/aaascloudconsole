@@ -578,6 +578,14 @@ export class SimcardComponent implements OnInit, AfterViewInit {
 
     /////////////////////// テスト 削除可 //////////////////////////
 
+    onClickRow(event) {
+        console.log(event);
+    }
+
+    onRowCheckboxChanged(event) {
+        console.log(event.selected);
+    }
+
     onTextValueChange(event) {
         console.log("onTextValueChange " + event);
     }

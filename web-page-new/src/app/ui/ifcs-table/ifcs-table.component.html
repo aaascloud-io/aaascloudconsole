@@ -18,9 +18,10 @@
 
         <!-- データ -->
         <tbody>
-        <tr *ngFor="let item of list">
+        <tr *ngFor="let item of list" (click)="onRowClick($event, item)">
             <td *ngIf="checkable">
-                <input type="checkbox" [checked]="item.selected" (change)="onCheckChange($event,item)">
+                <input type="checkbox" [checked]="item.selected" (change)="onCheckChange($event,item)"
+                       (click)="onCheckboxClick($event)">
             </td>
             <td *ngFor="let header of HeaderItems" nowrap>
 

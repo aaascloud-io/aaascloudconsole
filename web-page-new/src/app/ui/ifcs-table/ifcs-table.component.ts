@@ -241,6 +241,16 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
      */
     @Output() editRowEvent = new EventEmitter<RowItem>();
 
+    /**
+     * 行クリックイベント
+     */
+    @Output() rowClickEvent = new EventEmitter<RowItem>();
+
+    /**
+     * 行のチェックボックスイベント
+     */
+    @Output() rowCheckboxChangedEvent = new EventEmitter<RowItem>();
+
 
     constructor(
         private tableService: IfcsTableService,
@@ -306,6 +316,9 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
     onCheckChange(event, row: RowItem) {
         row.selected = event.target.checked;
         this._allChecked = this._allCheckValue();
+
+        // 行のチェックボックスイベント
+        this.rowCheckboxChangedEvent.emit(row);
     }
 
     /**
@@ -314,6 +327,24 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
      */
     onPageChange(event) {
         this._allChecked = this._allCheckValue();
+    }
+
+    /**
+     * 行クリックイベント処理
+     * @param event イベント
+     * @param row 行データ
+     */
+    onRowClick(event, row: RowItem) {
+        this.rowClickEvent.emit(row);
+    }
+
+    /**
+     * チェックボックスクリックイベント
+     * @param event イベント
+     */
+    onCheckboxClick(event){
+        // イベント中止
+        event.stopPropagation();
     }
 
     /**
@@ -385,7 +416,7 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
         if (!this._list) {
             return [];
         }
-        
+
         // let s = this._start() - 1;
         // let e = this._end();
         // return this._list.slice(s, e);
