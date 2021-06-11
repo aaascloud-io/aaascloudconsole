@@ -81,8 +81,8 @@ import {ToastModule} from 'primeng/toast';
 import {RippleModule} from 'primeng/ripple';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
-import {IfModalService} from './ui/if-modal/if-modal.service';
-import {IfTableService} from "./ui/if-table/if-table.service";
+import {IfcsModalService} from './ui/ifcs-modal/ifcs-modal.service';
+import {IfcsTableService} from "./ui/ifcs-table/ifcs-table.service";
 
 
 
@@ -166,8 +166,8 @@ import {IfTableService} from "./ui/if-table/if-table.service";
         BaseService,
         MessageService,
         ConfirmationService,
-        IfModalService,
-        IfTableService,
+        IfcsModalService,
+        IfcsTableService,
     ],
     bootstrap: [AppComponent],
     exports: [RouterModule]

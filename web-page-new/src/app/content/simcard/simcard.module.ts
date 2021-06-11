@@ -15,15 +15,15 @@ import {ButtonModule} from 'primeng/button';
 import {RippleModule} from 'primeng/ripple';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {TreeTableModule} from 'primeng/treetable';
-import {IfTableModule} from "../../ui/if-table/if-table.module";
-import {IfModalModule} from "../../ui/if-modal/if-modal.module";
-import {IfInputModule} from "../../ui/if-input/if-input.module";
-import {IfDateModule} from "../../ui/if-date/if-date.module";
-import {IfTextareaModule} from "../../ui/if-textarea/if-textarea.module";
-import {IfSelectModule} from "../../ui/if-select/if-select.module";
-import {IfLinkModule} from "../../ui/if-link/if-link.module";
-import {IfDropzoneModule} from "../../ui/if-dropzone/if-dropzone.module";
-import {IfInputGroupModule} from "../../ui/if-input-group/if-input-group.module";
+import {IfcsTableModule} from "../../ui/ifcs-table/ifcs-table.module";
+import {IfcsModalModule} from "../../ui/ifcs-modal/ifcs-modal.module";
+import {IfcsInputModule} from "../../ui/ifcs-input/ifcs-input.module";
+import {IfcsDateModule} from "../../ui/ifcs-date/ifcs-date.module";
+import {IfcsTextareaModule} from "../../ui/ifcs-textarea/ifcs-textarea.module";
+import {IfcsSelectModule} from "../../ui/ifcs-select/ifcs-select.module";
+import {IfcsLinkModule} from "../../ui/ifcs-link/ifcs-link.module";
+import {IfcsDropzoneModule} from "../../ui/ifcs-dropzone/ifcs-dropzone.module";
+import {IfcsInputGroupModule} from "../../ui/ifcs-input-group/ifcs-input-group.module";
 
 @NgModule({
     imports: [
@@ -47,15 +47,15 @@ import {IfInputGroupModule} from "../../ui/if-input-group/if-input-group.module"
             },
         ]),
         TreeTableModule,
-        IfTableModule,
-        IfModalModule,
-        IfInputModule,
-        IfDateModule,
-        IfTextareaModule,
-        IfSelectModule,
-        IfLinkModule,
-        IfDropzoneModule,
-        IfInputGroupModule,
+        IfcsTableModule,
+        IfcsModalModule,
+        IfcsInputModule,
+        IfcsDateModule,
+        IfcsTextareaModule,
+        IfcsSelectModule,
+        IfcsLinkModule,
+        IfcsDropzoneModule,
+        IfcsInputGroupModule,
     ],
     declarations: [SimcardComponent],
     exports: [RouterModule]

@@ -32,13 +32,13 @@
 
                             <div class="row">
                                 <div class="col-sm-12" style="margin-left: 20px">
-                                    <app-if-input-group prepend="true" prependClass="la-search"
-                                                        append="true" appendLabel="Go!" style="width: 500px"
-                                                        [(value)]="searchValue"
-                                                        [placeholder]="SEARCH_TEXT_MSG"
-                                                        (clickAppendEvent)="onSearchClick($event)"
-                                                        (changeValueEvent)="onSearchChange($event)">
-                                    </app-if-input-group>
+                                    <ifcs-input-group prepend="true" prependClass="la-search"
+                                                      append="true" appendLabel="Go!" style="width: 500px"
+                                                      [(value)]="searchValue"
+                                                      [placeholder]="SEARCH_TEXT_MSG"
+                                                      (clickAppendEvent)="onSearchClick($event)"
+                                                      (changeValueEvent)="onSearchChange($event)">
+                                    </ifcs-input-group>
                                 </div>
                             </div>
 
@@ -58,12 +58,12 @@
                             <!--                    title: 'タイトル',-->
                             <!--                    text: 'テスト',-->
                             <!--                    onClicked: {event: onTest, option: 'パラメータテスト'}}]-->
-                            <app-if-table [tblId]="TBL_LIST_ID" [list]="cardInfos" [pageable]="true" [checkable]="true"
-                                          (deleteRowEvent)="onDeleteRow($event)"
-                                          (editRowEvent)="onEditRow($event)"
-                                          [columnCustoms]="[
+                            <ifcs-table [tblId]="TBL_LIST_ID" [list]="cardInfos" [pageable]="true" [checkable]="true"
+                                        (deleteRowEvent)="onDeleteRow($event)"
+                                        (editRowEvent)="onEditRow($event)"
+                                        [columnCustoms]="[
                                           {column: 'opt', edit: true, delete: true}]"
-                                          [columnSuppers]="[{column: 'spr',
+                                        [columnSuppers]="[{column: 'spr',
                                                              class: 'primary info mr-1 d-inline-block',
                                                              title: 'タイトル',
                                                              text: 'テスト',
@@ -84,7 +84,7 @@
                                     <li data-col="renrakusen" data-text="連絡先"></li>
                                     <li data-col="riyokaishibi" data-text="利用開始日"></li>
                                 </ul>
-                            </app-if-table>
+                            </ifcs-table>
                             <!-------------------------->
 
                         </div>
@@ -111,100 +111,100 @@
 </p-confirmDialog>
 
 <!--新規ダイアログ-->
-<app-if-modal [modalId]="NEW_CARD_MODAL"
-              [title]="newCardModalTitle"
-              [cancelBtnText]="'取消'"
-              [okBtnText]="newCardModalOkButtonText"
-              (okClick)="onAddDialogOKClick($event)"
-              (cancelClicked)="onAddDialogCloseClick()">
+<ifcs-modal [modalId]="NEW_CARD_MODAL"
+            [title]="newCardModalTitle"
+            [cancelBtnText]="'取消'"
+            [okBtnText]="newCardModalOkButtonText"
+            (okClick)="onAddDialogOKClick($event)"
+            (cancelClicked)="onAddDialogCloseClick()">
     <div class="modalBody">
 
         <div class="row">
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-date name="ukeirebi" label="受入日" required="true"
-                             [(ngModel)]="pageModel.simCard.ukeirebi"></app-if-date>
+                <ifcs-date name="ukeirebi" label="受入日" required="true"
+                           [(ngModel)]="pageModel.simCard.ukeirebi"></ifcs-date>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-select name="kubun" label="区分" required="true"
-                               [list]="selDivision" bindLabel="key" bindValue="val"
-                               (valueChange)="onSelValueChange($event)"
-                               (selectChangedEvent)="onModelChange($event)"
-                               [(value)]="pageModel.simCard.kubun" maxlength="10"></app-if-select>
+                <ifcs-select name="kubun" label="区分" required="true"
+                             [list]="selDivision" bindLabel="key" bindValue="val"
+                             (valueChange)="onSelValueChange($event)"
+                             (selectChangedEvent)="onModelChange($event)"
+                             [(value)]="pageModel.simCard.kubun" maxlength="10"></ifcs-select>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-input name="imei" label="IMEI" id="imei" placeholder="" class="info" required="true"
-                              [(ngModel)]="pageModel.simCard.imei"
-                              maxlength="20" (ngModelChange)="onTextValueChange($event)"></app-if-input>
+                <ifcs-input name="imei" label="IMEI" id="imei" placeholder="" class="info" required="true"
+                            [(ngModel)]="pageModel.simCard.imei"
+                            maxlength="20" (ngModelChange)="onTextValueChange($event)"></ifcs-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-input name="kanribango" label="管理番号" placeholder="" required="true"
-                              [(ngModel)]="pageModel.simCard.kanribango" maxlength="15"></app-if-input>
+                <ifcs-input name="kanribango" label="管理番号" placeholder="" required="true"
+                            [(ngModel)]="pageModel.simCard.kanribango" maxlength="15"></ifcs-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-date name="hakkobi" label="発行日" [(ngModel)]="pageModel.simCard.hakkobi"></app-if-date>
+                <ifcs-date name="hakkobi" label="発行日" [(ngModel)]="pageModel.simCard.hakkobi"></ifcs-date>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-date name="riyokaishibi" label="利用開始日"
-                             [(ngModel)]="pageModel.simCard.riyokaishibi"></app-if-date>
+                <ifcs-date name="riyokaishibi" label="利用開始日"
+                           [(ngModel)]="pageModel.simCard.riyokaishibi"></ifcs-date>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-input name="tenwabango" label="電話番号" placeholder="" [(ngModel)]="pageModel.simCard.tenwabango"
-                              maxlength="11"></app-if-input>
+                <ifcs-input name="tenwabango" label="電話番号" placeholder="" [(ngModel)]="pageModel.simCard.tenwabango"
+                            maxlength="11"></ifcs-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-input name="hakkotanto" label="発行担当" placeholder="" [(ngModel)]="pageModel.simCard.hakkotanto"
-                              maxlength="20"></app-if-input>
+                <ifcs-input name="hakkotanto" label="発行担当" placeholder="" [(ngModel)]="pageModel.simCard.hakkotanto"
+                            maxlength="20"></ifcs-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-input name="hakkosaki" label="発行先" placeholder="" [(ngModel)]="pageModel.simCard.hakkosaki"
-                              maxlength="200"></app-if-input>
+                <ifcs-input name="hakkosaki" label="発行先" placeholder="" [(ngModel)]="pageModel.simCard.hakkosaki"
+                            maxlength="200"></ifcs-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-input name="hakkosakitantosha" label="発行先担当者" placeholder=""
-                              [(ngModel)]="pageModel.simCard.hakkosakitantosha" maxlength="20"></app-if-input>
+                <ifcs-input name="hakkosakitantosha" label="発行先担当者" placeholder=""
+                            [(ngModel)]="pageModel.simCard.hakkosakitantosha" maxlength="20"></ifcs-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-input name="renrakusen" label="連絡先" placeholder="" [(ngModel)]="pageModel.simCard.renrakusen"
-                              maxlength="20"></app-if-input>
+                <ifcs-input name="renrakusen" label="連絡先" placeholder="" [(ngModel)]="pageModel.simCard.renrakusen"
+                            maxlength="20"></ifcs-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-textarea name="riyomokuteki" label="利用目的" placeholder="" class="info"
-                                 [(ngModel)]="pageModel.simCard.riyomokuteki" maxlength="400"></app-if-textarea>
+                <ifcs-textarea name="riyomokuteki" label="利用目的" placeholder="" class="info"
+                               [(ngModel)]="pageModel.simCard.riyomokuteki" maxlength="400"></ifcs-textarea>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-textarea name="riyomokuteki" label="案件概要" placeholder=""
-                                 [(ngModel)]="pageModel.simCard.gaiyo" maxlength="400"></app-if-textarea>
+                <ifcs-textarea name="riyomokuteki" label="案件概要" placeholder=""
+                               [(ngModel)]="pageModel.simCard.gaiyo" maxlength="400"></ifcs-textarea>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <app-if-textarea name="riyomokuteki" label="備考" placeholder=""
-                                 [(ngModel)]="pageModel.simCard.biko" maxlength="400"></app-if-textarea>
+                <ifcs-textarea name="riyomokuteki" label="備考" placeholder=""
+                               [(ngModel)]="pageModel.simCard.biko" maxlength="400"></ifcs-textarea>
             </div>
 
         </div>
 
     </div>
-</app-if-modal>
+</ifcs-modal>
 
 <!--一括登録ダイアログ-->
-<app-if-modal [modalId]="NEW_ALL_CARD_MODAL"
-              [title]="newAllCardModalTitle"
-              [cancelBtnText]="'取消'"
-              [okBtnText]="newAllCardModalOkButtonText"
-              [okBtnDisabled]="isOkBtnDisabled"
-              (okClick)="onNewAllDialogOKClick($event)">
+<ifcs-modal [modalId]="NEW_ALL_CARD_MODAL"
+            [title]="newAllCardModalTitle"
+            [cancelBtnText]="'取消'"
+            [okBtnText]="newAllCardModalOkButtonText"
+            [okBtnDisabled]="isOkBtnDisabled"
+            (okClick)="onNewAllDialogOKClick($event)">
     <div class="modalBody">
         <div class="form-group col-12">
-            <app-if-link [label]="DOWNLOAD_SAMPLE_MSG" (clickEvent)="onDownloadSample($event)"
-                         linkClass="btn btn-social btn-block mb-1 btn-outline-vimeo"
-                         iconClass="la la-cloud-download"></app-if-link>
+            <ifcs-link [label]="DOWNLOAD_SAMPLE_MSG" (clickEvent)="onDownloadSample($event)"
+                       linkClass="btn btn-social btn-block mb-1 btn-outline-vimeo"
+                       iconClass="la la-cloud-download"></ifcs-link>
         </div>
         <div class="custom-file form-group col-12">
-            <app-if-dropzone [label]="EXCEL_FILE_IMPORT_MSG" (onChangeEvent)="onImportDataButton($event)"
-                             (onRemoveEvent)="onRemoveFile($event)">
-            </app-if-dropzone>
+            <ifcs-dropzone [label]="EXCEL_FILE_IMPORT_MSG" (onChangeEvent)="onImportDataButton($event)"
+                           (onRemoveEvent)="onRemoveFile($event)">
+            </ifcs-dropzone>
         </div>
         <div class="table-responsive form-group col-12">
-            <app-if-table [tblId]="TBL_ALL_LIST_ID" [list]="importData">
+            <ifcs-table [tblId]="TBL_ALL_LIST_ID" [list]="importData">
                 <ul class="header newAllList">
                     <li data-col="no" data-text="番号"></li>
                     <li data-col="ukeirebi" data-text="受入日"></li>
@@ -223,8 +223,8 @@
                     <li data-col="biko" data-text="備考"></li>
                     <li data-col="deleteflg" data-text="削除フラグ"></li>
                 </ul>
-            </app-if-table>
+            </ifcs-table>
         </div>
     </div>
     <!-- modalBody-->
-</app-if-modal>
+</ifcs-modal>

@@ -1,0 +1,20 @@
+<div>
+    <div class="input-group">
+        <div *ngIf="prepend" class="input-group-prepend">
+            <button class="btn btn-primary" type="button" (click)="onPrepend($event)">
+                <i class="la" [ngClass]="prependClass">{{prependLabel}}</i>
+            </button>
+        </div>
+
+        <ifcs-input type="text" placeholder="{{placeholder}}"
+                    maxlength="{{maxlength}}" class="{{class}}"
+                    [(ngModel)]="value" style="{{style}}"
+                    (ngModelChange)="onTextValueChange($event)"></ifcs-input>
+
+        <div *ngIf="append" class="input-group-append">
+            <button class="btn btn-primary" type="button" (click)="onAppend($event)">
+                <i class="" [ngClass]="appendClass">{{appendLabel}}</i>
+            </button>
+        </div>
+    </div>
+</div>

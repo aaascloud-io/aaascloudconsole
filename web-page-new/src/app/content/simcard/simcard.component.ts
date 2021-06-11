@@ -10,8 +10,8 @@ import {
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {HttpService} from 'src/app/_services/HttpService';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {IfModalService} from "../../ui/if-modal/if-modal.service";
-import {IfTableService} from "../../ui/if-table/if-table.service";
+import {IfcsModalService} from "../../ui/ifcs-modal/ifcs-modal.service";
+import {IfcsTableService} from "../../ui/ifcs-table/ifcs-table.service";
 import * as XLSX from 'xlsx';
 
 
@@ -101,8 +101,8 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         private modal: NgbModal,
         private elementRef: ElementRef,
         private httpService: HttpService,
-        private modalService: IfModalService,
-        private tableService: IfTableService,
+        private modalService: IfcsModalService,
+        private tableService: IfcsTableService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
     ) {
@@ -584,7 +584,7 @@ export class SimcardComponent implements OnInit, AfterViewInit {
     }
 
     test() {
-        // const control = document.querySelector("app-if-input[name='imei']");
+        // const control = document.querySelector("app-ifcs-input[name='imei']");
         const control = document.querySelector("#imei").querySelector("input");
         const input: HTMLInputElement = control as HTMLInputElement;
         input.focus();
