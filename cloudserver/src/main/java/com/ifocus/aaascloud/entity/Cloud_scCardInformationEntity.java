@@ -17,8 +17,9 @@ public class Cloud_scCardInformationEntity {
     private Integer no;
     private Timestamp ukeirebi;
     private String kubun;
-    private String imei;
+    private String iccid;
     private String kanribango;
+    private String imsi;
     private String tenwabango;
     private String hakkotanto;
     private Timestamp hakkobi;

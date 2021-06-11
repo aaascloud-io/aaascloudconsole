@@ -70,8 +70,9 @@
                                     <li data-col="opt" data-text="操作" data-type="custom"></li>
                                     <li data-col="ukeirebi" data-text="受入日"></li>
                                     <li data-col="kubunName" data-text="区分"></li>
-                                    <li data-col="imei" data-text="IMEI"></li>
+                                    <li data-col="iccid" data-text="ICCID"></li>
                                     <li data-col="kanribango" data-text="管理番号"></li>
+                                    <li data-col="imsi" data-text="IMSI"></li>
                                     <li data-col="tenwabango" data-text="電話番号"></li>
                                     <li data-col="hakkotanto" data-text="発行担当"></li>
                                     <li data-col="hakkobi" data-text="発行日"></li>
@@ -128,13 +129,17 @@
                              [(value)]="pageModel.simCard.kubun" maxlength="10"></ifcs-select>
             </div>
             <div class="form-group col-lg-6 col-md-12">
-                <ifcs-input name="imei" label="IMEI" id="imei" placeholder="" class="info" required="true"
-                            [(ngModel)]="pageModel.simCard.imei"
+                <ifcs-input name="iccid" label="ICCID" id="iccid" placeholder="" class="info" required="true"
+                            [(ngModel)]="pageModel.simCard.iccid"
                             maxlength="20" (ngModelChange)="onTextValueChange($event)"></ifcs-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <ifcs-input name="kanribango" label="管理番号" placeholder="" required="true"
                             [(ngModel)]="pageModel.simCard.kanribango" maxlength="15"></ifcs-input>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <ifcs-input name="imsi" label="IMSI" id="imsi" placeholder="" class="info"
+                            [(ngModel)]="pageModel.simCard.imsi" maxlength="20" ></ifcs-input>
             </div>
             <div class="form-group col-lg-6 col-md-12">
                 <ifcs-date name="hakkobi" label="発行日" [(ngModel)]="pageModel.simCard.hakkobi"></ifcs-date>
@@ -205,8 +210,9 @@
                     <li data-col="no" data-text="番号"></li>
                     <li data-col="ukeirebi" data-text="受入日"></li>
                     <li data-col="kubun" data-text="区分"></li>
-                    <li data-col="imei" data-text="IMEI"></li>
+                    <li data-col="iccid" data-text="ICCID"></li>
                     <li data-col="kanribango" data-text="管理番号"></li>
+                    <li data-col="imsi" data-text="IMSI"></li>
                     <li data-col="tenwabango" data-text="電話番号"></li>
                     <li data-col="hakkotanto" data-text="発行担当"></li>
                     <li data-col="hakkobi" data-text="発行日"></li>

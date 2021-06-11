@@ -10,8 +10,9 @@ public class Cloud_scCardInformationModel implements Serializable {
     private Integer no;
     private String ukeirebi;
     private String kubun;
-    private String imei;
+    private String iccid;
     private String kanribango;
+    private String imsi;
     private String tenwabango;
     private String hakkotanto;
     private String hakkobi;
