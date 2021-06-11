@@ -285,7 +285,12 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      * @param event イベント
      */
     onDownloadSample(event): void {
-        this.exportExcel("sample.xlsx", "sheet1");
+        // テーブルによって、ヘッダー情報取得
+        let header = this.tableService.headers(this.TBL_ALL_LIST_ID);
+        // ヘッダー情報をデータに設定する
+        let data = [header.names, header.labels];
+        // エクセルをエクスポートする
+        this.exportExcel("sample.xlsx", "sheet1", data);
     }
 
     /**
@@ -421,6 +426,27 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         });
     }
 
+
+    /////////////////////////////////////////////////////////////////////
+
+    /**
+     * エクセルファイルをエクスポートする
+     * @param fileName ファイル名
+     * @param sheetName シート名
+     * @param data 指定したデータ
+     */
+    private exportExcel(fileName: string, sheetName: string, data: string[][]): void {
+        // エクセルデータ作成
+        let blob = this.excelData(data, sheetName);
+
+        // ダウンロード
+        const url = window.URL.createObjectURL(blob);
+        let link = document.createElement("a");
+        link.download = fileName;
+        link.href = url;
+        link.click();
+    }
+
     /**
      * エクセルデータを作成する
      * @param data 指定したデータ
@@ -453,27 +479,6 @@ export class SimcardComponent implements OnInit, AfterViewInit {
             }
         );
         return blob;
-    }
-
-    /**
-     * エクセルファイルをエクスポートする
-     * @param fileName ファイル名
-     * @param sheetName シート名
-     */
-    private exportExcel(fileName: string, sheetName: string): void {
-        // テーブルによって、ヘッダー情報取得
-        let header = this.tableService.headers(this.TBL_ALL_LIST_ID);
-        // ヘッダー情報をデータに設定する
-        let data = [header.names, header.labels];
-        // エクセルデータ作成
-        let blob = this.excelData(data, sheetName);
-
-        // ダウンロード
-        const url = window.URL.createObjectURL(blob);
-        let link = document.createElement("a");
-        link.download = fileName;
-        link.href = url;
-        link.click();
     }
 
     /**
