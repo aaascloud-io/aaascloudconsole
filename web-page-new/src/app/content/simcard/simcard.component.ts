@@ -328,8 +328,10 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         if (!value) {
             return;
         }
+        // 表示されたヘッダー取得
+        let headers = this.tableService.headers(this.TBL_LIST_ID);
         // 検索の場合
-        this.cardInfos = this.doSearch(this.cardInfos, value);
+        this.cardInfos = this.doSearch(this.cardInfos, value, headers.names);
     }
 
     /**
@@ -547,12 +549,17 @@ export class SimcardComponent implements OnInit, AfterViewInit {
      * 検索キーによって、指定した配列から検索処理を行う
      * @param data 指定した配列
      * @param search 検索キー
+     * @param headers ヘッダー
      */
-    private doSearch<T>(data: Array<T>, search: any): Array<T> {
+    private doSearch<T>(data: Array<T>, search: any, headers: string[]): Array<T> {
         let text = search.toString().toLowerCase();
         let result = data.filter(item => {
             let rst = false;
             for (let key in item) {
+                // 非表示のヘッダーを除く
+                if (!headers.includes(key)) {
+                    continue;
+                }
                 let itemText = String(item[key]).toLowerCase();
                 if (itemText.includes(text)) {
                     rst = true;
