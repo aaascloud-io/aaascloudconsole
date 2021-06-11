@@ -578,29 +578,9 @@ export class SimcardComponent implements OnInit, AfterViewInit {
         console.log(event);
     }
 
-    onTest(event, row, option) {
-        alert(option);
-        console.log(event);
-        console.log(row);
-        console.log(option);
-    }
-
-    test() {
-        // const control = document.querySelector("app-ifcs-input[name='imei']");
-        const control = document.querySelector("#imei").querySelector("input");
-        const input: HTMLInputElement = control as HTMLInputElement;
-        input.focus();
-        // input.select();
-
-        // imei
-        if (this.pageModel.simCard.imei === "123456") {
-            this.modalService.close(this.NEW_CARD_MODAL);
-        }
-
-        // setTimeout(()=>{ // this will make the execution after the above boolean has changed
-        //     this.test2F.nativeElement.focus();
-        // },0);
-    }
+    // const control = document.querySelector("#imei").querySelector("input");
+    // const input: HTMLInputElement = control as HTMLInputElement;
+    // input.focus();
 
     /////////////////////// テスト 削除可 //////////////////////////
 

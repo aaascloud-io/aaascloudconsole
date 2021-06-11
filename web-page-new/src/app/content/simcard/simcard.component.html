@@ -58,20 +58,16 @@
                             <!--                    title: 'タイトル',-->
                             <!--                    text: 'テスト',-->
                             <!--                    onClicked: {event: onTest, option: 'パラメータテスト'}}]-->
+                            <!--                            <li data-col="spr" data-text="supper" data-type="supper"></li>-->
+
                             <ifcs-table [tblId]="TBL_LIST_ID" [list]="cardInfos" [pageable]="true" [checkable]="true"
                                         (deleteRowEvent)="onDeleteRow($event)"
                                         (editRowEvent)="onEditRow($event)"
                                         [columnCustoms]="[
-                                          {column: 'opt', edit: true, delete: true}]"
-                                        [columnSuppers]="[{column: 'spr',
-                                                             class: 'primary info mr-1 d-inline-block',
-                                                             title: 'タイトル',
-                                                             text: 'テスト',
-                                                             onClicked: {event: onTest, option: 'パラメータテスト'}}]">
+                                          {column: 'opt', edit: true, delete: true}]">
                                 <ul class="header">
                                     <li data-col="no" data-text="番号"></li>
                                     <li data-col="opt" data-text="操作" data-type="custom"></li>
-                                    <li data-col="spr" data-text="supper" data-type="supper"></li>
                                     <li data-col="ukeirebi" data-text="受入日"></li>
                                     <li data-col="kubunName" data-text="区分"></li>
                                     <li data-col="imei" data-text="IMEI"></li>
