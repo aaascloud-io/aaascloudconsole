@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit {
         "access_token": resToken["access_token"]
       };
 
-      var resUser = await this.httpService.usePost('/login', param).then(item => {
+      var resUser = await this.httpService.usePostII('/login', param).then(item => {
         try {
           if (item != null) {
             ///保存

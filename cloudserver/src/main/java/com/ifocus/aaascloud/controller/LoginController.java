@@ -1,5 +1,8 @@
 package com.ifocus.aaascloud.controller;
 
+import com.ifocus.aaascloud.exception.BusinessException;
+import com.ifocus.aaascloud.exception.ValidationException;
+import com.ifocus.aaascloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,46 +22,45 @@ import net.sf.json.JSONObject;
 @Controller
 public class LoginController {
 
-	@Autowired
-	private Cloud_userService cloud_userService;
-	@Autowired
-	private Cloud_companyService cloud_companyService;
+    @Autowired
+    private Cloud_userService cloud_userService;
+    @Autowired
+    private Cloud_companyService cloud_companyService;
 
-	/**
-	 * ログイン認証
-	 * @param cloud_userModel Cloud_userModel
-	 *         loginId
-	 *         password
-	 * @return BaseHttpResponse<String> JSON形式
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	@ResponseBody
-	@CrossOrigin(origins = "*", maxAge = 3600)
-	public BaseHttpResponse<String> login(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
 
-		BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+    /**
+     * ログイン認証
+     *
+     * @param cloud_userModel Cloud_userModel
+     *                        loginId
+     *                        password
+     * @return BaseHttpResponse<String> JSON形式
+     * @throws Exception
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    public BaseHttpResponse<Cloud_userModel> login(@RequestBody Cloud_userModel cloud_userModel) {
+        BaseHttpResponse<Cloud_userModel> response = new BaseHttpResponse<>();
 
-		JSONObject resJasonObj = new JSONObject();
+        // ユーザなしの場合
+        if (StringUtil.isEmpty(cloud_userModel.getUsername())) {
+            throw new ValidationException(ErrorConstant.ERROR_CODE_0001,
+                    ErrorConstant.ERROR_MSG_0001 + "usernameが必須です。");
+        }
 
-		if (null != cloud_userModel.getUsername()) {
+        // ログイン認証
+        Cloud_userModel model = cloud_userService.login(cloud_userModel.getUsername());
 
-			try {
-				// ログイン認証
-				Cloud_userModel model = cloud_userService.login(cloud_userModel.getUsername());
+        // ログイン失敗の場合
+        if (model.getUserid() < 0) {
+            throw new BusinessException(ErrorConstant.ERROR_CODE_0005,
+                    ErrorConstant.ERROR_MSG_0005 + "login:");
+        }
 
-				if (model.getUserid() >= 0) {
+        // トークン刷新
+        cloud_userService.refreshToken(cloud_userModel.getUsername(), cloud_userModel.getAccess_token());
 
-					// トークン刷新
-					cloud_userService.refreshToken(cloud_userModel.getUsername(), cloud_userModel.getAccess_token());
-
-					// 管理者情報設定
-					resJasonObj.put("loginuserid", model.getUserid());
-					resJasonObj.put("loginusername", model.getUsername());
-					resJasonObj.put("logincompanyid", model.getCompanyid());
-					resJasonObj.put("loginrole", model.getRole());
-					resJasonObj.put("loginupperuserid", model.getUpperuserid());
-					resJasonObj.put("fullname", model.getFullName());
 //					// 会社情報取得
 //					Cloud_companyModel cloud_companyModel = cloud_companyService.getCompanyInfo(model.getCompanyid());
 //
@@ -71,36 +73,13 @@ public class LoginController {
 //					resJasonObj.put("fax", cloud_companyModel.getFax());
 //					resJasonObj.put("level", cloud_companyModel.getLevel());
 
-					resJasonObj.put("result", true);
+        // ログイン戻り値
+        response.setStatus(200);
+        response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+        response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
+        response.setData(model);
+        return response;
 
-				} else {
+    }
 
-					/* 異常系 */
-					response.setStatus(200);
-					response.setResultCode(ErrorConstant.ERROR_CODE_0005);
-					response.setResultMsg(ErrorConstant.ERROR_MSG_0005 + "login:");
-					return response;
-				}
-
-			} catch (Exception e) {
-				/* 異常系 */
-				response.setStatus(200);
-				response.setResultCode(ErrorConstant.ERROR_CODE_0005);
-				response.setResultMsg(ErrorConstant.ERROR_MSG_0005 + "login:" + e.getMessage());
-				return response;
-			}
-
-		} else {
-			response.setStatus(200);
-			response.setResultCode(ErrorConstant.ERROR_CODE_0001);
-			response.setResultMsg(ErrorConstant.ERROR_MSG_0001 + "usernameが必須です。");
-			return response;
-		}
-
-		response.setStatus(200);
-		response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-		response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-		response.setData(resJasonObj.toString());
-		return response;
-	}
 }

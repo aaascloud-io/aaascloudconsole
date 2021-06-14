@@ -511,12 +511,12 @@ export class HttpService {
         if (res) {
             // save user info
             let temp = {
-                uid: res.loginuserid,
-                login_id: res.loginusername,
-                company: res.logincompanyid,
-                role: res.loginrole,
-                upperuserid: res.loginupperuserid,
-                fullname: res.fullname,
+                uid: res.userid,
+                login_id: res.username,
+                company: res.companyid,
+                role: res.role,
+                upperuserid: res.upperuserid,
+                fullname: res.fullName,
                 access_token: ConstantsHandler.TOKEN.access_token
 
             }
