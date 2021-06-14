@@ -95,22 +95,16 @@ public class Cloud_userService {
      *        false = NG
      *
      */
-    public boolean checkToken(LoginInfo loginInfo) throws Exception {
-
-        try {
-            if (loginInfo.getAccess_token() == null || loginInfo.getAccess_token().isEmpty()) {
-                return false;
-            }
-            Cloud_userEntity user = cloud_userRepository.findByToken(loginInfo.getAccess_token());
-            if (user != null && user.getUsername().equals(loginInfo.getLoginusername())) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            throw e;
+    public boolean checkToken(LoginInfo loginInfo) {
+        if (loginInfo.getAccess_token() == null || loginInfo.getAccess_token().isEmpty()) {
+            return false;
         }
-
+        Cloud_userEntity user = cloud_userRepository.findByToken(loginInfo.getAccess_token());
+        if (user != null && user.getUsername().equals(loginInfo.getLoginusername())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
