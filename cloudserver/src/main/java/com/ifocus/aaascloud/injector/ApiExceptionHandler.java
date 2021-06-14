@@ -2,6 +2,7 @@ package com.ifocus.aaascloud.injector;
 
 import com.ifocus.aaascloud.api.common.BaseHttpResponse;
 import com.ifocus.aaascloud.constant.ErrorConstant;
+import com.ifocus.aaascloud.exception.BusinessException;
 import com.ifocus.aaascloud.exception.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,6 +30,16 @@ public class ApiExceptionHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public BaseHttpResponse<?> handleValidationError(ValidationException e, WebRequest req) {
+        BaseHttpResponse<String> response = new BaseHttpResponse<>();
+        response.setResultCode(e.getCode());
+        response.setResultMsg(e.getMessage());
+        return response;
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public BaseHttpResponse<?> handleBusinessError(ValidationException e, WebRequest req) {
         BaseHttpResponse<String> response = new BaseHttpResponse<>();
         response.setResultCode(e.getCode());
         response.setResultMsg(e.getMessage());
