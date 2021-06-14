@@ -10,8 +10,13 @@
             <th *ngIf="checkable" scope="col" class="thcolor">
                 <input type="checkbox" [(ngModel)]="_allChecked" (change)="onAllCheckChange($event)">
             </th>
-            <th *ngFor="let header of HeaderItems; let i = index" scope="col" class="thcolor">
+            <th *ngFor="let header of HeaderItems; let i = index" scope="col" class="thcolor"
+                (click)="onHeaderClick($event, header)">
                 <span>{{header.label}}</span>
+                <span *ngIf="header.sortable">
+                    <i *ngIf="header.ascending === true" class="la la-sort-up"></i>
+                    <i *ngIf="header.ascending === false" class="la la-sort-down"></i>
+                </span>
             </th>
         </tr>
         </thead>

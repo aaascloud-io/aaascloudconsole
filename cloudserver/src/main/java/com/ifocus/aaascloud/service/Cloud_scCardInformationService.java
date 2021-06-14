@@ -30,7 +30,9 @@ public class Cloud_scCardInformationService {
     public List<Cloud_scCardInformationModel> findSimCardList() {
         Iterable<Cloud_scCardInformationEntity> list = cloud_scCardInformationRepository.findAll();
         List<Cloud_scCardInformationModel> models = this.toCardInformationModels(list);
-        models = models.stream().filter(item -> Objects.equals(DeleteFlagConstant.NOT_DELETED, item.getDeleteflg())).collect(Collectors.toList());
+        models = models.stream()
+                .filter(item -> Objects.equals(DeleteFlagConstant.NOT_DELETED, item.getDeleteflg()))
+                .collect(Collectors.toList());
         return models;
     }
 
@@ -91,7 +93,7 @@ public class Cloud_scCardInformationService {
      * @param models SIMカード情報リスト
      * @return 追加したSIMカード情報
      */
-    public List<Cloud_scCardInformationModel> addAll(List<Cloud_scCardInformationModel> models){
+    public List<Cloud_scCardInformationModel> addAll(List<Cloud_scCardInformationModel> models) {
         List<Cloud_scCardInformationEntity> entities = CardInformationAppMapper.MAPPER.toCardInformationEntities(models);
         entities.stream().forEach(item -> item.setDeleteflg(DeleteFlagConstant.NOT_DELETED));
         return this.saveSimCardList(entities);
@@ -104,7 +106,9 @@ public class Cloud_scCardInformationService {
      * @return 変換した結果
      */
     private List<Cloud_scCardInformationModel> toCardInformationModels(Iterable<Cloud_scCardInformationEntity> list) {
-        List<Cloud_scCardInformationEntity> entities = StreamSupport.stream(list.spliterator(), false).collect(Collectors.toList());
+        List<Cloud_scCardInformationEntity> entities = StreamSupport
+                .stream(list.spliterator(), false)
+                .collect(Collectors.toList());
         return CardInformationAppMapper.MAPPER.toCardInformationModels(entities);
 //        return models.stream()
 //                .map(item -> new TreeNode<>(item, null))

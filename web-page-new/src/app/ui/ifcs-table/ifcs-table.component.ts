@@ -11,6 +11,7 @@ import {IfcsTableColumnCustom} from './ifcs-table.columnCustom';
 import {IfcsTableColumnSupperLink} from "./ifcs-table.columnSupperLink";
 import {IfcsTableService} from "./ifcs-table.service";
 
+
 /**
  * テーブルヘッダー（TH）
  */
@@ -19,6 +20,8 @@ interface HeaderItem {
     label: string;
     type: string;
     // align: string;
+    ascending: boolean;
+    sortable: boolean;
 }
 
 /**
@@ -342,9 +345,48 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
      * チェックボックスクリックイベント
      * @param event イベント
      */
-    onCheckboxClick(event){
+    onCheckboxClick(event) {
         // イベント中止
         event.stopPropagation();
+    }
+
+    /**
+     * ヘッダークリックイベント（ソート処理）
+     * @param event イベント
+     * @param header クリックされたヘッダー
+     */
+    onHeaderClick(event, header: HeaderItem) {
+        // ソート機能なしの場合
+        if (!header.sortable) {
+            return;
+        }
+        // テーブルデータなしの場合
+        if (!this._list) {
+            return;
+        }
+        
+        // 自身以外の状態をクリアする
+        this._headerItems.filter(h => h.columnName !== header.columnName)
+            .forEach(h => h.ascending = null);
+        // ソート処理
+        header.ascending = !header.ascending;
+        this._list.sort((a, b) => {
+            let col = header.columnName;
+            let ascending = header.ascending;
+            if (!a[col] && !b[col]) {
+                return 0;
+            }
+            if (a[col] === b[col]) {
+                return 0;
+            }
+            if (ascending) {
+                return a[col] < b[col] ? -1 : 1;
+            } else {
+                return a[col] < b[col] ? 1 : -1;
+            }
+        });
+        // ページデータ再作成
+        this.pageData();
     }
 
     /**
@@ -386,6 +428,8 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
                 columnName: $(el).data('col'),
                 label: $(el).data('text'),
                 type: $(el).data('type') ? $(el).data('type') : ItemType.NORMAL,
+                ascending: null,
+                sortable: $(el).data('sortable') ? $(el).data('sortable') : false,
             });
 
         });
@@ -417,12 +461,12 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
             return [];
         }
 
-        // let s = this._start() - 1;
-        // let e = this._end();
-        // return this._list.slice(s, e);
+        let s = this._start();
+        let e = this._end();
+        return this._list.slice(s, e);
 
-        // ページ数によって、ページデータからデータを取得する
-        return this._pageData[this._page - 1];
+        // // ページ数によって、ページデータからデータを取得する
+        // return this._pageData[this._page - 1];
     }
 
     /**
