@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.ifocus.aaascloud.model.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,18 +31,6 @@ import com.ifocus.aaascloud.entity.Cloud_productEntity;
 import com.ifocus.aaascloud.repository.Cloud_productRepository;
 import com.ifocus.aaascloud.entity.Cloud_userEntity;
 import com.ifocus.aaascloud.repository.Cloud_userRepository;
-import com.ifocus.aaascloud.model.Cloud_companyModel;
-import com.ifocus.aaascloud.model.Cloud_deviceDetailModel;
-import com.ifocus.aaascloud.model.Cloud_deviceModel;
-import com.ifocus.aaascloud.model.Cloud_errlogModel;
-import com.ifocus.aaascloud.model.Cloud_errresumeModel;
-import com.ifocus.aaascloud.model.Cloud_groupModel;
-import com.ifocus.aaascloud.model.Cloud_productModel;
-import com.ifocus.aaascloud.model.Cloud_projectModel;
-import com.ifocus.aaascloud.model.Cloud_userModel;
-import com.ifocus.aaascloud.model.Cloud_versionModel;
-import com.ifocus.aaascloud.model.LoginInfo;
-import com.ifocus.aaascloud.model.TargetUserInfo;
 import com.ifocus.aaascloud.service.AccessService;
 import com.ifocus.aaascloud.service.Cloud_companyService;
 import com.ifocus.aaascloud.service.Cloud_deviceService;
@@ -972,7 +961,7 @@ class AaascloudApplicationTests extends TestCase{
 		model.setUsername(loginUserEntity.getUsername());
 		model.setUserid(loginUserEntity.getUserid());
 
-		BaseHttpResponse<String> response = profileController.getUserProfile(model);
+		BaseHttpResponse<UserModel> response = profileController.getUserProfile(model);
 
 		assertEquals( ErrorConstant.ERROR_CODE_0000, response.getResultCode());
 		assertEquals( 1, response.getCount());

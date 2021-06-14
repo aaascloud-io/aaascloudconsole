@@ -19,7 +19,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(PersistenceException.class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public BaseHttpResponse<?> handleDbAccessError(PersistenceException e, WebRequest req) {
+    public BaseHttpResponse<?> handleDbAccessError(PersistenceException e, WebRequest req, Object handler) {
         BaseHttpResponse<String> response = new BaseHttpResponse<>();
         response.setResultCode(ErrorConstant.ERROR_CODE_9999);
         response.setResultMsg(e.getMessage());
@@ -29,17 +29,23 @@ public class ApiExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public BaseHttpResponse<?> handleValidationError(ValidationException e, WebRequest req) {
+    public BaseHttpResponse<?> handleValidationError(ValidationException e, WebRequest req, Object handler) {
         BaseHttpResponse<String> response = new BaseHttpResponse<>();
         response.setResultCode(e.getCode());
         response.setResultMsg(e.getMessage());
+
+//        StackTraceElement stackTraceElement= e.getStackTrace()[0];
+//        System.out.println("File="+stackTraceElement.getFileName());
+//        System.out.println("Line="+stackTraceElement.getLineNumber());
+//        System.out.println("Method="+stackTraceElement.getMethodName());
+
         return response;
     }
 
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public BaseHttpResponse<?> handleBusinessError(ValidationException e, WebRequest req) {
+    public BaseHttpResponse<?> handleBusinessError(ValidationException e, WebRequest req, Object handler) {
         BaseHttpResponse<String> response = new BaseHttpResponse<>();
         response.setResultCode(e.getCode());
         response.setResultMsg(e.getMessage());
