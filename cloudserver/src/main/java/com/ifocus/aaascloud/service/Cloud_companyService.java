@@ -86,7 +86,7 @@ public class Cloud_companyService {
 	 * 会社登録
 	 *
 	 */
-	public Cloud_companyModel registerCompany(Cloud_companyEntity entity) throws Exception {
+	public Cloud_companyModel registerCompany(Cloud_companyEntity entity) {
 		// 削除済行を物理削除する
 		cloud_companyRepository.deleteCompanyMarked(entity.getCorporatenumber());
 		Cloud_companyModel model = new Cloud_companyModel();

@@ -65,7 +65,7 @@ public class AccessService {
 	 *         0013 = 管理者を追加するには、上位会社に依頼してください。
 	 *
 	 */
-	public ReturnModel checkAddUserAccess(Cloud_userModel cloud_userModel) throws Exception {
+	public ReturnModel checkAddUserAccess(Cloud_userModel cloud_userModel) {
 
 //		LoginInfo loginInfo = cloud_userModel.getLoginInfo();
 //
@@ -240,7 +240,7 @@ public class AccessService {
 	 * @return Cloud_companyModel 会社モデル
 	 *
 	 */
-	public Cloud_companyModel getCompanyModel(Cloud_companyEntity entity) throws Exception {
+	private Cloud_companyModel getCompanyModel(Cloud_companyEntity entity) throws Exception {
 		Cloud_companyModel model = new Cloud_companyModel();
 		model.setCompanyid(entity.getCompanyid());
 		model.setCompanyname(entity.getCompanyname());
@@ -261,7 +261,7 @@ public class AccessService {
 	 * @return Cloud_userModel ユーザモデル
 	 *
 	 */
-	public Cloud_userModel getModel(Cloud_userEntity entity) throws Exception {
+	private Cloud_userModel getModel(Cloud_userEntity entity) throws Exception {
 		Cloud_userModel model = new Cloud_userModel();
 		model.setUserid(entity.getUserid());
 		model.setUsername(entity.getUsername());
@@ -276,7 +276,7 @@ public class AccessService {
 	 * @return Cloud_userModel ユーザモデル
 	 *
 	 */
-	public Cloud_userModel getUserModel(Cloud_companyEntity entity,Cloud_userEntity cloud_userEntity) throws Exception {
+	private Cloud_userModel getUserModel(Cloud_companyEntity entity,Cloud_userEntity cloud_userEntity) throws Exception {
 		Cloud_userModel model = new Cloud_userModel();
 		model.setCompanyid(entity.getCompanyid());
 		model.setCompanyname(entity.getCompanyname());
@@ -300,7 +300,7 @@ public class AccessService {
 	 * @return List<Cloud_displaysettingsModel> 画面表示項目設定Modeリスト
 	 *
 	 */
-	public List<Cloud_displaysettingsModel> getModelsByEntitys(List<Cloud_displaysettingsEntity> entityList) throws Exception {
+	private List<Cloud_displaysettingsModel> getModelsByEntitys(List<Cloud_displaysettingsEntity> entityList) throws Exception {
 		List<Cloud_displaysettingsModel> modelList = new ArrayList<Cloud_displaysettingsModel>();
 		for (Cloud_displaysettingsEntity entity:entityList) {
 			modelList.add(getDisplaysettingsModelModel(entity));
@@ -316,7 +316,7 @@ public class AccessService {
 	 * @return Cloud_displaysettingsModel 画面表示項目設定モデル
 	 *
 	 */
-	public Cloud_displaysettingsModel getDisplaysettingsModelModel(Cloud_displaysettingsEntity entity) throws Exception {
+	private Cloud_displaysettingsModel getDisplaysettingsModelModel(Cloud_displaysettingsEntity entity) throws Exception {
 		Cloud_displaysettingsModel model = new Cloud_displaysettingsModel();
 		model.setCompanyid(entity.getCompanyid());
 		model.setDisplayorder(entity.getDisplayorder());

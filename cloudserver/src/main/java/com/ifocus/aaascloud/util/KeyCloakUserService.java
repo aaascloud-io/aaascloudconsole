@@ -86,7 +86,7 @@ public class KeyCloakUserService {
 	 *      "0000" = 正常終了
 	 *      "0200" = ユーザがすでに存在しています。
 	 */
-	public String addUser(String username, String password) throws Exception {
+	public String addUser(String username, String password) {
 
 		// ユーザが存在する場合
 		if (isValidUsername(username)) {

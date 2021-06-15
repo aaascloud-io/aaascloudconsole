@@ -1126,12 +1126,10 @@ public class Cloud_deviceService {
 	 * @return List<Cloud_deviceModel> デバイス一覧
 	 *
 	 */
-	public List<Cloud_deviceModel> getUnderCompanyDevicesByUserids(List<Integer> useridList) throws Exception {
-
+	public List<Cloud_deviceModel> getUnderCompanyDevicesByUserids(List<Integer> useridList) {
 		// 全社のデバイス一覧取得
 		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchUnderCompanyDevicesByUseridIn(useridList);
 		return this.getModelsByEntitys(list);
-
 	}
 
 	/*

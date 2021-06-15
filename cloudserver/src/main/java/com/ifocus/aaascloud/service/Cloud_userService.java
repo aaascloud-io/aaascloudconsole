@@ -1,29 +1,25 @@
 package com.ifocus.aaascloud.service;
 
-import java.sql.Timestamp;
-import java.util.*;
-
+import com.ifocus.aaascloud.constant.AliveConstant;
+import com.ifocus.aaascloud.constant.DeleteFlagConstant;
+import com.ifocus.aaascloud.constant.ErrorConstant;
 import com.ifocus.aaascloud.constant.division.RoleDivision;
+import com.ifocus.aaascloud.entity.Cloud_companyEntity;
+import com.ifocus.aaascloud.entity.Cloud_userEntity;
+import com.ifocus.aaascloud.mapper.UserAppMapper;
+import com.ifocus.aaascloud.model.*;
+import com.ifocus.aaascloud.repository.Cloud_companyRepository;
+import com.ifocus.aaascloud.repository.Cloud_userRepository;
+import com.ifocus.aaascloud.util.KeyCloakUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ifocus.aaascloud.constant.AliveConstant;
-import com.ifocus.aaascloud.constant.DeleteFlagConstant;
-import com.ifocus.aaascloud.constant.ErrorConstant;
-import com.ifocus.aaascloud.entity.Cloud_companyEntity;
-import com.ifocus.aaascloud.repository.Cloud_companyRepository;
-import com.ifocus.aaascloud.entity.Cloud_userEntity;
-import com.ifocus.aaascloud.repository.Cloud_userRepository;
-import com.ifocus.aaascloud.model.Cloud_companyModel;
-import com.ifocus.aaascloud.model.Cloud_deviceModel;
-import com.ifocus.aaascloud.model.Cloud_userModel;
-import com.ifocus.aaascloud.model.LoginInfo;
-import com.ifocus.aaascloud.model.UserModel;
-import com.ifocus.aaascloud.util.KeyCloakUserService;
-import com.ifocus.aaascloud.util.Util;
+import java.sql.Timestamp;
+import java.util.*;
 
 @SpringBootApplication
 @RestController
@@ -46,7 +42,6 @@ public class Cloud_userService {
      * ログイン認証
      * @param username String ユーザ名
      * @return Cloud_userModel ログインユーザー情報モデル
-     *
      */
     public Cloud_userModel login(String username) {
         // ログインユーザ取得
@@ -59,7 +54,6 @@ public class Cloud_userService {
      * トークン刷新
      * @param username String ユーザ名
      * @return Cloud_userModel ログインユーザー情報モデル
-     *
      */
     public void refreshToken(String username, String token) {
         // ログインユーザ取得
@@ -67,8 +61,6 @@ public class Cloud_userService {
         loginUserEntity.setToken(token);
         loginUserEntity.setU_uid(loginUserEntity.getUserid());
         loginUserEntity.setU_time(new Timestamp(System.currentTimeMillis()));
-
-        return;
     }
 
     /*
@@ -77,14 +69,12 @@ public class Cloud_userService {
      * @return Cloud_userModel ログインユーザー情報モデル
      *
      */
-    public void clearToken(String username) throws Exception {
+    public void clearToken(String username) {
         // ログインユーザ取得
         Cloud_userEntity loginUserEntity = cloud_userRepository.findByUsername(username);
         loginUserEntity.setToken("");
         loginUserEntity.setU_uid(loginUserEntity.getUserid());
         loginUserEntity.setU_time(new Timestamp(System.currentTimeMillis()));
-
-        return;
     }
 
     /*
@@ -93,27 +83,19 @@ public class Cloud_userService {
      * @return boolean 認証結果
      *        true  = OK
      *        false = NG
-     *
      */
     public boolean checkToken(LoginInfo loginInfo) {
         if (loginInfo.getAccess_token() == null || loginInfo.getAccess_token().isEmpty()) {
             return false;
         }
         Cloud_userEntity user = cloud_userRepository.findByToken(loginInfo.getAccess_token());
-        if (user != null && user.getUsername().equals(loginInfo.getLoginusername())) {
-            return true;
-        } else {
-            return false;
-        }
+        return user != null && user.getUsername().equals(loginInfo.getLoginusername());
     }
 
     /*
      * アクセス権限チェック
-     *
-     *
      */
     public boolean checkAccessOK(Integer loginuserid, Integer targetuserid) throws Exception {
-
 //		if (null != loginuserid && null != targetuserid) {
 //
 //			if (loginuserid.equals(targetuserid)) {
@@ -139,7 +121,6 @@ public class Cloud_userService {
      * @return boolean
      *         true = 有効
      *         false = 無効
-     *
      */
     public boolean isValidUsername(String username) throws Exception {
         return keyCloakUserService.isValidUsername(username);
@@ -166,8 +147,6 @@ public class Cloud_userService {
 
     /*
      * 先祖であるかどうかを判断する
-     *
-     *
      */
     public boolean isAncestor(Integer userid, Integer targetUserId) {
         Optional<Cloud_userEntity> myEntity = cloud_userRepository.findById(targetUserId);
@@ -184,76 +163,57 @@ public class Cloud_userService {
 
     /*
      * ユーザ一覧取得
-     *
-     *
      */
     public List<Cloud_userModel> getSonUsers(Integer loginid) throws Exception {
-        List<Cloud_userModel> returnList = new ArrayList<Cloud_userModel>();
         List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(loginid);
-        if (list != null) {
-            list.forEach(elm -> {
-                Cloud_userModel model = new Cloud_userModel();
-                model.setUserid(elm.getUserid());
-                model.setUsername(elm.getUsername());
-                model.setCompanyid(elm.getCompanyid());
-                model.setRole(elm.getRole());
-                model.setUpperuserid(elm.getUpperuserid());
-                /* 会社情報取得 */
-                Optional<Cloud_companyEntity> entity = cloud_companyRepository.findById(model.getCompanyid());
-                if (entity != null) {
-                    model.setCompanyname(entity.get().getCompanyname());
-                }
-                /* デバイス数取得 */
-                try {
-                    List<Integer> userids = new ArrayList<Integer>(Arrays.asList(model.getUserid()));
-                    List<Cloud_deviceModel> deviceList = cloud_deviceService.getUnderCompanyDevicesByUserids(userids);
-                    model.setDevicecount(deviceList.size());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        List<Cloud_userModel> returnList = UserAppMapper.MAPPER.toUserModels(list);
 
-                /* ユーザ数取得 */
-                List<Cloud_userEntity> underUserlist = cloud_userRepository.getUsersByUpperuserid(model.getUserid());
-                model.setUserSize(underUserlist.size());
-
-
-                returnList.add(model);
-            });
+        // なしの場合
+        if (CollectionUtils.isEmpty(returnList)) {
+            return returnList;
         }
-        return returnList;
 
+        returnList.stream().forEach(model -> {
+            /* 会社情報取得 */
+            Optional<Cloud_companyEntity> entity = cloud_companyRepository.findById(model.getCompanyid());
+            entity.ifPresent(cloud_companyEntity -> model.setCompanyname(cloud_companyEntity.getCompanyname()));
+
+            /* デバイス数取得 */
+            List<Cloud_deviceModel> deviceList = cloud_deviceService
+                    .getUnderCompanyDevicesByUserids(Arrays.asList(model.getUserid()));
+            model.setDevicecount(deviceList.size());
+
+            /* ユーザ数取得 */
+            List<Cloud_userEntity> underUserlist = cloud_userRepository.getUsersByUpperuserid(model.getUserid());
+            model.setUserSize(underUserlist.size());
+        });
+
+        return returnList;
     }
 
     /*
      * 会社ユーザ一覧取得
-     *
-     *
      */
     public List<Cloud_userEntity> getCompanyUsers(Integer companyid) throws Exception {
         List<Cloud_userEntity> returnList = cloud_userRepository.getUsersByCompanyid(companyid);
         return returnList;
-
     }
 
     /*
      * 配下ユーザ一覧取得
-     *
-     *
      */
     public List<Cloud_userModel> getUnderUsers(List<Integer> userids) {
         List<Cloud_userEntity> returnList = (List<Cloud_userEntity>) cloud_userRepository.findAllById(userids);
         return getModelsByEntitys(returnList);
-
     }
 
     /*
      * 配下ユーザ検索
-     *
-     *
      */
     public List<Cloud_userModel> searchUnderUsers(List<Integer> userids, Cloud_userModel model) {
         List<Cloud_userEntity> returnList = (List<Cloud_userEntity>) cloud_userRepository.searchUnderUsersByCompanyname(
-                userids, model.getCompanynameForSearch(), model.getFirstNameForSearch(), model.getLastNameForSearch(), model.getEmailForSearch());
+                userids, model.getCompanynameForSearch(), model.getFirstNameForSearch(),
+                model.getLastNameForSearch(), model.getEmailForSearch());
         return getModelsByEntitys(returnList);
     }
 
@@ -263,23 +223,25 @@ public class Cloud_userService {
      * @param cloud_userModel Cloud_userModel
      * @return userid Integer
      */
-    public Integer registerSonUser(Cloud_userModel model) throws Exception {
+    public Integer registerSonUser(Cloud_userModel model) {
 
         ////////////////////////////////////////////////////////
         // DB登録を行う
         ////////////////////////////////////////////////////////
 
+        /* システム日時 */
+        Timestamp systemTime = new Timestamp(System.currentTimeMillis());
+
         // 会社IDが設定していない場合、
-        if (model.getCompanyid() == null) {
+        if (Objects.isNull(model.getCompanyid())) {
             ////////////////////////////////////////////////////////
             // 会社登録
             ////////////////////////////////////////////////////////
 
             // 自社情報取得
-            Optional<Cloud_companyEntity> myEntity = cloud_companyRepository.findById(model.getLoginInfo().getLogincompanyid());
+            Optional<Cloud_companyEntity> myEntity = cloud_companyRepository
+                    .findById(model.getLoginInfo().getLogincompanyid());
 
-            /* システム日時 */
-            Timestamp systemTime = new Timestamp(System.currentTimeMillis());
             // レベル
             Integer level = myEntity.get().getLevel();
             if (Objects.isNull(level)) {
@@ -287,27 +249,18 @@ public class Cloud_userService {
             }
 
             // 情報設定
-            Cloud_companyEntity entity = new Cloud_companyEntity();
-            entity.setCorporatenumber(model.getCorporatenumber());
-            entity.setCompanyname(model.getCompanyname());
-            entity.setAddress(model.getAddress());
-            entity.setIndustry(model.getIndustry());
-            entity.setMail(model.getMail());
-            entity.setTel(model.getTel());
-            entity.setFax(model.getFax());
+            Cloud_companyEntity entity = UserAppMapper.MAPPER.toCompanyEntity(model);
             entity.setLevel(level + 1);    // レベルアップ
             entity.setAlive(AliveConstant.ALIVE);
             entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
-            entity.setI_uid(model.getLoginInfo().getLoginuserid());
             entity.setI_time(systemTime);
-            entity.setU_uid(model.getLoginInfo().getLoginuserid());
             entity.setU_time(systemTime);
+            entity.setCompanyid(null);
 
             Cloud_companyModel insertedModel = cloud_companyService.registerCompany(entity);
 
             // 登録した会社IDを設定する
             model.setCompanyid(insertedModel.getCompanyid());
-
         }
 
         // 削除済行を物理削除する
@@ -315,24 +268,13 @@ public class Cloud_userService {
         // 権限
         Integer role = model.getRole();
         // 情報設定
-        Cloud_userEntity entity = new Cloud_userEntity();
-        /* システム日時 */
-        Timestamp systemTime = new Timestamp(System.currentTimeMillis());
-        // entity.setUserid(model.getUserid());  新規登録時に、useridがない。
-        entity.setCompanyid(model.getCompanyid());
-        entity.setUsername(model.getUsername());
-        entity.setLastname(model.getLastname());
-        entity.setFirstname(model.getFirstname());
-        entity.setEmail(model.getEmail());
-        entity.setRole(model.getRole());
-        entity.setUpperuserid(model.getUpperuserid());
+        Cloud_userEntity entity = UserAppMapper.MAPPER.toUserEntity(model);
         entity.setToken("");
         entity.setAlive(AliveConstant.ALIVE);
         entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
-        entity.setI_uid(model.getLoginInfo().getLoginuserid());
         entity.setI_time(systemTime);
-        entity.setU_uid(model.getLoginInfo().getLoginuserid());
         entity.setU_time(systemTime);
+        entity.setUserid(null);  // 新規登録時に、useridがない
 
         // 顧客の場合、Firebaseに登録する
         if (Objects.equals(RoleDivision.CLIENT.getValue(), role.toString())) {
@@ -345,25 +287,15 @@ public class Cloud_userService {
 
         // ユーザー登録結果
         Cloud_userEntity cloud_userEntity = null;
-        try {
-            cloud_userEntity = cloud_userRepository.save(entity);
-        } catch (Exception e) {
-            // TODO Firebase登録失敗の場合、ロールバック処理が必要
-            throw e;
-        }
+        cloud_userEntity = cloud_userRepository.save(entity);
 
         ////////////////////////////////////////////////////////
         // KeyCloakに登録を行う
         ////////////////////////////////////////////////////////
-        try {
-            String retrunCode = keyCloakUserService.addUser(model.getUsername(), model.getPassword());
-            if (!ErrorConstant.ERROR_CODE_0000.equals(retrunCode)) {
-                // TODO Firebase登録失敗の場合、ロールバック処理が必要
-                return -1;
-            }
-        } catch (Exception e) {
+        String retrunCode = keyCloakUserService.addUser(model.getUsername(), model.getPassword());
+        if (!ErrorConstant.ERROR_CODE_0000.equals(retrunCode)) {
             // TODO Firebase登録失敗の場合、ロールバック処理が必要
-            throw e;
+            return -1;
         }
 
         return cloud_userEntity.getUserid();
@@ -371,57 +303,43 @@ public class Cloud_userService {
 
     /*
      * ユーザ更新
-     * @param loginInfo LoginInfo
      * @param cloud_userModel Cloud_userModel
      * @return userid Integer
      */
-    public Integer updateSonUser(LoginInfo loginInfo, Cloud_userModel model) throws Exception {
+    public Integer updateSonUser(Cloud_userModel model) throws Exception {
+        /* システム日時 */
+        Timestamp systemTime = new Timestamp(System.currentTimeMillis());
 
         ////////////////////////////////////////////////////////
         // 会社更新
         ////////////////////////////////////////////////////////
-
         // 会社情報取得
         Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(model.getCompanyid());
-
-        /* システム日時 */
-        Timestamp systemTime = new Timestamp(System.currentTimeMillis());
         // 情報設定
-        Cloud_companyEntity companyEntity = company.get();
-        companyEntity.setCompanyid(model.getCompanyid());
-        companyEntity.setCorporatenumber(model.getCorporatenumber());
-        companyEntity.setCompanyname(model.getCompanyname());
-        companyEntity.setAddress(model.getAddress());
-        companyEntity.setIndustry(model.getIndustry());
-        companyEntity.setMail(model.getMail());
-        companyEntity.setTel(model.getTel());
-        companyEntity.setFax(model.getFax());
+        Cloud_companyEntity companyEntity = UserAppMapper.MAPPER.toCompanyEntity(model);
         companyEntity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
-        companyEntity.setU_uid(loginInfo.getLoginuserid());
         companyEntity.setU_time(systemTime);
-
+        companyEntity.setLevel(company.get().getLevel());
+        companyEntity.setAlive(company.get().getAlive());
+        companyEntity.setI_uid(company.get().getI_uid());
+        companyEntity.setI_time(company.get().getI_time());
         cloud_companyService.updateCompany(companyEntity);
 
         ////////////////////////////////////////////////////////
         // ユーザ更新
         ////////////////////////////////////////////////////////
-
+        // ユーザ情報取得
         Optional<Cloud_userEntity> user = cloud_userRepository.findById(model.getUserid());
-        Cloud_userEntity entity = user.get();
-        entity.setUserid(model.getUserid());
-        entity.setCompanyid(model.getCompanyid());
-        entity.setUsername(model.getUsername());
-        entity.setFirstname(model.getFirstname());
-        entity.setLastname(model.getLastname());
-        entity.setRole(model.getRole());
+        Cloud_userEntity entity = UserAppMapper.MAPPER.toUserEntity(model);
         entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
-        entity.setU_uid(loginInfo.getLoginuserid());
         entity.setU_time(systemTime);
+        entity.setAlive(user.get().getAlive());
+        entity.setI_uid(user.get().getI_uid());
+        entity.setI_time(user.get().getI_time());
 
         Cloud_userEntity cloud_userEntity = cloud_userRepository.save(entity);
 
         return cloud_userEntity.getUserid();
-
     }
 
     /*
@@ -472,10 +390,9 @@ public class Cloud_userService {
      * @param cloud_userModel Cloud_userModel
      */
     public void deleteSonUser(Cloud_userModel model, Cloud_userModel LoginModel) throws Exception {
-
         // 対象取得
         Optional<Cloud_userEntity> user = cloud_userRepository.findById(model.getUserid());
-        if (user != null && user.isPresent()) {
+        if (user.isPresent()) {
 
             Cloud_userEntity entity = user.get();
 
@@ -486,15 +403,12 @@ public class Cloud_userService {
             // DB更新
             cloud_userRepository.save(entity);
         }
-        return;
-
     }
 
     /*
      * 配下ユーザの会社ID一覧取得
      * @param model Cloud_deviceModel ユーザ情報
      * @return List<Integer> 配下ユーザの会社ID一覧
-     *
      */
     public List<Integer> getUnderCompanyIds(Cloud_deviceModel model) throws Exception {
         List<Cloud_userEntity> returnList = cloud_userRepository.getUnderUserCompanyIdsByUpperuserid(model.getTargetUserInfo().getTargetuserid());
@@ -512,37 +426,12 @@ public class Cloud_userService {
             underUserCompanyIdList.add(model.getTargetUserInfo().getTargetuserCompanyid());
         }
         return underUserCompanyIdList;
-
-    }
-
-    /*
-     * EntityリストからModelリスト取得
-     * @param entityList List<Cloud_userEntity>
-     * @return List<UserModel>
-     *
-     */
-    public List<UserModel> getUserModelsByEntitys(List<Cloud_userEntity> entityList) throws Exception {
-
-
-        List<Cloud_userModel> modelList = getModelsByEntitys(entityList);
-        List<UserModel> userModelList = Util.getUserModels(modelList);
-//		for (UserModel userModel:userModelList) {
-//			// 会社情報を取得する
-//			Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(userModel.getCompanyid());
-//			// 会社情報を設定する
-//			userModel.setCompanyname(company.get().getCompanyname());
-//
-//			userModelList.add(userModel);
-//		}
-        return userModelList;
-
     }
 
     /*
      * EntityリストからModelリスト取得
      * @param entityList List<Cloud_userEntity>
      * @return List<Cloud_userModel>
-     *
      */
     public List<Cloud_userModel> getModelsByEntitys(List<Cloud_userEntity> entityList) {
 
@@ -551,36 +440,24 @@ public class Cloud_userService {
             modelList.add(getModelByEntity(entity));
         }
         return modelList;
-
     }
 
     /*
      * EntityからModel取得
      * @param entity Cloud_deviceEntity
      * @return Cloud_userModel
-     *
      */
-    public Cloud_userModel getModelByEntity(Cloud_userEntity entity) {
-        Cloud_userModel model = new Cloud_userModel();
-        model.setUserid(entity.getUserid());
-        model.setUsername(entity.getUsername());
-        model.setLastname(entity.getLastname());
-        model.setFirstname(entity.getFirstname());
-        model.setEmail(entity.getEmail());
-        model.setCompanyid(entity.getCompanyid());
-
+    private Cloud_userModel getModelByEntity(Cloud_userEntity entity) {
+        Cloud_userModel model = UserAppMapper.MAPPER.toUserModel(entity);
         // 会社名取得
         Optional<Cloud_companyEntity> company = cloud_companyRepository.findById(entity.getCompanyid());
         if (!company.equals(Optional.empty())) {
             model.setCompanyname(company.get().getCompanyname());
         }
-        model.setRole(entity.getRole());
-        model.setUpperuserid(entity.getUpperuserid());
-
         // fullname設定
         model.setFullname(model.getLastname() + " " + model.getFirstname());
-        model.setDeleteflag(entity.getDeleteflag());
-        return model;
 
+        return model;
     }
+
 }
