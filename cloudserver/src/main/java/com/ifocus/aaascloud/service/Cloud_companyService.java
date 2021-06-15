@@ -110,7 +110,7 @@ public class Cloud_companyService {
 	 * 会社更新
 	 *
 	 */
-	public Cloud_companyModel updateCompany(Cloud_companyEntity entity) throws Exception {
+	public Cloud_companyModel updateCompany(Cloud_companyEntity entity) {
 		Cloud_companyModel model = new Cloud_companyModel();
 		Cloud_companyEntity updatedEntity = cloud_companyRepository.save(entity);
 		if (updatedEntity != null ) {

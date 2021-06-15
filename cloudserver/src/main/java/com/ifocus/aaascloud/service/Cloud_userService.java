@@ -122,7 +122,7 @@ public class Cloud_userService {
      *         true = 有効
      *         false = 無効
      */
-    public boolean isValidUsername(String username) throws Exception {
+    public boolean isValidUsername(String username) {
         return keyCloakUserService.isValidUsername(username);
     }
 
@@ -306,7 +306,7 @@ public class Cloud_userService {
      * @param cloud_userModel Cloud_userModel
      * @return userid Integer
      */
-    public Integer updateSonUser(Cloud_userModel model) throws Exception {
+    public Integer updateSonUser(Cloud_userModel model) {
         /* システム日時 */
         Timestamp systemTime = new Timestamp(System.currentTimeMillis());
 
@@ -336,7 +336,10 @@ public class Cloud_userService {
         entity.setAlive(user.get().getAlive());
         entity.setI_uid(user.get().getI_uid());
         entity.setI_time(user.get().getI_time());
-
+        entity.setEmail(user.get().getEmail());
+        entity.setUpperuserid(user.get().getUpperuserid());
+        entity.setToken(user.get().getToken());
+        entity.setFirebaseuid(user.get().getFirebaseuid());
         Cloud_userEntity cloud_userEntity = cloud_userRepository.save(entity);
 
         return cloud_userEntity.getUserid();

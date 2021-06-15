@@ -204,7 +204,6 @@ public class Cloud_userController {
             throw new BusinessException(returnModel.getKey(), "accessService.checkAddUserAccess: " + returnModel.getValue());
         }
 
-
         // 登録処理
         Integer registeredUserid = cloud_userService.registerSonUser(cloud_userModel);
 
@@ -232,89 +231,52 @@ public class Cloud_userController {
     /**
      * ユーザを更新する
      *
-     * @param loginInfo       LoginInfo
      * @param cloud_userModel Cloud_userModel
      * @return BaseHttpResponse<String>
-     * @throws Exception
      */
     @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
     @ResponseBody
     @CrossOrigin(origins = "*", maxAge = 3600)
-    public BaseHttpResponse<String> updateUser(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
-
+    public BaseHttpResponse<String> updateUser(@RequestBody Cloud_userModel cloud_userModel) {
         BaseHttpResponse<String> response = new BaseHttpResponse<String>();
 
-        try {
-            // トークン認証
-            if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
-                response.setStatus(200);
-                response.setResultCode(ErrorConstant.ERROR_CODE_0300);
-                response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
-                return response;
-            }
-
-        } catch (Exception e) {
-            response.setStatus(200);
-            response.setResultCode(ErrorConstant.ERROR_CODE_0300);
-            response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
-            return response;
+        // トークン認証
+        if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+            throw new BusinessException(ErrorConstant.ERROR_CODE_0300, ErrorConstant.ERROR_MSG_0300);
         }
 
         // 権限チェック
         ReturnModel returnModel = accessService.checkAddUserAccess(cloud_userModel);
-        if (!returnModel.getKey().equals(ErrorConstant.ERROR_CODE_0000)) {
+        if (!Objects.equals(ErrorConstant.ERROR_CODE_0000, returnModel.getKey())) {
             /* 異常系:権限なし */
-            response.setStatus(200);
-            response.setResultCode(returnModel.getKey());
-            response.setResultMsg("accessService.checkAddUserAccess: " + returnModel.getValue());
-            return response;
+            throw new BusinessException(returnModel.getKey(), "accessService.checkAddUserAccess: " + returnModel.getValue());
         }
 
-        try {
-            Optional<Cloud_userEntity> tempEntity = cloud_userRepository.findById(cloud_userModel.getUserid());
-            Cloud_userEntity entity = tempEntity.get();
-            // ユーザ名が更新されるなら、
-            if (!entity.getUsername().equals(cloud_userModel.getUsername())) {
-                // KeyCloakに存在しない場合、
-                if (!cloud_userService.isValidUsername(cloud_userModel.getUsername())) {
-                    /* 異常系 */
-                    response.setStatus(200);
-                    response.setResultCode(ErrorConstant.ERROR_CODE_0008);
-                    response.setResultMsg(ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録のユーザ名です。");
-                    return response;
-                }
-            }
-        } catch (Exception e) {
-            /* 異常系 */
-            response.setStatus(200);
-            response.setResultCode(ErrorConstant.ERROR_CODE_0100);
-            response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_userService.updateSonUser:" + e.getMessage());
-            return response;
-        }
-
-        try {
-            Integer registeredUserid = cloud_userService.updateSonUser(cloud_userModel);
-
-            if (null != registeredUserid) {
-                /* 正常系 */
-                response.setStatus(200);
-                response.setResultCode(ErrorConstant.ERROR_CODE_0000);
-                response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-            } else {
+        Optional<Cloud_userEntity> tempEntity = cloud_userRepository.findById(cloud_userModel.getUserid());
+        Cloud_userEntity entity = tempEntity.get();
+        // ユーザ名が更新されるなら、
+        if (!Objects.equals(entity.getUsername(), cloud_userModel.getUsername())) {
+            // KeyCloakに存在しない場合、
+            if (!cloud_userService.isValidUsername(cloud_userModel.getUsername())) {
                 /* 異常系 */
-                response.setStatus(200);
-                response.setResultCode(ErrorConstant.ERROR_CODE_0100);
-                response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_userService.updateSonUser");
+                throw new BusinessException(ErrorConstant.ERROR_CODE_0008, ErrorConstant.ERROR_MSG_0008 + "KeyCloakに未登録のユーザ名です。");
             }
-        } catch (Exception e) {
-            /* 異常系 */
-            response.setStatus(200);
-            response.setResultCode(ErrorConstant.ERROR_CODE_0100);
-            response.setResultMsg(ErrorConstant.ERROR_MSG_0100 + "cloud_userService.updateSonUser:" + e.getMessage());
-            return response;
         }
+
+        // ユーザ更新
+        Integer registeredUserid = cloud_userService.updateSonUser(cloud_userModel);
+        if (Objects.isNull(registeredUserid)) {
+            /* 異常系 */
+            throw new BusinessException(ErrorConstant.ERROR_CODE_0100, ErrorConstant.ERROR_MSG_0100 + "cloud_userService.updateSonUser");
+        }
+
+        /* 正常系 */
+        response.setStatus(200);
+        response.setResultCode(ErrorConstant.ERROR_CODE_0000);
+        response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
         return response;
     }
+
 
     /**
      * ユーザを削除する

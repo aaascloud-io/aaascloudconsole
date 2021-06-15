@@ -30,8 +30,8 @@ public class Cloud_userModel extends UserModel {
 	private Integer userid;
 	private Integer companyid;
 	private String username;
-//	private String firstname;
-//	private String lastname;
+	private String firstname;
+	private String lastname;
 	private String fullname;
 	private String email;
 	private String loginid;
