@@ -181,7 +181,7 @@ public class Cloud_projectService {
 	 * @param userids List<Integer> ターゲットユーザーIDリスト
 	 * @List<Cloud_projectModel> プロジェクト一覧
 	 */
-	public List<Cloud_projectModel> getMyUnderProjects(List<Integer> userids) throws Exception {
+	public List<Cloud_projectModel> getMyUnderProjects(List<Integer> userids) {
 		List<Cloud_projectModel> returnList = new ArrayList<Cloud_projectModel>();
 		Iterable<Cloud_projectEntity> list = cloud_projectRepository.searchByUseridIn(userids);
 		list.forEach(s -> {

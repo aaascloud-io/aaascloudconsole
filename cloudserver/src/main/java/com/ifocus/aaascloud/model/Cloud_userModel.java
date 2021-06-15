@@ -30,9 +30,9 @@ public class Cloud_userModel extends UserModel {
 	private Integer userid;
 	private Integer companyid;
 	private String username;
-	private String firstName;
-	private String lastName;
-	private String fullName;
+//	private String firstname;
+//	private String lastname;
+	private String fullname;
 	private String email;
 	private String loginid;
 	private String password;
@@ -47,7 +47,7 @@ public class Cloud_userModel extends UserModel {
 
 	// 会社情報
 	private String corporatenumber;
-	private String companyname;
+	private String companyName;
 	private String address;
 	private String industry;
 	private String mail;
@@ -57,8 +57,19 @@ public class Cloud_userModel extends UserModel {
 	// デバイス数
 	private Integer devicecount;
 	// ユーザ数
-	private Integer usercount;
+	private Integer userSize;
 	private Cloud_userModel parent;
+
+
+	// 配下ユーザ数
+	private Integer userCount;
+
+	// 配下ユーザ数(削除以外)
+	private Integer notDelUserCount;
+
+	// 配下プロジェクト数
+	private Integer projectCount;
+
 
 	/*
 	 * companyname情報検索条件取得
@@ -66,10 +77,10 @@ public class Cloud_userModel extends UserModel {
 	 */
 	public String getCompanynameForSearch() {
 
-		if (this.companyname == null || this.companyname.isEmpty()) {
+		if (this.companyName == null || this.companyName.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
-			return "%" + this.companyname.trim() + "%";
+			return "%" + this.companyName.trim() + "%";
 		}
 	}
 
@@ -79,10 +90,10 @@ public class Cloud_userModel extends UserModel {
 	 */
 	public String getFirstNameForSearch() {
 
-		if (this.firstName == null || this.firstName.isEmpty()) {
+		if (this.firstname == null || this.firstname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
-			return "%" + this.firstName.trim() + "%";
+			return "%" + this.firstname.trim() + "%";
 		}
 	}
 
@@ -92,10 +103,10 @@ public class Cloud_userModel extends UserModel {
 	 */
 	public String getLastNameForSearch() {
 
-		if (this.lastName == null || this.lastName.isEmpty()) {
+		if (this.lastname == null || this.lastname.isEmpty()) {
 			return CommonConstant.DEFAULT_MATCH_ALL;
 		} else {
-			return "%" + this.lastName.trim() + "%";
+			return "%" + this.lastname.trim() + "%";
 		}
 	}
 

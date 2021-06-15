@@ -110,7 +110,7 @@ export class DeviceComponent implements OnInit {
       productname: false,
       projectname: false,
       groupname: false,
-      userfullname:false
+      fullname:false
     },
   }
 
@@ -210,7 +210,7 @@ export class DeviceComponent implements OnInit {
       }
     });
 
-    this.httpService.usePost('/getUnderUsers', param).then(item => {
+    this.httpService.usePostII('/getUnderUsers', param).then(item => {
       try {
         if (item != null) {
           this.underUsersSelectArray = item;

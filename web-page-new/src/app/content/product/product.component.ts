@@ -510,7 +510,7 @@ export class ProductComponent implements OnInit {
   protected async getUnderUsers() {
     var query = {
     };
-    this.httpService.usePost('getUnderUsers', query).then(item => {
+    this.httpService.usePostII('getUnderUsers', query).then(item => {
       try {
         if (item) {
           this.users=item

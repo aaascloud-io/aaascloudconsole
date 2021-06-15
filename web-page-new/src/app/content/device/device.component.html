@@ -119,8 +119,8 @@
                         *ngIf="pageModel.sort.projectname" [ngClass]="lasort"></i></th>
                       <th scope="col" class="thcolor" (click)="sortData('groupname')">グループ<i
                           *ngIf="pageModel.sort.groupname" [ngClass]="lasort"></i></th>
-                      <th scope="col" class="thcolor"  (click)="sortData('userfullname')">所有者<i
-                        *ngIf="pageModel.sort.userfullname" [ngClass]="lasort"></i></th>
+                      <th scope="col" class="thcolor"  (click)="sortData('fullname')">所有者<i
+                        *ngIf="pageModel.sort.fullname" [ngClass]="lasort"></i></th>
                       <th scope="col" class="thcolor" >SIMカードIMSI</th>
                       <th scope="col" class="thcolor" >SIMカード電話番号</th>
                       <th scope="col" class="thcolor" >暗号化キー</th>
@@ -155,7 +155,7 @@
                       <td nowrap>{{ element.projectname}}</td>
                       <td nowrap>{{ element.groupname}}</td>
 
-                      <td nowrap>{{ element.userfullname}}</td>
+                      <td nowrap>{{ element.fullname}}</td>
                       <td nowrap>{{ element.sim_imsi}}</td>
                       <td nowrap>{{ element.sim_tel}}</td>
                       <td nowrap>{{ element.encryptedkey}}</td>
@@ -258,7 +258,7 @@
         </div> -->
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者<code>＊</code></h6>
-          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="userfullname" name="underUsers"
+          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="fullname" name="underUsers"
             [(ngModel)]="editUserSelected" #underUsersngname="ngModel" required>
           </ng-select>
           <div *ngIf="editDeviceForm.submitted && underUsersngname.invalid" class="invalid-feedback d-block">
@@ -387,7 +387,7 @@
         </div>
         <div class="form-group col-lg-6 col-md-12">
           <h6>所有者<code>＊</code></h6>
-          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="userfullname" bindValue="userid"
+          <ng-select [items]="underUsersSelectArray" [searchable]="true" bindLabel="fullname" bindValue="userid"
             name="username" [(ngModel)]="pageModel.deviceDetail.userid" #underusersname="ngModel" required>
           </ng-select>
           <div *ngIf="registerDeviceForm.submitted && underusersname.invalid" class="invalid-feedback d-block">

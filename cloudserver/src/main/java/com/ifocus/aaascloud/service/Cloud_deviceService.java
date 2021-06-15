@@ -344,7 +344,7 @@ public class Cloud_deviceService {
 	 * @return List<Cloud_deviceModel> デバイス一覧
 	 *
 	 */
-	public List<Cloud_deviceModel> getUnderUserDevices(List<Integer> userids) throws Exception {
+	public List<Cloud_deviceModel> getUnderUserDevices(List<Integer> userids) {
 
 		// 配下ユーザのデバイス一覧取得
 		List<Cloud_deviceEntity> list = cloud_deviceRepository.searchUnderUserDevicesByUseridIn(userids);
@@ -1021,7 +1021,7 @@ public class Cloud_deviceService {
 	 * @return Cloud_deviceModel
 	 *
 	 */
-	public Cloud_deviceModel getModelByEntity(Cloud_deviceEntity entity) throws Exception {
+	public Cloud_deviceModel getModelByEntity(Cloud_deviceEntity entity) {
 		Cloud_deviceModel model = new Cloud_deviceModel();
 		model.setDeviceid(entity.getDeviceid());
 		model.setProjectid(entity.getProjectid());
@@ -1090,7 +1090,7 @@ public class Cloud_deviceService {
 	 * @return List<Cloud_deviceModel> Modeリスト
 	 *
 	 */
-	public List<Cloud_deviceModel> getModelsByEntitys(List<Cloud_deviceEntity> entityList) throws Exception {
+	public List<Cloud_deviceModel> getModelsByEntitys(List<Cloud_deviceEntity> entityList) {
 		List<Cloud_deviceModel> modelList = new ArrayList<Cloud_deviceModel>();
 		for (Cloud_deviceEntity entity:entityList) {
 			modelList.add(getModelByEntity(entity));

@@ -516,7 +516,7 @@ export class HttpService {
                 company: res.companyid,
                 role: res.role,
                 upperuserid: res.upperuserid,
-                fullname: res.fullName,
+                fullname: res.fullname,
                 access_token: ConstantsHandler.TOKEN.access_token
 
             }
@@ -576,6 +576,20 @@ export class HttpService {
             .toPromise()
             .then((result: any) => {
                 return JSON.parse(result.data);
+            })
+            .catch((err) => {
+                if (err.status === 401 && err.error.result === false) {
+                    this.loginFail(err);
+                }
+                console.log('post error = ' + JSON.stringify(err));
+            });
+    }
+
+    adminPostII(path: string, data: any): Promise<any> {
+        return this._http.post(this.baseService.getPath(path), JSON.stringify(data), this.baseService.getHeader())
+            .toPromise()
+            .then((result: any) => {
+                return result.data;
             })
             .catch((err) => {
                 if (err.status === 401 && err.error.result === false) {

@@ -169,7 +169,7 @@ public class Cloud_userService {
      *
      *
      */
-    public boolean isAncestor(Integer userid, Integer targetUserId) throws Exception {
+    public boolean isAncestor(Integer userid, Integer targetUserId) {
         Optional<Cloud_userEntity> myEntity = cloud_userRepository.findById(targetUserId);
         if (userid.equals(myEntity.get().getUpperuserid())) {
             return true;
@@ -214,7 +214,7 @@ public class Cloud_userService {
 
                 /* ユーザ数取得 */
                 List<Cloud_userEntity> underUserlist = cloud_userRepository.getUsersByUpperuserid(model.getUserid());
-                model.setUsercount(underUserlist.size());
+                model.setUserSize(underUserlist.size());
 
 
                 returnList.add(model);
@@ -240,7 +240,7 @@ public class Cloud_userService {
      *
      *
      */
-    public List<Cloud_userModel> getUnderUsers(List<Integer> userids) throws Exception {
+    public List<Cloud_userModel> getUnderUsers(List<Integer> userids) {
         List<Cloud_userEntity> returnList = (List<Cloud_userEntity>) cloud_userRepository.findAllById(userids);
         return getModelsByEntitys(returnList);
 
@@ -251,11 +251,10 @@ public class Cloud_userService {
      *
      *
      */
-    public List<Cloud_userModel> searchUnderUsers(List<Integer> userids, Cloud_userModel model) throws Exception {
+    public List<Cloud_userModel> searchUnderUsers(List<Integer> userids, Cloud_userModel model) {
         List<Cloud_userEntity> returnList = (List<Cloud_userEntity>) cloud_userRepository.searchUnderUsersByCompanyname(
                 userids, model.getCompanynameForSearch(), model.getFirstNameForSearch(), model.getLastNameForSearch(), model.getEmailForSearch());
         return getModelsByEntitys(returnList);
-
     }
 
     /*
@@ -322,8 +321,8 @@ public class Cloud_userService {
         // entity.setUserid(model.getUserid());  新規登録時に、useridがない。
         entity.setCompanyid(model.getCompanyid());
         entity.setUsername(model.getUsername());
-        entity.setLastname(model.getLastName());
-        entity.setFirstname(model.getFirstName());
+        entity.setLastname(model.getLastname());
+        entity.setFirstname(model.getFirstname());
         entity.setEmail(model.getEmail());
         entity.setRole(model.getRole());
         entity.setUpperuserid(model.getUpperuserid());
@@ -412,8 +411,8 @@ public class Cloud_userService {
         entity.setUserid(model.getUserid());
         entity.setCompanyid(model.getCompanyid());
         entity.setUsername(model.getUsername());
-        entity.setFirstname(model.getFirstName());
-        entity.setLastname(model.getLastName());
+        entity.setFirstname(model.getFirstname());
+        entity.setLastname(model.getLastname());
         entity.setRole(model.getRole());
         entity.setDeleteflag(DeleteFlagConstant.NOT_DELETED);
         entity.setU_uid(loginInfo.getLoginuserid());
@@ -545,7 +544,7 @@ public class Cloud_userService {
      * @return List<Cloud_userModel>
      *
      */
-    public List<Cloud_userModel> getModelsByEntitys(List<Cloud_userEntity> entityList) throws Exception {
+    public List<Cloud_userModel> getModelsByEntitys(List<Cloud_userEntity> entityList) {
 
         List<Cloud_userModel> modelList = new ArrayList<Cloud_userModel>();
         for (Cloud_userEntity entity : entityList) {
@@ -565,8 +564,8 @@ public class Cloud_userService {
         Cloud_userModel model = new Cloud_userModel();
         model.setUserid(entity.getUserid());
         model.setUsername(entity.getUsername());
-        model.setLastName(entity.getLastname());
-        model.setFirstName(entity.getFirstname());
+        model.setLastname(entity.getLastname());
+        model.setFirstname(entity.getFirstname());
         model.setEmail(entity.getEmail());
         model.setCompanyid(entity.getCompanyid());
 
@@ -579,7 +578,7 @@ public class Cloud_userService {
         model.setUpperuserid(entity.getUpperuserid());
 
         // fullname設定
-        model.setFullName(model.getLastName() + " " + model.getFirstName());
+        model.setFullname(model.getLastname() + " " + model.getFirstname());
         model.setDeleteflag(entity.getDeleteflag());
         return model;
 

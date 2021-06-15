@@ -100,7 +100,7 @@ public class AccessService {
 	 * @return List<Integer> アクセス権限を持つユーザ一覧
 	 *
 	 */
-	public List<Integer> getAccessUsers(Integer userid) throws Exception {
+	public List<Integer> getAccessUsers(Integer userid) {
 		List<Integer> returnList = new ArrayList<Integer>();
 		returnList.add(userid);
 //		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);
@@ -115,7 +115,7 @@ public class AccessService {
 		}
 	}
 	
-	public List<Integer> getNotDelAccessUsers(Integer userid) throws Exception {
+	public List<Integer> getNotDelAccessUsers(Integer userid) {
 		List<Integer> returnList = new ArrayList<Integer>();
 		returnList.add(userid);
 		List<Cloud_userEntity> list = cloud_userRepository.getUsersByUpperuserid(userid);

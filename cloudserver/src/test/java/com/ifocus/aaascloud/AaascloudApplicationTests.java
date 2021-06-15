@@ -1204,8 +1204,8 @@ class AaascloudApplicationTests extends TestCase{
 		model.setCompanyid(1);
 		model.setUsername("testdong");
 		model.setPassword("123456");
-		model.setFirstName("テスト");
-		model.setLastName("董");
+		model.setFirstname("テスト");
+		model.setLastname("董");
 		model.setEmail("dong@i-focus.co.jp");
 		model.setRole(RoleConstant.ADMIN);
 		model.setUpperuserid(1);
@@ -1244,8 +1244,8 @@ class AaascloudApplicationTests extends TestCase{
 		model.setCompanyid(1);
 		model.setUsername("wang");
 		model.setPassword("123456");
-		model.setFirstName("富美子");
-		model.setLastName("王");
+		model.setFirstname("富美子");
+		model.setLastname("王");
 		model.setEmail("wang@i-focus.co.jp");
 		model.setRole(RoleConstant.PERSONNEL);
 

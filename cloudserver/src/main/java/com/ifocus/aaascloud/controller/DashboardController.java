@@ -189,8 +189,8 @@ public class DashboardController {
 			UserModel userModel = new UserModel(
 					"",
 					cloud_userModel.getUsername(),
-					cloud_userModel.getFirstName(),
-					cloud_userModel.getLastName(),
+					cloud_userModel.getFirstname(),
+					cloud_userModel.getLastname(),
 					cloud_userModel.getEmail());
 			list.add(userModel);
 		}

@@ -985,7 +985,7 @@ export class UserComponent implements OnInit {
       "lastName": this.pageModel.query.lastname,
       "email": this.pageModel.query.email,
     }
-    this.httpService.adminPost('searchUnderUsers', query).then(item => {
+    this.httpService.adminPostII('searchUnderUsers', query).then(item => {
       try {
         if (item) {
           item.forEach(element => {
@@ -1139,7 +1139,7 @@ export class UserComponent implements OnInit {
       "lastName": this.pageModel.query.lastname,
       "email": this.pageModel.query.email,
     }
-    this.httpService.usePost('getUnderUsers', query).then(item => {
+    this.httpService.usePostII('getUnderUsers', query).then(item => {
       try {
 
         item.forEach(element => {
@@ -1490,7 +1490,7 @@ export class UserComponent implements OnInit {
   loginuserFilte() {
     var query = {
     }
-    this.httpService.usePost('getUnderUsers', query).then(item => {
+    this.httpService.usePostII('getUnderUsers', query).then(item => {
       try {
         if (item) {
           item.forEach(element => {

@@ -11,9 +11,9 @@ public class UserModel {
 
 	private String username;
 
-	private String firstName;
+	protected String firstname;
 
-	private String lastName;
+	protected String lastname;
 
 	private String email;
 
@@ -22,8 +22,8 @@ public class UserModel {
 	public UserModel(String uid, String username, String firstName, String lastName, String email) {
 		this.uid = uid;
 		this.username = username;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.firstname = firstName;
+		this.lastname = lastName;
 		this.email = email;
 	}
 }
