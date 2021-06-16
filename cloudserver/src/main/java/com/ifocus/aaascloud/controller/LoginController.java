@@ -32,10 +32,7 @@ public class LoginController {
      * ログイン認証
      *
      * @param cloud_userModel Cloud_userModel
-     *                        loginId
-     *                        password
      * @return BaseHttpResponse<String> JSON形式
-     * @throws Exception
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody

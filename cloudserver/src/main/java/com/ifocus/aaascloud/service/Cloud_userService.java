@@ -141,7 +141,7 @@ public class Cloud_userService {
      * @param username String ユーザー名（CloudのログインID）
      * @param newPassword String 新パスワード
      */
-    public void changePassword(String username, String newPassword) throws Exception {
+    public void changePassword(String username, String newPassword) {
         keyCloakUserService.changePassword(username, newPassword);
     }
 

@@ -93,7 +93,7 @@ export class ProfileComponent implements OnInit {
           "username": item.login_id,
           "password": this.f.newpassword.value
         }
-        var resUser = await this.httpService.useRpPost('/updateProfile', param).then(item => {
+        var resUser = await this.httpService.useRpPostII('/updateProfile', param).then(item => {
           try {
             if (item != null) {
               if (item.resultCode === "0000") {

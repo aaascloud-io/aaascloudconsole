@@ -439,7 +439,7 @@ export class UserComponent implements OnInit {
         var query = {
           "cloud_userModelList": this.selectedUserid,
         }
-        this.httpService.useRpDelete('deleteUser', query).then(item => {
+        this.httpService.useRpDeleteII('deleteUser', query).then(item => {
           try {
             if (item.resultCode === "0000") {
               this.selectedUserid = [];
@@ -487,7 +487,7 @@ export class UserComponent implements OnInit {
           }
 
           // ユーザー情報の削除
-          this.httpService.useRpDelete('deleteUser', query).then(item => {
+          this.httpService.useRpDeleteII('deleteUser', query).then(item => {
             try {
               if (item.resultCode === "0000") {
                 this.selectedUserid = [];
@@ -836,7 +836,7 @@ export class UserComponent implements OnInit {
    */
   registerUser(query, addForm: NgForm) {
 
-    this.httpService.useRpPost('registerUser', query).then(item => {
+    this.httpService.useRpPostII('registerUser', query).then(item => {
       try {
         if (item.resultCode === "0000") {
           this.ngOnInit();
@@ -868,7 +868,7 @@ export class UserComponent implements OnInit {
    */
   addMyUser(query, addForm: NgForm) {
 
-    this.httpService.useRpPost('registerUser', query).then(item => {
+    this.httpService.useRpPostII('registerUser', query).then(item => {
       try {
         if (item.resultCode === "0000") {
           this.ngOnInit();

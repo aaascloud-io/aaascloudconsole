@@ -162,7 +162,7 @@ export class VersionComponent implements OnInit {
       // "username": this.pageModel.loginInfo["loginusername"],
     };
 
-    this.httpService.usePost('/searchVersions',param).then(item => {
+    this.httpService.usePostII('/searchVersions',param).then(item => {
       try {
         if (item != null) {
           item.forEach(element => {
@@ -233,7 +233,7 @@ export class VersionComponent implements OnInit {
         "downloadurl": this.addVersion['downloadurl'],
         "description": this.addVersion['description'],
       }
-      this.httpService.useRpPost('registerVersion',param).then(item=>{
+      this.httpService.useRpPostII('registerVersion',param).then(item=>{
         console.log(item);
         try{
           if(item.resultCode == "0000"){
@@ -271,7 +271,7 @@ export class VersionComponent implements OnInit {
         "productname": this.searchValue.productname,
         "versionname": this.searchValue.versionname,
       };
-      this.httpService.useRpPost('searchVersions',param).then(item=>{
+      this.httpService.useRpPostII('searchVersions',param).then(item=>{
         let jsonItem = typeof item.data == 'string' ? JSON.parse(item.data) : item.data;
         this.rows = [];
         jsonItem.forEach(element => {
@@ -312,7 +312,7 @@ export class VersionComponent implements OnInit {
               "rowid":row.rowid,
             };
           }
-          this.httpService.useRpDelete('deleteVersion',param).then(item=>{
+          this.httpService.useRpDeleteII('deleteVersion',param).then(item=>{
             console.log(item);
             try{
               if(item.resultCode == "0000"){
@@ -383,7 +383,7 @@ export class VersionComponent implements OnInit {
         "description":this.selectedVersion.description,
         "downloadurl":this.selectedVersion.downloadurl,
       };
-      this.httpService.useRpPost('updateVersion', param).then(item => {
+      this.httpService.useRpPostII('updateVersion', param).then(item => {
         try {
           if (item.resultCode == "0000") {
   
@@ -423,14 +423,14 @@ export class VersionComponent implements OnInit {
 
       this.confirmationService.confirm({
         message: "選択したデーターを削除しますか",
-        header: 'プロジェクト削除確認',
+        header: 'バージョン削除確認',
         accept: () => {
           var query = {
             // "loginInfo":this.pageModel.loginInfo,
             // "targetUserInfo":this.pageModel.targetUserInfo,
             "rowidlist": this.selected,
           }
-          this.httpService.useRpDelete('deleteVersions', query).then(item => {
+          this.httpService.useRpDeleteII('deleteVersions', query).then(item => {
             try {
               if (item.resultCode == "0000") {
                 this.searchValue = {
@@ -438,7 +438,7 @@ export class VersionComponent implements OnInit {
                   versionname:''
                 };
                 this.ngOnInit();
-                this.showAlert("success","選択したプロジェクトを削除しました");
+                this.showAlert("success","選択したバージョンを削除しました");
                 this.selected = [];
               }else{
                 console.log('登録失敗、ご確認してください。');

@@ -1,18 +1,18 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
-import { BaseService } from './BaseService';
-import { AuthSignService } from './AuthSignService';
-import { DataFatoryService } from './DataFatoryService';
-import { Router } from '@angular/router';
-import { ConstantsHandler, ServerType } from '../_common/_constant/constants.handler';
-import { CookieService } from 'ngx-cookie-service';
-import { UrlHandler } from 'src/app/_common/_constant/url.handler';
-import { Observable } from 'rxjs';
-import { Logger } from 'src/app/_common/_utils/logger';
-import { tap } from 'rxjs/operators';
-import { AlertService } from '../_services/alert.service';
-import { UserInfo } from 'src/app/_common/_interface/UserInfo';
-import { codes } from 'src/app/_common/_utils/codes-utils';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpRequest} from '@angular/common/http';
+import {BaseService} from './BaseService';
+import {AuthSignService} from './AuthSignService';
+import {DataFatoryService} from './DataFatoryService';
+import {Router} from '@angular/router';
+import {ConstantsHandler, ServerType} from '../_common/_constant/constants.handler';
+import {CookieService} from 'ngx-cookie-service';
+import {UrlHandler} from 'src/app/_common/_constant/url.handler';
+import {Observable} from 'rxjs';
+import {Logger} from 'src/app/_common/_utils/logger';
+import {tap} from 'rxjs/operators';
+import {AlertService} from '../_services/alert.service';
+import {UserInfo} from 'src/app/_common/_interface/UserInfo';
+import {codes} from 'src/app/_common/_utils/codes-utils';
 
 
 @Injectable()
@@ -20,6 +20,7 @@ export class HttpService {
 
     static times = 0;
     validTimePaddingInMs: number;
+
     constructor(private dataFatoryService: DataFatoryService, private _http: HttpClient, private _authSignService: AuthSignService, private _router: Router, private baseService: BaseService, private alertService: AlertService, private cookieService: CookieService) {
     }
 
@@ -85,6 +86,7 @@ export class HttpService {
                     this.loginFail(err);
                 }
                 console.log('post error = ' + JSON.stringify(err));
+                return err.error;
             });
     }
 
@@ -126,6 +128,28 @@ export class HttpService {
             });
     }
 
+    useRpPutII(path: string, data: any): Promise<any> {
+        let item: UserInfo = this.getLoginUser();
+        this.createData(data, item);
+
+        return this._http.put(this.baseService.getPath(path), JSON.stringify(data), this.baseService.getHeader())
+            .toPromise()
+            .then((result: any) => {
+                if (result.resultCode === codes.RETCODE.ERROR_TOKEN) {
+                    this.clearLogin()
+                } else {
+                    return result;
+                }
+            })
+            .catch((err) => {
+                if (err.status === 401 && err.error.result === false) {
+                    this.loginFail(err);
+                }
+                console.log('put error = ' + JSON.stringify(err));
+                return err.error;
+            });
+    }
+
     useRpPost(path: string, datas: any): Promise<any> {
         let item: UserInfo = this.getLoginUser();
         this.createData(datas, item);
@@ -144,6 +168,28 @@ export class HttpService {
                     this.loginFail(err);
                 }
                 console.log('post error = ' + JSON.stringify(err));
+            });
+    }
+
+    useRpPostII(path: string, datas: any): Promise<any> {
+        let item: UserInfo = this.getLoginUser();
+        this.createData(datas, item);
+
+        return this._http.post(this.baseService.getPath(path), datas, this.baseService.getHeader())
+            .toPromise()
+            .then((result: any) => {
+                if (result.resultCode === codes.RETCODE.ERROR_TOKEN) {
+                    this.clearLogin()
+                } else {
+                    return result;
+                }
+            })
+            .catch((err) => {
+                if (err.status === 401 && err.error.result === false) {
+                    this.loginFail(err);
+                }
+                console.log('post error = ' + JSON.stringify(err));
+                return err.error;
             });
     }
 
@@ -175,6 +221,35 @@ export class HttpService {
             });
     }
 
+    useRpDeleteII(path: string, datas: any): Promise<any> {
+        let item: UserInfo = this.getLoginUser();
+        this.createData(datas, item);
+
+        var options = this.baseService.getHeader();
+        // const options = {
+        //     headers:header ,
+        //     body: JSON.stringify(data)
+
+        //   }
+        options["body"] = JSON.stringify(datas);
+        return this._http.delete(this.baseService.getPath(path), options)
+            .toPromise()
+            .then((result: any) => {
+                if (result.resultCode === codes.RETCODE.ERROR_TOKEN) {
+                    this.clearLogin()
+                } else {
+                    return result;
+                }
+            })
+            .catch((err) => {
+                if (err.status === 401 && err.error.result === false) {
+                    this.loginFail(err);
+                }
+                console.log('delete error = ' + JSON.stringify(err));
+                return err.error;
+            });
+    }
+
     useVerify(path: string, data: any): Promise<any> {
         let item: UserInfo = this.getLoginUser();
         this.createData(data, item);
@@ -195,9 +270,13 @@ export class HttpService {
     private loginFail(err: any): void {
         this.cookieService.delete(ConstantsHandler.GLOBAL_TOKEN.id);
         this.dataFatoryService.clearLoginUser();
-        this._router.navigate([''], { queryParams: { message: ConstantsHandler.GLOBAL_TOKEN.errMsg.userTokenInvalid, userName: err.error.userName } });
+        this._router.navigate([''], {
+            queryParams: {
+                message: ConstantsHandler.GLOBAL_TOKEN.errMsg.userTokenInvalid,
+                userName: err.error.userName
+            }
+        });
     }
-
 
 
     UseGetForRealPath(path: string, data): Promise<any> {
@@ -253,7 +332,6 @@ export class HttpService {
                 throw err;
             });
     }
-
 
 
     verify(): boolean {
@@ -433,7 +511,8 @@ export class HttpService {
     logout(): void {
         this.clearLogin();
         if (this.tokenVerify()) {
-            this.postToPFServer("/user/logout", {}, function () { });
+            this.postToPFServer("/user/logout", {}, function () {
+            });
         }
         this._router.navigate([""]);
     }
@@ -596,10 +675,11 @@ export class HttpService {
                     this.loginFail(err);
                 }
                 console.log('post error = ' + JSON.stringify(err));
+                return err.error;
             });
     }
 
-    private createData(data: any, item: UserInfo): any{
+    private createData(data: any, item: UserInfo): any {
         data.loginInfo = {
             "loginuserid": item.uid,
             "loginusername": item.login_id,

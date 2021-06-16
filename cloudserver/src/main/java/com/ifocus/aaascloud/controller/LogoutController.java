@@ -26,15 +26,12 @@ public class LogoutController {
      * ログアウト
      *
      * @param cloud_userModel Cloud_userModel
-     *                        loginId
-     *                        password
      * @return BaseHttpResponse<String> JSON形式
-     * @throws Exception
      */
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseBody
     @CrossOrigin(origins = "*", maxAge = 3600)
-    public BaseHttpResponse<ResponseJsonResult> logout(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
+    public BaseHttpResponse<ResponseJsonResult> logout(@RequestBody Cloud_userModel cloud_userModel) {
         BaseHttpResponse<ResponseJsonResult> response = new BaseHttpResponse<>();
 
         // トークン認証

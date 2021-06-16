@@ -45,7 +45,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public BaseHttpResponse<?> handleBusinessError(ValidationException e, WebRequest req, Object handler) {
+    public BaseHttpResponse<?> handleBusinessError(BusinessException e, WebRequest req, Object handler) {
         BaseHttpResponse<String> response = new BaseHttpResponse<>();
         response.setResultCode(e.getCode());
         response.setResultMsg(e.getMessage());

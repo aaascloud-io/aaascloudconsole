@@ -45,7 +45,7 @@ public class AccessService {
 	 *         false = アクセス不可
 	 *
 	 */
-	public boolean checkOEMAccess(LoginInfo loginInfo) throws Exception {
+	public boolean checkOEMAccess(LoginInfo loginInfo) {
 		try {
 			Optional<Cloud_companyEntity> entity = cloud_companyRepository.findById(loginInfo.getLogincompanyid());
 			return CorporateNumberConstant.COM_I_FOCUS.equals(entity.get().getCorporatenumber());
