@@ -72,7 +72,7 @@ export class DashboardComponent implements OnInit {
         "username": item.login_id
       }
     }
-    this.httpService.usePost('/getDashboardInfo', param).then(item => {
+    this.httpService.usePostII('/getDashboardInfo', param).then(item => {
       try {
         if (item != null) {
           this.pageModel.products = item.productList;

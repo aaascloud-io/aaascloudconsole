@@ -62,7 +62,7 @@ public class Cloud_productService {
 	 *
 	 *
 	 */
-	public List<Cloud_productModel> searchMyProductList(List<Integer> userList) throws Exception {
+	public List<Cloud_productModel> searchMyProductList(List<Integer> userList) {
 
 		List<Cloud_productEntity> list = cloud_productRepository.searchMyProductsByProducttypenameAndProductname(
 				userList,
@@ -231,7 +231,7 @@ public class Cloud_productService {
 	 * @return List<Cloud_deviceModel> Modeリスト
 	 *
 	 */
-	public List<Cloud_productModel> getModelsByEntitys(List<Cloud_productEntity> entityList) throws Exception {
+	public List<Cloud_productModel> getModelsByEntitys(List<Cloud_productEntity> entityList) {
 		List<Cloud_productModel> modelList = new ArrayList<Cloud_productModel>();
 		for (Cloud_productEntity entity:entityList) {
 			modelList.add(getModelByEntity(entity));
@@ -247,7 +247,7 @@ public class Cloud_productService {
 	 * @return Cloud_productModel
 	 *
 	 */
-	public Cloud_productModel getModelByEntity(Cloud_productEntity entity) throws Exception {
+	public Cloud_productModel getModelByEntity(Cloud_productEntity entity) {
 		Cloud_productModel model = new Cloud_productModel();
 		model.setProductid(entity.getProductid());
 		model.setProducttypename(entity.getProducttypename());

@@ -31,8 +31,7 @@ public class Cloud_errlogService {
 	 * エラーログ一覧情報取得
 	 *
 	 */
-	public List<Cloud_errlogModel> getErrlogList(List<Integer> useridList,	List<String> imeiList, List<String> snList)
-	throws Exception {
+	public List<Cloud_errlogModel> getErrlogList(List<Integer> useridList,	List<String> imeiList, List<String> snList) {
 		Cloud_errlogModel model = new Cloud_errlogModel();
 		List<Cloud_errlogEntity> list = cloud_errlogRepository.searchErrlogsByUseridInOrDeviceIn(useridList,imeiList,snList);
 		return getModelsByEntitys(list);
@@ -45,7 +44,7 @@ public class Cloud_errlogService {
 	 * @return List<Cloud_errlogModel> Modeリスト
 	 *
 	 */
-	public List<Cloud_errlogModel> getModelsByEntitys(List<Cloud_errlogEntity> entityList) throws Exception {
+	public List<Cloud_errlogModel> getModelsByEntitys(List<Cloud_errlogEntity> entityList) {
 		List<Cloud_errlogModel> modelList = new ArrayList<Cloud_errlogModel>();
 		for (Cloud_errlogEntity entity:entityList) {
 			modelList.add(getModelByEntity(entity));
@@ -61,7 +60,7 @@ public class Cloud_errlogService {
 	 * @return Cloud_errlogModel
 	 *
 	 */
-	public Cloud_errlogModel getModelByEntity(Cloud_errlogEntity entity) throws Exception {
+	public Cloud_errlogModel getModelByEntity(Cloud_errlogEntity entity) {
 		Cloud_errlogModel model = new Cloud_errlogModel();
 		model.setRowid(entity.getRowid());
 		model.setUserid(entity.getUserid());

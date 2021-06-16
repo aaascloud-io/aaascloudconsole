@@ -1029,7 +1029,7 @@ class AaascloudApplicationTests extends TestCase{
 		model.setUsername(loginUserEntity.getUsername());
 		model.setUserid(loginUserEntity.getUserid());
 
-		BaseHttpResponse<String> response = dashboardController.getDashboardInfo(model);
+		BaseHttpResponse<DashboardModel> response = dashboardController.getDashboardInfo(model);
 
 		assertEquals(200, response.getStatus());
 		assertEquals(ErrorConstant.ERROR_CODE_0000, response.getResultCode());
