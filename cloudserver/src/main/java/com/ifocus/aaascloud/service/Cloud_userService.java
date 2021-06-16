@@ -38,8 +38,9 @@ public class Cloud_userService {
     @Autowired
     private KeyCloakUserService keyCloakUserService;
 
-    /*
+    /**
      * ログイン認証
+     *
      * @param username String ユーザ名
      * @return Cloud_userModel ログインユーザー情報モデル
      */
@@ -50,10 +51,11 @@ public class Cloud_userService {
 
     }
 
-    /*
+    /**
      * トークン刷新
+     *
      * @param username String ユーザ名
-     * @return Cloud_userModel ログインユーザー情報モデル
+     * @param token    String token
      */
     public void refreshToken(String username, String token) {
         // ログインユーザ取得
@@ -63,11 +65,10 @@ public class Cloud_userService {
         loginUserEntity.setU_time(new Timestamp(System.currentTimeMillis()));
     }
 
-    /*
+    /**
      * トークンクリア
-     * @param username String ユーザ名
-     * @return Cloud_userModel ログインユーザー情報モデル
      *
+     * @param username String ユーザ名
      */
     public void clearToken(String username) {
         // ログインユーザ取得
@@ -77,12 +78,13 @@ public class Cloud_userService {
         loginUserEntity.setU_time(new Timestamp(System.currentTimeMillis()));
     }
 
-    /*
+    /**
      * トークン認証
+     *
      * @param loginInfo LoginInfo ログインユーザー情報
      * @return boolean 認証結果
-     *        true  = OK
-     *        false = NG
+     * true  = OK
+     * false = NG
      */
     public boolean checkToken(LoginInfo loginInfo) {
         if (loginInfo.getAccess_token() == null || loginInfo.getAccess_token().isEmpty()) {
@@ -92,10 +94,10 @@ public class Cloud_userService {
         return user != null && user.getUsername().equals(loginInfo.getLoginusername());
     }
 
-    /*
+    /**
      * アクセス権限チェック
      */
-    public boolean checkAccessOK(Integer loginuserid, Integer targetuserid) throws Exception {
+    public boolean checkAccessOK(Integer loginuserid, Integer targetuserid) {
 //		if (null != loginuserid && null != targetuserid) {
 //
 //			if (loginuserid.equals(targetuserid)) {
@@ -115,37 +117,29 @@ public class Cloud_userService {
     }
 
 
-    /*
+    /**
      * KeyCloakに存在チェック
+     *
      * @param username String ユーザ名
      * @return boolean
-     *         true = 有効
-     *         false = 無効
+     * true = 有効
+     * false = 無効
      */
     public boolean isValidUsername(String username) {
         return keyCloakUserService.isValidUsername(username);
     }
 
-    /*
-     * KeyCloakからユーザ情報取得
-     * @param username String ユーザー名（CloudのログインID）
-     * @return UserModel ユーザー情報
-     *
-     */
-    public UserModel getUserModelFromUsername(String username) throws Exception {
-        return keyCloakUserService.getUserModelFromUsername(username);
-    }
-
-    /*
+    /**
      * KeyCloakのパスワードを変更する
-     * @param username String ユーザー名（CloudのログインID）
+     *
+     * @param username    String ユーザー名（CloudのログインID）
      * @param newPassword String 新パスワード
      */
     public void changePassword(String username, String newPassword) {
         keyCloakUserService.changePassword(username, newPassword);
     }
 
-    /*
+    /**
      * 先祖であるかどうかを判断する
      */
     public boolean isAncestor(Integer userid, Integer targetUserId) {
@@ -161,7 +155,7 @@ public class Cloud_userService {
         }
     }
 
-    /*
+    /**
      * ユーザ一覧取得
      */
     public List<Cloud_userModel> getSonUsers(Integer loginid) throws Exception {
@@ -191,7 +185,7 @@ public class Cloud_userService {
         return returnList;
     }
 
-    /*
+    /**
      * 会社ユーザ一覧取得
      */
     public List<Cloud_userEntity> getCompanyUsers(Integer companyid) {
@@ -199,7 +193,7 @@ public class Cloud_userService {
         return returnList;
     }
 
-    /*
+    /**
      * 配下ユーザ一覧取得
      */
     public List<Cloud_userModel> getUnderUsers(List<Integer> userids) {
@@ -207,7 +201,7 @@ public class Cloud_userService {
         return getModelsByEntitys(returnList);
     }
 
-    /*
+    /**
      * 配下ユーザ検索
      */
     public List<Cloud_userModel> searchUnderUsers(List<Integer> userids, Cloud_userModel model) {
@@ -217,10 +211,10 @@ public class Cloud_userService {
         return getModelsByEntitys(returnList);
     }
 
-    /*
+    /**
      * ユーザ登録
-     * @param loginInfo LoginInfo
-     * @param cloud_userModel Cloud_userModel
+     *
+     * @param model model
      * @return userid Integer
      */
     public Integer registerSonUser(Cloud_userModel model) {
@@ -301,9 +295,10 @@ public class Cloud_userService {
         return cloud_userEntity.getUserid();
     }
 
-    /*
+    /**
      * ユーザ更新
-     * @param cloud_userModel Cloud_userModel
+     *
+     * @param model Cloud_userModel
      * @return userid Integer
      */
     public Integer updateSonUser(Cloud_userModel model) {
@@ -345,9 +340,9 @@ public class Cloud_userService {
         return cloud_userEntity.getUserid();
     }
 
-    /*
+    /**
      * ユーザ一括削除
-     * @param loginInfo LoginInfo
+     *
      * @param cloud_userModel Cloud_userModel
      */
     public void deleteSonUsers(Cloud_userModel cloud_userModel) {
@@ -381,10 +376,11 @@ public class Cloud_userService {
 
     }
 
-    /*
+    /**
      * ユーザ削除
+     *
+     * @param model     model
      * @param loginInfo LoginInfo
-     * @param cloud_userModel Cloud_userModel
      */
     public void deleteSonUser(Cloud_userModel model, Cloud_userModel LoginModel) {
         // 対象取得
@@ -402,8 +398,9 @@ public class Cloud_userService {
         }
     }
 
-    /*
+    /**
      * 配下ユーザの会社ID一覧取得
+     *
      * @param model Cloud_deviceModel ユーザ情報
      * @return List<Integer> 配下ユーザの会社ID一覧
      */
@@ -425,8 +422,9 @@ public class Cloud_userService {
         return underUserCompanyIdList;
     }
 
-    /*
+    /**
      * EntityリストからModelリスト取得
+     *
      * @param entityList List<Cloud_userEntity>
      * @return List<Cloud_userModel>
      */
@@ -439,8 +437,9 @@ public class Cloud_userService {
         return modelList;
     }
 
-    /*
+    /**
      * EntityからModel取得
+     *
      * @param entity Cloud_deviceEntity
      * @return Cloud_userModel
      */

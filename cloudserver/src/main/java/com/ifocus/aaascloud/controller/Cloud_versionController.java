@@ -42,7 +42,7 @@ public class Cloud_versionController {
     @RequestMapping(value = "/searchVersions", method = RequestMethod.POST)
     @ResponseBody
     @CrossOrigin(origins = "*", maxAge = 3600)
-    public BaseHttpResponse<List<Cloud_versionModel>> searchVersions(@RequestBody Cloud_versionModel model) throws Exception {
+    public BaseHttpResponse<List<Cloud_versionModel>> searchVersions(@RequestBody Cloud_versionModel model) {
         BaseHttpResponse<List<Cloud_versionModel>> response = new BaseHttpResponse<>();
 
         // トークン認証

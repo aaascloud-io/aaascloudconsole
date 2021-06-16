@@ -38,9 +38,9 @@ public class Cloud_versionService {
     private Cloud_productRepository cloud_productRepository;
 
 
-    /*
+    /**
      * バージョン一覧を取得する
-     * @param productid Integer バージョンモデル
+     *
      * @return List<Cloud_versionModel> バージョン一覧
      */
     public List<Cloud_versionModel> getAllVersions(Cloud_versionModel model) throws Exception {
@@ -48,20 +48,22 @@ public class Cloud_versionService {
         return getModelsByEntitys(list);
     }
 
-    /*
+    /**
      * バージョンを検索する
-     * @param productid Integer バージョンモデル
+     *
+     * @param model バージョンモデル
      * @return List<Cloud_versionModel> バージョン一覧
      */
-    public List<Cloud_versionModel> searchVersions(Cloud_versionModel model) throws Exception {
+    public List<Cloud_versionModel> searchVersions(Cloud_versionModel model) {
         List<Cloud_versionEntity> list = cloud_versionRepository.searchVersionsByProductnameAndVersionname(model.getProductnameForSearch(),
-				model.getVersionnameForSearch());
+                model.getVersionnameForSearch());
         return getModelsByEntitys(list);
     }
 
-    /*
+    /**
      * バージョン詳細を取得する
-     * @param productid Integer バージョンモデル
+     *
+     * @param model バージョンモデル
      * @return List<Cloud_versionModel> バージョン一覧
      */
     public Cloud_versionModel getVersioninInfo(Cloud_versionModel model) throws Exception {
@@ -69,19 +71,10 @@ public class Cloud_versionService {
         return getCloud_versionModel(version.get());
     }
 
-    /*
-     * プロダクト別バージョン一覧を取得する
-     * @param productid Integer バージョンモデル
-     * @return List<Cloud_versionModel> バージョン一覧
-     */
-    public List<Cloud_versionModel> getVersionList(Integer productid) throws Exception {
-        List<Cloud_versionEntity> list = cloud_versionRepository.findByProductid(productid);
-        return getModelsByEntitys(list);
-    }
-
-    /*
+    /**
      * バージョン登録
-     * @param entity Cloud_versionEntity バージョンEntity
+     *
+     * @param model バージョンモデル
      * @return Cloud_versionModel 登録済みバージョン
      */
     public Cloud_versionModel registerVersion(Cloud_versionModel model) {
@@ -92,9 +85,10 @@ public class Cloud_versionService {
 
     }
 
-    /*
+    /**
      * バージョン更新
-     * @param entity Cloud_versionEntity バージョンEntity
+     *
+     * @param model バージョンモデル
      * @return Cloud_versionModel 更新済みバージョン
      */
     public Cloud_versionModel updateVersion(Cloud_versionModel model) {
@@ -102,9 +96,11 @@ public class Cloud_versionService {
         return getCloud_versionModel(updatedEntity);
     }
 
-    /*
+    /**
      * バージョン削除
-     * @param entity Cloud_versionEntity バージョンEntity
+     *
+     * @param loginInfo バージョンモデル
+     * @param versionId バージョンID
      */
     public void deleteVersion(LoginInfo loginInfo, Integer versionId) {
         Optional<Cloud_versionEntity> value = cloud_versionRepository.findById(versionId);
@@ -115,9 +111,11 @@ public class Cloud_versionService {
         cloud_versionRepository.save(getEntity);
     }
 
-    /*
+    /**
      * 一括バージョン削除
-     * @param versionId List<Integer> バージョンIDリスト
+     *
+     * @param loginInfo     バージョンモデル
+     * @param versionIdList バージョンIDリスト
      */
     public void deleteVersions(LoginInfo loginInfo, List<Integer> versionIdList) {
         if (CollectionUtils.isEmpty(versionIdList)) {
@@ -126,7 +124,7 @@ public class Cloud_versionService {
 
         Timestamp systemDateTime = new Timestamp(System.currentTimeMillis());
         Iterable<Cloud_versionEntity> finds = cloud_versionRepository.findAllById(versionIdList);
-        finds.forEach(item ->{
+        finds.forEach(item -> {
             item.setDeleteflag(DeleteFlagConstant.DELETED);
             item.setU_uid(loginInfo.getLoginuserid());
             item.setU_time(systemDateTime);
@@ -134,8 +132,9 @@ public class Cloud_versionService {
         cloud_versionRepository.saveAll(finds);
     }
 
-    /*
+    /**
      * バージョンEntityリストからバージョンModeリストl取得
+     *
      * @param entityList List<Cloud_versionEntity> バージョンEntityリスト
      * @return List<Cloud_versionModel> バージョンModeリスト
      */
@@ -147,8 +146,9 @@ public class Cloud_versionService {
         return modelList;
     }
 
-    /*
+    /**
      * バージョンモデル取得
+     *
      * @param entity Cloud_companyEntity バージョンエンティティ
      * @return Cloud_versionModel バージョンモデル
      */
@@ -161,8 +161,9 @@ public class Cloud_versionService {
         return model;
     }
 
-    /*
+    /**
      * ModelからEntity取得(登録用)
+     *
      * @param model Cloud_versionModel
      * @return Cloud_versionEntity
      */
@@ -183,8 +184,9 @@ public class Cloud_versionService {
         return entity;
     }
 
-    /*
+    /**
      * ModelからEntity取得(更新用)
+     *
      * @param model Cloud_versionModel
      * @return Cloud_versionEntity
      */
