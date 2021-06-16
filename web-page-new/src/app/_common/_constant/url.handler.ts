@@ -1,4 +1,4 @@
-import {ConstantsHandler, ServerType} from './constants.handler';
+import {ConstantsHandler, ServerType, HttpEnv} from './constants.handler';
 
 export class UrlHandler {
 
@@ -6,11 +6,9 @@ export class UrlHandler {
 
     //アプリの絶対パスを取る
     static getApiUrlRocalTest(uri: string): string {
-        let path: any = ConstantsHandler.getEnvCfg();
+        let path: HttpEnv = ConstantsHandler.getEnvCfg();
         // サーバー
-        let url: string = path.protocol + '://' + path.host + ':' + path.port + '/' + path.root + '/' + uri;
-
-        return url;
+        return path.protocol + '://' + path.host + ':' + path.port + '/' + path.root + '/' + uri;
     }
 
     static getApiUrl(uri: string, serverType: number): string {
@@ -77,4 +75,5 @@ export class UrlHandler {
         }
         return portNo;
     }
+
 }

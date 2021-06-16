@@ -1,10 +1,16 @@
 import {environment} from '../../../environments/environment';
 
-interface HttpEnv {
-    protocol: string,
-    host: string,
-    port: string,
-    root: string,
+export class HttpEnv {
+    protocol: string;
+    host: string;
+    port: string;
+    root: string;
+}
+
+export class ServerType {
+    static loginServer = 1;
+    static server = 2;
+    static bsServer = 3;
 }
 
 export class ConstantsHandler {
@@ -66,8 +72,3 @@ export class ConstantsHandler {
 
 }
 
-export class ServerType {
-    static loginServer = 1;
-    static server = 2;
-    static bsServer = 3;
-}
