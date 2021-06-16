@@ -194,7 +194,7 @@ public class Cloud_userService {
     /*
      * 会社ユーザ一覧取得
      */
-    public List<Cloud_userEntity> getCompanyUsers(Integer companyid) throws Exception {
+    public List<Cloud_userEntity> getCompanyUsers(Integer companyid) {
         List<Cloud_userEntity> returnList = cloud_userRepository.getUsersByCompanyid(companyid);
         return returnList;
     }
@@ -350,24 +350,18 @@ public class Cloud_userService {
      * @param loginInfo LoginInfo
      * @param cloud_userModel Cloud_userModel
      */
-    public void deleteSonUsers(Cloud_userModel cloud_userModel) throws Exception {
-
+    public void deleteSonUsers(Cloud_userModel cloud_userModel) {
         ////////////////////////////////////////////////////////
         // KeyCloakに削除を行う
         ////////////////////////////////////////////////////////
-        try {
-            // 選択されるユーザを削除する
-            for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
-                keyCloakUserService.deleteUser(cloud_userModelInfo.getUsername());
-            }
-        } catch (Exception e) {
-            throw e;
+        // 選択されるユーザを削除する
+        for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
+            keyCloakUserService.deleteUser(cloud_userModelInfo.getUsername());
         }
 
         ////////////////////////////////////////////////////////
         // DB削除を行う
         ////////////////////////////////////////////////////////
-
         // 選択されるユーザを削除する
         for (Cloud_userModel cloud_userModelInfo : cloud_userModel.getCloud_userModelList()) {
             // 会社ユーザ一覧取得
@@ -392,7 +386,7 @@ public class Cloud_userService {
      * @param loginInfo LoginInfo
      * @param cloud_userModel Cloud_userModel
      */
-    public void deleteSonUser(Cloud_userModel model, Cloud_userModel LoginModel) throws Exception {
+    public void deleteSonUser(Cloud_userModel model, Cloud_userModel LoginModel) {
         // 対象取得
         Optional<Cloud_userEntity> user = cloud_userRepository.findById(model.getUserid());
         if (user.isPresent()) {

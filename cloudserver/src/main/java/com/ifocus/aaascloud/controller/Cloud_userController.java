@@ -238,7 +238,7 @@ public class Cloud_userController {
     @ResponseBody
     @CrossOrigin(origins = "*", maxAge = 3600)
     public BaseHttpResponse<String> updateUser(@RequestBody Cloud_userModel cloud_userModel) {
-        BaseHttpResponse<String> response = new BaseHttpResponse<String>();
+        BaseHttpResponse<String> response = new BaseHttpResponse<>();
 
         // トークン認証
         if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
@@ -277,65 +277,37 @@ public class Cloud_userController {
         return response;
     }
 
-
     /**
      * ユーザを削除する
      *
-     * @param loginInfo       LoginInfo
      * @param cloud_userModel Cloud_userModel
      * @return BaseHttpResponse<String>
-     * @throws Exception
      */
     @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
     @ResponseBody
     @CrossOrigin(origins = "*", maxAge = 3600)
-    public BaseHttpResponse<String> deleteUser(@RequestBody Cloud_userModel cloud_userModel) throws Exception {
+    public BaseHttpResponse<String> deleteUser(@RequestBody Cloud_userModel cloud_userModel) {
+        BaseHttpResponse<String> response = new BaseHttpResponse<>();
 
-        BaseHttpResponse<String> response = new BaseHttpResponse<String>();
-
-        try {
-            // トークン認証
-            if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
-                response.setStatus(200);
-                response.setResultCode(ErrorConstant.ERROR_CODE_0300);
-                response.setResultMsg(ErrorConstant.ERROR_MSG_0300);
-                return response;
-            }
-
-        } catch (Exception e) {
-            response.setStatus(200);
-            response.setResultCode(ErrorConstant.ERROR_CODE_0300);
-            response.setResultMsg(ErrorConstant.ERROR_MSG_0300 + e.getMessage());
-            return response;
+        // トークン認証
+        if (!cloud_userService.checkToken(cloud_userModel.getLoginInfo())) {
+            throw new BusinessException(ErrorConstant.ERROR_CODE_0300, ErrorConstant.ERROR_MSG_0300);
         }
 
         // 権限チェック
         ReturnModel returnModel = accessService.checkAddUserAccess(cloud_userModel);
-        if (!returnModel.getKey().equals(ErrorConstant.ERROR_CODE_0000)) {
+        if (!Objects.equals(ErrorConstant.ERROR_CODE_0000, returnModel.getKey())) {
             /* 異常系:権限なし */
-            response.setStatus(200);
-            response.setResultCode(returnModel.getKey());
-            response.setResultMsg("accessService.checkAddUserAccess: " + returnModel.getValue());
-            return response;
+            throw new BusinessException(returnModel.getKey(), "accessService.checkAddUserAccess: " + returnModel.getValue());
         }
 
+        // 削除処理
+        cloud_userService.deleteSonUsers(cloud_userModel);
 
-        try {
-
-            cloud_userService.deleteSonUsers(cloud_userModel);
-
-        } catch (Exception e) {
-            /* 異常系 */
-            response.setStatus(200);
-            response.setResultCode(ErrorConstant.ERROR_CODE_0102);
-            response.setResultMsg(ErrorConstant.ERROR_MSG_0102 + "deleteCompany OR deleteSonUsers:" + e.getMessage());
-            return response;
-        }
-
+        /* 正常系 */
         response.setStatus(200);
         response.setResultCode(ErrorConstant.ERROR_CODE_0000);
         response.setResultMsg(ErrorConstant.ERROR_MSG_0000);
-
         return response;
     }
 

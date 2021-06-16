@@ -133,7 +133,7 @@ public class Cloud_companyService {
 	 * 会社削除
 	 *
 	 */
-	public void deleteCompany(Cloud_companyEntity entity,LoginInfo loginInfo) throws Exception {
+	public void deleteCompany(Cloud_companyEntity entity,LoginInfo loginInfo) {
 		//cloud_companyRepository.deleteById(entity.getCompanyid());
 		Optional<Cloud_companyEntity> value = cloud_companyRepository.findById(entity.getCompanyid());
 		Cloud_companyEntity getEntity = value.get();

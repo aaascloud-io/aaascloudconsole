@@ -72,9 +72,7 @@ public class KeyCloakUserService {
 	 * @param newPassword String 新パスワード
 	 */
 	public void changePassword(String username, String newPassword) {
-
 		UserModel userModel = getUserModelFromUsername(username);
-
 		keyCloakAdminClient.changePassword(userModel.getUid(), newPassword);
 	}
 
@@ -87,7 +85,6 @@ public class KeyCloakUserService {
 	 *      "0200" = ユーザがすでに存在しています。
 	 */
 	public String addUser(String username, String password) {
-
 		// ユーザが存在する場合
 		if (isValidUsername(username)) {
 			return ErrorConstant.ERROR_CODE_0200;
@@ -105,12 +102,8 @@ public class KeyCloakUserService {
 	 * ユーザ削除
 	 * @param username String ユーザー名（CloudのログインID）
 	 */
-	public void deleteUser(String username) throws Exception {
-
-		try {
-			keyCloakAdminClient.delUserByUsername(username);
-		} catch (Exception e) {
-			throw e;
-		}
+	public void deleteUser(String username) {
+		keyCloakAdminClient.delUserByUsername(username);
 	}
+
 }
