@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {IfcsLinkComponent} from "../ifcs-link/ifcs-link.component";
 
 @Component({

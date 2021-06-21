@@ -23,11 +23,13 @@ export class IfcsLinkComponent implements OnInit {
      * スタイル
      */
     @Input() linkClass: string | string[] | Set<string> | { [klass: string]: any; }
+    @Input() linkStyle: string;
 
     /**
      * イコンスタイル
      */
     @Input() iconClass: string | string[] | Set<string> | { [klass: string]: any; }
+    @Input() iconStyle: string;
 
     /**
      * クリックイベント
