@@ -1,0 +1,17 @@
+.u-isHidden {
+    display: none !important;
+}
+
+.table th {
+    background-color: grey !important;
+    color: whitesmoke !important;
+    font-weight: bold !important;
+    height: 40px !important;
+}
+
+.table tr {
+}
+
+.parentRow {
+    font-weight: bold;
+}

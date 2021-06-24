@@ -1,0 +1,27 @@
+.headerRow {
+    font-weight: bold;
+    height: 30px;
+}
+
+.table li {
+    display: inline;
+    float: left;
+}
+
+.table ul {
+    display: table;
+    table-layout: fixed;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    vertical-align: baseline;
+}
+
+.table-first-column {
+    flex-direction: column;
+}
+
+.table-column {
+    flex-direction: column;
+}
+

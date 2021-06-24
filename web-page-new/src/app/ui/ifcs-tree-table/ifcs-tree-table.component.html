@@ -1,0 +1,74 @@
+<div class="ui-table-headerTemplate u-isHidden">
+    <ng-content select=".header"></ng-content>
+</div>
+
+<div class="table table-hover">
+    <p-treeTable #tt [value]="list"
+                 [columns]="HeaderItems" [reorderableColumns]="true" styleClass="p-treetable-sm" autoLayout=true>
+
+        <!-- ヘッダー -->
+        <ng-template pTemplate="header">
+            <tr>
+                <th *ngFor="let col of HeaderItems">
+                    <span>{{col.header}}</span>
+                </th>
+            </tr>
+        </ng-template>
+
+        <!-- テーブル -->
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+
+            <!-- 拡張 -->
+            <ng-container *ngIf="extension">
+                <ng-container *ngIf="rowData['isParent']">
+                    <tr [ttRow]="rowNode" class="parentRow">
+                        <td [attr.colspan]="columns.length">
+                            <ifcs-tree-table-toggler-customized [rowNode]="rowNode"
+                                                                [outTemplate]="outTemplate"></ifcs-tree-table-toggler-customized>
+                        </td>
+                    </tr>
+                </ng-container>
+
+                <ng-container *ngIf="!rowData['isParent']">
+                    <tr [ttRow]="rowNode">
+                        <td *ngFor="let header of HeaderItems">
+                            <ng-container *ngIf="header.node">
+                                <p-treeTableToggler [rowNode]="rowNode" #treeTableToggler></p-treeTableToggler>
+                            </ng-container>
+                            <span>{{rowData[header.field]}}</span>
+                        </td>
+                    </tr>
+                </ng-container>
+            </ng-container>
+
+            <!-- 拡張なし -->
+            <ng-container *ngIf="!extension">
+                <tr [ttRow]="rowNode" [ngClass]="{'parentRow': rowData['isParent']}">
+                    <td *ngFor="let header of HeaderItems">
+                        <ng-container *ngIf="header.node">
+                            <p-treeTableToggler [rowNode]="rowNode" #treeTableToggler></p-treeTableToggler>
+                        </ng-container>
+                        <span>{{rowData[header.field]}}</span>
+                    </td>
+                </tr>
+            </ng-container>
+
+        </ng-template>
+
+    </p-treeTable>
+
+</div>
+
+
+<!-- サンプル (拡張を含む) -->
+<!--<ng-template let-param="value" #extensionTemp>-->
+<!--    <p>{{param.data.name}} ({{param.data.size}}) {{param.data.type}}</p>-->
+<!--</ng-template>-->
+
+<!--<ifcs-tree-table tblId="newAllList" [list]="test" [outTemplate]="extensionTemp" [extension]="true">-->
+<!--    <ul class="header newAllList">-->
+<!--        <li data-col="name" data-text="番号" data-node="true"></li>-->
+<!--        <li data-col="size" data-text="受入日"></li>-->
+<!--        <li data-col="type" data-text="区分"></li>-->
+<!--    </ul>-->
+<!--</ifcs-tree-table>-->

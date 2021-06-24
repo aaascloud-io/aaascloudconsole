@@ -1,0 +1,14 @@
+<div (click)="onClick($event)" class="headerRow">
+    <ul>
+        <li class="table-first-column">
+            <button type="button" class="p-treetable-toggler p-link" tabindex="-1" pRipple
+                    [style.visibility]="rowNode.node.leaf === false || (rowNode.node.children && rowNode.node.children.length) ? 'visible' : 'hidden'"
+                    [style.marginLeft]="rowNode.level * 30 + 'px'">
+                <i [ngClass]="rowNode.node.expanded ? 'pi pi-fw pi-chevron-down' : 'pi pi-fw pi-chevron-right'"></i>
+            </button>
+        </li>
+        <li class="table-column">
+            <ng-container *ngTemplateOutlet="outTemplate; context:{value: rowNode.node}"></ng-container>
+        </li>
+    </ul>
+</div>
