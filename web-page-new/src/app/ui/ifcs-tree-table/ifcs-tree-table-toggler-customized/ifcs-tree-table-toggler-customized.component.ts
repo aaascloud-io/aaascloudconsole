@@ -11,7 +11,7 @@ import {TreeTable} from "primeng/treetable";
 export class IfcsTreeTableTogglerCustomizedComponent implements OnInit {
 
     @Input() rowNode: any;
-    @Input() outTemplate: TemplateRef<HTMLElement>;
+    @Input() parentOutTemplate: TemplateRef<HTMLElement>;
 
 
     constructor(public tt: TreeTable) {

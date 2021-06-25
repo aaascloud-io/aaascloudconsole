@@ -7,9 +7,18 @@ import {TreeNode} from "primeng/api";
  * テーブルヘッダー（TH）
  */
 interface HeaderItem {
+    // 列
     field: string;
+    // 列名
     header: string;
+    // グループ開始
     node: boolean;
+    // 列拡張
+    ext: boolean;
+}
+
+interface ColExtension {
+    [key: string]: any | undefined;
 }
 
 
@@ -26,6 +35,8 @@ export class IfcsTreeTableComponent implements OnInit {
     private _headerItems: HeaderItem[];
     // テーブルデータ
     private _list: TreeNode[];
+    // 親行のTD結合数
+    private _colspanNum: number;
 
 
     /**
@@ -34,14 +45,24 @@ export class IfcsTreeTableComponent implements OnInit {
     @Input() tblId: string;
 
     /**
-     * テンプレート情報
-     */
-    @Input() outTemplate: TemplateRef<HTMLElement>;
-
-    /**
      * 拡張可否
      */
-    @Input() extension: boolean;
+    @Input() parentExtension: boolean;
+
+    /**
+     * テンプレート情報
+     */
+    @Input() parentOutTemplate: TemplateRef<HTMLElement>;
+
+    /**
+     * 親行のTD結合可否
+     */
+    @Input() colspan: boolean;
+
+    /**
+     * 列拡張可否
+     */
+    @Input() colExtension: ColExtension;
 
 
     /**
@@ -71,6 +92,25 @@ export class IfcsTreeTableComponent implements OnInit {
             return [];
         }
         return this._list;
+    }
+
+    /**
+     * 親行のTD結合属性
+     * @param v 指定した列数
+     */
+    @Input()
+    set colspanNum(v: number) {
+        this._colspanNum = v;
+    }
+
+    /**
+     * 親行のTD結合数取得
+     */
+    get colspanNum(): number {
+        if (!this._colspanNum) {
+            return this._headerItems.length;
+        }
+        return this._colspanNum;
     }
 
 
@@ -110,6 +150,7 @@ export class IfcsTreeTableComponent implements OnInit {
                 field: $(el).data('col'),
                 header: $(el).data('text'),
                 node: $(el).data('node') ? $(el).data('node') : false,
+                ext: $(el).data('ext') ? $(el).data('ext') : false,
             });
 
         });

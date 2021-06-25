@@ -18,40 +18,70 @@
         <!-- テーブル -->
         <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
 
-            <!-- 拡張 -->
-            <ng-container *ngIf="extension">
+            <!-- 拡張あり -->
+            <ng-container *ngIf="parentExtension">
+                <!-- 親の場合-->
                 <ng-container *ngIf="rowData['isParent']">
                     <tr [ttRow]="rowNode" class="parentRow">
-                        <td [attr.colspan]="columns.length">
+                        <!-- TD結合-->
+                        <td [attr.colspan]="colspan ? colspanNum : ''">
+                            <!--　拡張-->
                             <ifcs-tree-table-toggler-customized [rowNode]="rowNode"
-                                                                [outTemplate]="outTemplate"></ifcs-tree-table-toggler-customized>
+                                                                [parentOutTemplate]="parentOutTemplate">
+                            </ifcs-tree-table-toggler-customized>
                         </td>
                     </tr>
                 </ng-container>
-
+                <!-- 親以外の場合-->
                 <ng-container *ngIf="!rowData['isParent']">
                     <tr [ttRow]="rowNode">
                         <td *ngFor="let header of HeaderItems">
+                            <!-- グループ開始-->
                             <ng-container *ngIf="header.node">
                                 <p-treeTableToggler [rowNode]="rowNode" #treeTableToggler></p-treeTableToggler>
                             </ng-container>
-                            <span>{{rowData[header.field]}}</span>
+
+                            <!--TD-->
+                            <!-- 列拡張-->
+                            <ng-container *ngIf="header.ext">
+                                <ng-container
+                                        *ngTemplateOutlet="colExtension[header.field]; context:{value: rowNode.node}">
+                                </ng-container>
+                            </ng-container>
+                            <!-- 列拡張以外-->
+                            <ng-container *ngIf="!header.ext">
+                                <span>{{rowData[header.field]}}</span>
+                            </ng-container>
+
                         </td>
                     </tr>
                 </ng-container>
-            </ng-container>
+            </ng-container><!-- 拡張あり -->
 
             <!-- 拡張なし -->
-            <ng-container *ngIf="!extension">
+            <ng-container *ngIf="!parentExtension">
                 <tr [ttRow]="rowNode" [ngClass]="{'parentRow': rowData['isParent']}">
                     <td *ngFor="let header of HeaderItems">
+                        <!-- グループ開始-->
                         <ng-container *ngIf="header.node">
                             <p-treeTableToggler [rowNode]="rowNode" #treeTableToggler></p-treeTableToggler>
                         </ng-container>
-                        <span>{{rowData[header.field]}}</span>
+
+                        <!--TD-->
+                        <!-- 列拡張-->
+                        <ng-container *ngIf="header.ext">
+                            <ng-container
+                                    *ngTemplateOutlet="colExtension[header.field]; context:{value: rowNode.node}">
+                            </ng-container>
+                        </ng-container>
+                        <!-- 列拡張以外-->
+                        <ng-container *ngIf="!header.ext">
+                            <span>{{rowData[header.field]}}</span>
+                        </ng-container>
+
                     </td>
                 </tr>
-            </ng-container>
+            </ng-container><!-- 拡張なし -->
 
         </ng-template>
 
@@ -61,14 +91,30 @@
 
 
 <!-- サンプル (拡張を含む) -->
-<!--<ng-template let-param="value" #extensionTemp>-->
-<!--    <p>{{param.data.name}} ({{param.data.size}}) {{param.data.type}}</p>-->
+<!--&lt;!&ndash;グループ開始テンプレート&ndash;&gt;-->
+<!--<ng-template let-param="value" #groupParentTemp>-->
+<!--    <span>-->
+<!--        <span>{{param.data.name}} ({{param.data.size}}) {{param.data.type}}</span>-->
+<!--        <span style="padding: 10px">-->
+<!--            <a class="primary edit mr-1 mrless" title="編集"-->
+<!--               (click)="onGroupEdit($event, param)"><i class="la la-pencil"></i></a>-->
+<!--        </span>-->
+<!--    </span>-->
 <!--</ng-template>-->
-
-<!--<ifcs-tree-table tblId="newAllList" [list]="test" [outTemplate]="extensionTemp" [extension]="true">-->
+<!--&lt;!&ndash;操作列テンプレート&ndash;&gt;-->
+<!--<ng-template let-param="value" #colTmpOpt>-->
+<!--    <a class="danger delete mr-1 mrless" title="削除" (click)="onUserDel($event, param)">-->
+<!--        <i class="la la-trash-o"></i>-->
+<!--    </a>-->
+<!--</ng-template>-->
+<!--&lt;!&ndash;ツリーテーブル&ndash;&gt;-->
+<!--<ifcs-tree-table tblId="newAllList" [list]="list" [parentExtension]="true"-->
+<!--                 [parentOutTemplate]="groupParentTemp" [colspan]="true"-->
+<!--                 [colExtension]="{'opt': colTmpOpt}">-->
 <!--    <ul class="header newAllList">-->
 <!--        <li data-col="name" data-text="番号" data-node="true"></li>-->
 <!--        <li data-col="size" data-text="受入日"></li>-->
 <!--        <li data-col="type" data-text="区分"></li>-->
+<!--        <li data-col="opt" data-text="操作" data-ext="true"></li>-->
 <!--    </ul>-->
 <!--</ifcs-tree-table>-->

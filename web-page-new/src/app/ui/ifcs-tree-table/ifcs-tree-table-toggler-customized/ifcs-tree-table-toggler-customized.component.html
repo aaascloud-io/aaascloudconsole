@@ -8,7 +8,7 @@
             </button>
         </li>
         <li class="table-column">
-            <ng-container *ngTemplateOutlet="outTemplate; context:{value: rowNode.node}"></ng-container>
+            <ng-container *ngTemplateOutlet="parentOutTemplate; context:{value: rowNode.node}"></ng-container>
         </li>
     </ul>
 </div>
