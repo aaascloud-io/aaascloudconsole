@@ -3,6 +3,7 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     TemplateRef,
@@ -10,6 +11,7 @@ import {
 } from '@angular/core';
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {IfcsModalService} from "./ifcs-modal.service";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -17,9 +19,10 @@ import {IfcsModalService} from "./ifcs-modal.service";
     templateUrl: './ifcs-modal.component.html',
     styleUrls: ['./ifcs-modal.component.css']
 })
-export class IfcsModalComponent implements OnInit, AfterViewInit {
+export class IfcsModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild('defaultModelContent') private defaultModelContent: TemplateRef<any>;
+    private subscriptions: Array<Subscription> = [];
 
     /**
      * ダイアログId
@@ -71,16 +74,8 @@ export class IfcsModalComponent implements OnInit, AfterViewInit {
         private modal: NgbModal,
         private modalService: IfcsModalService,
     ) {
-        // ダイアログIdにより、該当なダイアログを開く
-        this.modalService.modalOpenCalled$.subscribe(
-            (modalId) => {
-                this.openModal(modalId);
-            }
-        );
-        // ダイアログIdにより、該当なダイアログを閉じる
-        this.modalService.modalCloseCalled$.subscribe((modalId) => {
-            this.closeModal(modalId);
-        })
+        // subscribe設定
+        this.doSubscribe();
     }
 
     ngOnInit(): void {
@@ -90,6 +85,11 @@ export class IfcsModalComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+    }
+
+    ngOnDestroy(): void {
+        // subscribe解除
+        this.doUnsubscribe();
     }
 
     /**
@@ -130,6 +130,31 @@ export class IfcsModalComponent implements OnInit, AfterViewInit {
             return;
         }
         this.modal.dismissAll();
+    }
+
+    /**
+     * subscribe設定
+     */
+    private doSubscribe(): void {
+        // ダイアログIdにより、該当なダイアログを開く
+        this.subscriptions.push(this.modalService.modalOpenCalled$.subscribe(
+            (modalId) => {
+                this.openModal(modalId);
+            }
+        ));
+        // ダイアログIdにより、該当なダイアログを閉じる
+        this.subscriptions.push(this.modalService.modalCloseCalled$.subscribe((modalId) => {
+            this.closeModal(modalId);
+        }));
+    }
+
+    /**
+     * subscribe解除
+     */
+    private doUnsubscribe(): void {
+        this.subscriptions.forEach((subscription: Subscription) => {
+            subscription.unsubscribe();
+        });
     }
 
 }

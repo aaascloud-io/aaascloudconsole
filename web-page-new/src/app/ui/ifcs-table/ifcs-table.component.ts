@@ -3,6 +3,7 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
 } from '@angular/core';
@@ -10,6 +11,7 @@ import * as $ from 'jquery'
 import {IfcsTableColumnCustom} from './ifcs-table.columnCustom';
 import {IfcsTableColumnSupperLink} from "./ifcs-table.columnSupperLink";
 import {IfcsTableService} from "./ifcs-table.service";
+import {Subscription} from "rxjs";
 
 
 /**
@@ -72,7 +74,9 @@ class ItemType {
     templateUrl: './ifcs-table.component.html',
     styleUrls: ['./ifcs-table.component.css']
 })
-export class IfcsTableComponent implements OnInit, AfterViewInit {
+export class IfcsTableComponent implements OnInit, AfterViewInit, OnDestroy {
+    private subscriptions: Array<Subscription> = [];
+
     // ヘッダー情報
     private _headerItems: HeaderItem[];
     // テーブルデータ
@@ -258,24 +262,8 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
     constructor(
         private tableService: IfcsTableService,
     ) {
-        // テーブルIdにより、該当なページのデータを取得
-        this.tableService.currentDataCalled$.subscribe(
-            (param: CurrentInfo) => {
-                this.current(param);
-            }
-        );
-        // テーブルIdにより、該当なテーブルを再描画する
-        this.tableService.paintCalled$.subscribe(
-            (tblId: string) => {
-                this.repaint(tblId);
-            }
-        );
-        // テーブルIdにより、該当なテーブルのヘッダーを取得
-        this.tableService.headerCalled$.subscribe(
-            (param: HeaderInfo) => {
-                this.headers(param);
-            }
-        );
+        // subscribe設定
+        this.doSubscribe();
     }
 
     ngOnInit(): void {
@@ -283,6 +271,11 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+    }
+
+    ngOnDestroy(): void {
+        // subscribe解除
+        this.doUnsubscribe();
     }
 
     /**
@@ -364,7 +357,7 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
         if (!this._list) {
             return;
         }
-        
+
         // 自身以外の状態をクリアする
         this._headerItems.filter(h => h.columnName !== header.columnName)
             .forEach(h => h.ascending = null);
@@ -559,6 +552,39 @@ export class IfcsTableComponent implements OnInit, AfterViewInit {
         } else {
             return p * this._size;
         }
+    }
+
+    /**
+     * subscribe設定
+     */
+    private doSubscribe(): void {
+        // テーブルIdにより、該当なページのデータを取得
+        this.subscriptions.push(this.tableService.currentDataCalled$.subscribe(
+            (param: CurrentInfo) => {
+                this.current(param);
+            }
+        ));
+        // テーブルIdにより、該当なテーブルを再描画する
+        this.subscriptions.push(this.tableService.paintCalled$.subscribe(
+            (tblId: string) => {
+                this.repaint(tblId);
+            }
+        ));
+        // テーブルIdにより、該当なテーブルのヘッダーを取得
+        this.subscriptions.push(this.tableService.headerCalled$.subscribe(
+            (param: HeaderInfo) => {
+                this.headers(param);
+            }
+        ));
+    }
+
+    /**
+     * subscribe解除
+     */
+    private doUnsubscribe(): void {
+        this.subscriptions.forEach((subscription: Subscription) => {
+            subscription.unsubscribe();
+        });
     }
 
 }
