@@ -128,6 +128,15 @@ export class IfcsTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // ページサイズによって、ページ毎にデータを設定する
         this.pageData();
+
+        // 全選択設定処理
+        let data = this._currentData();
+        let find = data.filter(item => item.selected);
+        this._allChecked = false;
+        // 該当行は全部に選択された場合、全選択にする
+        if(find.length === data.length){
+            this._allChecked = true;
+        }
     }
 
     /**
