@@ -23,6 +23,7 @@ export class IfcsModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild('defaultModelContent') private defaultModelContent: TemplateRef<any>;
     private subscriptions: Array<Subscription> = [];
+    private modalRef: NgbModalRef;
 
     /**
      * ダイアログId
@@ -108,10 +109,13 @@ export class IfcsModalComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.modalId !== modalId) {
             return;
         }
-        this.modal.open(this.defaultModelContent, {
+        // ダイアログを開く
+        this.modalRef = this.modal.open(this.defaultModelContent, {
             windowClass: 'animated fadeInDown'
             , size: 'lg'
-        }).result.then((result) => {
+        });
+        // ダイアログを閉じるときに、ハンドラ処理を行う
+        this.modalRef.result.then((result) => {
             // Close modal
             // console.log(result);
             this.cancelClicked.emit();
@@ -129,7 +133,8 @@ export class IfcsModalComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.modalId !== modalId) {
             return;
         }
-        this.modal.dismissAll();
+        // this.modal.dismissAll();
+        this.modalRef.close();
     }
 
     /**
