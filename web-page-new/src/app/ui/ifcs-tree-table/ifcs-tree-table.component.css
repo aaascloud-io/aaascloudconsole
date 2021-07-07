@@ -9,7 +9,8 @@
     height: 40px !important;
 }
 
-.table tr {
+.table tr td {
+    vertical-align: middle;
 }
 
 .parentRow {
