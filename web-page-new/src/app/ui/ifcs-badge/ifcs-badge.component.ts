@@ -8,6 +8,15 @@ import {IfcsLinkComponent} from "../ifcs-link/ifcs-link.component";
 })
 export class IfcsBadgeComponent extends IfcsLinkComponent {
 
+    /**
+     * ラベルスタイル
+     */
+    @Input() labelClass: string | string[] | Set<string> | { [klass: string]: any; }
+    @Input() labelStyle: string;
+
+    @Input() tooltip: string;
+
+
     constructor() {
         super();
     }

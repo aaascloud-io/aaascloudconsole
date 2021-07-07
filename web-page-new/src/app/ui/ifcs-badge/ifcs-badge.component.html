@@ -1,6 +1,13 @@
-<div class="{{linkClass}}" style="{{linkStyle}}">
-    <a (click)="onClick($event)">
+<div title="{{tooltip}}">
+    <a class="{{linkClass}}" style="{{linkStyle}}" (click)="onClick($event)">
         <i class="{{iconClass}}" style="{{iconStyle}}"></i>
-        <span>{{label}}</span>
+        <span class="{{labelClass}}" style="{{labelStyle}}">{{label}}</span>
     </a>
 </div>
+
+<!--<div class="{{linkClass}}" style="{{linkStyle}}">-->
+<!--    <a (click)="onClick($event)">-->
+<!--        <i class="{{iconClass}}" style="{{iconStyle}}"></i>-->
+<!--        <span class="{{labelClass}}">{{label}}</span>-->
+<!--    </a>-->
+<!--</div>-->
