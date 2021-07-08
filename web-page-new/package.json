@@ -36,6 +36,7 @@
     "@types/highlight.js": "^9.12.3",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "@types/jquery": "^3.2.12",
+    "snapsvg": "^0.5.1",
     "jquery": "^3.2.1",
     "agm-direction": "^0.7.9",
     "angular-archwizard": "^3.0.0",
