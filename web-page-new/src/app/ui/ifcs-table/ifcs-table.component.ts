@@ -23,9 +23,9 @@ interface HeaderItem {
  */
 interface RowItem {
     /** key: column name, value: cell value */
-    selected: string | undefined;
+    selected: boolean | undefined;
 
-    [key: string]: string | undefined;
+    [key: string]: string | boolean | undefined;
 }
 
 /**
@@ -135,7 +135,7 @@ export class IfcsTableComponent implements OnInit, AfterViewInit, OnDestroy {
         let find = data.filter(item => item.selected);
         this._allChecked = false;
         // 該当行は全部に選択された場合、全選択にする
-        if(find.length === data.length){
+        if (find.length === data.length) {
             this._allChecked = true;
         }
     }
@@ -583,6 +583,26 @@ export class IfcsTableComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * 選択しないのを設定する
+     * @private
+     */
+    private _uncheckedAllValue(tblId: string): void {
+        if (this.tblId !== tblId) {
+            return;
+        }
+        if (!this._list) {
+            return;
+        }
+        this._list.forEach((row) => {
+            if (row.selected) {
+                row.selected = false;
+            }
+        });
+        this._allChecked = false;
+        // this.repaint(tblId);
+    }
+
+    /**
      * subscribe設定
      */
     private doSubscribe(): void {
@@ -602,6 +622,12 @@ export class IfcsTableComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(this.tableService.headerCalled$.subscribe(
             (param: HeaderInfo) => {
                 this.headers(param);
+            }
+        ));
+        // テーブルIdにより、該当なテーブルの全選択取消
+        this.subscriptions.push(this.tableService.unselectedCalled$.subscribe(
+            (tblId: string) => {
+                this._uncheckedAllValue(tblId);
             }
         ));
     }

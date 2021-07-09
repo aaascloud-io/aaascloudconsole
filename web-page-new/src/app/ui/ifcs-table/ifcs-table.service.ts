@@ -14,6 +14,9 @@ export class IfcsTableService {
     // ヘッダー
     private header = new Subject<any>();
     public headerCalled$ = this.header.asObservable();
+    // 全選択取消
+    private unselect = new Subject<any>();
+    public unselectedCalled$ = this.unselect.asObservable();
 
 
     /**
@@ -51,6 +54,14 @@ export class IfcsTableService {
         }
         this.header.next(param);
         return param.header;
+    }
+
+    /**
+     * 全選択取消
+     * @param tblId テーブルId
+     */
+    public unselected(tblId: string): void {
+        this.unselect.next(tblId);
     }
 
 
