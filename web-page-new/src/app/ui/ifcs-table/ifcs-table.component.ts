@@ -1,12 +1,4 @@
-import {
-    AfterViewInit,
-    Component,
-    EventEmitter,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output,} from '@angular/core';
 import * as $ from 'jquery'
 import {IfcsTableColumnCustom} from './ifcs-table.columnCustom';
 import {IfcsTableColumnSupperLink} from "./ifcs-table.columnSupperLink";
@@ -56,6 +48,13 @@ interface HeaderInfo {
 }
 
 /**
+ * 拡張（列）
+ */
+interface ColExtension {
+    [key: string]: any | undefined;
+}
+
+/**
  * カラム種類
  */
 class ItemType {
@@ -67,6 +66,8 @@ class ItemType {
     public static SWITCH: string = "switch";
     // スーパー項目
     public static SUPPER: string = "supper";
+    // 拡張項目
+    public static EXT: string = "ext";
 }
 
 @Component({
@@ -267,6 +268,16 @@ export class IfcsTableComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     @Output() rowCheckboxChangedEvent = new EventEmitter<RowItem>();
 
+    /**
+     * 行スタイル設定イベント
+     */
+    @Input('loadRowClass') loadRowClass: (row: RowItem) => string;
+
+    /**
+     * 列拡張可否
+     */
+    @Input() colExtension: ColExtension;
+
 
     constructor(
         private tableService: IfcsTableService,
@@ -389,6 +400,14 @@ export class IfcsTableComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         // ページデータ再作成
         this.pageData();
+    }
+
+    /**
+     * 行スタイル設定
+     * @param row 行情報
+     */
+    onLoadRowClass(row): string {
+        return this.loadRowClass(row);
     }
 
     /**

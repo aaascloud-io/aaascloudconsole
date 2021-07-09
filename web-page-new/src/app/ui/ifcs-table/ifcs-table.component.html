@@ -23,7 +23,7 @@
 
         <!-- データ -->
         <tbody>
-        <tr *ngFor="let item of list" (click)="onRowClick($event, item)">
+        <tr *ngFor="let item of list" (click)="onRowClick($event, item)" [ngClass]="onLoadRowClass(item)">
             <td *ngIf="checkable">
                 <input type="checkbox" [checked]="item.selected" (change)="onCheckChange($event,item)"
                        (click)="onCheckboxClick($event)">
@@ -61,6 +61,13 @@
                     </ng-container>
                 </span>
 
+                <!-- 列拡張-->
+                <span *ngIf="header.type === 'ext'">
+                    <ng-container
+                        *ngTemplateOutlet="colExtension[header.columnName]; context:{value: item}">
+                    </ng-container>
+                </span>
+
                 <!-- 普通項目 -->
                 <span *ngIf="header.type === 'normal'">{{ item[header.columnName] }}</span>
             </td>
@@ -92,6 +99,7 @@
                 <option [ngValue]="20">20 items per page</option>
                 <option [ngValue]="50">50 items per page</option>
                 <option [ngValue]="100">100 items per page</option>
+                <option [ngValue]="_count">All items</option>
             </select>
         </div>
     </div>
