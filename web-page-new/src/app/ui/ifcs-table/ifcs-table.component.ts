@@ -407,6 +407,9 @@ export class IfcsTableComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param row 行情報
      */
     onLoadRowClass(row): string {
+        if (!this.loadRowClass) {
+            return;
+        }
         return this.loadRowClass(row);
     }
 
