@@ -23,12 +23,16 @@
 
         <!-- データ -->
         <tbody>
-        <tr *ngFor="let item of list" (click)="onRowClick($event, item)" [ngClass]="onLoadRowClass(item)">
+        <tr *ngFor="let item of list; index as idx" (click)="onRowClick($event, item)" [ngClass]="onLoadRowClass(item)">
             <td *ngIf="checkable">
                 <input type="checkbox" [checked]="item.selected" (change)="onCheckChange($event,item)"
                        (click)="onCheckboxClick($event)">
             </td>
-            <td *ngFor="let header of HeaderItems" nowrap>
+            <td nowrap *ngFor="let header of HeaderItems">
+                <!-- 自動採番項目 -->
+                <span *ngIf="header.type === 'auto'">
+                    {{(_page - 1) * size + idx + 1}}
+                </span>
 
                 <!-- カスタマイズ項目 -->
                 <span *ngIf="header.type === 'custom'">
@@ -64,7 +68,7 @@
                 <!-- 列拡張-->
                 <span *ngIf="header.type === 'ext'">
                     <ng-container
-                        *ngTemplateOutlet="colExtension[header.columnName]; context:{value: item}">
+                            *ngTemplateOutlet="colExtension[header.columnName]; context:{value: item}">
                     </ng-container>
                 </span>
 

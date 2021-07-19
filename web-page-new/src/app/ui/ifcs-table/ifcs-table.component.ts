@@ -68,6 +68,8 @@ class ItemType {
     public static SUPPER: string = "supper";
     // 拡張項目
     public static EXT: string = "ext";
+    // 自動No.列あり／なし
+    public static AUTO: string = "auto";
 }
 
 @Component({
