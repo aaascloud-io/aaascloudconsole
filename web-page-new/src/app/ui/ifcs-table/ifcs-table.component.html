@@ -41,10 +41,10 @@
                         <!-- カスタマイズ属性アイテム有り -->
                         <ng-container *ngIf="header.columnName === ctm.column">
                             <!-- 編集ボタン -->
-                            <a *ngIf="ctm.edit" class="primary edit mr-1 mrless" (click)="onEditRow($event,item)"><i
-                                    class="la la-pencil"></i></a>
+                            <a *ngIf="ctm.edit" class="primary edit mr-1 mrless" title="編集"
+                               (click)="onEditRow($event,item)"><i class="la la-pencil"></i></a>
                             <!-- 削除ボタン -->
-                            <a *ngIf="ctm.delete" class="danger delete mr-1 mrless"
+                            <a *ngIf="ctm.delete" class="danger delete mr-1 mrless" title="削除"
                                (click)="onDeleteRow($event,item)"><i class="la la-trash-o"></i></a>
                         </ng-container>
                     </ng-container>
