@@ -41,7 +41,7 @@ export class IfcsTextareaComponent implements OnInit, ControlValueAccessor {
     /**
      * 行数
      */
-    @Input() rows: string;
+    @Input() rows: number;
 
     /**
      * Id
@@ -67,6 +67,11 @@ export class IfcsTextareaComponent implements OnInit, ControlValueAccessor {
      * スタイル
      */
     @Input() class: string | string[] | Set<string> | { [klass: string]: any; }
+
+    @Input() disabled: boolean;
+
+    @Input() cols: number;
+
 
     /**
      * 入力値
@@ -100,7 +105,7 @@ export class IfcsTextareaComponent implements OnInit, ControlValueAccessor {
     ngOnInit(): void {
         let rows = this.rows;
         if (!rows) {
-            this.rows = "3";
+            this.rows = 3;
         }
     }
 
