@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {IfcsBadgeComponent} from "../ifcs-badge/ifcs-badge.component";
 
 @Component({
-  selector: 'app-ifcs-media-button',
+  selector: 'ifcs-media-button',
   templateUrl: './ifcs-media-button.component.html',
   styleUrls: ['./ifcs-media-button.component.css']
 })
